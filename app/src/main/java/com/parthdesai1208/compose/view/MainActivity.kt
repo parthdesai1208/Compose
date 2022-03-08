@@ -5,14 +5,13 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.viewmodel.TodoViewModel
 
@@ -27,17 +26,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @Preview(name= "light" ,showSystemUi = true)
+    @Preview(name = "light", showSystemUi = true)
     @Preview(name = "Dark", showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
     @Composable
     fun PreviewUI() {
         ComposeTheme {
 //            TextInCenter("Parth")
+            /*---*/
 //            CollapsableRecyclerView()
+            /*---*/
             /*Surface {
                 TodoActivityScreen(todoViewModel)
             }*/
-            Text("Hi there!", Modifier.baseLineToTop(32.dp).wrapContentWidth().wrapContentHeight(), color = MaterialTheme.colors.onSurface)
+            /*---*/
+            //Text("Hi there!", Modifier.baseLineToTop(32.dp).wrapContentWidth().wrapContentHeight(), color = MaterialTheme.colors.onSurface)
+            /*---*/
+            Column(verticalArrangement = Arrangement.Top) {
+                StaggeredGridFun(
+                    modifier = Modifier
+                        .wrapContentHeight()
+                        .wrapContentWidth()
+                )
+            }
+            /*---*/
         }
     }
 }
