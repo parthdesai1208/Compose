@@ -22,7 +22,7 @@ import kotlin.math.max
 @Composable
 fun StaggeredGrid(
     modifier: Modifier = Modifier,
-    rows: Int = 3,
+    totalRow: Int = 3,
     content: @Composable () -> Unit
 ) {
     Layout(
@@ -30,53 +30,52 @@ fun StaggeredGrid(
         content = content
     ) { measurables, constraints ->
         // Keep track of the width of each row
-        val rowWidths = IntArray(rows) { 0 }
+        val eachRowWidth = IntArray(totalRow) { 0 }
 
         // Keep track of the max height of each row
-        val rowHeights = IntArray(rows) { 0 }
+        val eachRowHeight = IntArray(totalRow) { 0 }
 
-        // Don't constrain child views further, measure them with given constraints
-        // List of measured children
+        // here we add array for calculating total width & height of the horizontal recyclerview
         val placeables = measurables.mapIndexed { index, measurable ->
 
             // Measure each child
             val placeable = measurable.measure(constraints)
 
             // Track the width and max height of each row
-            val row = index % rows
-            rowWidths[row] += placeable.width
-            rowHeights[row] = max(rowHeights[row], placeable.height)
+            val row = index % totalRow
+            eachRowWidth[row] += placeable.width
+            eachRowHeight[row] = max(eachRowHeight[row], placeable.height)
 
             placeable
         }
 
-        // Grid's width is the widest row
-        val width = rowWidths.maxOrNull()
+        // here we calculate total width of the horizontal recyclerview
+        val totalWidthOfRecyclerView = eachRowWidth.maxOrNull()
             ?.coerceIn(constraints.minWidth.rangeTo(constraints.maxWidth)) ?: constraints.minWidth
 
-        // Grid's height is the sum of the tallest element of each row
-        // coerced to the height constraints
-        val height = rowHeights.sumOf { it }
+        // here we calculate total height of the horizontal recyclerview
+        val totalHeightOfRecyclerView = eachRowHeight.sumOf { it }
             .coerceIn(constraints.minHeight.rangeTo(constraints.maxHeight))
 
-        // Y of each row, based on the height accumulation of previous rows
-        val rowY = IntArray(rows) { 0 }
-        for (i in 1 until rows) {
-            rowY[i] = rowY[i - 1] + rowHeights[i - 1]
+        // here we prepare array for each item's height in increment order
+        val eachRowYPosition = IntArray(totalRow) { 0 }
+        for (i in 1 until totalRow) {
+            eachRowYPosition[i] = eachRowYPosition[i - 1] + eachRowHeight[i - 1]
         }
 
-        // Set the size of the parent layout
-        layout(width, height) {
+        // Set the size of the recycler view
+        layout(totalWidthOfRecyclerView, totalHeightOfRecyclerView) {
             // x cord we have placed up to, per row
-            val rowX = IntArray(rows) { 0 }
+            val eachRowXPosition = IntArray(totalRow) { 0 }
 
             placeables.forEachIndexed { index, placeable ->
-                val row = index % rows
+                val row = index % totalRow
                 placeable.placeRelative(
-                    x = rowX[row],
-                    y = rowY[row]
+                    x = eachRowXPosition[row],
+                    y = eachRowYPosition[row]
                 )
-                rowX[row] += placeable.width
+                //here we add width after each item place in horizontal direction
+                eachRowXPosition[row] += placeable.width
             }
         }
 
@@ -132,7 +131,7 @@ val topics = listOf(
 @Composable
 fun StaggeredGridFun(modifier: Modifier = Modifier) {
     Row(modifier = modifier.horizontalScroll(rememberScrollState())) {
-        StaggeredGrid(modifier = modifier, rows = 4) {
+        StaggeredGrid(modifier = modifier, totalRow = 4) {
             for (topic in topics) {
                 Chip(modifier = Modifier.padding(6.dp), text = topic)
             }
