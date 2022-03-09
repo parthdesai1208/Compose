@@ -5,12 +5,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.viewmodel.TodoViewModel
@@ -31,24 +26,32 @@ class MainActivity : AppCompatActivity() {
     @Composable
     fun PreviewUI() {
         ComposeTheme {
+            //region text
 //            TextInCenter("Parth")
-            /*---*/
+            //endregion
+            //region recyclerview
 //            CollapsableRecyclerView()
-            /*---*/
+            //endregion
+            //region Learn state
             /*Surface {
                 TodoActivityScreen(todoViewModel)
             }*/
-            /*---*/
-            //Text("Hi there!", Modifier.baseLineToTop(32.dp).wrapContentWidth().wrapContentHeight(), color = MaterialTheme.colors.onSurface)
-            /*---*/
-            Column(verticalArrangement = Arrangement.Top) {
+            //endregion
+            //region custom modifier
+//            Text("Hi there!", Modifier.baseLineToTop(32.dp).wrapContentWidth().wrapContentHeight(), color = MaterialTheme.colors.onSurface)
+            //endregion
+            //region Custom recyclerview
+            /*Column(verticalArrangement = Arrangement.Top) {
                 StaggeredGridFun(
                     modifier = Modifier
                         .wrapContentHeight()
                         .wrapContentWidth()
                 )
-            }
-            /*---*/
+            }*/
+            //endregion
+            //region Constraint Layout
+            ConstraintLayoutContent()
+            //endregion
         }
     }
 }

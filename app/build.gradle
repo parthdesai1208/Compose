@@ -71,7 +71,8 @@ dependencies {
     implementation "androidx.compose.ui:ui-tooling-preview:1.1.1"
     //icon
     implementation "androidx.compose.material:material-icons-extended:1.1.1"
-
+    //compose constraint layout
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0"
 
     //testing
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'
