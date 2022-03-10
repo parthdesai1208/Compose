@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.viewmodel.TodoViewModel
@@ -23,6 +24,7 @@ class MainActivity : AppCompatActivity() {
 
     @Preview(name = "light", showSystemUi = true)
     @Preview(name = "Dark", showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+    @Preview(name = "landscape", showSystemUi = true, device = Devices.AUTOMOTIVE_1024p, widthDp = 720, heightDp = 360)
     @Composable
     fun PreviewUI() {
         ComposeTheme {
@@ -50,7 +52,8 @@ class MainActivity : AppCompatActivity() {
             }*/
             //endregion
             //region Constraint Layout
-            ConstraintLayoutContent()
+            //ConstraintLayoutContent()
+            DecoupledConstraintLayout()
             //endregion
         }
     }
