@@ -21,13 +21,13 @@ import com.parthdesai1208.compose.view.theme.ComposeTheme
 
 @Composable
 fun ConstraintLayoutContent() {
-   /* ConstraintLayout(modifier = Modifier
+    ConstraintLayout(modifier = Modifier
         .fillMaxWidth()
         .fillMaxHeight()) {
 
         val (button1, text, button2) = createRefs()
         createHorizontalChain(button1, button2, chainStyle = ChainStyle.Spread)
-        Button(onClick = { *//*TODO*//* },
+        Button(onClick = {  },
             modifier = Modifier.constrainAs(button1) {
                 top.linkTo(parent.top, 16.dp) //for single link
                 linkTo(parent.start,button2.start)
@@ -35,7 +35,7 @@ fun ConstraintLayoutContent() {
             Text(text = "Button1")
         }
 
-        Button(onClick = { *//*TODO*//* },
+        Button(onClick = {  },
             modifier = Modifier.constrainAs(button2) {
                 top.linkTo(button1.top) //for single link
                 bottom.linkTo(button1.bottom)
@@ -50,7 +50,7 @@ fun ConstraintLayoutContent() {
                 linkTo(button1.bottom, parent.bottom, 10.dp, 8.dp, bias = 0f) //for vertical link
                 linkTo(button1.end, button1.end) //for single link
             })
-    }*/
+    }
 }
 
 @Preview(showSystemUi = true)

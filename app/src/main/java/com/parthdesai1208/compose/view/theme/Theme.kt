@@ -29,25 +29,13 @@ fun ComposeTheme(
 private val DarkColorPaletteBasic = darkColors(
     primary = purple200,
     primaryVariant = purple700,
-    secondary = teal200
-    /*primaryVariant = primaryVariantDColor,
-    surface = Color.Blue,
-    onSurface = Navy,
-    primary = Navy,
-    onPrimary = Chartreuse,
-    background = Color.Black,
-    onBackground = Color.Black*/
+    secondary = teal200,
 )
 
 private val LightColorPaletteBasic = lightColors(
     primary = purple500,
     primaryVariant = purple700,
     secondary = teal200
-    /*primaryVariant = primaryVariantLColor,
-    surface = Color.Blue,
-    onSurface = Color.White,
-    primary = LightBlue,
-    onPrimary = Navy*/
 )
 
 
