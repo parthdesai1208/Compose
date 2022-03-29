@@ -3,18 +3,19 @@ package com.parthdesai1208.compose.view
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,7 +29,6 @@ import androidx.navigation.navArgument
 import com.parthdesai1208.compose.view.MainDestinations.MAIN_SCREEN_ROUTE_POSTFIX
 import com.parthdesai1208.compose.view.MainDestinations.MAIN_SCREEN_ROUTE_PREFIX
 import com.parthdesai1208.compose.view.theme.ComposeTheme
-import com.parthdesai1208.compose.viewmodel.TodoViewModel
 
 class MainActivity : AppCompatActivity() {
 
@@ -96,7 +96,36 @@ enum class MainScreenEnumType(val buttonTitle: String, val func: @Composable () 
         }
     }),
     ConstraintLayoutContent("Constraint Layout Content", { ConstraintLayoutContent() }),
-    ConstraintLayoutScreen("runtime Constraint Layout", { DecoupledConstraintLayout() })
+    ConstraintLayoutScreen("runtime Constraint Layout", { DecoupledConstraintLayout() }),
+    AnimatedVisibilityWithoutParams("AnimatedVisibility - without params", { com.parthdesai1208.compose.view.animation.AnimatedVisibilityWithoutParams() }),
+    AnimatedVisibilityWithParams("AnimatedVisibility - with params", { com.parthdesai1208.compose.view.animation.AnimatedVisibilityWithParams() }),
+    AnimateVisibilityState("AnimatedVisibility - with state", { com.parthdesai1208.compose.view.animation.AnimateVisibilityState() }),
+    AnimateEnterExitChild("enter exit visibility animation", { com.parthdesai1208.compose.view.animation.AnimateEnterExitChild() }),
+    CrossFade("CrossFade", { com.parthdesai1208.compose.view.animation.CrossFade() }),
+    AnimatableOnly("AnimatableOnly", { com.parthdesai1208.compose.view.animation.AnimatableOnly() }),
+    AnimatedContentSimple("AnimatedContentSimple", { com.parthdesai1208.compose.view.animation.AnimatedContentSimple() }),
+    AnimatedContentWithTransitionSpec1("AnimatedContent - with targetState, transitionSpec ex-1",{ com.parthdesai1208.compose.view.animation.AnimatedContentWithTransitionSpec1() }),
+    AnimatedContentWithTransitionSpec2("AnimatedContent - with targetState, transitionSpec ex-2", { com.parthdesai1208.compose.view.animation.AnimatedContentWithTransitionSpec2() }),
+    AnimatedContentWithTransitionSpec3("AnimatedContent - with targetState, transitionSpec ex-3", { com.parthdesai1208.compose.view.animation.AnimatedContentWithTransitionSpec3() }),
+    AnimatedContentSize("AnimatedContentSize", { com.parthdesai1208.compose.view.animation.AnimatedContentSize() }),
+    AnimatedContentSizeTransform("AnimatedContentSizeTransform", { com.parthdesai1208.compose.view.animation.AnimatedContentSizeTransform() }),
+    AnimateFloatAsState("AnimateFloatAsState", { com.parthdesai1208.compose.view.animation.AnimateFloatAsState() }),
+    AnimateColorAsState("AnimateColorAsState", { com.parthdesai1208.compose.view.animation.AnimateColorAsState() }),
+    AnimateDpAsState("animateDpAsState", { com.parthdesai1208.compose.view.animation.AnimateDpAsState() }),
+    AnimateSizeAsState("AnimateSizeAsState", { com.parthdesai1208.compose.view.animation.AnimateSizeAsState() }),
+    UpdateTransition1("updateTransition-1", { com.parthdesai1208.compose.view.animation.UpdateTransitionBasic1() }),
+    UpdateTransition2("updateTransition-2", { com.parthdesai1208.compose.view.animation.UpdateTransitionBasic2() }),
+    UpdateTransitionChild("UpdateTransitionChild", { com.parthdesai1208.compose.view.animation.UpdateTransitionChild() }),
+    UpdateTransitionExtension("multiple anim updateTransition",{ com.parthdesai1208.compose.view.animation.UpdateTransitionExtension() }),
+    InfiniteAnimation("InfiniteAnimation", { com.parthdesai1208.compose.view.animation.InfiniteAnimation() }),
+    TargetBasedAnimation("TargetBasedAnimation", { com.parthdesai1208.compose.view.animation.TargetBasedAnimationFun() }),
+    Spring("spring",{ com.parthdesai1208.compose.view.animation.SpringFun() }),
+    Tween("tween", { com.parthdesai1208.compose.view.animation.TweenFun() }),
+    Keyframes("keyframes", { com.parthdesai1208.compose.view.animation.KeyFramesFun() }),
+    Repeatable("repeatable", { com.parthdesai1208.compose.view.animation.RepeatableFun() }),
+    InfiniteRepeatable("InfiniteRepeatable", { com.parthdesai1208.compose.view.animation.InfiniteRepeatableFun() }),
+    Snap("snap", { com.parthdesai1208.compose.view.animation.SnapFun() }),
+    AnimationVector("AnimationVector - TypeConverter,Coroutine", { com.parthdesai1208.compose.view.animation.AnimationVectorFun() })
 }
 
 @Composable
@@ -146,13 +175,15 @@ fun MainScreen(actions: MainActions) {
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
+                .padding(8.dp)
         ) {
-            Text(title.buttonTitle)
+            Text(title.buttonTitle, textAlign = TextAlign.Center)
         }
     }
 
     Column {
-        Text(text = "Compose Samples", modifier = Modifier.padding(16.dp), fontSize = 18.sp, fontFamily = FontFamily.SansSerif)
+        Text(text = "Compose Samples", modifier = Modifier.padding(16.dp), fontSize = 18.sp, fontFamily = FontFamily.SansSerif,
+        color = MaterialTheme.colors.onSurface)
         Spacer(modifier = Modifier.height(8.dp))
         Column(
             modifier = Modifier
