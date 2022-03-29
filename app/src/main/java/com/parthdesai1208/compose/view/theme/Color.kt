@@ -12,3 +12,8 @@ val Chartreuse = Color(0xFFEFF7CF)
 val LightBlue = Color(0xFFD7EFFE)
 val primaryVariantLColor = Color(0xFFFFFDE7)
 val primaryVariantDColor = Color(0xFF090808)
+
+val Purple100 = Color(0xFFE1BEE7)
+val Green300 = Color(0xFF81C784)
+val Green800 = Color(0xFF2E7D32)
+val Amber600 = Color(0xFFFFB300)

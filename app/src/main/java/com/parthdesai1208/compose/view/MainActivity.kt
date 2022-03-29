@@ -125,7 +125,8 @@ enum class MainScreenEnumType(val buttonTitle: String, val func: @Composable () 
     Repeatable("repeatable", { com.parthdesai1208.compose.view.animation.RepeatableFun() }),
     InfiniteRepeatable("InfiniteRepeatable", { com.parthdesai1208.compose.view.animation.InfiniteRepeatableFun() }),
     Snap("snap", { com.parthdesai1208.compose.view.animation.SnapFun() }),
-    AnimationVector("AnimationVector - TypeConverter,Coroutine", { com.parthdesai1208.compose.view.animation.AnimationVectorFun() })
+    AnimationVector("AnimationVector - TypeConverter,Coroutine", { com.parthdesai1208.compose.view.animation.AnimationVectorFun() }),
+    AnimationEx1("AnimationEx1",{ com.parthdesai1208.compose.view.animation.AnimationEx1() })
 }
 
 @Composable
