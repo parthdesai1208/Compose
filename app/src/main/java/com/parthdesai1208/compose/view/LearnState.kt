@@ -23,6 +23,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -49,6 +50,7 @@ fun TodoActivityScreen(todoViewModel: TodoViewModel) {
     )
 }
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun TodoScreen(
     items: List<TodoItem>,
@@ -113,7 +115,8 @@ fun TodoScreen(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(horizontal = 44.dp, vertical = 10.dp),
-                visible = visi
+                visible = visi,
+                enter = scaleIn(), exit = scaleOut()
             ) {
                 /*ExtendedFloatingActionButton(
                     icon = {
@@ -149,7 +152,7 @@ fun TodoScreen(
             },
             modifier = Modifier
                 .padding(16.dp)
-                .fillMaxWidth(),
+                .wrapContentWidth().align(alignment = Alignment.CenterHorizontally),
         ) {
             Text("Add random item")
         }

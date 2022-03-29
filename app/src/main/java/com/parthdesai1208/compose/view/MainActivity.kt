@@ -14,9 +14,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -29,8 +31,6 @@ import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.viewmodel.TodoViewModel
 
 class MainActivity : AppCompatActivity() {
-
-    private val todoViewModel by viewModels<TodoViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,18 +71,31 @@ object MainDestinations {
 enum class MainScreenEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
     TextInCenter("Text in center", { TextInCenter("Parth") }),
     CollapsableRecyclerviewScreen("recyclerview", { CollapsableRecyclerView() }),
-    //LearnStateScreen("Learn state", {  } )
-    CustomModifierScreen("custom modifier", { Text("Hi there!", Modifier.baseLineToTop(32.dp).wrapContentWidth().wrapContentHeight(), color = androidx.compose.material.MaterialTheme.colors.onSurface) }),
+    LearnStateScreen("Learn state (VM)", {
+        androidx.compose.material.Surface {
+            TodoActivityScreen(androidx.lifecycle.viewmodel.compose.viewModel())
+        }
+    }),
+    CustomModifierScreen("custom modifier", {
+        Text(
+            "Hi there!",
+            Modifier
+                .baseLineToTop(32.dp)
+                .wrapContentWidth()
+                .wrapContentHeight(),
+            color = androidx.compose.material.MaterialTheme.colors.onSurface
+        )
+    }),
     CustomRecyclerviewScreen("Custom recyclerview", {
-        androidx.compose.foundation.layout.Column(verticalArrangement = androidx.compose.foundation.layout.Arrangement.Top) {
-            com.parthdesai1208.compose.view.StaggeredGridFun(
+        Column(verticalArrangement = Arrangement.Top) {
+            StaggeredGridFun(
                 modifier = androidx.compose.ui.Modifier
                     .wrapContentHeight()
                     .wrapContentWidth()
             )
         }
     }),
-    ConstraintLayoutContent("Constraint Layout Content",{ com.parthdesai1208.compose.view.ConstraintLayoutContent() }),
+    ConstraintLayoutContent("Constraint Layout Content", { ConstraintLayoutContent() }),
     ConstraintLayoutScreen("runtime Constraint Layout", { DecoupledConstraintLayout() })
 }
 
@@ -138,14 +151,18 @@ fun MainScreen(actions: MainActions) {
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(8.dp)
-    ) {
-        enumValues<MainScreenEnumType>().forEach {
-            MyButton(it)
+    Column {
+        Text(text = "Compose Samples", modifier = Modifier.padding(16.dp), fontSize = 18.sp, fontFamily = FontFamily.SansSerif)
+        Spacer(modifier = Modifier.height(8.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(8.dp)
+        ) {
+            enumValues<MainScreenEnumType>().forEach {
+                MyButton(it)
+            }
         }
     }
 }
