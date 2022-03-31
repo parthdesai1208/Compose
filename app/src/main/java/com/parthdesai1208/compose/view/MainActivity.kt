@@ -28,6 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.parthdesai1208.compose.view.MainDestinations.MAIN_SCREEN_ROUTE_POSTFIX
 import com.parthdesai1208.compose.view.MainDestinations.MAIN_SCREEN_ROUTE_PREFIX
+import com.parthdesai1208.compose.view.navigation.NavigationEx1
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 
 class MainActivity : AppCompatActivity() {
@@ -126,7 +127,8 @@ enum class MainScreenEnumType(val buttonTitle: String, val func: @Composable () 
     InfiniteRepeatable("InfiniteRepeatable", { com.parthdesai1208.compose.view.animation.InfiniteRepeatableFun() }),
     Snap("snap", { com.parthdesai1208.compose.view.animation.SnapFun() }),
     AnimationVector("AnimationVector - TypeConverter,Coroutine", { com.parthdesai1208.compose.view.animation.AnimationVectorFun() }),
-    AnimationEx1("AnimationEx1",{ com.parthdesai1208.compose.view.animation.AnimationEx1() })
+    AnimationEx1("AnimationEx1",{ com.parthdesai1208.compose.view.animation.AnimationEx1() }),
+    NavigationEx1("NavigationEx1 with arg,DeepLink", { NavigationEx1() })
 }
 
 @Composable
