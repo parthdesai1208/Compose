@@ -1,5 +1,13 @@
 package com.parthdesai1208.compose.view.navigation
 
+import android.app.Activity
+import android.content.ClipData
+import android.content.Context.CLIPBOARD_SERVICE
+import android.os.Build
+import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.*
@@ -15,21 +23,25 @@ import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -231,6 +243,7 @@ fun OverviewScreen(
             .verticalScroll(rememberScrollState())
             .semantics { contentDescription = "Overview Screen" } //for testing purpose only
     ) {
+        val activity = LocalContext.current as Activity
         AlertCard()
         Spacer(Modifier.height(RallyDefaultPadding))
         AccountsCard(
@@ -243,7 +256,16 @@ fun OverviewScreen(
             onClickIndividualBillRow = onClickIndividualBillRow
         )
         Spacer(Modifier.height(RallyDefaultPadding))
-        Text(text = "Use https://example.com/task_id=Checking for deeplink")
+        Text(
+            text = "Use https://example.com/task_id=Checking for deeplink",
+            modifier = Modifier.clickable {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    val clipboardManager = activity.getSystemService(android.content.ClipboardManager::class.java) as android.content.ClipboardManager
+                    val clipData = ClipData.newPlainText("deepLink for clipboard", "https://example.com/task_id=Checking")
+                    clipboardManager.setPrimaryClip(clipData)
+                    Toast.makeText(activity, "Copied to clipboard", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
 }
 
