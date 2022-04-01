@@ -25,9 +25,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
+import com.parthdesai1208.compose.model.UserData
 import com.parthdesai1208.compose.view.MainDestinations.MAIN_SCREEN_ROUTE_POSTFIX
 import com.parthdesai1208.compose.view.MainDestinations.MAIN_SCREEN_ROUTE_PREFIX
+import com.parthdesai1208.compose.view.navigation.AccountScreenWithSingleRecord
 import com.parthdesai1208.compose.view.navigation.NavigationEx1
+import com.parthdesai1208.compose.view.navigation.RallyScreen
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 
 class MainActivity : AppCompatActivity() {
@@ -142,6 +146,18 @@ fun MainActivityNavGraph(startDestination: String = MainDestinations.MAIN_SCREEN
             val arguments = requireNotNull(backStackEntry.arguments)
             ChildScreen(arguments.getString(MAIN_SCREEN_ROUTE_POSTFIX))
         }
+
+        //region for deep link = https://example.com/task_id=Checking
+        composable(
+            route = "${RallyScreen.Accounts.name}/{name}",
+            arguments = listOf(navArgument("name") { type = NavType.StringType }),
+            deepLinks = listOf(navDeepLink { uriPattern = "https://example.com/task_id={name}" })
+        ) { entry ->
+            val accountName = entry.arguments?.getString("name")
+            val account = UserData.getAccount(accountName)
+            if(account.name.isNotEmpty()){ MainScreenEnumType.NavigationEx1.func.invoke() }
+        }
+        //endregion
     }
 }
 
