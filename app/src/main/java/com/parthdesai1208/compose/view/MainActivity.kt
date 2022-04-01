@@ -11,7 +11,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
@@ -53,11 +52,6 @@ class MainActivity : AppCompatActivity() {
     fun PreviewUI() {
         ComposeTheme {
             MainActivityNavGraph()
-            //region Learn state
-            /*Surface {
-                TodoActivityScreen(todoViewModel)
-            }*/
-            //endregion
         }
     }
 }
@@ -84,13 +78,13 @@ enum class MainScreenEnumType(val buttonTitle: String, val func: @Composable () 
                 .baseLineToTop(32.dp)
                 .wrapContentWidth()
                 .wrapContentHeight(),
-            color = androidx.compose.material.MaterialTheme.colors.onSurface
+            color = MaterialTheme.colors.onSurface
         )
     }),
     CustomRecyclerviewScreen("Custom recyclerview", {
         Column(verticalArrangement = Arrangement.Top) {
             StaggeredGridFun(
-                modifier = androidx.compose.ui.Modifier
+                modifier = Modifier
                     .wrapContentHeight()
                     .wrapContentWidth()
             )
@@ -134,11 +128,10 @@ enum class MainScreenEnumType(val buttonTitle: String, val func: @Composable () 
 @Composable
 fun MainActivityNavGraph(startDestination: String = MainDestinations.MAIN_SCREEN) {
     val navController = rememberNavController()
-    val actions = remember(navController) { MainActions(navController) }
 
     NavHost(navController = navController, startDestination = startDestination) {
         composable(route = MainDestinations.MAIN_SCREEN) {
-            MainScreen(actions)
+            MainScreen(navController = navController)
         }
         composable(
             route = "$MAIN_SCREEN_ROUTE_PREFIX/{$MAIN_SCREEN_ROUTE_POSTFIX}",
@@ -152,29 +145,20 @@ fun MainActivityNavGraph(startDestination: String = MainDestinations.MAIN_SCREEN
     }
 }
 
-class MainActions(navController: NavHostController) {
-    val mainScreen: () -> Unit = {
-        navController.navigate(MainDestinations.MAIN_SCREEN)
-    }
-    val mainScreenToNextScreenOnClick: (String) -> Unit = { routePostFixString ->
-        navController.navigate("$MAIN_SCREEN_ROUTE_PREFIX/$routePostFixString")
-    }
-}
-
 @Composable
 fun ChildScreen(onClickButtonTitle: String?) {
     enumValues<MainScreenEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke()
 }
 
 @Composable
-fun MainScreen(actions: MainActions) {
+fun MainScreen(navController: NavHostController) {
 
     @Composable
     fun MyButton(
         title: MainScreenEnumType
     ) {
         Button(
-            onClick = { actions.mainScreenToNextScreenOnClick(title.buttonTitle) },
+            onClick = { navController.navigate("$MAIN_SCREEN_ROUTE_PREFIX/${title.buttonTitle}") },
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
