@@ -29,6 +29,7 @@ import androidx.navigation.navDeepLink
 import com.parthdesai1208.compose.model.UserData
 import com.parthdesai1208.compose.view.MainDestinations.MAIN_SCREEN_ROUTE_POSTFIX
 import com.parthdesai1208.compose.view.MainDestinations.MAIN_SCREEN_ROUTE_PREFIX
+import com.parthdesai1208.compose.view.animation.AnimationNavGraph
 import com.parthdesai1208.compose.view.navigation.AccountScreenWithSingleRecord
 import com.parthdesai1208.compose.view.navigation.NavigationEx1
 import com.parthdesai1208.compose.view.navigation.RallyScreen
@@ -96,36 +97,7 @@ enum class MainScreenEnumType(val buttonTitle: String, val func: @Composable () 
     }),
     ConstraintLayoutContent("Constraint Layout Content", { ConstraintLayoutContent() }),
     ConstraintLayoutScreen("runtime Constraint Layout", { DecoupledConstraintLayout() }),
-    AnimatedVisibilityWithoutParams("AnimatedVisibility - without params", { com.parthdesai1208.compose.view.animation.AnimatedVisibilityWithoutParams() }),
-    AnimatedVisibilityWithParams("AnimatedVisibility - with params", { com.parthdesai1208.compose.view.animation.AnimatedVisibilityWithParams() }),
-    AnimateVisibilityState("AnimatedVisibility - with state", { com.parthdesai1208.compose.view.animation.AnimateVisibilityState() }),
-    AnimateEnterExitChild("enter exit visibility animation", { com.parthdesai1208.compose.view.animation.AnimateEnterExitChild() }),
-    CrossFade("CrossFade", { com.parthdesai1208.compose.view.animation.CrossFade() }),
-    AnimatableOnly("AnimatableOnly", { com.parthdesai1208.compose.view.animation.AnimatableOnly() }),
-    AnimatedContentSimple("AnimatedContentSimple", { com.parthdesai1208.compose.view.animation.AnimatedContentSimple() }),
-    AnimatedContentWithTransitionSpec1("AnimatedContent - with targetState, transitionSpec ex-1",{ com.parthdesai1208.compose.view.animation.AnimatedContentWithTransitionSpec1() }),
-    AnimatedContentWithTransitionSpec2("AnimatedContent - with targetState, transitionSpec ex-2", { com.parthdesai1208.compose.view.animation.AnimatedContentWithTransitionSpec2() }),
-    AnimatedContentWithTransitionSpec3("AnimatedContent - with targetState, transitionSpec ex-3", { com.parthdesai1208.compose.view.animation.AnimatedContentWithTransitionSpec3() }),
-    AnimatedContentSize("AnimatedContentSize", { com.parthdesai1208.compose.view.animation.AnimatedContentSize() }),
-    AnimatedContentSizeTransform("AnimatedContentSizeTransform", { com.parthdesai1208.compose.view.animation.AnimatedContentSizeTransform() }),
-    AnimateFloatAsState("AnimateFloatAsState", { com.parthdesai1208.compose.view.animation.AnimateFloatAsState() }),
-    AnimateColorAsState("AnimateColorAsState", { com.parthdesai1208.compose.view.animation.AnimateColorAsState() }),
-    AnimateDpAsState("animateDpAsState", { com.parthdesai1208.compose.view.animation.AnimateDpAsState() }),
-    AnimateSizeAsState("AnimateSizeAsState", { com.parthdesai1208.compose.view.animation.AnimateSizeAsState() }),
-    UpdateTransition1("updateTransition-1", { com.parthdesai1208.compose.view.animation.UpdateTransitionBasic1() }),
-    UpdateTransition2("updateTransition-2", { com.parthdesai1208.compose.view.animation.UpdateTransitionBasic2() }),
-    UpdateTransitionChild("UpdateTransitionChild", { com.parthdesai1208.compose.view.animation.UpdateTransitionChild() }),
-    UpdateTransitionExtension("multiple anim updateTransition",{ com.parthdesai1208.compose.view.animation.UpdateTransitionExtension() }),
-    InfiniteAnimation("InfiniteAnimation", { com.parthdesai1208.compose.view.animation.InfiniteAnimation() }),
-    TargetBasedAnimation("TargetBasedAnimation", { com.parthdesai1208.compose.view.animation.TargetBasedAnimationFun() }),
-    Spring("spring",{ com.parthdesai1208.compose.view.animation.SpringFun() }),
-    Tween("tween", { com.parthdesai1208.compose.view.animation.TweenFun() }),
-    Keyframes("keyframes", { com.parthdesai1208.compose.view.animation.KeyFramesFun() }),
-    Repeatable("repeatable", { com.parthdesai1208.compose.view.animation.RepeatableFun() }),
-    InfiniteRepeatable("InfiniteRepeatable", { com.parthdesai1208.compose.view.animation.InfiniteRepeatableFun() }),
-    Snap("snap", { com.parthdesai1208.compose.view.animation.SnapFun() }),
-    AnimationVector("AnimationVector - TypeConverter,Coroutine", { com.parthdesai1208.compose.view.animation.AnimationVectorFun() }),
-    AnimationEx1("AnimationEx1",{ com.parthdesai1208.compose.view.animation.AnimationEx1() }),
+    AnimationScreen("Animation Samples", { AnimationNavGraph() }),
     NavigationEx1("NavigationEx1 with arg,DeepLink", { NavigationEx1() })
 }
 

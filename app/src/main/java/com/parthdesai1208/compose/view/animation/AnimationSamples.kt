@@ -31,15 +31,128 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
 import androidx.core.graphics.ColorUtils
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.view.ChildScreen
+import com.parthdesai1208.compose.view.MainDestinations
+import com.parthdesai1208.compose.view.MainScreen
+import com.parthdesai1208.compose.view.MainScreenEnumType
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
+
+//region default screen & Navigation
+enum class AnimationScreenEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
+    AnimatedVisibilityWithoutParams("AnimatedVisibility - without params", { AnimatedVisibilityWithoutParams() }),
+    AnimatedVisibilityWithParams("AnimatedVisibility - with params", { AnimatedVisibilityWithParams() }),
+    AnimateVisibilityState("AnimatedVisibility - with state", { AnimateVisibilityState() }),
+    AnimateEnterExitChild("enter exit visibility animation", { AnimateEnterExitChild() }),
+    CrossFade("CrossFade", { CrossFade() }),
+    AnimatableOnly("AnimatableOnly", { AnimatableOnly() }),
+    AnimatedContentSimple("AnimatedContentSimple", { AnimatedContentSimple() }),
+    AnimatedContentWithTransitionSpec1("AnimatedContent - with targetState, transitionSpec ex-1",{ AnimatedContentWithTransitionSpec1() }),
+    AnimatedContentWithTransitionSpec2("AnimatedContent - with targetState, transitionSpec ex-2", { AnimatedContentWithTransitionSpec2() }),
+    AnimatedContentWithTransitionSpec3("AnimatedContent - with targetState, transitionSpec ex-3", { AnimatedContentWithTransitionSpec3() }),
+    AnimatedContentSize("AnimatedContentSize", { AnimatedContentSize() }),
+    AnimatedContentSizeTransform("AnimatedContentSizeTransform", { AnimatedContentSizeTransform() }),
+    AnimateFloatAsState("AnimateFloatAsState", { AnimateFloatAsState() }),
+    AnimateColorAsState("AnimateColorAsState", { AnimateColorAsState() }),
+    AnimateDpAsState("animateDpAsState", { AnimateDpAsState() }),
+    AnimateSizeAsState("AnimateSizeAsState", { AnimateSizeAsState() }),
+    UpdateTransition1("updateTransition-1", { UpdateTransitionBasic1() }),
+    UpdateTransition2("updateTransition-2", { UpdateTransitionBasic2() }),
+    UpdateTransitionChild("UpdateTransitionChild", { UpdateTransitionChild() }),
+    UpdateTransitionExtension("multiple anim updateTransition",{ UpdateTransitionExtension() }),
+    InfiniteAnimation("InfiniteAnimation", { InfiniteAnimation() }),
+    TargetBasedAnimation("TargetBasedAnimation", { TargetBasedAnimationFun() }),
+    Spring("spring",{ SpringFun() }),
+    Tween("tween", { TweenFun() }),
+    Keyframes("keyframes", { KeyFramesFun() }),
+    Repeatable("repeatable", { RepeatableFun() }),
+    InfiniteRepeatable("InfiniteRepeatable", { InfiniteRepeatableFun() }),
+    Snap("snap", { SnapFun() }),
+    AnimationVector("AnimationVector - TypeConverter,Coroutine", { AnimationVectorFun() }),
+    AnimationEx1("AnimationEx1",{ AnimationEx1() }),
+}
+
+object AnimationDestinations {
+    const val ANIMATION_MAIN_SCREEN = "animationMainScreen"
+    const val ANIMATION_SCREEN_ROUTE_PREFIX = "ANIMATION_SCREEN_ROUTE_PREFIX"
+    const val ANIMATION_SCREEN_ROUTE_POSTFIX = "ANIMATION_SCREEN_ROUTE_POSTFIX"
+}
+
+@Composable
+fun AnimationScreen(navController: NavHostController) {
+    @Composable
+    fun MyButton(
+        title: AnimationScreenEnumType
+    ) {
+        Button(
+            onClick = { navController.navigate("${AnimationDestinations.ANIMATION_SCREEN_ROUTE_PREFIX}/${title.buttonTitle}") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentWidth(align = Alignment.CenterHorizontally)
+                .padding(8.dp)
+        ) {
+            Text(title.buttonTitle, textAlign = TextAlign.Center)
+        }
+    }
+
+    Column {
+        Text(text = "Animation Samples", modifier = Modifier.padding(16.dp), fontSize = 18.sp, fontFamily = FontFamily.SansSerif,
+            color = MaterialTheme.colors.onSurface)
+        Spacer(modifier = Modifier.height(8.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(8.dp)
+        ) {
+            enumValues<AnimationScreenEnumType>().forEach {
+                MyButton(it)
+            }
+        }
+    }
+}
+
+@Composable
+fun AnimationNavGraph(startDestination: String = AnimationDestinations.ANIMATION_MAIN_SCREEN) {
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = startDestination) {
+        composable(route = AnimationDestinations.ANIMATION_MAIN_SCREEN) {
+            AnimationScreen(navController = navController)
+        }
+
+        composable(
+            route = "${AnimationDestinations.ANIMATION_SCREEN_ROUTE_PREFIX}/{${AnimationDestinations.ANIMATION_SCREEN_ROUTE_POSTFIX}}",
+            arguments = listOf(navArgument(AnimationDestinations.ANIMATION_SCREEN_ROUTE_POSTFIX) {
+                type = NavType.StringType
+            })
+        ) { backStackEntry ->
+            val arguments = requireNotNull(backStackEntry.arguments)
+            ChildAnimationScreen(arguments.getString(AnimationDestinations.ANIMATION_SCREEN_ROUTE_POSTFIX))
+        }
+    }
+}
+
+@Composable
+fun ChildAnimationScreen(onClickButtonTitle: String?) {
+    enumValues<AnimationScreenEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke()
+}
+//endregion
 
 /*
 *********************************************************************************************************************************
@@ -170,7 +283,10 @@ fun AnimateEnterExitChild() {
         Button(onClick = { visible = !visible }) {
             Text(if (visible) "Hide" else "Show")
         }
-        Box(modifier = Modifier.fillMaxWidth().height(30.dp).background(color))
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .height(30.dp)
+            .background(color))
         AnimatedVisibility(
             visible = visible,
             enter = fadeIn(animationSpec = tween(
@@ -730,7 +846,10 @@ fun AnimateSizeAsState() {
     ) {
         var isOn by remember { mutableStateOf(true) }
         val size1: Size by animateSizeAsState(targetValue = if (isOn) Size(100f,100f) else Size(200f,200f))
-        Box(Modifier.background(MaterialTheme.colors.onSurface).size(width = size1.width.dp, height = size1.height.dp))
+        Box(
+            Modifier
+                .background(MaterialTheme.colors.onSurface)
+                .size(width = size1.width.dp, height = size1.height.dp))
         Button(onClick = { isOn = !isOn }) {
             Text("Click Me")
         }
@@ -874,7 +993,9 @@ fun UpdateTransitionChild() {
 
     Column {
         Canvas(
-            modifier = Modifier.fillMaxWidth().height(200.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
                 .border(BorderStroke(1.dp, Color.Green))
         ) {
             drawPath(Path().apply { addRect(rect) }, Red)
@@ -906,7 +1027,9 @@ fun Child(transition: Transition<BoxState>) {
 
     Column {
         Canvas(
-            modifier = Modifier.fillMaxWidth().height(200.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
                 .border(BorderStroke(1.dp, Color.Green))
         ) {
             drawPath(Path().apply { addRect(rect) }, Red)
@@ -978,7 +1101,10 @@ fun InfiniteAnimation() {
         )
     )
 
-    Box(Modifier.fillMaxSize().background(color))
+    Box(
+        Modifier
+            .fillMaxSize()
+            .background(color))
 }
 
 /**********************************************************************************************************************************
@@ -1013,7 +1139,7 @@ fun TargetBasedAnimationFun() {
     Box(modifier = Modifier.fillMaxSize(1f),contentAlignment = Alignment.Center) {
         Box(modifier = Modifier
             .size(animationValue.dp)
-            .background(Red,shape = RoundedCornerShape(animationValue/5))
+            .background(Red, shape = RoundedCornerShape(animationValue / 5))
             .clickable {
                 state++
             },contentAlignment = Alignment.Center) {
@@ -1094,7 +1220,9 @@ fun SpringFun() {
             DrawImage(offsetAnimationDampingRatioMediumBouncy)
             Text(text = "DampingRatioHighBouncy", color = MaterialTheme.colors.onSurface)
             DrawImage(offsetAnimationDampingRatioHighBouncy)
-            Spacer(modifier = Modifier.height(100.dp).fillMaxWidth())
+            Spacer(modifier = Modifier
+                .height(100.dp)
+                .fillMaxWidth())
 
         }
 
@@ -1178,7 +1306,9 @@ fun TweenFun() {
             DrawImage(easingFastOutSlowInEasing)
             Text(text = "withDelay", color = MaterialTheme.colors.onSurface)
             DrawImage(withDelay)
-            Spacer(modifier = Modifier.height(100.dp).fillMaxWidth())
+            Spacer(modifier = Modifier
+                .height(100.dp)
+                .fillMaxWidth())
 
         }
 
@@ -1223,7 +1353,9 @@ fun KeyFramesFun() {
             Text(text = "keyframes", color = MaterialTheme.colors.onSurface)
             DrawImage(keyframesAnimation)
 
-            Spacer(modifier = Modifier.height(100.dp).fillMaxWidth())
+            Spacer(modifier = Modifier
+                .height(100.dp)
+                .fillMaxWidth())
         }
 
         ExtendedFloatingActionButton(
@@ -1270,7 +1402,9 @@ fun RepeatableFun() {
             Text(text = "repeatable Restart", color = MaterialTheme.colors.onSurface)
             DrawImage(repeatableRestartAnimation)
 
-            Spacer(modifier = Modifier.height(150.dp).fillMaxWidth())
+            Spacer(modifier = Modifier
+                .height(150.dp)
+                .fillMaxWidth())
 
             Text(text = "repeatable Reverse", color = MaterialTheme.colors.onSurface)
             DrawImage(repeatableReverseAnimation)
@@ -1320,7 +1454,9 @@ fun InfiniteRepeatableFun() {
             Text(text = "infinite repeatable Restart", color = MaterialTheme.colors.onSurface)
             DrawImage(infiniteRepeatableRestartAnimation)
 
-            Spacer(modifier = Modifier.height(150.dp).fillMaxWidth())
+            Spacer(modifier = Modifier
+                .height(150.dp)
+                .fillMaxWidth())
 
             Text(text = "infinite repeatable Reverse", color = MaterialTheme.colors.onSurface)
             DrawImage(infiniteRepeatableReverseAnimation)
@@ -1364,7 +1500,9 @@ fun SnapFun() {
             Text(text = "snap animation",  color = MaterialTheme.colors.onSurface)
             DrawImage(snapAnimation)
 
-            Spacer(modifier = Modifier.height(150.dp).fillMaxWidth())
+            Spacer(modifier = Modifier
+                .height(150.dp)
+                .fillMaxWidth())
         }
 
         ExtendedFloatingActionButton(
