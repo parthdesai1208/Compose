@@ -13,6 +13,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Devices
@@ -68,14 +70,14 @@ object MainDestinations {
     const val MAIN_SCREEN_ROUTE_POSTFIX = "MAIN_SCREEN_ROUTE_POSTFIX"
 }
 
-enum class MainScreenEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
+enum class MainScreenEnumType(val buttonTitle: String , val func: @Composable () -> Unit, val buttonTitleForAccessibility : String = buttonTitle) {
     TextInCenter("Text in center", { TextInCenter("Parth") }),
     CollapsableRecyclerviewScreen("recyclerview", { CollapsableRecyclerView() }),
     LearnStateScreen("Learn state (VM)", {
         androidx.compose.material.Surface {
             TodoActivityScreen(androidx.lifecycle.viewmodel.compose.viewModel())
         }
-    }),
+    }, buttonTitleForAccessibility = "Learn state with view model"),
     CustomModifierScreen("custom modifier", {
         Text(
             "Hi there!",
@@ -98,7 +100,8 @@ enum class MainScreenEnumType(val buttonTitle: String, val func: @Composable () 
     ConstraintLayoutContent("Constraint Layout Content", { ConstraintLayoutContent() }),
     ConstraintLayoutScreen("runtime Constraint Layout", { DecoupledConstraintLayout() }),
     AnimationScreen("Animation Samples", { AnimationNavGraph() }),
-    NavigationEx1("NavigationEx1 with arg,DeepLink", { NavigationEx1() })
+    NavigationEx1("NavigationEx1 with arg,DeepLink", { NavigationEx1() }
+    , buttonTitleForAccessibility = "Navigation Example 1 with arg,DeepLink")
 }
 
 @Composable
@@ -152,7 +155,8 @@ fun MainScreen(navController: NavHostController) {
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
                 .padding(8.dp)
         ) {
-            Text(title.buttonTitle, textAlign = TextAlign.Center)
+            Text(title.buttonTitle, textAlign = TextAlign.Center
+                ,modifier = Modifier.semantics { contentDescription = title.buttonTitleForAccessibility })
         }
     }
 
