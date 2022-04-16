@@ -87,4 +87,7 @@ dependencies {
     //https://developer.android.com/jetpack/androidx/releases/compose-animation#declaring_dependencies
     implementation "androidx.compose.animation:animation:1.2.0-alpha06"
 
+    //accompanist - for insets & system UI
+    implementation "com.google.accompanist:accompanist-insets:0.23.1"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.23.1"
 }

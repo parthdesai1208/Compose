@@ -1,5 +1,6 @@
 package com.parthdesai1208.compose.view
 
+import android.app.Application
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -28,14 +29,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import com.parthdesai1208.compose.ComposeApp
 import com.parthdesai1208.compose.model.UserData
 import com.parthdesai1208.compose.view.MainDestinations.MAIN_SCREEN_ROUTE_POSTFIX
 import com.parthdesai1208.compose.view.MainDestinations.MAIN_SCREEN_ROUTE_PREFIX
 import com.parthdesai1208.compose.view.animation.AnimationNavGraph
-import com.parthdesai1208.compose.view.navigation.AccountScreenWithSingleRecord
 import com.parthdesai1208.compose.view.navigation.NavigationEx1
 import com.parthdesai1208.compose.view.navigation.RallyScreen
 import com.parthdesai1208.compose.view.theme.ComposeTheme
+import com.parthdesai1208.compose.view.accessibility.AccessibilityScreen
 
 class MainActivity : AppCompatActivity() {
 
@@ -58,7 +60,7 @@ class MainActivity : AppCompatActivity() {
     @Composable
     fun PreviewUI() {
         ComposeTheme {
-            MainActivityNavGraph()
+            MainActivityNavGraph(application = application)
         }
     }
 }
@@ -70,7 +72,11 @@ object MainDestinations {
     const val MAIN_SCREEN_ROUTE_POSTFIX = "MAIN_SCREEN_ROUTE_POSTFIX"
 }
 
-enum class MainScreenEnumType(val buttonTitle: String , val func: @Composable () -> Unit, val buttonTitleForAccessibility : String = buttonTitle) {
+enum class MainScreenEnumType(
+    val buttonTitle: String,
+    val func: @Composable () -> Unit,
+    val buttonTitleForAccessibility: String = buttonTitle,
+) {
     TextInCenter("Text in center", { TextInCenter("Parth") }),
     CollapsableRecyclerviewScreen("recyclerview", { CollapsableRecyclerView() }),
     LearnStateScreen("Learn state (VM)", {
@@ -100,12 +106,19 @@ enum class MainScreenEnumType(val buttonTitle: String , val func: @Composable ()
     ConstraintLayoutContent("Constraint Layout Content", { ConstraintLayoutContent() }),
     ConstraintLayoutScreen("runtime Constraint Layout", { DecoupledConstraintLayout() }),
     AnimationScreen("Animation Samples", { AnimationNavGraph() }),
-    NavigationEx1("NavigationEx1 with arg,DeepLink", { NavigationEx1() }
-    , buttonTitleForAccessibility = "Navigation Example 1 with arg,DeepLink")
+    NavigationEx1(
+        "NavigationEx1 with arg,DeepLink",
+        { NavigationEx1() },
+        buttonTitleForAccessibility = "Navigation Example 1 with arg,DeepLink"
+    ),
+    Accessibility("Accessibility", {})
 }
 
 @Composable
-fun MainActivityNavGraph(startDestination: String = MainDestinations.MAIN_SCREEN) {
+fun MainActivityNavGraph(
+    startDestination: String = MainDestinations.MAIN_SCREEN,
+    application: Application,
+) {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = startDestination) {
@@ -119,7 +132,12 @@ fun MainActivityNavGraph(startDestination: String = MainDestinations.MAIN_SCREEN
             })
         ) { backStackEntry ->
             val arguments = requireNotNull(backStackEntry.arguments)
-            ChildScreen(arguments.getString(MAIN_SCREEN_ROUTE_POSTFIX))
+            if (arguments.getString(MAIN_SCREEN_ROUTE_POSTFIX) == "Accessibility") {
+                val container = (application as ComposeApp).container
+                AccessibilityScreen(appContainer = container)
+            } else {
+                ChildScreen(arguments.getString(MAIN_SCREEN_ROUTE_POSTFIX))
+            }
         }
 
         //region for deep link = https://example.com/task_id=Checking
@@ -130,7 +148,9 @@ fun MainActivityNavGraph(startDestination: String = MainDestinations.MAIN_SCREEN
         ) { entry ->
             val accountName = entry.arguments?.getString("name")
             val account = UserData.getAccount(accountName)
-            if(account.name.isNotEmpty()){ MainScreenEnumType.NavigationEx1.func.invoke() }
+            if (account.name.isNotEmpty()) {
+                MainScreenEnumType.NavigationEx1.func.invoke()
+            }
         }
         //endregion
     }
@@ -146,23 +166,36 @@ fun MainScreen(navController: NavHostController) {
 
     @Composable
     fun MyButton(
-        title: MainScreenEnumType
+        title: MainScreenEnumType,
     ) {
         Button(
-            onClick = { navController.navigate("$MAIN_SCREEN_ROUTE_PREFIX/${title.buttonTitle}") },
+            onClick = {
+                /*if (title.buttonTitle == "Accessibility") {
+                } else {*/
+                navController.navigate("$MAIN_SCREEN_ROUTE_PREFIX/${title.buttonTitle}")
+//                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
                 .padding(8.dp)
         ) {
-            Text(title.buttonTitle, textAlign = TextAlign.Center
-                ,modifier = Modifier.semantics { contentDescription = title.buttonTitleForAccessibility })
+            Text(title.buttonTitle,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.semantics {
+                    contentDescription = title.buttonTitleForAccessibility
+                })
         }
     }
 
     Column {
-        Text(text = "Compose Samples", modifier = Modifier.padding(16.dp), fontSize = 18.sp, fontFamily = FontFamily.SansSerif,
-        color = MaterialTheme.colors.onSurface)
+        Text(
+            text = "Compose Samples",
+            modifier = Modifier.padding(16.dp),
+            fontSize = 18.sp,
+            fontFamily = FontFamily.SansSerif,
+            color = MaterialTheme.colors.onSurface
+        )
         Spacer(modifier = Modifier.height(8.dp))
         Column(
             modifier = Modifier
