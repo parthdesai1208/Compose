@@ -1,6 +1,7 @@
 package com.parthdesai1208.compose.view
 
 import android.app.Application
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.compose.setContent
@@ -14,6 +15,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontFamily
@@ -38,6 +40,7 @@ import com.parthdesai1208.compose.view.navigation.NavigationEx1
 import com.parthdesai1208.compose.view.navigation.RallyScreen
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.view.accessibility.AccessibilityScreen
+import com.parthdesai1208.compose.view.migration.MigrationActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -111,7 +114,8 @@ enum class MainScreenEnumType(
         { NavigationEx1() },
         buttonTitleForAccessibility = "Navigation Example 1 with arg,DeepLink"
     ),
-    Accessibility("Accessibility", {})
+    Accessibility("Accessibility", {}),
+    Migration("Migration to compose", {})
 }
 
 @Composable
@@ -168,12 +172,15 @@ fun MainScreen(navController: NavHostController) {
     fun MyButton(
         title: MainScreenEnumType,
     ) {
+        val context  = LocalContext.current
+
         Button(
             onClick = {
-                /*if (title.buttonTitle == "Accessibility") {
-                } else {*/
+                if(title.buttonTitle == "Migration to compose"){
+                    context.startActivity(Intent(context,MigrationActivity::class.java))
+                    return@Button
+                }
                 navController.navigate("$MAIN_SCREEN_ROUTE_PREFIX/${title.buttonTitle}")
-//                }
             },
             modifier = Modifier
                 .fillMaxWidth()

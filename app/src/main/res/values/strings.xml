@@ -61,4 +61,10 @@
     <string name="agree">AGREE</string>
     <string name="home_post_min_read">%1$s - %2$d min read</string>
     <!--end region-->
+
+    <!--region Migration-->
+    <string name="go_to_fragment">Go To Fragment\n(Migration in fragment)</string>
+    <string name="hello_i_am_view">Hello I am View family</string>
+    <string name="hello_i_am_from_compose">Hello I am from compose family</string>
+    <!--end region-->
 </resources>

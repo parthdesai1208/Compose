@@ -37,6 +37,9 @@ android {
 //        kotlinCompilerVersion "1.4.10"
         kotlinCompilerExtensionVersion "1.1.1"
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 /*tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
