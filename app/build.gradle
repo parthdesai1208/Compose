@@ -75,6 +75,8 @@ dependencies {
     implementation "androidx.compose.material:material-icons-extended:1.1.1"
     //compose constraint layout
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0"
+    //for fragment
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     //testing
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'

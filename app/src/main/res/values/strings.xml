@@ -64,7 +64,7 @@
 
     <!--region Migration-->
     <string name="go_to_fragment">Go To Fragment\n(Migration in fragment)</string>
-    <string name="hello_i_am_view">Hello I am View family</string>
+    <string name="hello_i_am_view">Hello I am from View family</string>
     <string name="hello_i_am_from_compose">Hello I am from compose family</string>
     <!--end region-->
 </resources>

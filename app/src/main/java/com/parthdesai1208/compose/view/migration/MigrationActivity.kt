@@ -1,5 +1,6 @@
 package com.parthdesai1208.compose.view.migration
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -24,14 +25,24 @@ class MigrationActivity : AppCompatActivity() {
 
         binding.composeView.setContent {
             ComposeTheme {
-                Text(text = stringResource(id = R.string.hello_i_am_from_compose), color = MaterialTheme.colors.onSurface,
-                modifier = Modifier
-                    .wrapContentWidth(align = Alignment.CenterHorizontally)
-                    .wrapContentHeight())
+                Text(
+                    text = stringResource(id = R.string.hello_i_am_from_compose),
+                    color = MaterialTheme.colors.onSurface,
+                    modifier = Modifier
+                        .wrapContentWidth(align = Alignment.CenterHorizontally)
+                        .wrapContentHeight()
+                )
             }
         }
 
-        binding.btnGoToFragment.setOnClickListener {  }
+        binding.btnGoToFragment.setOnClickListener {
+            startActivity(
+                Intent(
+                    this,
+                    MigrationFragmentActivity::class.java
+                )
+            )
+        }
     }
 
 }
