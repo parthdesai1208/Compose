@@ -3,8 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/NeoSOFT/AndroidStudioProjects/Compose/app/src/main/res/layout/activity_migration.xml" value="0.33" />
+        <entry key="..\:/Users/NeoSOFT/AndroidStudioProjects/Compose/app/src/main/res/layout/activity_migration.xml" value="0.25" />
         <entry key="..\:/Users/NeoSOFT/AndroidStudioProjects/Compose/app/src/main/res/layout/activity_migration_fragment.xml" value="0.33541666666666664" />
+        <entry key="..\:/Users/NeoSOFT/AndroidStudioProjects/Compose/app/src/main/res/layout/activity_view_inside_compose.xml" value="0.35104166666666664" />
         <entry key="..\:/Users/NeoSOFT/AndroidStudioProjects/Compose/app/src/main/res/layout/fragment_migration.xml" value="0.3494791666666667" />
       </map>
     </option>

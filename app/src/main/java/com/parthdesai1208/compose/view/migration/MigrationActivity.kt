@@ -43,6 +43,15 @@ class MigrationActivity : AppCompatActivity() {
                 )
             )
         }
+
+        binding.btnGoToViewInsideComposeActivity.setOnClickListener {
+            startActivity(
+                Intent(
+                    this,
+                    ViewInsideComposeActivity::class.java
+                )
+            )
+        }
     }
 
 }
