@@ -107,10 +107,15 @@ fun TodoScreen(
             }
 
             //region floating action button
-            val visi = if(!enableTopSection)
-                false
-            else
-                listState.firstVisibleItemIndex > 2
+            val visi by remember {
+                derivedStateOf {
+                    if (!enableTopSection)
+                        false
+                    else
+                        listState.firstVisibleItemIndex > 2
+                }
+            }
+
             androidx.compose.animation.AnimatedVisibility(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
@@ -131,7 +136,7 @@ fun TodoScreen(
                     coroutineScope.launch {
                         listState.animateScrollToItem(index = 0)
                     }
-                },backgroundColor = MaterialTheme.colors.secondary ) {
+                }, backgroundColor = MaterialTheme.colors.secondary) {
                     Icon(
                         painter = painterResource(id = com.parthdesai1208.compose.R.drawable.ic_arrow_up),
                         contentDescription = "Go Up"
@@ -152,7 +157,8 @@ fun TodoScreen(
             },
             modifier = Modifier
                 .padding(16.dp)
-                .wrapContentWidth().align(alignment = Alignment.CenterHorizontally),
+                .wrapContentWidth()
+                .align(alignment = Alignment.CenterHorizontally),
         ) {
             Text("Add random item")
         }
