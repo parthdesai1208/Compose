@@ -115,7 +115,8 @@ enum class MainScreenEnumType(
         buttonTitleForAccessibility = "Navigation Example 1 with arg,DeepLink"
     ),
     Accessibility("Accessibility", {}),
-    Migration("Migration to compose", {})
+    Migration("Migration to compose", {}),
+    DrawScreen("Draw Samples",{ com.parthdesai1208.compose.view.draw.DrawNavGraph() })
 }
 
 @Composable
