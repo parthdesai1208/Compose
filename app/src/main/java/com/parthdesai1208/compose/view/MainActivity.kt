@@ -80,7 +80,7 @@ enum class MainScreenEnumType(
     val func: @Composable () -> Unit,
     val buttonTitleForAccessibility: String = buttonTitle,
 ) {
-    TextInCenter("Text in center", { TextInCenter("Parth") }),
+    TextComponents("Text Components", { TextComponents("World") }),
     CollapsableRecyclerviewScreen("recyclerview", { CollapsableRecyclerView() }),
     LearnStateScreen("Learn state (VM)", {
         androidx.compose.material.Surface {
