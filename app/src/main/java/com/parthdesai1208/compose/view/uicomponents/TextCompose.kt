@@ -1,4 +1,4 @@
-package com.parthdesai1208.compose.view
+package com.parthdesai1208.compose.view.uicomponents
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.widget.Toast

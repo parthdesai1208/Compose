@@ -68,4 +68,8 @@
     <string name="hello_i_am_from_compose">Hello I am from compose family</string>
     <string name="go_to_view_inside_compose_activity">Go To \'View Inside compose\' activity</string>
     <!--end region-->
+
+    <!--    region UI components-->
+    <string name="placeholder_search">Search</string>
+    <!--    end region-->
 </resources>
