@@ -24,7 +24,8 @@ import androidx.navigation.navArgument
 
 enum class UIComponentsListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
     TextComponents("Text",{ TextComponents("World") }),
-    SearchBarComponents("SearchBar",{ SearchBar(androidx.lifecycle.viewmodel.compose.viewModel()) })
+    ButtonComponents("Button",{ ButtonCompose() }),
+    SearchBarComponents("SearchBar",{ SearchBar(androidx.lifecycle.viewmodel.compose.viewModel()) }),
 }
 
 object UIComponentsDestinations {
