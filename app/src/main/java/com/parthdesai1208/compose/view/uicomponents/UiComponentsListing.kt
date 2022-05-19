@@ -21,11 +21,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 
 
-
 enum class UIComponentsListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
-    TextComponents("Text",{ TextComponents("World") }),
-    ButtonComponents("Button",{ ButtonCompose() }),
-    SearchBarComponents("SearchBar",{ SearchBar(androidx.lifecycle.viewmodel.compose.viewModel()) }),
+    TextComponents("Text", { TextComponents("World") }),
+    ButtonComponents("Button", { ButtonCompose() }),
+    SearchBarComponents("SearchBar",
+        { SearchBar(androidx.lifecycle.viewmodel.compose.viewModel()) }),
+    SnackBarComponents("SnackBar", { SnackBarCompose() })
 }
 
 object UIComponentsDestinations {
@@ -73,8 +74,13 @@ fun UIComponentsListingScreen(navController: NavHostController) {
     }
 
     Column {
-        Text(text = "UI Components Samples", modifier = Modifier.padding(16.dp), fontSize = 18.sp, fontFamily = FontFamily.SansSerif,
-            color = MaterialTheme.colors.onSurface)
+        Text(
+            text = "UI Components Samples",
+            modifier = Modifier.padding(16.dp),
+            fontSize = 18.sp,
+            fontFamily = FontFamily.SansSerif,
+            color = MaterialTheme.colors.onSurface
+        )
         Spacer(modifier = Modifier.height(8.dp))
         Column(
             modifier = Modifier
