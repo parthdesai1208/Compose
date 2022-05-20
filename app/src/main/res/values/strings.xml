@@ -77,5 +77,12 @@
     <string name="hl4">Tabata</string>
     <string name="hl5">HIIT</string>
     <string name="hl6">Pre-natal yoga</string>
+
+    <string name="hgl1">Short mantras</string>
+    <string name="hgl2">Nature meditations</string>
+    <string name="hgl3">Stress and anxiety</string>
+    <string name="hgl4">Self massage</string>
+    <string name="hgl5">Overwhelmed</string>
+    <string name="hgl6">Nightly wind down</string>
     <!--    end region-->
 </resources>

@@ -62,7 +62,7 @@ dependencies {
     //activity compose
     implementation 'androidx.activity:activity-compose:1.4.0'
     //compose foundation
-    implementation 'androidx.compose.foundation:foundation:1.1.1'
+    implementation 'androidx.compose.foundation:foundation:1.2.0-beta02'
     implementation "androidx.compose.foundation:foundation-layout:1.1.1"
     //material compose
     implementation "androidx.compose.material:material:1.1.1"

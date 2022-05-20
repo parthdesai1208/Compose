@@ -11,6 +11,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -28,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.model.HorizontalGridListData
 import com.parthdesai1208.compose.model.HorizontalListData
 
 //region Collapsable Recyclerview
@@ -188,6 +192,31 @@ fun HorizontalList(modifier: Modifier = Modifier) {
                     .wrapContentWidth(align = Alignment.Start)
             )
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = "Horizontal Grid List (Grid:2)",
+            color = MaterialTheme.colors.onSurface,
+            style = MaterialTheme.typography.h5,
+            modifier = Modifier.padding(all = 8.dp)
+        )
+
+        LazyHorizontalGrid(
+            rows = GridCells.Fixed(2),
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = modifier.height(120.dp)
+        ) {
+            itemsIndexed(HorizontalGridListData) {position, item ->
+                HorizontalGridListItem(item.drawable, item.text,
+                    Modifier
+                        .height(56.dp)
+                        .clickable {
+                            Toast.makeText(context, "${context.getString(item.text)} is clicked at $position position", Toast.LENGTH_SHORT).show()
+                        })
+            }
+        }
     }
 }
 
@@ -224,6 +253,35 @@ fun HorizontalListItem(
             ),
             color = MaterialTheme.colors.onSurface
         )
+    }
+}
+
+@Composable
+fun HorizontalGridListItem(
+    @DrawableRes drawable: Int,
+    @StringRes text: Int,
+    modifier: Modifier = Modifier
+) {
+    Surface(
+        shape = MaterialTheme.shapes.small,
+        modifier = modifier
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.width(192.dp)
+        ) {
+            Image(
+                painter = painterResource(drawable),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(56.dp)
+            )
+            Text(
+                text = stringResource(text),
+                style = MaterialTheme.typography.h6,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+        }
     }
 }
 //endregion
