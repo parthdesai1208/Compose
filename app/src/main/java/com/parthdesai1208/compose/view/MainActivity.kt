@@ -35,16 +35,12 @@ import com.parthdesai1208.compose.ComposeApp
 import com.parthdesai1208.compose.model.UserData
 import com.parthdesai1208.compose.view.MainDestinations.MAIN_SCREEN_ROUTE_POSTFIX
 import com.parthdesai1208.compose.view.MainDestinations.MAIN_SCREEN_ROUTE_PREFIX
+import com.parthdesai1208.compose.view.accessibility.AccessibilityScreen
 import com.parthdesai1208.compose.view.animation.AnimationNavGraph
+import com.parthdesai1208.compose.view.migration.MigrationActivity
 import com.parthdesai1208.compose.view.navigation.NavigationEx1
 import com.parthdesai1208.compose.view.navigation.RallyScreen
 import com.parthdesai1208.compose.view.theme.ComposeTheme
-import com.parthdesai1208.compose.view.accessibility.AccessibilityScreen
-import com.parthdesai1208.compose.view.migration.MigrationActivity
-import com.parthdesai1208.compose.view.uicomponents.CollapsableRecyclerView
-import com.parthdesai1208.compose.view.uicomponents.ConstraintLayoutContent
-import com.parthdesai1208.compose.view.uicomponents.DecoupledConstraintLayout
-import com.parthdesai1208.compose.view.uicomponents.StaggeredGridFun
 
 class MainActivity : AppCompatActivity() {
 

@@ -26,7 +26,7 @@ enum class UIComponentsListingEnumType(val buttonTitle: String, val func: @Compo
     ButtonComponents("Button", { ButtonCompose() }),
     SearchBarComponents("SearchBar", { SearchBar(androidx.lifecycle.viewmodel.compose.viewModel()) }),
     SnackBarComponents("SnackBar", { SnackBarCompose() }),
-    CollapsableRecyclerviewScreen("recyclerview", { CollapsableRecyclerView() }),
+    CollapsableRecyclerviewScreen("Collapsable Recyclerview(vertical)", { CollapsableRecyclerView() }),
     CustomRecyclerviewScreen("Custom recyclerview", {
         Column(verticalArrangement = Arrangement.Top) {
             StaggeredGridFun(
@@ -36,6 +36,7 @@ enum class UIComponentsListingEnumType(val buttonTitle: String, val func: @Compo
             )
         }
     }),
+    HorizontalListScreen("Horizontal List",{ HorizontalList() }),
     ConstraintLayoutContent("Constraint Layout Content", { ConstraintLayoutContent() }),
     ConstraintLayoutScreen("runtime Constraint Layout", { DecoupledConstraintLayout() }),
 }

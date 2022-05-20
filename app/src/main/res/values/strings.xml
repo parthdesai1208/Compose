@@ -71,5 +71,11 @@
 
     <!--    region UI components-->
     <string name="placeholder_search">Search</string>
+    <string name="hl1">Inversions</string>
+    <string name="hl2">Quick yoga</string>
+    <string name="hl3">Stretching</string>
+    <string name="hl4">Tabata</string>
+    <string name="hl5">HIIT</string>
+    <string name="hl6">Pre-natal yoga</string>
     <!--    end region-->
 </resources>
