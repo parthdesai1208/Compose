@@ -1,4 +1,4 @@
-package com.parthdesai1208.compose.view
+package com.parthdesai1208.compose.view.uicomponents
 
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxHeight

@@ -41,6 +41,10 @@ import com.parthdesai1208.compose.view.navigation.RallyScreen
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.view.accessibility.AccessibilityScreen
 import com.parthdesai1208.compose.view.migration.MigrationActivity
+import com.parthdesai1208.compose.view.uicomponents.CollapsableRecyclerView
+import com.parthdesai1208.compose.view.uicomponents.ConstraintLayoutContent
+import com.parthdesai1208.compose.view.uicomponents.DecoupledConstraintLayout
+import com.parthdesai1208.compose.view.uicomponents.StaggeredGridFun
 
 class MainActivity : AppCompatActivity() {
 
@@ -81,7 +85,6 @@ enum class MainScreenEnumType(
     val buttonTitleForAccessibility: String = buttonTitle,
 ) {
     TextComponents("UI Components", { com.parthdesai1208.compose.view.uicomponents.UIComponentsNavGraph() }),
-    CollapsableRecyclerviewScreen("recyclerview", { CollapsableRecyclerView() }),
     LearnStateScreen("Learn state (VM)", {
         androidx.compose.material.Surface {
             TodoActivityScreen(androidx.lifecycle.viewmodel.compose.viewModel())
@@ -97,17 +100,6 @@ enum class MainScreenEnumType(
             color = MaterialTheme.colors.onSurface
         )
     }),
-    CustomRecyclerviewScreen("Custom recyclerview", {
-        Column(verticalArrangement = Arrangement.Top) {
-            StaggeredGridFun(
-                modifier = Modifier
-                    .wrapContentHeight()
-                    .wrapContentWidth()
-            )
-        }
-    }),
-    ConstraintLayoutContent("Constraint Layout Content", { ConstraintLayoutContent() }),
-    ConstraintLayoutScreen("runtime Constraint Layout", { DecoupledConstraintLayout() }),
     AnimationScreen("Animation Samples", { AnimationNavGraph() }),
     NavigationEx1(
         "NavigationEx1 with arg,DeepLink",

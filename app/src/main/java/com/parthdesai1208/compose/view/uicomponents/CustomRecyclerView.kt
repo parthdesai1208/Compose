@@ -1,4 +1,4 @@
-package com.parthdesai1208.compose.view
+package com.parthdesai1208.compose.view.uicomponents
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
