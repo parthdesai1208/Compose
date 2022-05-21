@@ -35,8 +35,9 @@ android {
     }
     composeOptions {
 //        kotlinCompilerVersion "1.4.10"
-        kotlinCompilerExtensionVersion "1.1.1"
+        kotlinCompilerExtensionVersion "1.2.0-beta02"
     }
+    namespace 'com.parthdesai1208.compose'
     buildFeatures {
         viewBinding true
     }
