@@ -19,6 +19,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
@@ -26,6 +27,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.Color.Companion.Yellow
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.colorspace.ColorSpaces
+import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -45,28 +48,35 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.parthdesai1208.compose.R
-import com.parthdesai1208.compose.view.ChildScreen
-import com.parthdesai1208.compose.view.MainDestinations
-import com.parthdesai1208.compose.view.MainScreen
-import com.parthdesai1208.compose.view.MainScreenEnumType
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 //region default screen & Navigation
 enum class AnimationScreenEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
-    AnimatedVisibilityWithoutParams("AnimatedVisibility - without params", { AnimatedVisibilityWithoutParams() }),
-    AnimatedVisibilityWithParams("AnimatedVisibility - with params", { AnimatedVisibilityWithParams() }),
+    AnimatedVisibilityWithoutParams(
+        "AnimatedVisibility - without params",
+        { AnimatedVisibilityWithoutParams() }),
+    AnimatedVisibilityWithParams(
+        "AnimatedVisibility - with params",
+        { AnimatedVisibilityWithParams() }),
     AnimateVisibilityState("AnimatedVisibility - with state", { AnimateVisibilityState() }),
     AnimateEnterExitChild("enter exit visibility animation", { AnimateEnterExitChild() }),
     CrossFade("CrossFade", { CrossFade() }),
     AnimatableOnly("AnimatableOnly", { AnimatableOnly() }),
     AnimatedContentSimple("AnimatedContentSimple", { AnimatedContentSimple() }),
-    AnimatedContentWithTransitionSpec1("AnimatedContent - with targetState, transitionSpec ex-1",{ AnimatedContentWithTransitionSpec1() }),
-    AnimatedContentWithTransitionSpec2("AnimatedContent - with targetState, transitionSpec ex-2", { AnimatedContentWithTransitionSpec2() }),
-    AnimatedContentWithTransitionSpec3("AnimatedContent - with targetState, transitionSpec ex-3", { AnimatedContentWithTransitionSpec3() }),
+    AnimatedContentWithTransitionSpec1("AnimatedContent - with targetState, transitionSpec ex-1",
+        { AnimatedContentWithTransitionSpec1() }),
+    AnimatedContentWithTransitionSpec2(
+        "AnimatedContent - with targetState, transitionSpec ex-2",
+        { AnimatedContentWithTransitionSpec2() }),
+    AnimatedContentWithTransitionSpec3(
+        "AnimatedContent - with targetState, transitionSpec ex-3",
+        { AnimatedContentWithTransitionSpec3() }),
     AnimatedContentSize("AnimatedContentSize", { AnimatedContentSize() }),
-    AnimatedContentSizeTransform("AnimatedContentSizeTransform", { AnimatedContentSizeTransform() }),
+    AnimatedContentSizeTransform(
+        "AnimatedContentSizeTransform",
+        { AnimatedContentSizeTransform() }),
     AnimateFloatAsState("AnimateFloatAsState", { AnimateFloatAsState() }),
     AnimateColorAsState("AnimateColorAsState", { AnimateColorAsState() }),
     AnimateDpAsState("animateDpAsState", { AnimateDpAsState() }),
@@ -74,17 +84,19 @@ enum class AnimationScreenEnumType(val buttonTitle: String, val func: @Composabl
     UpdateTransition1("updateTransition-1", { UpdateTransitionBasic1() }),
     UpdateTransition2("updateTransition-2", { UpdateTransitionBasic2() }),
     UpdateTransitionChild("UpdateTransitionChild", { UpdateTransitionChild() }),
-    UpdateTransitionExtension("multiple anim updateTransition",{ UpdateTransitionExtension() }),
+    UpdateTransitionExtension("multiple anim updateTransition", { UpdateTransitionExtension() }),
+    MultipleAnimCoroutineAnimateTo("multiple anim Coroutine animateTo()\n(Rotate & color change)",
+        { MultipleAnimCoroutineAnimateTo() }),
     InfiniteAnimation("InfiniteAnimation", { InfiniteAnimation() }),
     TargetBasedAnimation("TargetBasedAnimation", { TargetBasedAnimationFun() }),
-    Spring("spring",{ SpringFun() }),
+    Spring("spring", { SpringFun() }),
     Tween("tween", { TweenFun() }),
     Keyframes("keyframes", { KeyFramesFun() }),
     Repeatable("repeatable", { RepeatableFun() }),
     InfiniteRepeatable("InfiniteRepeatable", { InfiniteRepeatableFun() }),
     Snap("snap", { SnapFun() }),
     AnimationVector("AnimationVector - TypeConverter,Coroutine", { AnimationVectorFun() }),
-    AnimationEx1("AnimationEx1",{ AnimationEx1() }),
+    AnimationEx1("AnimationEx1", { AnimationEx1() }),
 }
 
 object AnimationDestinations {
@@ -111,8 +123,13 @@ fun AnimationScreen(navController: NavHostController) {
     }
 
     Column {
-        Text(text = "Animation Samples", modifier = Modifier.padding(16.dp), fontSize = 18.sp, fontFamily = FontFamily.SansSerif,
-            color = MaterialTheme.colors.onSurface)
+        Text(
+            text = "Animation Samples",
+            modifier = Modifier.padding(16.dp),
+            fontSize = 18.sp,
+            fontFamily = FontFamily.SansSerif,
+            color = MaterialTheme.colors.onSurface
+        )
         Spacer(modifier = Modifier.height(8.dp))
         Column(
             modifier = Modifier
@@ -211,7 +228,7 @@ fun AnimatedVisibilityWithParams() {
                 )
             )
         ) {
-            Text(text = "Hello, world!",Modifier.background(MaterialTheme.colors.secondary))
+            Text(text = "Hello, world!", Modifier.background(MaterialTheme.colors.secondary))
         }
         Button(onClick = { visible = !visible }) {
             Text("Click Me")
@@ -223,7 +240,7 @@ fun TimeInterpolator.toEasing() = Easing { x -> getInterpolation(x) }
 
 /**********************************************************************************************************************************
 AnimatedVisibility - with state
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @Preview(showSystemUi = true)
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -242,22 +259,30 @@ fun AnimateVisibilityState() {
         AnimatedVisibility(
             visibleState = state,
             //execute when view is visible
-            enter = fadeIn(tween(4000)) + expandVertically (
-                animationSpec = tween(4000,
-                    easing = android.view.animation.BounceInterpolator().toEasing())),
+            enter = fadeIn(tween(4000)) + expandVertically(
+                animationSpec = tween(
+                    4000,
+                    easing = android.view.animation.BounceInterpolator().toEasing()
+                )
+            ),
             //execute when view is gone
-            exit = fadeOut(tween(4000)) + shrinkVertically (
-                animationSpec = tween(4000,
-                    easing = android.view.animation.BounceInterpolator().toEasing()))
+            exit = fadeOut(tween(4000)) + shrinkVertically(
+                animationSpec = tween(
+                    4000,
+                    easing = android.view.animation.BounceInterpolator().toEasing()
+                )
+            )
         ) {
             // Use the MutableTransitionState to know the current animation state
             // of the AnimatedVisibility.
-            Text(text = when {
-                state.isIdle && state.currentState -> "Hello, World!"
-                !state.isIdle && state.currentState -> "Disappearing"
-                state.isIdle && !state.currentState -> ""
-                else -> "Appearing"
-            }, color = MaterialTheme.colors.onSurface)
+            Text(
+                text = when {
+                    state.isIdle && state.currentState -> "Hello, World!"
+                    !state.isIdle && state.currentState -> "Disappearing"
+                    state.isIdle && !state.currentState -> ""
+                    else -> "Appearing"
+                }, color = MaterialTheme.colors.onSurface
+            )
         }
         Button(onClick = { state.targetState = !state.targetState }) {
             Text("Click Me")
@@ -267,7 +292,7 @@ fun AnimateVisibilityState() {
 
 /**********************************************************************************************************************************
 enter exit visibility animation
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @Preview(showSystemUi = true)
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
@@ -279,29 +304,33 @@ fun AnimateEnterExitChild() {
     var color by remember {
         mutableStateOf(Color.Black)
     }
-    Column( Modifier.fillMaxSize()) {
+    Column(Modifier.fillMaxSize()) {
         Button(onClick = { visible = !visible }) {
             Text(if (visible) "Hide" else "Show")
         }
-        Box(modifier = Modifier
-            .fillMaxWidth()
-            .height(30.dp)
-            .background(color))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(30.dp)
+                .background(color)
+        )
         AnimatedVisibility(
             visible = visible,
-            enter = fadeIn(animationSpec = tween(
-                durationMillis = 3000,
-                easing = LinearOutSlowInEasing
-            )
+            enter = fadeIn(
+                animationSpec = tween(
+                    durationMillis = 3000,
+                    easing = LinearOutSlowInEasing
+                )
             ),
-            exit = fadeOut(animationSpec = tween(
-                durationMillis = 3000,
-                easing = LinearOutSlowInEasing
-            )
+            exit = fadeOut(
+                animationSpec = tween(
+                    durationMillis = 3000,
+                    easing = LinearOutSlowInEasing
+                )
             )
         ) {
             val background by transition.animateColor(label = "") { state ->
-                when(state) {
+                when (state) {
                     EnterExitState.PreEnter -> Red
                     EnterExitState.PostExit -> Color.Green
                     EnterExitState.Visible -> Color.Blue
@@ -346,7 +375,7 @@ fun AnimateEnterExitChild() {
 
 /**********************************************************************************************************************************
 trigger animation when any state changes using crossfade()
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @Composable
 fun CrossFade() {
     Column(
@@ -358,7 +387,8 @@ fun CrossFade() {
         Crossfade(
             targetState = currentPage,
             animationSpec = tween(durationMillis = 1000)
-        ) { screen -> ColorBox(screen)
+        ) { screen ->
+            ColorBox(screen)
         }
         Button(onClick = {
             currentPage = (0..0xFFFFFF).random()
@@ -393,7 +423,7 @@ fun contrastColor(color: Int): Color {
 
 /**********************************************************************************************************************************
 trigger animation when any state changes using animateTo()
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @Composable
 fun AnimatableOnly() {
     Column(
@@ -427,26 +457,32 @@ fun AnimatableOnly() {
 
 /**********************************************************************************************************************************
 AnimatedContent - with targetState
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AnimatedContentSimple() {
-    Row(modifier = Modifier.fillMaxSize(),
+    Row(
+        modifier = Modifier.fillMaxSize(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center) {
+        horizontalArrangement = Arrangement.Center
+    ) {
         var count by remember { mutableStateOf(0) }
         Button(onClick = { count++ }) {
             Text("Add")
         }
         AnimatedContent(targetState = count) { targetCount ->
-            Text(text = "Count: $targetCount", modifier = Modifier.padding(start = 8.dp),color = MaterialTheme.colors.onSurface)
+            Text(
+                text = "Count: $targetCount",
+                modifier = Modifier.padding(start = 8.dp),
+                color = MaterialTheme.colors.onSurface
+            )
         }
     }
 }
 
 /**********************************************************************************************************************************
 AnimatedContent - with targetState, transitionSpec ex-1
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AnimatedContentWithTransitionSpec1() {
@@ -464,7 +500,7 @@ fun AnimatedContentWithTransitionSpec1() {
             ) { screen -> ColorBoxOnly(screen) }
 
             AnimatedContent(targetState = currentPage,
-                transitionSpec =  {
+                transitionSpec = {
                     if (targetState > initialState) {
                         upColorTransition()
                     } else {
@@ -534,7 +570,7 @@ fun ColorBoxTextOnly(screen: Int) {
 
 /**********************************************************************************************************************************
 AnimatedContent - with targetState, transitionSpec ex-2
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AnimatedContentWithTransitionSpec2() {
@@ -571,14 +607,18 @@ fun AnimatedContentWithTransitionSpec2() {
                 )
             }
         ) { targetCount ->
-            Text(text = "$targetCount", modifier = Modifier.padding(start = 8.dp), color = MaterialTheme.colors.onSurface)
+            Text(
+                text = "$targetCount",
+                modifier = Modifier.padding(start = 8.dp),
+                color = MaterialTheme.colors.onSurface
+            )
         }
     }
 }
 
 /**********************************************************************************************************************************
 AnimatedContent - with targetState, transitionSpec ex-3 between 2 content
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun AnimatedContentWithTransitionSpec3() {
@@ -637,7 +677,7 @@ fun ContentIcon() {
 
 /**********************************************************************************************************************************
 animateContentSize
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AnimatedContentSize() {
@@ -667,7 +707,7 @@ fun AnimatedContentSize() {
 
 /**********************************************************************************************************************************
 Animate Content Size Transform
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AnimatedContentSizeTransform() {
@@ -740,7 +780,7 @@ private fun expandFading(time: Int) =
 
 /**********************************************************************************************************************************
 animateFloatAsState
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @Composable
 fun AnimateFloatAsState() {
     Column(
@@ -770,7 +810,7 @@ fun AnimateFloatAsState() {
 
 /**********************************************************************************************************************************
 animateColorAsState
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @Composable
 fun AnimateColorAsState() {
     Column(
@@ -781,7 +821,7 @@ fun AnimateColorAsState() {
 
         var currentPage by remember { mutableStateOf(0) }
 
-        val color : Color by animateColorAsState(targetValue = Color(currentPage + 0xFF000000))
+        val color: Color by animateColorAsState(targetValue = Color(currentPage + 0xFF000000))
         Box(
             Modifier
                 .size(100.dp)
@@ -795,7 +835,7 @@ fun AnimateColorAsState() {
 
 /**********************************************************************************************************************************
 animateDpAsState
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 enum class BikePosition {
     Start, Finish
 }
@@ -811,7 +851,7 @@ fun AnimateDpAsState() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-    )  {
+    ) {
         Image(
             painter = painterResource(R.drawable.ic_launcher_foreground),
             contentDescription = null,
@@ -836,7 +876,7 @@ fun AnimateDpAsState() {
 
 /**********************************************************************************************************************************
 AnimateSizeAsState
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @Composable
 fun AnimateSizeAsState() {
     Column(
@@ -845,11 +885,17 @@ fun AnimateSizeAsState() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         var isOn by remember { mutableStateOf(true) }
-        val size1: Size by animateSizeAsState(targetValue = if (isOn) Size(100f,100f) else Size(200f,200f))
+        val size1: Size by animateSizeAsState(
+            targetValue = if (isOn) Size(100f, 100f) else Size(
+                200f,
+                200f
+            )
+        )
         Box(
             Modifier
                 .background(MaterialTheme.colors.onSurface)
-                .size(width = size1.width.dp, height = size1.height.dp))
+                .size(width = size1.width.dp, height = size1.height.dp)
+        )
         Button(onClick = { isOn = !isOn }) {
             Text("Click Me")
         }
@@ -858,7 +904,7 @@ fun AnimateSizeAsState() {
 
 /**********************************************************************************************************************************
 updateTransition-1
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @Composable
 fun UpdateTransitionBasic1() {
 
@@ -908,7 +954,7 @@ private enum class BoxState1 {
 
 /**********************************************************************************************************************************
 updateTransition-2
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 enum class BoxState {
     Collapsed,
     Expanded
@@ -977,7 +1023,7 @@ fun <T> transitioningSpec(): @Composable (Transition.Segment<BoxState>.() -> Fin
 
 /**********************************************************************************************************************************
 UpdateTransitionChild
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @OptIn(ExperimentalTransitionApi::class)
 @Composable
 fun UpdateTransitionChild() {
@@ -1039,7 +1085,7 @@ fun Child(transition: Transition<BoxState>) {
 
 /**********************************************************************************************************************************
 multiple animation using updateTransition
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
 @Composable
 fun UpdateTransitionExtension() {
@@ -1059,9 +1105,11 @@ fun UpdateTransitionExtension() {
         elevation = elevation,
         modifier = Modifier.padding(10.dp)
     ) {
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
             Text(text = "Hello, world!")
             // AnimatedVisibility as a part of the transition.
             transition.AnimatedVisibility(
@@ -1087,8 +1135,60 @@ fun UpdateTransitionExtension() {
 }
 
 /**********************************************************************************************************************************
+Multiple Animation using animateTo() backed by coroutines
+ **********************************************************************************************************************************/
+@Composable
+fun MultipleAnimCoroutineAnimateTo() {
+    //tasks here
+    //1. rotation
+    //2. change color
+    val angle = remember { Animatable(initialValue = 0f) }
+    var angleChanger by remember { mutableStateOf(360f) } //here we use 360f because we use angleChanger as targetValue
+    val color = remember {
+        Animatable(
+            initialValue = Color.Green,
+            typeConverter = Color.VectorConverter(ColorSpaces.LinearSrgb)
+            //VectorConverter = transforms between a Color and a 4 part AnimationVector storing the red, green, blue and alpha components of the color
+        )
+    }
+    val colorChanger =
+        remember { mutableStateOf(Color.Blue) } //here we use Blue because we use colorChanger as targetValue
+
+    LaunchedEffect(key1 = angleChanger, key2 = colorChanger) {
+        //if you want animation one time then you can pass angle & color as key1,key2
+        //but if you want animation multiple times by user actions then you have to use angleChanger & colorChanger
+
+        //Note : here we use two separate launch{} because we want to execute it parallel
+        //for serial execution, we can use single launch{} block
+        launch {
+            angle.animateTo(targetValue = angleChanger, animationSpec = tween(3000))
+        }
+        launch {
+            color.animateTo(targetValue = colorChanger.value, animationSpec = tween(3000))
+        }
+    }
+
+    Canvas(modifier = Modifier
+        .fillMaxSize()
+        .wrapContentWidth(align = Alignment.CenterHorizontally)
+        .wrapContentHeight(align = Alignment.CenterVertically)
+        .size(200.dp)
+        .clickable {
+            angleChanger = if (angleChanger == 0f) 360f else 0f
+            colorChanger.value = if (colorChanger.value == Color.Green) Color.Blue else Color.Green
+        }, onDraw = {
+        rotate(degrees = angle.value) {
+            drawRoundRect(
+                color = color.value,
+                cornerRadius = CornerRadius(16.dp.toPx())
+            )
+        }
+    })
+}
+
+/**********************************************************************************************************************************
 InfiniteAnimation
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @Composable
 fun InfiniteAnimation() {
     val infiniteTransition = rememberInfiniteTransition()
@@ -1104,12 +1204,13 @@ fun InfiniteAnimation() {
     Box(
         Modifier
             .fillMaxSize()
-            .background(color))
+            .background(color)
+    )
 }
 
 /**********************************************************************************************************************************
 TargetBasedAnimation
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @Composable
 fun TargetBasedAnimationFun() {
     var state by remember {
@@ -1136,21 +1237,26 @@ fun TargetBasedAnimationFun() {
         } while (!anim.isFinishedFromNanos(playTime))
 
     }
-    Box(modifier = Modifier.fillMaxSize(1f),contentAlignment = Alignment.Center) {
-        Box(modifier = Modifier
-            .size(animationValue.dp)
-            .background(Red, shape = RoundedCornerShape(animationValue / 5))
-            .clickable {
-                state++
-            },contentAlignment = Alignment.Center) {
-            Text(text = animationValue.toString(),style = TextStyle(color = Color.White,fontSize = (animationValue/5).sp))
+    Box(modifier = Modifier.fillMaxSize(1f), contentAlignment = Alignment.Center) {
+        Box(
+            modifier = Modifier
+                .size(animationValue.dp)
+                .background(Red, shape = RoundedCornerShape(animationValue / 5))
+                .clickable {
+                    state++
+                }, contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = animationValue.toString(),
+                style = TextStyle(color = Color.White, fontSize = (animationValue / 5).sp)
+            )
         }
     }
 }
 
 /**********************************************************************************************************************************
 spring
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @Preview
 @Composable
 fun SpringFun() {
@@ -1200,6 +1306,7 @@ fun SpringFun() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(start = 16.dp, top = 16.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             Text(text = "StiffnessLow", color = MaterialTheme.colors.onSurface)
@@ -1220,9 +1327,11 @@ fun SpringFun() {
             DrawImage(offsetAnimationDampingRatioMediumBouncy)
             Text(text = "DampingRatioHighBouncy", color = MaterialTheme.colors.onSurface)
             DrawImage(offsetAnimationDampingRatioHighBouncy)
-            Spacer(modifier = Modifier
-                .height(100.dp)
-                .fillMaxWidth())
+            Spacer(
+                modifier = Modifier
+                    .height(100.dp)
+                    .fillMaxWidth()
+            )
 
         }
 
@@ -1260,7 +1369,7 @@ fun getScreenWidth(): Float {
 
 /**********************************************************************************************************************************
 tween
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @Preview
 @Composable
 fun TweenFun() {
@@ -1269,9 +1378,9 @@ fun TweenFun() {
     //100.dp = 90.dp is width of the image & 10.dp is for padding
     val targetValue = if (bikeState == BikePosition.Start) 5.dp else getScreenWidth().dp - 100.dp
 
-    val easingLinearEasing : Dp by animateDpAsState(
+    val easingLinearEasing: Dp by animateDpAsState(
         targetValue,
-        animationSpec = tween(durationMillis = 1000,easing = LinearEasing)
+        animationSpec = tween(durationMillis = 1000, easing = LinearEasing)
     )
     val easingLinearOutSlowInEasing: Dp by animateDpAsState(
         targetValue,
@@ -1285,7 +1394,7 @@ fun TweenFun() {
         targetValue,
         animationSpec = tween(durationMillis = 1000, easing = FastOutSlowInEasing)
     )
-    val withDelay : Dp by animateDpAsState(
+    val withDelay: Dp by animateDpAsState(
         targetValue,
         animationSpec = tween(durationMillis = 1000, delayMillis = 1000)
     )
@@ -1306,9 +1415,11 @@ fun TweenFun() {
             DrawImage(easingFastOutSlowInEasing)
             Text(text = "withDelay", color = MaterialTheme.colors.onSurface)
             DrawImage(withDelay)
-            Spacer(modifier = Modifier
-                .height(100.dp)
-                .fillMaxWidth())
+            Spacer(
+                modifier = Modifier
+                    .height(100.dp)
+                    .fillMaxWidth()
+            )
 
         }
 
@@ -1327,7 +1438,7 @@ fun TweenFun() {
 
 /**********************************************************************************************************************************
 keyframes
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @Preview
 @Composable
 fun KeyFramesFun() {
@@ -1336,7 +1447,7 @@ fun KeyFramesFun() {
     //100.dp = 90.dp is width of the image & 10.dp is for padding
     val targetValue = if (bikeState == BikePosition.Start) 5.dp else getScreenWidth().dp - 100.dp
 
-    val keyframesAnimation : Dp by animateDpAsState(
+    val keyframesAnimation: Dp by animateDpAsState(
         targetValue,
         animationSpec = keyframes {
             durationMillis = 1000
@@ -1353,9 +1464,11 @@ fun KeyFramesFun() {
             Text(text = "keyframes", color = MaterialTheme.colors.onSurface)
             DrawImage(keyframesAnimation)
 
-            Spacer(modifier = Modifier
-                .height(100.dp)
-                .fillMaxWidth())
+            Spacer(
+                modifier = Modifier
+                    .height(100.dp)
+                    .fillMaxWidth()
+            )
         }
 
         ExtendedFloatingActionButton(
@@ -1373,7 +1486,7 @@ fun KeyFramesFun() {
 
 /**********************************************************************************************************************************
 repeatable
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @Preview
 @Composable
 fun RepeatableFun() {
@@ -1382,14 +1495,22 @@ fun RepeatableFun() {
     //100.dp = 90.dp is width of the image & 10.dp is for padding
     val targetValue = if (bikeState == BikePosition.Start) 5.dp else getScreenWidth().dp - 100.dp
 
-    val repeatableRestartAnimation : Dp by animateDpAsState(
+    val repeatableRestartAnimation: Dp by animateDpAsState(
         targetValue,
-        animationSpec = repeatable(iterations = 5, animation = tween(), repeatMode = RepeatMode.Restart)
+        animationSpec = repeatable(
+            iterations = 5,
+            animation = tween(),
+            repeatMode = RepeatMode.Restart
+        )
         //will restart the animation from the start value to the end value.
     )
-    val repeatableReverseAnimation : Dp by animateDpAsState(
+    val repeatableReverseAnimation: Dp by animateDpAsState(
         targetValue,
-        animationSpec = repeatable(iterations = 5, animation = tween(), repeatMode = RepeatMode.Reverse)
+        animationSpec = repeatable(
+            iterations = 5,
+            animation = tween(),
+            repeatMode = RepeatMode.Reverse
+        )
         //will reverse the last iteration as the animation repeats.
     )
 
@@ -1402,9 +1523,11 @@ fun RepeatableFun() {
             Text(text = "repeatable Restart", color = MaterialTheme.colors.onSurface)
             DrawImage(repeatableRestartAnimation)
 
-            Spacer(modifier = Modifier
-                .height(150.dp)
-                .fillMaxWidth())
+            Spacer(
+                modifier = Modifier
+                    .height(150.dp)
+                    .fillMaxWidth()
+            )
 
             Text(text = "repeatable Reverse", color = MaterialTheme.colors.onSurface)
             DrawImage(repeatableReverseAnimation)
@@ -1425,7 +1548,7 @@ fun RepeatableFun() {
 
 /**********************************************************************************************************************************
 infiniteRepeatable
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @Preview
 @Composable
 fun InfiniteRepeatableFun() {
@@ -1434,12 +1557,12 @@ fun InfiniteRepeatableFun() {
     //100.dp = 90.dp is width of the image & 10.dp is for padding
     val targetValue = if (bikeState == BikePosition.Start) 5.dp else getScreenWidth().dp - 100.dp
 
-    val infiniteRepeatableRestartAnimation : Dp by animateDpAsState(
+    val infiniteRepeatableRestartAnimation: Dp by animateDpAsState(
         targetValue,
         animationSpec = infiniteRepeatable(animation = tween(), repeatMode = RepeatMode.Restart)
         //will restart the animation from the start value to the end value.
     )
-    val infiniteRepeatableReverseAnimation : Dp by animateDpAsState(
+    val infiniteRepeatableReverseAnimation: Dp by animateDpAsState(
         targetValue,
         animationSpec = infiniteRepeatable(animation = tween(), repeatMode = RepeatMode.Reverse)
         //will reverse the last iteration as the animation repeats.
@@ -1454,9 +1577,11 @@ fun InfiniteRepeatableFun() {
             Text(text = "infinite repeatable Restart", color = MaterialTheme.colors.onSurface)
             DrawImage(infiniteRepeatableRestartAnimation)
 
-            Spacer(modifier = Modifier
-                .height(150.dp)
-                .fillMaxWidth())
+            Spacer(
+                modifier = Modifier
+                    .height(150.dp)
+                    .fillMaxWidth()
+            )
 
             Text(text = "infinite repeatable Reverse", color = MaterialTheme.colors.onSurface)
             DrawImage(infiniteRepeatableReverseAnimation)
@@ -1477,7 +1602,7 @@ fun InfiniteRepeatableFun() {
 
 /**********************************************************************************************************************************
 snap
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 @Preview
 @Composable
 fun SnapFun() {
@@ -1486,7 +1611,7 @@ fun SnapFun() {
     //100.dp = 90.dp is width of the image & 10.dp is for padding
     val targetValue = if (bikeState == BikePosition.Start) 5.dp else getScreenWidth().dp - 100.dp
 
-    val snapAnimation : Dp by animateDpAsState(
+    val snapAnimation: Dp by animateDpAsState(
         targetValue,
         animationSpec = snap(delayMillis = 500)
     )
@@ -1497,12 +1622,14 @@ fun SnapFun() {
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            Text(text = "snap animation",  color = MaterialTheme.colors.onSurface)
+            Text(text = "snap animation", color = MaterialTheme.colors.onSurface)
             DrawImage(snapAnimation)
 
-            Spacer(modifier = Modifier
-                .height(150.dp)
-                .fillMaxWidth())
+            Spacer(
+                modifier = Modifier
+                    .height(150.dp)
+                    .fillMaxWidth()
+            )
         }
 
         ExtendedFloatingActionButton(
@@ -1520,7 +1647,7 @@ fun SnapFun() {
 
 /**********************************************************************************************************************************
 AnimationVector - TypeConverter
-**********************************************************************************************************************************/
+ **********************************************************************************************************************************/
 //animate circle on touch
 @Composable
 fun AnimationVectorFun() {
