@@ -1,6 +1,5 @@
 package com.parthdesai1208.compose.view.uicomponents
 
-import android.content.res.Configuration
 import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -22,7 +21,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -35,22 +37,103 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.model.HorizontalGridListData
 import com.parthdesai1208.compose.model.HorizontalListData
 import com.parthdesai1208.compose.model.StaggeredGridListDataClass
-import com.parthdesai1208.compose.model.staggeredGridListData
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.viewmodel.HorizontalListViewModel
 import kotlin.math.max
+
+//region vertical recyclerview
+
+object VerticalListDestinations {
+    const val VERTICAL_LIST_MAIN_SCREEN = "VERTICAL_LIST_MAIN_SCREEN"
+    const val VERTICAL_LIST_SCREEN_ROUTE_PREFIX = "VERTICAL_LIST_SCREEN_ROUTE_PREFIX"
+    const val VERTICAL_LIST_SCREEN_ROUTE_POSTFIX = "VERTICAL_LIST_SCREEN_ROUTE_POSTFIX"
+}
+
+@Composable
+fun VerticalListNavGraph(startDestination: String = VerticalListDestinations.VERTICAL_LIST_MAIN_SCREEN) {
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = startDestination) {
+        composable(route = VerticalListDestinations.VERTICAL_LIST_MAIN_SCREEN) {
+            VerticalListListing(navController = navController)
+        }
+
+        composable(
+            route = "${VerticalListDestinations.VERTICAL_LIST_SCREEN_ROUTE_PREFIX}/{${VerticalListDestinations.VERTICAL_LIST_SCREEN_ROUTE_POSTFIX}}",
+            arguments = listOf(navArgument(VerticalListDestinations.VERTICAL_LIST_SCREEN_ROUTE_POSTFIX) {
+                type = NavType.StringType
+            })
+        ) { backStackEntry ->
+            val arguments = requireNotNull(backStackEntry.arguments)
+            ChildVerticalListScreen(arguments.getString(VerticalListDestinations.VERTICAL_LIST_SCREEN_ROUTE_POSTFIX))
+        }
+
+    }
+}
+
+enum class VerticalListListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
+    CollapsableList("Collapsable Expandable Recyclerview(vertical)", { CollapsableRecyclerView() })
+}
+
+@Composable
+fun ChildVerticalListScreen(onClickButtonTitle: String?) {
+    enumValues<VerticalListListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke()
+}
+
+@Composable
+fun VerticalListListing(navController: NavHostController) {
+    @Composable
+    fun MyButton(
+        title: VerticalListListingEnumType
+    ) {
+        Button(
+            onClick = { navController.navigate("${VerticalListDestinations.VERTICAL_LIST_SCREEN_ROUTE_PREFIX}/${title.buttonTitle}") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentWidth(align = Alignment.CenterHorizontally)
+                .padding(8.dp)
+        ) {
+            Text(title.buttonTitle, textAlign = TextAlign.Center)
+        }
+    }
+
+    Column {
+        Text(
+            text = "Vertical List Samples",
+            modifier = Modifier.padding(16.dp),
+            fontSize = 18.sp,
+            fontFamily = FontFamily.SansSerif,
+            color = MaterialTheme.colors.onSurface
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(8.dp)
+        ) {
+            enumValues<VerticalListListingEnumType>().forEach {
+                MyButton(it)
+            }
+        }
+    }
+}
 
 //region Collapsable Recyclerview
 @Composable
@@ -120,6 +203,8 @@ private fun CardItemCollapsableRecyclerView(name: String) {
 }
 //endregion
 
+//endregion
+
 //region Horizontal Recyclerview
 object HorizontalListDestinations {
     const val HAGL_MAIN_SCREEN = "HAGL_MAIN_SCREEN"
@@ -132,10 +217,13 @@ fun HorizontalListNavGraph(startDestination: String = HorizontalListDestinations
 
     NavHost(navController = navController, startDestination = startDestination) {
         composable(route = HorizontalListDestinations.HAGL_MAIN_SCREEN) {
-            HorizontalList(androidx.lifecycle.viewmodel.compose.viewModel(), navController = navController)
+            HorizontalList(
+                androidx.lifecycle.viewmodel.compose.viewModel(),
+                navController = navController
+            )
         }
 
-        composable(route = HorizontalListDestinations.HAGL_SCREEN_ROUTE_PREFIX){
+        composable(route = HorizontalListDestinations.HAGL_SCREEN_ROUTE_PREFIX) {
             HorizontalAdaptiveGridListFun()
         }
 
@@ -143,7 +231,11 @@ fun HorizontalListNavGraph(startDestination: String = HorizontalListDestinations
 }
 
 @Composable
-fun HorizontalList(viewModel : HorizontalListViewModel = HorizontalListViewModel(), navController: NavHostController, modifier: Modifier = Modifier) {
+fun HorizontalList(
+    viewModel: HorizontalListViewModel = HorizontalListViewModel(),
+    navController: NavHostController,
+    modifier: Modifier = Modifier
+) {
     val stateForLazyListStateDemo = rememberLazyListState()
     val lastDetect by remember {
         derivedStateOf {
@@ -266,8 +358,8 @@ fun HorizontalList(viewModel : HorizontalListViewModel = HorizontalListViewModel
 
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedButton(onClick = {
-               navController.navigate(HorizontalListDestinations.HAGL_SCREEN_ROUTE_PREFIX)
-        },modifier = Modifier.padding(horizontal = 8.dp)) {
+            navController.navigate(HorizontalListDestinations.HAGL_SCREEN_ROUTE_PREFIX)
+        }, modifier = Modifier.padding(horizontal = 8.dp)) {
             Text(text = "Adaptive Grid List ->")
         }
 
@@ -280,14 +372,15 @@ fun HorizontalList(viewModel : HorizontalListViewModel = HorizontalListViewModel
         )
 
         StaggeredGridFun(viewModelState, onChipClick = { index, b ->
-            viewModel.onChipClicked(index,b)
+            viewModel.onChipClicked(index, b)
         })
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(onClick = {
             val s = StringBuilder()
-            viewModelState.forEach { if(it.isAdded) s.append(it.genre).append(", ") }
-            if(s.isNotEmpty()) Toast.makeText(context, "${s.dropLast(2)}", Toast.LENGTH_SHORT).show()
+            viewModelState.forEach { if (it.isAdded) s.append(it.genre).append(", ") }
+            if (s.isNotEmpty()) Toast.makeText(context, "${s.dropLast(2)}", Toast.LENGTH_SHORT)
+                .show()
         }, modifier = Modifier.padding(horizontal = 8.dp)) {
             Text(text = "Show selection")
         }
@@ -364,13 +457,17 @@ fun HorizontalGridListItem(
 }
 
 @Composable
-fun HorizontalAdaptiveGridListFun(modifier : Modifier = Modifier) {
+fun HorizontalAdaptiveGridListFun(modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxSize()) {
         LazyHorizontalGrid(rows = GridCells.Adaptive(150.dp), content = {
-                                                   //150.dp is the height of one cell
-            items(items = HorizontalGridListData){
-                Image(painter = painterResource(it.drawable), contentDescription = stringResource(id = it.text)
-                    , contentScale = ContentScale.Crop, modifier = Modifier.size(100.dp))
+            //150.dp is the height of one cell
+            items(items = HorizontalGridListData) {
+                Image(
+                    painter = painterResource(it.drawable),
+                    contentDescription = stringResource(id = it.text),
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.size(100.dp)
+                )
             }
         })
     }
@@ -379,18 +476,20 @@ fun HorizontalAdaptiveGridListFun(modifier : Modifier = Modifier) {
 
 //region Staggered Grid List
 @Composable
-fun StaggeredGridFun(list : List<StaggeredGridListDataClass>, modifier: Modifier = Modifier,
-   onChipClick: (Int,Boolean) -> Unit) {
+fun StaggeredGridFun(
+    list: List<StaggeredGridListDataClass>, modifier: Modifier = Modifier,
+    onChipClick: (Int, Boolean) -> Unit
+) {
     val context = LocalContext.current
 
-    Row(modifier = modifier
-        .horizontalScroll(rememberScrollState())) {
+    Row(
+        modifier = modifier
+            .horizontalScroll(rememberScrollState())
+    ) {
         StaggeredGrid(modifier = modifier, totalRow = 4) {
             list.forEachIndexed { index, s ->
-                Chip(modifier = Modifier.padding(6.dp)
-                    , text = s.genre
-                    ,onChipClick = {
-                            onChipClick(index,it)
+                Chip(modifier = Modifier.padding(6.dp), text = s.genre, onChipClick = {
+                    onChipClick(index, it)
                 })
             }
         }
@@ -399,13 +498,14 @@ fun StaggeredGridFun(list : List<StaggeredGridListDataClass>, modifier: Modifier
 
 class StaggeredGridItemTransition(
     selectedAlpha: State<Float>
-){
+) {
     val selectedAlpha by selectedAlpha
 }
+
 private enum class SelectionState { Unselected, Selected }
 
 @Composable
-private fun staggeredGridItemTransitionFun(rowSelected : Boolean) : StaggeredGridItemTransition {
+private fun staggeredGridItemTransitionFun(rowSelected: Boolean): StaggeredGridItemTransition {
     val transition = updateTransition(
         targetState = if (rowSelected) SelectionState.Selected else SelectionState.Unselected,
         label = ""
@@ -418,7 +518,7 @@ private fun staggeredGridItemTransitionFun(rowSelected : Boolean) : StaggeredGri
         }
     }
 
-    return remember(transition){
+    return remember(transition) {
         StaggeredGridItemTransition(selectedAlpha = selectedAlpha)
     }
 }
@@ -486,17 +586,18 @@ fun StaggeredGrid(
 }
 
 @Composable
-fun Chip(modifier: Modifier = Modifier, text: String ,onChipClick : (Boolean) -> Unit) {
+fun Chip(modifier: Modifier = Modifier, text: String, onChipClick: (Boolean) -> Unit) {
     val (selected, onSelected) = rememberSaveable { mutableStateOf(false) }
     val staggeredGridItemTransitionState = staggeredGridItemTransitionFun(rowSelected = selected)
-    Card(modifier = modifier.padding(1.dp),
+    Card(
+        modifier = modifier.padding(1.dp),
         border = BorderStroke(color = MaterialTheme.colors.onSurface, width = Dp.Hairline),
         shape = RoundedCornerShape(8.dp),
-        backgroundColor = if(staggeredGridItemTransitionState.selectedAlpha > 0f) colorResource(id = R.color.pink_400) else MaterialTheme.colors.surface
+        backgroundColor = if (staggeredGridItemTransitionState.selectedAlpha > 0f) colorResource(id = R.color.pink_400) else MaterialTheme.colors.surface
     ) {
-        if(staggeredGridItemTransitionState.selectedAlpha > 0f){
+        if (staggeredGridItemTransitionState.selectedAlpha > 0f) {
             onChipClick(true)
-        }else{
+        } else {
             onChipClick(false)
         }
         Row(
@@ -507,15 +608,23 @@ fun Chip(modifier: Modifier = Modifier, text: String ,onChipClick : (Boolean) ->
                 .wrapContentHeight(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(imageVector = if(staggeredGridItemTransitionState.selectedAlpha > 0f) Icons.Default.Check else Icons.Default.Add, contentDescription = null
-                , tint = if(staggeredGridItemTransitionState.selectedAlpha > 0f) Color.White else LocalContentColor.current.copy(alpha = LocalContentAlpha.current))
+            Icon(
+                imageVector = if (staggeredGridItemTransitionState.selectedAlpha > 0f) Icons.Default.Check else Icons.Default.Add,
+                contentDescription = null,
+                tint = if (staggeredGridItemTransitionState.selectedAlpha > 0f) Color.White else LocalContentColor.current.copy(
+                    alpha = LocalContentAlpha.current
+                )
+            )
             /*Box(
                 modifier = Modifier
                     .size(16.dp, 16.dp)
                     .background(color = MaterialTheme.colors.secondary)
             )*/
             Spacer(Modifier.width(4.dp))
-            Text(text = text, color = if(staggeredGridItemTransitionState.selectedAlpha > 0f) Color.White else MaterialTheme.colors.onSurface)
+            Text(
+                text = text,
+                color = if (staggeredGridItemTransitionState.selectedAlpha > 0f) Color.White else MaterialTheme.colors.onSurface
+            )
         }
     }
 }
