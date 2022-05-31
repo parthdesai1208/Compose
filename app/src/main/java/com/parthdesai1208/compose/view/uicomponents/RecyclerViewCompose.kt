@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
@@ -28,10 +29,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -40,10 +39,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.model.HorizontalGridListData
 import com.parthdesai1208.compose.model.HorizontalListData
 import com.parthdesai1208.compose.model.StaggeredGridListDataClass
+import com.parthdesai1208.compose.model.staggeredGridListData
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.viewmodel.HorizontalListViewModel
 import kotlin.math.max
@@ -117,8 +121,29 @@ private fun CardItemCollapsableRecyclerView(name: String) {
 //endregion
 
 //region Horizontal Recyclerview
+object HorizontalListDestinations {
+    const val HAGL_MAIN_SCREEN = "HAGL_MAIN_SCREEN"
+    const val HAGL_SCREEN_ROUTE_PREFIX = "HAGL_SCREEN_ROUTE_PREFIX"
+}
+
 @Composable
-fun HorizontalList(viewModel : HorizontalListViewModel,modifier: Modifier = Modifier) {
+fun HorizontalListNavGraph(startDestination: String = HorizontalListDestinations.HAGL_MAIN_SCREEN) {
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = startDestination) {
+        composable(route = HorizontalListDestinations.HAGL_MAIN_SCREEN) {
+            HorizontalList(androidx.lifecycle.viewmodel.compose.viewModel(), navController = navController)
+        }
+
+        composable(route = HorizontalListDestinations.HAGL_SCREEN_ROUTE_PREFIX){
+            HorizontalAdaptiveGridListFun()
+        }
+
+    }
+}
+
+@Composable
+fun HorizontalList(viewModel : HorizontalListViewModel = HorizontalListViewModel(), navController: NavHostController, modifier: Modifier = Modifier) {
     val stateForLazyListStateDemo = rememberLazyListState()
     val lastDetect by remember {
         derivedStateOf {
@@ -210,7 +235,7 @@ fun HorizontalList(viewModel : HorizontalListViewModel,modifier: Modifier = Modi
 
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Grid List (Grid:2)",
+            text = "Grid List (Grid:2 (row-fixed))",
             color = MaterialTheme.colors.onSurface,
             style = MaterialTheme.typography.h5,
             modifier = Modifier.padding(all = 8.dp)
@@ -237,6 +262,13 @@ fun HorizontalList(viewModel : HorizontalListViewModel,modifier: Modifier = Modi
                                 .show()
                         })
             }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+        OutlinedButton(onClick = {
+               navController.navigate(HorizontalListDestinations.HAGL_SCREEN_ROUTE_PREFIX)
+        },modifier = Modifier.padding(horizontal = 8.dp)) {
+            Text(text = "Adaptive Grid List ->")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -328,6 +360,19 @@ fun HorizontalGridListItem(
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
         }
+    }
+}
+
+@Composable
+fun HorizontalAdaptiveGridListFun(modifier : Modifier = Modifier) {
+    Column(modifier = modifier.fillMaxSize()) {
+        LazyHorizontalGrid(rows = GridCells.Adaptive(150.dp), content = {
+                                                   //150.dp is the height of one cell
+            items(items = HorizontalGridListData){
+                Image(painter = painterResource(it.drawable), contentDescription = stringResource(id = it.text)
+                    , contentScale = ContentScale.Crop, modifier = Modifier.size(100.dp))
+            }
+        })
     }
 }
 //endregion
@@ -475,8 +520,6 @@ fun Chip(modifier: Modifier = Modifier, text: String ,onChipClick : (Boolean) ->
     }
 }
 
-@Preview(name = "light")
-@Preview(name = "Dark", uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun ChipPreview() {
     ComposeTheme {

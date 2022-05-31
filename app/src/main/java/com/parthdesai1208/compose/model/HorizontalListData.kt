@@ -36,12 +36,24 @@ val HorizontalGridListData = listOf(
     R.drawable.hgl3 to R.string.hgl3,
     R.drawable.hgl4 to R.string.hgl4,
     R.drawable.hgl5 to R.string.hgl5,
+    R.drawable.hgl6 to R.string.hgl6,
+    R.drawable.hgl1 to R.string.hgl1,
+    R.drawable.hgl2 to R.string.hgl2,
+    R.drawable.hgl3 to R.string.hgl3,
+    R.drawable.hgl4 to R.string.hgl4,
+    R.drawable.hgl5 to R.string.hgl5,
+    R.drawable.hgl6 to R.string.hgl6,
+    R.drawable.hgl1 to R.string.hgl1,
+    R.drawable.hgl2 to R.string.hgl2,
+    R.drawable.hgl3 to R.string.hgl3,
+    R.drawable.hgl4 to R.string.hgl4,
+    R.drawable.hgl5 to R.string.hgl5,
     R.drawable.hgl6 to R.string.hgl6
 ).map { DrawableStringPair(it.first, it.second) }
 
 data class StaggeredGridListDataClass(
-    val genre : String = "",
-    var isAdded : Boolean = false
+    val genre: String = "",
+    var isAdded: Boolean = false
 )
 
 val staggeredGridListData = listOf(
@@ -52,4 +64,4 @@ val staggeredGridListData = listOf(
     "Arts & Crafts", "Beauty", "Books", "Business", "Comics", "Culinary",
     "Design", "Fashion", "Film", "History", "Maths", "Music", "People", "Philosophy",
     "Religion", "Social sciences", "Technology", "TV", "Writing"
-).map { StaggeredGridListDataClass(it,false) }
+).map { StaggeredGridListDataClass(it, false) }
