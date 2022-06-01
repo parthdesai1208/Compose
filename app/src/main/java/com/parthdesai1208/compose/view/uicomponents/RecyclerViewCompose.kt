@@ -13,6 +13,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
@@ -31,7 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
@@ -41,8 +41,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,6 +53,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.model.DrawableStringPair
 import com.parthdesai1208.compose.model.HorizontalGridListData
 import com.parthdesai1208.compose.model.HorizontalListData
 import com.parthdesai1208.compose.model.StaggeredGridListDataClass
@@ -93,7 +94,10 @@ fun VerticalListNavGraph(startDestination: String = VerticalListDestinations.VER
 enum class VerticalListListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
     CollapsableList("Collapsable Expandable Recyclerview(vertical)", { CollapsableRecyclerView() }),
     VerticalGridList("Grid List (fixed)",{ VerticalGridList() }),
-    AdaptiveVerticalGridList("Adaptive Grid List",{ VerticalGridList(GridCells.Adaptive(150.dp)) })
+    AdaptiveVerticalGridList("Adaptive Grid List",{ VerticalGridList(GridCells.Adaptive(150.dp)) }),
+    CustomGridCell1("Double sized first row",{ VerticalGridList(gridCells = DoubleSizedLeftRowGridCell) }),
+    CustomGridCell2("First item take entire space", { FirstItemTakeWholeSpace() }),
+    CustomGridCell3("Every third Item take entire Space", { EveryThirdItemTakeWholeSpace() })
 }
 
 @Composable
@@ -222,16 +226,87 @@ fun VerticalGridList(gridCells: GridCells = GridCells.Fixed(2)) {
                      .sizeIn(maxHeight = 150.dp)
                      .align(Alignment.Center)
                  , contentScale = ContentScale.Crop)
-                 Text(text = stringResource(id = item.text), modifier = Modifier
-                     .align(Alignment.Center)
-                     .background(
-                         color = Color.LightGray.copy(alpha = .5f),
-                         shape = RoundedCornerShape(8.dp)
-                     )
-                     .padding(horizontal = 3.dp))
+                 Text(text = stringResource(id = item.text),
+                     textAlign = TextAlign.Center
+                     ,modifier = Modifier
+                         .align(Alignment.Center)
+                         .background(
+                             color = Color.LightGray.copy(alpha = .5f),
+                             shape = RoundedCornerShape(8.dp)
+                         )
+                         .padding(horizontal = 3.dp))
               }
           }
     })
+}
+
+val DoubleSizedLeftRowGridCell = object : GridCells {
+    override fun Density.calculateCrossAxisCellSizes(availableSize: Int, spacing: Int): List<Int> {
+        val firstColumn = (availableSize - spacing) * 2 / 3
+        val secondColumn = availableSize - spacing - firstColumn
+        return listOf(firstColumn, secondColumn)
+    }
+}
+
+@Composable
+fun FirstItemTakeWholeSpace() {
+    androidx.compose.foundation.lazy.grid.LazyVerticalGrid(
+        columns = DoubleSizedLeftRowGridCell
+        , verticalArrangement = Arrangement.spacedBy(8.dp)
+        , horizontalArrangement = Arrangement.spacedBy(8.dp)
+        , content = {
+            HorizontalGridListData.forEachIndexed { index, drawableStringPair ->
+                if (index == 0) {  //for very first item
+                    item(span = { GridItemSpan(maxLineSpan) }){
+                        ItemViewFirstItemTakeWholeSpace(drawableStringPair)
+                    }
+                }else{ //for remaining items in list
+                    item(span = { GridItemSpan(1) }){
+                        ItemViewFirstItemTakeWholeSpace(drawableStringPair)
+                    }
+                }
+            }
+        })
+}
+
+@Composable
+fun ItemViewFirstItemTakeWholeSpace(item : DrawableStringPair) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        Image(painter = painterResource(id = item.drawable), contentDescription = stringResource(id = item.text), modifier = Modifier
+            .sizeIn(maxHeight = 150.dp)
+            .align(Alignment.Center)
+            , contentScale = ContentScale.Crop)
+        Text(text = stringResource(id = item.text),
+            textAlign = TextAlign.Center
+            ,modifier = Modifier
+                .align(Alignment.Center)
+                .background(
+                    color = Color.LightGray.copy(alpha = .5f),
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .padding(horizontal = 3.dp))
+    }
+}
+
+@Composable
+fun EveryThirdItemTakeWholeSpace() {
+    androidx.compose.foundation.lazy.grid.LazyVerticalGrid(
+        columns = DoubleSizedLeftRowGridCell
+        , verticalArrangement = Arrangement.spacedBy(8.dp)
+        , horizontalArrangement = Arrangement.spacedBy(8.dp)
+        , content = {
+            HorizontalGridListData.forEachIndexed { index, drawableStringPair ->
+                if (index % 3 == 0) {  //for every third items
+                    item(span = { GridItemSpan(maxLineSpan) }){
+                        ItemViewFirstItemTakeWholeSpace(drawableStringPair)
+                    }
+                }else{ //for remaining items in list
+                    item(span = { GridItemSpan(1) }){
+                        ItemViewFirstItemTakeWholeSpace(drawableStringPair)
+                    }
+                }
+            }
+        })
 }
 //endregion
 //endregion
