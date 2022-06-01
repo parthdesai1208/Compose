@@ -34,6 +34,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -59,6 +60,7 @@ import com.parthdesai1208.compose.model.HorizontalListData
 import com.parthdesai1208.compose.model.StaggeredGridListDataClass
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.viewmodel.HorizontalListViewModel
+import kotlin.math.ceil
 import kotlin.math.max
 
 //region vertical recyclerview
@@ -93,11 +95,14 @@ fun VerticalListNavGraph(startDestination: String = VerticalListDestinations.VER
 
 enum class VerticalListListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
     CollapsableList("Collapsable Expandable Recyclerview(vertical)", { CollapsableRecyclerView() }),
-    VerticalGridList("Grid List (fixed)",{ VerticalGridList() }),
-    AdaptiveVerticalGridList("Adaptive Grid List",{ VerticalGridList(GridCells.Adaptive(150.dp)) }),
-    CustomGridCell1("Double sized first row",{ VerticalGridList(gridCells = DoubleSizedLeftRowGridCell) }),
+    VerticalGridList("Grid List (fixed)", { VerticalGridList() }),
+    AdaptiveVerticalGridList("Adaptive Grid List",
+        { VerticalGridList(GridCells.Adaptive(150.dp)) }),
+    CustomGridCell1("Double sized first row",
+        { VerticalGridList(gridCells = DoubleSizedLeftRowGridCell) }),
     CustomGridCell2("First item take entire space", { FirstItemTakeWholeSpace() }),
-    CustomGridCell3("Every third Item take entire Space", { EveryThirdItemTakeWholeSpace() })
+    CustomGridCell3("Every third Item take entire Space", { EveryThirdItemTakeWholeSpace() }),
+    StaggeredGridList("Staggered Grid List",{ VerticalStaggeredGridListFun() })
 }
 
 @Composable
@@ -210,34 +215,39 @@ private fun CardItemCollapsableRecyclerView(name: String) {
         }
     }
 }
+
 //endregion
 //region vertical grid list
-@Preview
 @Composable
 fun VerticalGridList(gridCells: GridCells = GridCells.Fixed(2)) {
     androidx.compose.foundation.lazy.grid.LazyVerticalGrid(
-          columns = gridCells
-        , verticalArrangement = Arrangement.spacedBy(8.dp)
-        , horizontalArrangement = Arrangement.spacedBy(8.dp)
-        , content = {
-          items(items = HorizontalGridListData){item ->
-              Box(modifier = Modifier.fillMaxSize()) {
-                 Image(painter = painterResource(id = item.drawable), contentDescription = stringResource(id = item.text), modifier = Modifier
-                     .sizeIn(maxHeight = 150.dp)
-                     .align(Alignment.Center)
-                 , contentScale = ContentScale.Crop)
-                 Text(text = stringResource(id = item.text),
-                     textAlign = TextAlign.Center
-                     ,modifier = Modifier
-                         .align(Alignment.Center)
-                         .background(
-                             color = Color.LightGray.copy(alpha = .5f),
-                             shape = RoundedCornerShape(8.dp)
-                         )
-                         .padding(horizontal = 3.dp))
-              }
-          }
-    })
+        columns = gridCells,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        content = {
+            items(items = HorizontalGridListData) { item ->
+                Box(modifier = Modifier.fillMaxSize()) {
+                    Image(
+                        painter = painterResource(id = item.drawable),
+                        contentDescription = stringResource(id = item.text),
+                        modifier = Modifier
+                            .sizeIn(maxHeight = 150.dp)
+                            .align(Alignment.Center),
+                        contentScale = ContentScale.Crop
+                    )
+                    Text(
+                        text = stringResource(id = item.text),
+                        textAlign = TextAlign.Center, modifier = Modifier
+                            .align(Alignment.Center)
+                            .background(
+                                color = Color.LightGray.copy(alpha = .5f),
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .padding(horizontal = 3.dp)
+                    )
+                }
+            }
+        })
 }
 
 val DoubleSizedLeftRowGridCell = object : GridCells {
@@ -251,17 +261,17 @@ val DoubleSizedLeftRowGridCell = object : GridCells {
 @Composable
 fun FirstItemTakeWholeSpace() {
     androidx.compose.foundation.lazy.grid.LazyVerticalGrid(
-        columns = DoubleSizedLeftRowGridCell
-        , verticalArrangement = Arrangement.spacedBy(8.dp)
-        , horizontalArrangement = Arrangement.spacedBy(8.dp)
-        , content = {
+        columns = DoubleSizedLeftRowGridCell,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        content = {
             HorizontalGridListData.forEachIndexed { index, drawableStringPair ->
                 if (index == 0) {  //for very first item
-                    item(span = { GridItemSpan(maxLineSpan) }){
+                    item(span = { GridItemSpan(maxLineSpan) }) {
                         ItemViewFirstItemTakeWholeSpace(drawableStringPair)
                     }
-                }else{ //for remaining items in list
-                    item(span = { GridItemSpan(1) }){
+                } else { //for remaining items in list
+                    item(span = { GridItemSpan(1) }) {
                         ItemViewFirstItemTakeWholeSpace(drawableStringPair)
                     }
                 }
@@ -270,43 +280,132 @@ fun FirstItemTakeWholeSpace() {
 }
 
 @Composable
-fun ItemViewFirstItemTakeWholeSpace(item : DrawableStringPair) {
+fun ItemViewFirstItemTakeWholeSpace(item: DrawableStringPair) {
     Box(modifier = Modifier.fillMaxSize()) {
-        Image(painter = painterResource(id = item.drawable), contentDescription = stringResource(id = item.text), modifier = Modifier
-            .sizeIn(maxHeight = 150.dp)
-            .align(Alignment.Center)
-            , contentScale = ContentScale.Crop)
-        Text(text = stringResource(id = item.text),
-            textAlign = TextAlign.Center
-            ,modifier = Modifier
+        Image(
+            painter = painterResource(id = item.drawable),
+            contentDescription = stringResource(id = item.text),
+            modifier = Modifier
+                .sizeIn(maxHeight = 150.dp)
+                .align(Alignment.Center),
+            contentScale = ContentScale.Crop
+        )
+        Text(
+            text = stringResource(id = item.text),
+            textAlign = TextAlign.Center, modifier = Modifier
                 .align(Alignment.Center)
                 .background(
                     color = Color.LightGray.copy(alpha = .5f),
                     shape = RoundedCornerShape(8.dp)
                 )
-                .padding(horizontal = 3.dp))
+                .padding(horizontal = 3.dp)
+        )
     }
 }
 
 @Composable
 fun EveryThirdItemTakeWholeSpace() {
     androidx.compose.foundation.lazy.grid.LazyVerticalGrid(
-        columns = DoubleSizedLeftRowGridCell
-        , verticalArrangement = Arrangement.spacedBy(8.dp)
-        , horizontalArrangement = Arrangement.spacedBy(8.dp)
-        , content = {
+        columns = DoubleSizedLeftRowGridCell,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        content = {
             HorizontalGridListData.forEachIndexed { index, drawableStringPair ->
                 if (index % 3 == 0) {  //for every third items
-                    item(span = { GridItemSpan(maxLineSpan) }){
+                    item(span = { GridItemSpan(maxLineSpan) }) {
                         ItemViewFirstItemTakeWholeSpace(drawableStringPair)
                     }
-                }else{ //for remaining items in list
-                    item(span = { GridItemSpan(1) }){
+                } else { //for remaining items in list
+                    item(span = { GridItemSpan(1) }) {
                         ItemViewFirstItemTakeWholeSpace(drawableStringPair)
                     }
                 }
             }
         })
+}
+
+
+@Composable
+fun VerticalStaggeredGridListFun() {
+    LazyColumn(contentPadding = PaddingValues(8.dp)){
+        item {
+            VerticalStaggeredGridList(totalColumn = 3){
+                HorizontalGridListData.forEachIndexed { index, item ->
+                    Box(modifier = Modifier.fillMaxSize().padding(8.dp)) {
+                        Image(
+                            painter = painterResource(id = item.drawable),
+                            contentDescription = stringResource(id = item.text),
+                            modifier = Modifier
+                                .align(Alignment.Center),
+                            contentScale = ContentScale.FillBounds
+                        )
+                        Text(
+                            text = stringResource(id = item.text),
+                            textAlign = TextAlign.Center, modifier = Modifier
+                                .align(Alignment.Center)
+                                .background(
+                                    color = Color.LightGray.copy(alpha = .5f),
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .padding(horizontal = 3.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun VerticalStaggeredGridList(modifier: Modifier = Modifier, totalColumn : Int = 0,content: @Composable () -> Unit) {
+    Layout(
+        content = content,
+        modifier = modifier
+    ) { measurables, constraints ->
+        val placeableXY: MutableMap<Placeable, Pair<Int, Int>> = mutableMapOf()
+
+        check(constraints.hasBoundedWidth) {
+            "Unbounded width not supported"
+        }
+//        val columns = ceil(constraints.maxWidth / maxColumnWidth.toPx()).toInt()
+        val columnWidth = constraints.maxWidth / totalColumn
+        val itemConstraints = constraints.copy(maxWidth = columnWidth)
+        val colHeights = IntArray(totalColumn) { 0 } // track each column's height
+        val placeables = measurables.map { measurable ->
+            val column = shortestColumn(colHeights)
+            val placeable = measurable.measure(itemConstraints)
+            placeableXY[placeable] = Pair(columnWidth * column, colHeights[column])
+            colHeights[column] += placeable.height
+            placeable
+        }
+
+        val height = colHeights.maxOrNull()
+            ?.coerceIn(constraints.minHeight, constraints.maxHeight)
+            ?: constraints.minHeight
+        layout(
+            width = constraints.maxWidth,
+            height = height
+        ) {
+            placeables.forEach { placeable ->
+                placeable.place(
+                    x = placeableXY.getValue(placeable).first,
+                    y = placeableXY.getValue(placeable).second
+                )
+            }
+        }
+    }
+}
+
+private fun shortestColumn(colHeights: IntArray): Int {
+    var minHeight = Int.MAX_VALUE
+    var column = 0
+    colHeights.forEachIndexed { index, height ->
+        if (height < minHeight) {
+            minHeight = height
+            column = index
+        }
+    }
+    return column
 }
 //endregion
 //endregion
@@ -566,17 +665,17 @@ fun HorizontalGridListItem(
 fun HorizontalAdaptiveGridListFun(modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxSize()) {
         LazyHorizontalGrid(rows = GridCells.Adaptive(150.dp),
-            contentPadding = PaddingValues(8.dp),content = {
-            //150.dp is the height of one cell
-            items(items = HorizontalGridListData) {
-                Image(
-                    painter = painterResource(it.drawable),
-                    contentDescription = stringResource(id = it.text),
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(100.dp)
-                )
-            }
-        })
+            contentPadding = PaddingValues(8.dp), content = {
+                //150.dp is the height of one cell
+                items(items = HorizontalGridListData) {
+                    Image(
+                        painter = painterResource(it.drawable),
+                        contentDescription = stringResource(id = it.text),
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.size(100.dp)
+                    )
+                }
+            })
     }
 }
 //endregion
@@ -587,13 +686,10 @@ fun StaggeredGridFun(
     list: List<StaggeredGridListDataClass>, modifier: Modifier = Modifier,
     onChipClick: (Int, Boolean) -> Unit
 ) {
-    val context = LocalContext.current
-
     Row(
-        modifier = modifier
-            .horizontalScroll(rememberScrollState())
+        modifier = modifier.horizontalScroll(rememberScrollState())
     ) {
-        StaggeredGrid(modifier = modifier, totalRow = 4) {
+        HorizontalStaggeredGrid(modifier = modifier, totalRow = 4) {
             list.forEachIndexed { index, s ->
                 Chip(modifier = Modifier.padding(6.dp), text = s.genre, onChipClick = {
                     onChipClick(index, it)
@@ -631,7 +727,7 @@ private fun staggeredGridItemTransitionFun(rowSelected: Boolean): StaggeredGridI
 }
 
 @Composable
-fun StaggeredGrid(
+fun HorizontalStaggeredGrid(
     modifier: Modifier = Modifier,
     totalRow: Int = 3,
     content: @Composable () -> Unit
