@@ -95,4 +95,6 @@ dependencies {
     //accompanist - for insets & system UI
     implementation "com.google.accompanist:accompanist-insets:0.23.1"
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.23.1"
+
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
 }

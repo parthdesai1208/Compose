@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
@@ -40,6 +41,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -88,7 +91,8 @@ fun VerticalListNavGraph(startDestination: String = VerticalListDestinations.VER
 }
 
 enum class VerticalListListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
-    CollapsableList("Collapsable Expandable Recyclerview(vertical)", { CollapsableRecyclerView() })
+    CollapsableList("Collapsable Expandable Recyclerview(vertical)", { CollapsableRecyclerView() }),
+    VerticalGridList("Grid List (fixed)",{ VerticalGridList() })
 }
 
 @Composable
@@ -202,7 +206,24 @@ private fun CardItemCollapsableRecyclerView(name: String) {
     }
 }
 //endregion
-
+//region vertical grid list
+@Composable
+fun VerticalGridList() {
+    androidx.compose.foundation.lazy.grid.LazyVerticalGrid(
+          columns = GridCells.Fixed(2)
+        , verticalArrangement = Arrangement.spacedBy(8.dp)
+        , horizontalArrangement = Arrangement.spacedBy(8.dp)
+        , content = {
+          items(items = HorizontalGridListData){item ->
+              Box(modifier = Modifier.fillMaxSize()) {
+                 Image(painter = painterResource(id = item.drawable), contentDescription = stringResource(id = item.text), modifier = Modifier.sizeIn(maxHeight = 150.dp).align(Alignment.Center)
+                 , contentScale = ContentScale.Crop)
+                 Text(text = stringResource(id = item.text), modifier = Modifier.align(Alignment.Center).background(color = Color.LightGray.copy(alpha = .5f), shape = RoundedCornerShape(8.dp)).padding(horizontal = 3.dp))
+              }
+          }
+    })
+}
+//endregion
 //endregion
 
 //region Horizontal Recyclerview
@@ -459,7 +480,8 @@ fun HorizontalGridListItem(
 @Composable
 fun HorizontalAdaptiveGridListFun(modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxSize()) {
-        LazyHorizontalGrid(rows = GridCells.Adaptive(150.dp), content = {
+        LazyHorizontalGrid(rows = GridCells.Adaptive(150.dp),
+            contentPadding = PaddingValues(8.dp),content = {
             //150.dp is the height of one cell
             items(items = HorizontalGridListData) {
                 Image(
