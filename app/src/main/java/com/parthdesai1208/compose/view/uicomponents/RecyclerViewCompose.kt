@@ -162,7 +162,7 @@ private fun ItemCollapsableRecyclerView(name: String) {
 
 @Composable
 private fun CardItemCollapsableRecyclerView(name: String) {
-    var expanded by remember { mutableStateOf(false) }
+    var expanded by rememberSaveable { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
@@ -218,9 +218,17 @@ fun VerticalGridList(gridCells: GridCells = GridCells.Fixed(2)) {
         , content = {
           items(items = HorizontalGridListData){item ->
               Box(modifier = Modifier.fillMaxSize()) {
-                 Image(painter = painterResource(id = item.drawable), contentDescription = stringResource(id = item.text), modifier = Modifier.sizeIn(maxHeight = 150.dp).align(Alignment.Center)
+                 Image(painter = painterResource(id = item.drawable), contentDescription = stringResource(id = item.text), modifier = Modifier
+                     .sizeIn(maxHeight = 150.dp)
+                     .align(Alignment.Center)
                  , contentScale = ContentScale.Crop)
-                 Text(text = stringResource(id = item.text), modifier = Modifier.align(Alignment.Center).background(color = Color.LightGray.copy(alpha = .5f), shape = RoundedCornerShape(8.dp)).padding(horizontal = 3.dp))
+                 Text(text = stringResource(id = item.text), modifier = Modifier
+                     .align(Alignment.Center)
+                     .background(
+                         color = Color.LightGray.copy(alpha = .5f),
+                         shape = RoundedCornerShape(8.dp)
+                     )
+                     .padding(horizontal = 3.dp))
               }
           }
     })
