@@ -92,7 +92,8 @@ fun VerticalListNavGraph(startDestination: String = VerticalListDestinations.VER
 
 enum class VerticalListListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
     CollapsableList("Collapsable Expandable Recyclerview(vertical)", { CollapsableRecyclerView() }),
-    VerticalGridList("Grid List (fixed)",{ VerticalGridList() })
+    VerticalGridList("Grid List (fixed)",{ VerticalGridList() }),
+    AdaptiveVerticalGridList("Adaptive Grid List",{ VerticalGridList(GridCells.Adaptive(150.dp)) })
 }
 
 @Composable
@@ -207,10 +208,11 @@ private fun CardItemCollapsableRecyclerView(name: String) {
 }
 //endregion
 //region vertical grid list
+@Preview
 @Composable
-fun VerticalGridList() {
+fun VerticalGridList(gridCells: GridCells = GridCells.Fixed(2)) {
     androidx.compose.foundation.lazy.grid.LazyVerticalGrid(
-          columns = GridCells.Fixed(2)
+          columns = gridCells
         , verticalArrangement = Arrangement.spacedBy(8.dp)
         , horizontalArrangement = Arrangement.spacedBy(8.dp)
         , content = {
