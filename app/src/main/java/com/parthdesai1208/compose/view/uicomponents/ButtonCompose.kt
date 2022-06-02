@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.widget.Space
 import android.widget.Toast
 import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.InteractionSource
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -11,10 +12,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
@@ -154,6 +157,8 @@ fun ButtonCompose() {
 
         NoRippleEffect()
 
+        CornerShapeButton()
+
         GradientButton(
             text = "Linear Gradient with Clamp",
             brush = Brush.linearGradient(colors = colorList, tileMode = TileMode.Clamp)
@@ -224,7 +229,7 @@ fun ButtonCompose() {
 
         GradientButton(text = "sweep Gradient", brush = Brush.sweepGradient(colors = colorList))
 
-        Row {
+        Row(modifier = Modifier.padding(vertical = 10.dp)) {
             CircularIconButton(icon = Icons.Filled.PlayArrow)
             Spacer(modifier = Modifier.width(8.dp))
             CircularIconButton(icon = Icons.Filled.Pause)
@@ -234,8 +239,32 @@ fun ButtonCompose() {
             CircularIconButton(icon = Icons.Filled.Settings)
         }
 
-
     }
+}
+
+@Composable
+fun CornerShapeButton() {
+    val myShape = RoundedCornerShape(topStart = 50.dp, bottomEnd = 50.dp)
+    Spacer(modifier = Modifier.height(8.dp))
+    Box(
+        modifier = Modifier
+            .background(
+                color = MaterialTheme.colors.primary, shape = myShape
+            )
+            .clip(shape = myShape)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = rememberRipple(bounded = true),
+                onClick = {}
+            )
+    ) {
+        Text(
+            "Different corner shape button\nwith ripple effect",
+            modifier = Modifier.padding(horizontal = 50.dp, vertical = 5.dp),
+            color = MaterialTheme.colors.onPrimary
+        )
+    }
+    Spacer(modifier = Modifier.height(8.dp))
 }
 
 @Composable
@@ -261,7 +290,8 @@ fun NoRippleEffect() {
     ) {
         Text(
             text = "No Ripple",
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colors.onPrimary
         )
     }
 }
@@ -308,8 +338,6 @@ fun CircularIconButton(icon: ImageVector) {
     }
 }
 
-@Preview(name = "light", showSystemUi = true)
-@Preview(name = "Dark", showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PreviewButtonCompose() {
     ComposeTheme {
