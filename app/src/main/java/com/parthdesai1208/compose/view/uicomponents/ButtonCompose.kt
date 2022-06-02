@@ -1,9 +1,9 @@
 package com.parthdesai1208.compose.view.uicomponents
 
 import android.widget.Toast
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
-import androidx.compose.animation.core.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -28,7 +28,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.parthdesai1208.compose.R
-import com.parthdesai1208.compose.view.theme.ComposeTheme
 import kotlinx.coroutines.launch
 
 @Composable
@@ -87,8 +86,11 @@ fun ButtonCompose() {
                 backgroundColor = colorResource(id = R.color.pink_700)
             )
         ) {
-            Text("Button with custom border")
+            Text("Button with custom border color")
         }
+
+        ButtonWithGradientBorder()
+
         Button(onClick = {}, contentPadding = PaddingValues(all = 16.dp)) {
             Text("With ContentPadding Button")
         }
@@ -249,6 +251,17 @@ fun ButtonCompose() {
 }
 
 @Composable
+fun ButtonWithGradientBorder() {
+    OutlinedButton(onClick = { },
+        border = BorderStroke(
+            width = 3.dp,
+            brush = Brush.linearGradient(colors = listOf(Color(0xFFffe53b), Color(0xFFff2525)))
+        )) {
+        Text(text = "(Outlined) Button with gradient border")
+    }
+}
+
+@Composable
 fun HeartAnimation() {
     val interactionSource = MutableInteractionSource()
 
@@ -298,19 +311,26 @@ fun ButtonWithClickAnimation() {
             .scale(scale.value)
             .background(color = MaterialTheme.colors.primary, shape = RoundedCornerShape(10.dp))
             .clickable(
-            interactionSource = interactionSource,
-            indication = null,
-            onClick = {
-                scope.launch {
-                    scale.animateTo(
-                        targetValue = 0.9f,
-                        animationSpec = tween(100)
-                    )   //down animation
-                    scale.animateTo(targetValue = 1f, animationSpec = tween(100))     //up animation
-                }
-            })
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = {
+                    scope.launch {
+                        scale.animateTo(
+                            targetValue = 0.9f,
+                            animationSpec = tween(100)
+                        )   //down animation
+                        scale.animateTo(
+                            targetValue = 1f,
+                            animationSpec = tween(100)
+                        )     //up animation
+                    }
+                })
     ) {
-        Text(text = "Button with click animation", color = MaterialTheme.colors.onPrimary, modifier = Modifier.padding(all = 8.dp))
+        Text(
+            text = "Button with click animation",
+            color = MaterialTheme.colors.onPrimary,
+            modifier = Modifier.padding(all = 8.dp)
+        )
     }
 }
 
@@ -406,12 +426,5 @@ fun CircularIconButton(icon: ImageVector) {
         ),
         border = BorderStroke(0.dp, Color.Transparent), onClick = {}) {
         Icon(imageVector = icon, contentDescription = null, tint = MaterialTheme.colors.onPrimary)
-    }
-}
-
-@Composable
-fun PreviewButtonCompose() {
-    ComposeTheme {
-        ButtonCompose()
     }
 }
