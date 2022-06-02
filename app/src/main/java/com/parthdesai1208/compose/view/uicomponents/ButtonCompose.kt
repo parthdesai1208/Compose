@@ -1,10 +1,9 @@
 package com.parthdesai1208.compose.view.uicomponents
 
-import android.content.res.Configuration
-import android.widget.Space
 import android.widget.Toast
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
-import androidx.compose.foundation.interaction.InteractionSource
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -12,12 +11,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
@@ -25,11 +25,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.view.theme.ComposeTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun ButtonCompose() {
@@ -45,7 +45,8 @@ fun ButtonCompose() {
             .padding(8.dp)
             .fillMaxSize()
             .verticalScroll(state = rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(space = 8.dp) //space between child
     ) {
         //button for primary action-use
         Button(onClick = { Toast.makeText(context, "Button Click", Toast.LENGTH_SHORT).show() }) {
@@ -239,13 +240,84 @@ fun ButtonCompose() {
             CircularIconButton(icon = Icons.Filled.Settings)
         }
 
+        Row(modifier = Modifier.padding(vertical = 10.dp)) {
+            ButtonWithClickAnimation()
+            Spacer(modifier = Modifier.width(8.dp))
+            HeartAnimation()
+        }
+    }
+}
+
+@Composable
+fun HeartAnimation() {
+    val interactionSource = MutableInteractionSource()
+
+    val coroutineScope = rememberCoroutineScope()
+
+    var enabled by remember { mutableStateOf(false) }
+
+    val scale = remember { Animatable(1f) }
+
+    Icon(
+        imageVector = Icons.Outlined.Favorite,
+        contentDescription = "Like the product",
+        tint = if (enabled) Color.Red else Color.LightGray,
+        modifier = Modifier
+            .scale(scale = scale.value)
+            .size(size = 36.dp)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null
+            ) {
+                enabled = !enabled
+                coroutineScope.launch {
+                    scale.animateTo(
+                        0.8f,
+                        animationSpec = tween(100),
+                    )
+                    scale.animateTo(
+                        1f,
+                        animationSpec = tween(100),
+                    )
+                }
+            }
+    )
+
+}
+
+@Composable
+fun ButtonWithClickAnimation() {
+    val interactionSource = MutableInteractionSource()
+
+    val scale = remember { Animatable(1f) }
+
+    val scope = rememberCoroutineScope()
+
+    Box(
+        modifier = Modifier
+            .scale(scale.value)
+            .background(color = MaterialTheme.colors.primary, shape = RoundedCornerShape(10.dp))
+            .clickable(
+            interactionSource = interactionSource,
+            indication = null,
+            onClick = {
+                scope.launch {
+                    scale.animateTo(
+                        targetValue = 0.9f,
+                        animationSpec = tween(100)
+                    )   //down animation
+                    scale.animateTo(targetValue = 1f, animationSpec = tween(100))     //up animation
+                }
+            })
+    ) {
+        Text(text = "Button with click animation", color = MaterialTheme.colors.onPrimary, modifier = Modifier.padding(all = 8.dp))
     }
 }
 
 @Composable
 fun CornerShapeButton() {
     val myShape = RoundedCornerShape(topStart = 50.dp, bottomEnd = 50.dp)
-    Spacer(modifier = Modifier.height(8.dp))
+
     Box(
         modifier = Modifier
             .background(
@@ -264,13 +336,12 @@ fun CornerShapeButton() {
             color = MaterialTheme.colors.onPrimary
         )
     }
-    Spacer(modifier = Modifier.height(8.dp))
 }
 
 @Composable
 fun NoRippleEffect() {
     // This is used to disable the ripple effect
-    val interactionSource = remember { MutableInteractionSource() }
+    val interactionSource = remember { MutableInteractionSource() } //step-1
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -281,8 +352,8 @@ fun NoRippleEffect() {
             )
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .clickable(
-                indication = null, // Assign null to disable the ripple effect
-                interactionSource = interactionSource
+                indication = null, // Assign null to disable the ripple effect //step-3
+                interactionSource = interactionSource //step-2
             ) {
 
             },
