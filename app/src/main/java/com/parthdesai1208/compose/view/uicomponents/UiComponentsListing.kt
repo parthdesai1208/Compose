@@ -24,12 +24,15 @@ import androidx.navigation.navArgument
 enum class UIComponentsListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
     TextComponents("Text", { TextComponents("World") }),
     ButtonComponents("Button", { ButtonCompose() }),
-    SearchBarComponents("SearchBar", { SearchBar(androidx.lifecycle.viewmodel.compose.viewModel()) }),
+    SearchBarComponents(
+        "SearchBar",
+        { SearchBar(androidx.lifecycle.viewmodel.compose.viewModel()) }),
     SnackBarComponents("SnackBar", { SnackBarCompose() }),
-    ColumnCompose("Column",{ ColumnNavGraph() }),
-    RowCompose("Row",{RowNavGraph()}),
+    ColumnCompose("Column", { ColumnNavGraph() }),
+    RowCompose("Row", { RowNavGraph() }),
+    BoxCompose("Box", { BoxNavGraph() }),
     CollapsableRecyclerviewScreen("Vertical List", { VerticalListNavGraph() }),
-    HorizontalListScreen("Horizontal List",{ HorizontalListNavGraph() }),
+    HorizontalListScreen("Horizontal List", { HorizontalListNavGraph() }),
     ConstraintLayoutContent("Constraint Layout Content", { ConstraintLayoutContent() }),
     ConstraintLayoutScreen("runtime Constraint Layout", { DecoupledConstraintLayout() }),
 }

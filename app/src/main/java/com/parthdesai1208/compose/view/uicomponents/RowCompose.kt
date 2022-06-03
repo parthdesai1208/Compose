@@ -24,7 +24,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 
-//region Column Listing Screen
+//region Row Listing Screen
 enum class RowListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
     WrapRowTopStart("WrapRowTopStart", { WrapRowTopStart() }),
     WrapRowTop("WrapRowTop", { WrapRowTop() }),
