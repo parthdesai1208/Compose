@@ -27,6 +27,7 @@ enum class UIComponentsListingEnumType(val buttonTitle: String, val func: @Compo
     SearchBarComponents("SearchBar", { SearchBar(androidx.lifecycle.viewmodel.compose.viewModel()) }),
     SnackBarComponents("SnackBar", { SnackBarCompose() }),
     ColumnCompose("Column",{ ColumnNavGraph() }),
+    RowCompose("Row",{RowNavGraph()}),
     CollapsableRecyclerviewScreen("Vertical List", { VerticalListNavGraph() }),
     HorizontalListScreen("Horizontal List",{ HorizontalListNavGraph() }),
     ConstraintLayoutContent("Constraint Layout Content", { ConstraintLayoutContent() }),

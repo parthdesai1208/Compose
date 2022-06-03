@@ -11,10 +11,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -59,7 +60,7 @@ enum class ColumnListingEnumType(val buttonTitle: String, val func: @Composable 
 
     ScrollableColumn("Scrollable Column", { ScrollableColumn() }),
 
-    AlignAllChild("Align All Child", { AlignAllChild() }),
+    AlignAllChild("Apply same space between All Child", { AlignAllChild() }),
 }
 
 object ColumnDestinations {
@@ -134,8 +135,8 @@ fun ColumnListingScreen(navController: NavController) {
 }
 //endregion
 
-fun Modifier.commonBorder(): Modifier {
-    return this.border(width = 10.dp, color = Green800)
+fun Modifier.commonBorder(width: Dp = 10.dp, color: Color = Green800): Modifier {
+    return this.border(width = width, color = color)
 }
 
 @Composable
@@ -415,6 +416,13 @@ fun AlignAllChild() {
 
 @Composable
 fun AlignAllChildText(text: String) {
-    Text(text = text, fontWeight = FontWeight.Medium, color = MaterialTheme.colors.onSurface
-    , modifier = Modifier.fillMaxWidth().wrapContentWidth(), textAlign = TextAlign.Center)
+    Text(
+        text = text,
+        fontWeight = FontWeight.Medium,
+        color = MaterialTheme.colors.onSurface,
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(),
+        textAlign = TextAlign.Center
+    )
 }
