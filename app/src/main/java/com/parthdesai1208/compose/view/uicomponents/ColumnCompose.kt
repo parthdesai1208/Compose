@@ -12,7 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -28,32 +30,36 @@ import com.parthdesai1208.compose.view.theme.red1000
 //region Column Listing Screen
 enum class ColumnListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
     SimpleColumn("WrapColumnTopStart", { WrapColumnTopStart() }),
-    WrapColumnTop("WrapColumnTop",{WrapColumnTop()}),
-    WrapColumnTopEnd("WrapColumnTopEnd",{WrapColumnTopEnd()}),
-    WrapColumnCenterStart("WrapColumnCenterStart",{WrapColumnCenterStart()}),
-    WrapColumnCenter("WrapColumnCenter",{WrapColumnCenter()}),
-    WrapColumnCenterEnd("WrapColumnCenterEnd",{WrapColumnCenterEnd()}),
-    WrapColumnBottomStart("WrapColumnBottomStart",{WrapColumnBottomStart()}),
-    WrapColumnBottom("WrapColumnBottom",{WrapColumnBottom()}),
-    WrapColumnBottomEnd("WrapColumnBottomEnd",{WrapColumnBottomEnd()}),
+    WrapColumnTop("WrapColumnTop", { WrapColumnTop() }),
+    WrapColumnTopEnd("WrapColumnTopEnd", { WrapColumnTopEnd() }),
+    WrapColumnCenterStart("WrapColumnCenterStart", { WrapColumnCenterStart() }),
+    WrapColumnCenter("WrapColumnCenter", { WrapColumnCenter() }),
+    WrapColumnCenterEnd("WrapColumnCenterEnd", { WrapColumnCenterEnd() }),
+    WrapColumnBottomStart("WrapColumnBottomStart", { WrapColumnBottomStart() }),
+    WrapColumnBottom("WrapColumnBottom", { WrapColumnBottom() }),
+    WrapColumnBottomEnd("WrapColumnBottomEnd", { WrapColumnBottomEnd() }),
 
-    FillMaxSizeColumn("Fill max size column",{ FillMaxSizeColumn() }),
-    FillMaxSizeChildTop("FillMaxSizeChildTop",{FillMaxSizeChildTop()}),
-    FillMaxSizeChildTopEnd("FillMaxSizeChildTopEnd",{FillMaxSizeChildTopEnd()}),
-    FillMaxSizeChildCenterStart("FillMaxSizeChildCenterStart",{FillMaxSizeChildCenterStart()}),
-    FillMaxSizeChildCenter("FillMaxSizeChildCenter",{FillMaxSizeChildCenter()}),
-    FillMaxSizeChildCenterEnd("FillMaxSizeChildCenterEnd",{FillMaxSizeChildCenterEnd()}),
-    FillMaxSizeChildBottomStart("FillMaxSizeChildBottomStart",{FillMaxSizeChildBottomStart()}),
-    FillMaxSizeChildBottomCenter("FillMaxSizeChildBottomCenter",{FillMaxSizeChildBottomCenter()}),
-    FillMaxSizeChildBottomEnd("FillMaxSizeChildBottomEnd",{FillMaxSizeChildBottomEnd()}),
-    FillMaxSizeChildSpaceEvenly("FillMaxSizeChildSpaceEvenly",{FillMaxSizeChildSpaceEvenly()}),
-    FillMaxSizeChildSpaceAround("FillMaxSizeChildSpaceAround",{FillMaxSizeChildSpaceAround()}),
-    FillMaxSizeChildSpaceBetween("FillMaxSizeChildSpaceBetween",{FillMaxSizeChildSpaceBetween()}),
+    FillMaxSizeColumn("Fill max size column", { FillMaxSizeColumn() }),
+    FillMaxSizeChildTop("FillMaxSizeChildTop", { FillMaxSizeChildTop() }),
+    FillMaxSizeChildTopEnd("FillMaxSizeChildTopEnd", { FillMaxSizeChildTopEnd() }),
+    FillMaxSizeChildCenterStart("FillMaxSizeChildCenterStart", { FillMaxSizeChildCenterStart() }),
+    FillMaxSizeChildCenter("FillMaxSizeChildCenter", { FillMaxSizeChildCenter() }),
+    FillMaxSizeChildCenterEnd("FillMaxSizeChildCenterEnd", { FillMaxSizeChildCenterEnd() }),
+    FillMaxSizeChildBottomStart("FillMaxSizeChildBottomStart", { FillMaxSizeChildBottomStart() }),
+    FillMaxSizeChildBottomCenter("FillMaxSizeChildBottomCenter",
+        { FillMaxSizeChildBottomCenter() }),
+    FillMaxSizeChildBottomEnd("FillMaxSizeChildBottomEnd", { FillMaxSizeChildBottomEnd() }),
+    FillMaxSizeChildSpaceEvenly("FillMaxSizeChildSpaceEvenly", { FillMaxSizeChildSpaceEvenly() }),
+    FillMaxSizeChildSpaceAround("FillMaxSizeChildSpaceAround", { FillMaxSizeChildSpaceAround() }),
+    FillMaxSizeChildSpaceBetween("FillMaxSizeChildSpaceBetween",
+        { FillMaxSizeChildSpaceBetween() }),
 
-    IndividualChildAlignment("Individual Child Alignment",{IndividualChildAlignment()}),
-    ChildWeight("child Weight", {ChildWeight()}),
+    IndividualChildAlignment("Individual Child Alignment", { IndividualChildAlignment() }),
+    ChildWeight("child Weight", { ChildWeight() }),
 
-    ScrollableColumn("Scrollable Column",{ScrollableColumn()}),
+    ScrollableColumn("Scrollable Column", { ScrollableColumn() }),
+
+    AlignAllChild("Align All Child", { AlignAllChild() }),
 }
 
 object ColumnDestinations {
@@ -128,7 +134,7 @@ fun ColumnListingScreen(navController: NavController) {
 }
 //endregion
 
-fun Modifier.commonBorder() : Modifier{
+fun Modifier.commonBorder(): Modifier {
     return this.border(width = 10.dp, color = Green800)
 }
 
@@ -144,74 +150,90 @@ fun WrapColumnTopStart(modifier: Modifier = Modifier) {
 
 @Composable
 fun WrapColumnTop() {
-    WrapColumnTopStart(modifier = Modifier
-        .fillMaxWidth()
-        .wrapContentWidth(align = Alignment.CenterHorizontally)
-        .fillMaxHeight()
-        .wrapContentHeight(align = Alignment.Top))
+    WrapColumnTopStart(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(align = Alignment.CenterHorizontally)
+            .fillMaxHeight()
+            .wrapContentHeight(align = Alignment.Top)
+    )
 }
 
 @Composable
 fun WrapColumnTopEnd() {
-    WrapColumnTopStart(modifier = Modifier
-        .fillMaxWidth()
-        .wrapContentWidth(align = Alignment.End)
-        .fillMaxHeight()
-        .wrapContentHeight(align = Alignment.Top))
+    WrapColumnTopStart(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(align = Alignment.End)
+            .fillMaxHeight()
+            .wrapContentHeight(align = Alignment.Top)
+    )
 }
 
 @Composable
 fun WrapColumnCenterStart() {
-    WrapColumnTopStart(modifier = Modifier
-        .fillMaxWidth()
-        .wrapContentWidth(align = Alignment.Start)
-        .fillMaxHeight()
-        .wrapContentHeight(align = Alignment.CenterVertically))
+    WrapColumnTopStart(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(align = Alignment.Start)
+            .fillMaxHeight()
+            .wrapContentHeight(align = Alignment.CenterVertically)
+    )
 }
 
 @Composable
 fun WrapColumnCenter() {
-    WrapColumnTopStart(modifier = Modifier
-        .fillMaxWidth()
-        .wrapContentWidth(align = Alignment.CenterHorizontally)
-        .fillMaxHeight()
-        .wrapContentHeight(align = Alignment.CenterVertically))
+    WrapColumnTopStart(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(align = Alignment.CenterHorizontally)
+            .fillMaxHeight()
+            .wrapContentHeight(align = Alignment.CenterVertically)
+    )
 }
 
 @Composable
 fun WrapColumnCenterEnd() {
-    WrapColumnTopStart(modifier = Modifier
-        .fillMaxWidth()
-        .wrapContentWidth(align = Alignment.End)
-        .fillMaxHeight()
-        .wrapContentHeight(align = Alignment.CenterVertically))
+    WrapColumnTopStart(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(align = Alignment.End)
+            .fillMaxHeight()
+            .wrapContentHeight(align = Alignment.CenterVertically)
+    )
 }
 
 @Composable
 fun WrapColumnBottomStart() {
-    WrapColumnTopStart(modifier = Modifier
-        .fillMaxWidth()
-        .wrapContentWidth(align = Alignment.Start)
-        .fillMaxHeight()
-        .wrapContentHeight(align = Alignment.Bottom))
+    WrapColumnTopStart(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(align = Alignment.Start)
+            .fillMaxHeight()
+            .wrapContentHeight(align = Alignment.Bottom)
+    )
 }
 
 @Composable
 fun WrapColumnBottom() {
-    WrapColumnTopStart(modifier = Modifier
-        .fillMaxWidth()
-        .wrapContentWidth(align = Alignment.CenterHorizontally)
-        .fillMaxHeight()
-        .wrapContentHeight(align = Alignment.Bottom))
+    WrapColumnTopStart(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(align = Alignment.CenterHorizontally)
+            .fillMaxHeight()
+            .wrapContentHeight(align = Alignment.Bottom)
+    )
 }
 
 @Composable
 fun WrapColumnBottomEnd() {
-    WrapColumnTopStart(modifier = Modifier
-        .fillMaxWidth()
-        .wrapContentWidth(align = Alignment.End)
-        .fillMaxHeight()
-        .wrapContentHeight(align = Alignment.Bottom))
+    WrapColumnTopStart(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(align = Alignment.End)
+            .fillMaxHeight()
+            .wrapContentHeight(align = Alignment.Bottom)
+    )
 }
 
 @Composable
@@ -234,13 +256,17 @@ private fun CommonBoxForColumn1(modifier: Modifier = Modifier) {
 
 
 @Composable
-fun FillMaxSizeColumn(verticalArrangement : Arrangement.Vertical = Arrangement.Top,
-                      horizontalAlignment: Alignment.Horizontal = Alignment.Start) {
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .commonBorder()
-        ,verticalArrangement = verticalArrangement
-    , horizontalAlignment = horizontalAlignment) {
+fun FillMaxSizeColumn(
+    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .commonBorder(),
+        verticalArrangement = verticalArrangement,
+        horizontalAlignment = horizontalAlignment
+    ) {
         CommonBoxForColumn1()
         CommonBoxForColumn2()
     }
@@ -263,7 +289,10 @@ fun FillMaxSizeChildCenterStart() {
 
 @Composable
 fun FillMaxSizeChildCenter() {
-    FillMaxSizeColumn(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally)
+    FillMaxSizeColumn(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    )
 }
 
 @Composable
@@ -278,7 +307,10 @@ fun FillMaxSizeChildBottomStart() {
 
 @Composable
 fun FillMaxSizeChildBottomCenter() {
-    FillMaxSizeColumn(verticalArrangement = Arrangement.Bottom, horizontalAlignment = Alignment.CenterHorizontally)
+    FillMaxSizeColumn(
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.CenterHorizontally
+    )
 }
 
 @Composable
@@ -288,17 +320,26 @@ fun FillMaxSizeChildBottomEnd() {
 
 @Composable
 fun FillMaxSizeChildSpaceEvenly() {
-    FillMaxSizeColumn(verticalArrangement = Arrangement.SpaceEvenly, horizontalAlignment = Alignment.CenterHorizontally)
+    FillMaxSizeColumn(
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.CenterHorizontally
+    )
 }
 
 @Composable
 fun FillMaxSizeChildSpaceAround() {
-    FillMaxSizeColumn(verticalArrangement = Arrangement.SpaceAround, horizontalAlignment = Alignment.CenterHorizontally)
+    FillMaxSizeColumn(
+        verticalArrangement = Arrangement.SpaceAround,
+        horizontalAlignment = Alignment.CenterHorizontally
+    )
 }
 
 @Composable
 fun FillMaxSizeChildSpaceBetween() {
-    FillMaxSizeColumn(verticalArrangement = Arrangement.SpaceBetween, horizontalAlignment = Alignment.CenterHorizontally)
+    FillMaxSizeColumn(
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.CenterHorizontally
+    )
 }
 
 @Composable
@@ -353,4 +394,27 @@ fun ScrollableColumn() {
         CommonBoxForColumn1()
         CommonBoxForColumn2()
     }
+}
+
+@Composable
+fun AlignAllChild() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth()
+            .fillMaxHeight()
+            .wrapContentHeight(), verticalArrangement = Arrangement.spacedBy(space = 16.dp)
+    ) {
+        AlignAllChildText("1st child")
+        AlignAllChildText("2nd child")
+        AlignAllChildText("3rd child")
+        AlignAllChildText("4th child")
+        AlignAllChildText("16dp space applied to all child vertically")
+    }
+}
+
+@Composable
+fun AlignAllChildText(text: String) {
+    Text(text = text, fontWeight = FontWeight.Medium, color = MaterialTheme.colors.onSurface
+    , modifier = Modifier.fillMaxWidth().wrapContentWidth(), textAlign = TextAlign.Center)
 }
