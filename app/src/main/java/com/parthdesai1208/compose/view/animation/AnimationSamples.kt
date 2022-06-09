@@ -97,6 +97,7 @@ enum class AnimationScreenEnumType(val buttonTitle: String, val func: @Composabl
     Snap("snap", { SnapFun() }),
     AnimationVector("AnimationVector - TypeConverter,Coroutine", { AnimationVectorFun() }),
     AnimationEx1("AnimationEx1", { AnimationEx1() }),
+    BoxWithIconUpDownAnimation("Icon Up-down animation",{ BoxWithIconUpDownAnimation() }),
 }
 
 object AnimationDestinations {
@@ -200,7 +201,6 @@ fun AnimatedVisibilityWithoutParams() {
 AnimatedVisibility - with params
 **********************************************************************************************************************************/
 @Preview(showSystemUi = true)
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AnimatedVisibilityWithParams() {
     var visible by remember {
@@ -242,7 +242,6 @@ fun TimeInterpolator.toEasing() = Easing { x -> getInterpolation(x) }
 AnimatedVisibility - with state
  **********************************************************************************************************************************/
 @Preview(showSystemUi = true)
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AnimateVisibilityState() {
     val state = remember {
