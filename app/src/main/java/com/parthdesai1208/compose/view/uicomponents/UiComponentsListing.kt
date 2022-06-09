@@ -25,6 +25,7 @@ enum class UIComponentsListingEnumType(val buttonTitle: String, val func: @Compo
     TextComponents("Text", { TextComponents("World") }),
     ButtonComponents("Button", { ButtonCompose() }),
     ImageCompose("Image",{ ImageComposeScreen() }),
+    IconCompose("Icon",{IconComposeScreen()}),
     SearchBarComponents(
         "SearchBar",
         { SearchBar(androidx.lifecycle.viewmodel.compose.viewModel()) }),
