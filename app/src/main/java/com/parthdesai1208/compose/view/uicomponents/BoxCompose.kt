@@ -139,12 +139,13 @@ fun WhatIsBox() {
 @Composable
 fun BoxAlignment() {
     Box(modifier = Modifier.fillMaxSize()) {
-        Text(text = "Top start", modifier = Modifier.align(alignment = Alignment.TopStart))
+        Text(text = "Top start", modifier = Modifier.align(alignment = Alignment.TopStart), color = MaterialTheme.colors.onSurface)
         Text(
             text = "Top center hide XXXXX below Box",
             modifier = Modifier.align(alignment = Alignment.TopCenter)
+            , color = MaterialTheme.colors.onSurface
         )
-        Text(text = "Top End", modifier = Modifier.align(alignment = Alignment.TopEnd))
+        Text(text = "Top End", modifier = Modifier.align(alignment = Alignment.TopEnd), color = MaterialTheme.colors.onSurface)
         Box(
             modifier = Modifier
                 .fillMaxHeight()
@@ -152,13 +153,13 @@ fun BoxAlignment() {
                 .background(color = Color.LightGray)
                 .align(alignment = Alignment.Center)
         )
-        Text(text = "Center start", modifier = Modifier.align(alignment = Alignment.CenterStart))
-        Text(text = "Center text", modifier = Modifier.align(alignment = Alignment.Center))
-        Text(text = "Center end", modifier = Modifier.align(alignment = Alignment.CenterEnd))
+        Text(text = "Center start", modifier = Modifier.align(alignment = Alignment.CenterStart), color = MaterialTheme.colors.onSurface)
+        Text(text = "Center text", modifier = Modifier.align(alignment = Alignment.Center), color = MaterialTheme.colors.onSurface)
+        Text(text = "Center end", modifier = Modifier.align(alignment = Alignment.CenterEnd), color = MaterialTheme.colors.onSurface)
 
-        Text(text = "Bottom Start", modifier = Modifier.align(alignment = Alignment.BottomStart))
-        Text(text = "Bottom center", modifier = Modifier.align(alignment = Alignment.BottomCenter))
-        Text(text = "Bottom End", modifier = Modifier.align(alignment = Alignment.BottomEnd))
+        Text(text = "Bottom Start", modifier = Modifier.align(alignment = Alignment.BottomStart), color = MaterialTheme.colors.onSurface)
+        Text(text = "Bottom center", modifier = Modifier.align(alignment = Alignment.BottomCenter), color = MaterialTheme.colors.onSurface)
+        Text(text = "Bottom End", modifier = Modifier.align(alignment = Alignment.BottomEnd), color = MaterialTheme.colors.onSurface)
 
         FloatingActionButton(
             onClick = { },
