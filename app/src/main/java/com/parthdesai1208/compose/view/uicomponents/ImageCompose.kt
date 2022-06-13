@@ -12,13 +12,19 @@ import androidx.compose.material.icons.outlined.AddAPhoto
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.BlurredEdgeTreatment
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.parthdesai1208.compose.R
 
@@ -39,7 +45,73 @@ fun ImageComposeScreen() {
             ImageWithBorder()
         }
         ContentScaleImage()
+        MirrorImage()
     }
+}
+
+@Composable
+fun MirrorImage() {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text(text = "Mirror Image",color = MaterialTheme.colors.onSurface)
+        Mirror {
+            Image(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+                    .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+                    .clip(shape = RoundedCornerShape(24.dp)),
+                painter = painterResource(id = R.drawable.hl3),
+                contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
+        }
+    }
+}
+
+@Composable
+fun Mirror(content: @Composable () -> Unit) {
+    Column {
+        content()
+        Box(modifier = Modifier
+            .graphicsLayer {   //rotation & alpha
+                alpha = 0.99f
+                rotationZ = 180f
+            }
+            /*.drawWithContent {
+                val colors = listOf(Color.Transparent, Color.White)
+                drawContent()
+                drawRect(
+                    brush = Brush.verticalGradient(colors),
+                    blendMode = BlendMode.DstIn
+                )
+            }*/
+            //blur
+            .blur(
+                radiusX = 1.dp,
+                radiusY = 3.dp,
+                edgeTreatment = BlurredEdgeTreatment.Unbounded
+            )
+            //half size image
+            .clip(
+                shape = HalfSizeShape
+            )
+        ) {
+            content()
+        }
+    }
+}
+
+object HalfSizeShape : Shape {
+    override fun createOutline(
+        size: Size,
+        layoutDirection: LayoutDirection,
+        density: Density
+    ): Outline = Outline.Rectangle(
+        Rect(
+            offset = Offset(x = 0f, y = size.height / 2),
+            size = Size(width = size.width, height = size.height)
+        )
+    )
 }
 
 @Composable
