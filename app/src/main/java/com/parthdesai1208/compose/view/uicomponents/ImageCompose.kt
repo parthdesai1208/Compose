@@ -1,5 +1,6 @@
 package com.parthdesai1208.compose.view.uicomponents
 
+import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -20,15 +21,22 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
+import coil.decode.ImageDecoderDecoder
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.view.animation.getScreenWidth
+import com.skydoves.landscapist.coil.CoilImage
+import com.skydoves.landscapist.glide.GlideImage
+import com.skydoves.landscapist.palette.BitmapPalette
 
-@Preview(showSystemUi = true)
 @Composable
 fun ImageComposeScreen() {
     Column(
@@ -46,13 +54,168 @@ fun ImageComposeScreen() {
         }
         ContentScaleImage()
         MirrorImage()
+        ImageLoadingUsingGlide()
+        ImageLoadingUsingCoil()
+    }
+}
+
+//region coil
+@Composable
+fun ImageLoadingUsingCoil() {
+    Column(modifier = Modifier.padding(top = 16.dp)) {
+        Text(
+            text = "Using Coil", color = MaterialTheme.colors.onSurface,
+            modifier = Modifier.padding(horizontal = 24.dp)
+        )
+        Row(
+            modifier = Modifier
+                .horizontalScroll(state = rememberScrollState())
+                .padding(top = 24.dp)
+        ) {
+            LoadImageUsingCoilURL()
+            LoadGifUsingCoil()
+        }
     }
 }
 
 @Composable
+fun LoadGifUsingCoil() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically)
+    ) {
+        Text(text = "Load Gif", color = MaterialTheme.colors.onSurface)
+        val context = LocalContext.current
+        val imageLoader = ImageLoader.Builder(context)
+            .components {
+                if (SDK_INT >= 28) {
+                    add(ImageDecoderDecoder.Factory())
+                } else {
+                    add(coil.decode.GifDecoder.Factory())
+                }
+            }
+            .build()
+        CoilImage(
+            imageModel = "https://media2.giphy.com/media/aQYR1p8saOQla/giphy.gif?cid=ecf05e4701sln9u63lr3z17lh5f3n3h3owrk54zh1183hqmi&rid=giphy.gif&ct=g",
+            imageLoader = { imageLoader },
+            modifier = Modifier
+                .width(width = getScreenWidth().dp - 30.dp)
+                .clip(shape = RoundedCornerShape(16.dp))
+        )
+    }
+}
+
+@Composable
+fun LoadImageUsingCoilURL() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically)
+    ) {
+        Text(text = "Using URL", color = MaterialTheme.colors.onSurface)
+        CoilImage(
+            imageModel = "https://user-images.githubusercontent.com/24237865/75087934-5a53dc00-553e-11ea-94f1-494c1c68a574.jpg",
+            modifier = Modifier
+                .height(450.dp)
+                .width(getScreenWidth().dp - 30.dp)
+                .clip(shape = RoundedCornerShape(16.dp)),
+            // shows a placeholder ImageBitmap when loading.
+            placeHolder = painterResource(R.drawable.hl1),
+            // shows an error ImageBitmap when the request failed.
+            error = painterResource(id = R.drawable.hl3),
+            //for preview only
+            previewPlaceholder = R.drawable.hl1,
+            contentScale = ContentScale.FillBounds,
+            bitmapPalette = BitmapPalette {
+                //it.paletteColorList() will get List<Int> color from image
+            },
+        )
+    }
+}
+
+
+//endregion
+
+//region Glide
+@Composable
+fun ImageLoadingUsingGlide() {
+    Column {
+        Text(
+            text = "Using Glide", color = MaterialTheme.colors.onSurface,
+            modifier = Modifier.padding(horizontal = 24.dp)
+        )
+        Row(
+            modifier = Modifier
+                .horizontalScroll(state = rememberScrollState())
+                .padding(top = 24.dp)
+        ) {
+            LoadImageUsingGlideURL()
+            LoadGifUsingGlide()
+        }
+    }
+}
+
+@Composable
+fun LoadGifUsingGlide() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically)
+    ) {
+        Text(text = "Load Gif", color = MaterialTheme.colors.onSurface)
+        val context = LocalContext.current
+        val requestBuilder = Glide.with(context).asDrawable()
+            .load("https://media2.giphy.com/media/aQYR1p8saOQla/giphy.gif?cid=ecf05e4701sln9u63lr3z17lh5f3n3h3owrk54zh1183hqmi&rid=giphy.gif&ct=g")
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+        GlideImage(
+            imageModel = "https://media2.giphy.com/media/aQYR1p8saOQla/giphy.gif?cid=ecf05e4701sln9u63lr3z17lh5f3n3h3owrk54zh1183hqmi&rid=giphy.gif&ct=g",
+            requestBuilder = { requestBuilder },
+            modifier = Modifier
+                .width(width = getScreenWidth().dp - 30.dp)
+                .clip(shape = RoundedCornerShape(16.dp))
+        )
+    }
+}
+
+@Composable
+fun LoadImageUsingGlideURL() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically)
+    ) {
+        Text(text = "Using URL", color = MaterialTheme.colors.onSurface)
+        val context = LocalContext.current
+        val requestBuilder =
+            Glide.with(context).asDrawable().diskCacheStrategy(DiskCacheStrategy.ALL)
+        GlideImage(
+            imageModel = "https://whc.unesco.org/uploads/thumbs/site_0252_0008-750-750-20151104113424.jpg",
+            modifier = Modifier
+                .height(height = 400.dp)
+                .width(width = getScreenWidth().dp - 30.dp)
+                .clip(shape = RoundedCornerShape(16.dp)),
+            // shows a placeholder ImageBitmap when loading.
+            placeHolder = painterResource(R.drawable.hl1),
+            // shows an error ImageBitmap when the request failed.
+            error = painterResource(id = R.drawable.hl3),
+            //for preview only
+            previewPlaceholder = R.drawable.hl1,
+            contentScale = ContentScale.FillBounds,
+            bitmapPalette = BitmapPalette {
+                //it.paletteColorList() will get List<Int> color from image
+            },
+            requestBuilder = { requestBuilder }
+        )
+    }
+}
+
+//endregion
+
+@Composable
 fun MirrorImage() {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "Mirror Image",color = MaterialTheme.colors.onSurface)
+        Text(text = "Mirror Image", color = MaterialTheme.colors.onSurface)
         Mirror {
             Image(
                 modifier = Modifier
@@ -77,14 +240,6 @@ fun Mirror(content: @Composable () -> Unit) {
                 alpha = 0.99f
                 rotationZ = 180f
             }
-            /*.drawWithContent {
-                val colors = listOf(Color.Transparent, Color.White)
-                drawContent()
-                drawRect(
-                    brush = Brush.verticalGradient(colors),
-                    blendMode = BlendMode.DstIn
-                )
-            }*/
             //blur
             .blur(
                 radiusX = 1.dp,
