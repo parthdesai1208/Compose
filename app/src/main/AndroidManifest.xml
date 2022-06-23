@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".ComposeApp"
         android:allowBackup="true"
@@ -10,6 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".BottomSheetActivity"
+            android:exported="false" />
         <activity
             android:name=".view.migration.ViewInsideComposeActivity"
             android:exported="false" />

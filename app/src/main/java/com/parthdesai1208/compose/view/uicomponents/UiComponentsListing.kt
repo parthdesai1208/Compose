@@ -37,6 +37,7 @@ enum class UIComponentsListingEnumType(val buttonTitle: String, val func: @Compo
     HorizontalListScreen("Horizontal List", { HorizontalListNavGraph() }),
     ConstraintLayoutContent("Constraint Layout Content", { ConstraintLayoutContent() }),
     ConstraintLayoutScreen("runtime Constraint Layout", { DecoupledConstraintLayout() }),
+    BottomSheetScreen("Bottom Sheet",{BottomSheetNavGraph()}),
 }
 
 object UIComponentsDestinations {
