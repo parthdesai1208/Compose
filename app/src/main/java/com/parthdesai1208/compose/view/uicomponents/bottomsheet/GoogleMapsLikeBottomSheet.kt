@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -22,7 +23,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -36,6 +39,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.model.GoogleMapsImageList
 import com.parthdesai1208.compose.model.GoogleMapsImageModel
+import com.parthdesai1208.compose.model.categoryList
 import com.parthdesai1208.compose.view.animation.getScreenWidth
 import com.parthdesai1208.compose.view.theme.blueDirectionColor
 import com.parthdesai1208.compose.view.uicomponents.DoubleSizedLeftRowGridCell
@@ -126,6 +130,38 @@ fun MapsLikeContent() {
         }
 
         HorizontalStaggeredImageList()
+
+        CategoryList()
+    }
+}
+
+@Composable
+fun ChipDirection(
+    image: ImageVector,
+    text: String,
+    bgColor: Color,
+    contentColor: Color,
+    borderColor: Color
+) {
+    Card(
+        border = BorderStroke(color = borderColor, width = Dp.Hairline),
+        shape = RoundedCornerShape(32.dp),
+        backgroundColor = bgColor
+    ) {
+        Row(
+            modifier = Modifier.padding(start = 14.dp, end = 14.dp, top = 8.dp, bottom = 8.dp),
+            horizontalArrangement = Arrangement.spacedBy(
+                8.dp,
+                alignment = Alignment.CenterHorizontally
+            )
+        ) {
+            Icon(
+                imageVector = image,
+                contentDescription = null,
+                tint = contentColor
+            )
+            Text(text = text, color = contentColor)
+        }
     }
 }
 
@@ -139,7 +175,7 @@ val DoubleSizedRowGridCell = object : GridCells {
 
 @Composable
 fun HorizontalStaggeredImageList() {
-    LazyHorizontalGrid(contentPadding = PaddingValues(start = 16.dp),
+    LazyHorizontalGrid(contentPadding = PaddingValues(start = 16.dp, end = 16.dp),
         modifier = Modifier
             .height(300.dp)
             .padding(top = 8.dp)
@@ -188,10 +224,17 @@ fun ItemHorizontalStaggeredImageList(item: GoogleMapsImageModel) {
             modifier = Modifier
                 .fillMaxSize()
                 .clip(shape = RoundedCornerShape(8.dp))
-                .alpha(if (item.isIconVisible && item.isTextVisible) .50f else 1f)
                 .constrainAs(image) {
                     linkTo(start = parent.start, end = parent.end)
                     linkTo(top = parent.top, bottom = parent.bottom)
+                }
+                .drawWithContent {
+                    if (item.isIconVisible && item.isTextVisible) {
+                        drawContent()
+                        drawRect(color = Color.Black, alpha = .6f)
+                    } else {
+                        drawContent()
+                    }
                 }
         )
         if (item.isIconVisible) {
@@ -201,7 +244,7 @@ fun ItemHorizontalStaggeredImageList(item: GoogleMapsImageModel) {
                     linkTo(top = parent.top, bottom = parent.bottom, bottomMargin = 16.dp)
                 })
         }
-        if (item.isTextVisible) {
+        if (item.isIconVisible && item.isTextVisible) {
             Text(
                 text = item.text,
                 color = Color.White,
@@ -215,7 +258,7 @@ fun ItemHorizontalStaggeredImageList(item: GoogleMapsImageModel) {
             Text(text = item.text, color = Color.White,
                 modifier = Modifier
                     .background(
-                        color = Color.Gray.copy(alpha = 0.7f),
+                        color = Color.Black.copy(alpha = .6f),
                         shape = RoundedCornerShape(8.dp)
                     )
                     .padding(all = 5.dp)
@@ -228,31 +271,38 @@ fun ItemHorizontalStaggeredImageList(item: GoogleMapsImageModel) {
 }
 
 @Composable
-fun ChipDirection(
-    image: ImageVector,
-    text: String,
-    bgColor: Color,
-    contentColor: Color,
-    borderColor: Color
-) {
-    Card(
-        border = BorderStroke(color = borderColor, width = Dp.Hairline),
-        shape = RoundedCornerShape(32.dp),
-        backgroundColor = bgColor
-    ) {
-        Row(
-            modifier = Modifier.padding(start = 14.dp, end = 14.dp, top = 8.dp, bottom = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(
-                8.dp,
-                alignment = Alignment.CenterHorizontally
-            )
-        ) {
-            Icon(
-                imageVector = image,
-                contentDescription = null,
-                tint = contentColor
-            )
-            Text(text = text, color = contentColor)
-        }
-    }
+fun CategoryList() {
+    LazyHorizontalGrid(rows = GridCells.Fixed(2),
+        modifier = Modifier
+            .padding(start = 16.dp, top = 18.dp, end = 16.dp)
+            .fillMaxWidth()
+            .height(200.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        content = {
+            categoryList.forEachIndexed { index, categoryData ->
+                item {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Box(
+                            modifier = Modifier
+                                .clip(shape = CircleShape)
+                                .background(color = categoryData.tintColor)
+                                .size(50.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = categoryData.icon,
+                                contentDescription = null,
+                                tint = MaterialTheme.colors.surface
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Text(
+                            text = categoryData.categoryName,
+                            color = MaterialTheme.colors.onSurface,
+                        )
+
+                    }
+                }
+            }
+        })
 }

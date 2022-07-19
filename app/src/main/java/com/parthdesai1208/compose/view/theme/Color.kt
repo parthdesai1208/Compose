@@ -20,3 +20,12 @@ val Amber600 = Color(0xFFFFB300)
 val red1000 = Color(0xFFF52A26)
 
 val blueDirectionColor = Color(0xFF1A73E8)
+
+val restaurant_gmap = Color(0xFF4285F4)
+val petrol_gmap = Color(0xFFEA4335)
+val hotel_gmap = Color(0xFFFBBC04)
+val coffee_gmap = Color(0xFF34A853)
+val groceries_gmap = Color(0xFFFA7B17)
+val attractions_gmap = Color(0xFFF439A0)
+val shopping_gmap = Color(0xFFA142F4)
+val more_gmap = Color(0xFF24C1E0)
