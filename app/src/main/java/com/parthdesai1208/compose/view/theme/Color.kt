@@ -18,3 +18,5 @@ val Green300 = Color(0xFF81C784)
 val Green800 = Color(0xFF2E7D32)
 val Amber600 = Color(0xFFFFB300)
 val red1000 = Color(0xFFF52A26)
+
+val blueDirectionColor = Color(0xFF1A73E8)

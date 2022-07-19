@@ -19,6 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.parthdesai1208.compose.view.uicomponents.bottomsheet.BottomSheetNavGraph
 
 
 enum class UIComponentsListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
@@ -37,7 +38,7 @@ enum class UIComponentsListingEnumType(val buttonTitle: String, val func: @Compo
     HorizontalListScreen("Horizontal List", { HorizontalListNavGraph() }),
     ConstraintLayoutContent("Constraint Layout Content", { ConstraintLayoutContent() }),
     ConstraintLayoutScreen("runtime Constraint Layout", { DecoupledConstraintLayout() }),
-    BottomSheetScreen("Bottom Sheet",{BottomSheetNavGraph()}),
+    BottomSheetScreen("Bottom Sheet",{ BottomSheetNavGraph() }),
 }
 
 object UIComponentsDestinations {

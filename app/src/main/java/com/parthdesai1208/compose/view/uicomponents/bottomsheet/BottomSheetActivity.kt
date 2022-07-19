@@ -1,4 +1,4 @@
-package com.parthdesai1208.compose
+package com.parthdesai1208.compose.view.uicomponents.bottomsheet
 
 import android.app.Activity
 import android.content.Intent
@@ -15,8 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.parthdesai1208.compose.view.MainActivity
 import com.parthdesai1208.compose.view.theme.ComposeTheme
-import com.parthdesai1208.compose.view.uicomponents.SimpleBottomSheetContent
-import com.parthdesai1208.compose.view.uicomponents.showAsBottomSheet
 
 class BottomSheetActivity : AppCompatActivity() {
 

@@ -1,4 +1,6 @@
-package com.parthdesai1208.compose.view.uicomponents
+@file:Suppress("OPT_IN_IS_NOT_ENABLED")
+
+package com.parthdesai1208.compose.view.uicomponents.bottomsheet
 
 import android.app.Activity
 import android.content.Intent
@@ -34,9 +36,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.parthdesai1208.compose.BottomSheetActivity
 import com.parthdesai1208.compose.R
-import com.parthdesai1208.compose.view.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -45,7 +45,8 @@ enum class BottomSheetListingEnumType(val buttonTitle: String, val func: @Compos
     SimpleBottomSheet("simple BS using Scaffold", { SimpleBottomSheet() }),
     BottomSheetWithPeekHeight("BS scaffold with peek height", { BottomSheetWithPeekHeight() }),
     BottomSheetWithAnimation("BS scaffold with animation", { BottomSheetWithAnimation() }),
-    BottomSheetUsingExtension("BS using extension",{ BottomSheetUsingExtension() }),
+    BottomSheetUsingExtension("BS using extension", { BottomSheetUsingExtension() }),
+    GoogleMapsLikeBottomSheet("Google maps BS", { GoogleMapsLikeBottomSheet() }),
 }
 
 object BottomSheetDestinations {
@@ -120,6 +121,7 @@ fun BottomSheetListingScreen(navController: NavController) {
 }
 //endregion
 
+@Suppress("OPT_IN_IS_NOT_ENABLED")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SimpleBottomSheet() {
