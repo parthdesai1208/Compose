@@ -2,9 +2,8 @@
 
 package com.parthdesai1208.compose.view.uicomponents.bottomsheet
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import android.content.res.Configuration
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -13,22 +12,24 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.BookmarkBorder
-import androidx.compose.material.icons.filled.Directions
-import androidx.compose.material.icons.filled.Image
-import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -41,10 +42,9 @@ import com.parthdesai1208.compose.model.GoogleMapsImageList
 import com.parthdesai1208.compose.model.GoogleMapsImageModel
 import com.parthdesai1208.compose.model.categoryList
 import com.parthdesai1208.compose.view.animation.getScreenWidth
+import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.view.theme.blueDirectionColor
-import com.parthdesai1208.compose.view.uicomponents.DoubleSizedLeftRowGridCell
-import com.parthdesai1208.compose.view.uicomponents.ItemViewFirstItemTakeWholeSpace
-import com.parthdesai1208.compose.view.uicomponents.commonBorder
+import com.parthdesai1208.compose.view.theme.restaurant_gmap
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -55,7 +55,14 @@ fun GoogleMapsLikeBottomSheet() {
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
     val scope = rememberCoroutineScope()
 
-    BottomSheetScaffold(sheetContent = { MapsLikeContent() }, scaffoldState = scaffoldState) {
+    BottomSheetScaffold(
+        sheetContent = {
+            ComposeTheme {
+                MapsLikeContent()
+            }
+        }, scaffoldState = scaffoldState,
+        sheetPeekHeight = 200.dp
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -72,7 +79,7 @@ fun GoogleMapsLikeBottomSheet() {
                     }
                 }
             }) {
-                Text(text = "Google maps", color = MaterialTheme.colors.onPrimary)
+                Text(text = "Google maps like BottomSheet", color = MaterialTheme.colors.onPrimary)
             }
         }
     }
@@ -81,13 +88,24 @@ fun GoogleMapsLikeBottomSheet() {
 @Preview(showSystemUi = true)
 @Composable
 fun MapsLikeContent() {
-    Column(modifier = Modifier.fillMaxSize()) {
-        val commonPadding = Modifier.padding(start = 16.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(state = rememberScrollState())
+    ) {
+        val commonPadding = Modifier.padding(start = 16.dp, end = 16.dp)
+        Spacer(modifier = Modifier.height(8.dp))
+        Box(
+            modifier = Modifier
+                .size(width = 50.dp, height = 5.dp)
+                .background(color = Color.LightGray, shape = RoundedCornerShape(12.dp))
+                .align(Alignment.CenterHorizontally)
+        )
         Text(
             text = "Pune",
             color = MaterialTheme.colors.onSurface,
             style = MaterialTheme.typography.h5,
-            modifier = commonPadding
+            modifier = commonPadding.padding(top = 16.dp)
         )
 
         Text(
@@ -130,8 +148,46 @@ fun MapsLikeContent() {
         }
 
         HorizontalStaggeredImageList()
-
+        DividerLine()
         CategoryList()
+        DividerLine()
+        PlaceDescriptionText()
+        DividerLine()
+        StateText()
+        DividerLine()
+        MeasureDistance()
+        PhotosImage()
+        DividerLine()
+        IconAndTextInRow(icon = Icons.Default.Edit, text = "Suggest an edit on Pune")
+        Spacer(modifier = Modifier.height(12.dp))
+        IconAndTextInRow(icon = Icons.Default.Map, text = "Add a missing place")
+        Spacer(modifier = Modifier.height(12.dp))
+        IconAndTextInRow(icon = Icons.Default.Place, text = "Add your business to Maps for free")
+        DividerLine()
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = commonPadding.padding(bottom = 8.dp)
+        ) {
+            ChipDirection(
+                image = Icons.Default.Directions, text = "",
+                bgColor = blueDirectionColor, contentColor = MaterialTheme.colors.surface,
+                borderColor = blueDirectionColor
+            )
+            ChipDirection(
+                image = Icons.Default.BookmarkBorder,
+                text = "Save",
+                bgColor = MaterialTheme.colors.surface,
+                contentColor = blueDirectionColor,
+                borderColor = Color.Gray
+            )
+            ChipDirection(
+                image = Icons.Default.Share,
+                text = "Share",
+                bgColor = MaterialTheme.colors.surface,
+                contentColor = blueDirectionColor,
+                borderColor = Color.Gray
+            )
+        }
     }
 }
 
@@ -143,9 +199,10 @@ fun ChipDirection(
     contentColor: Color,
     borderColor: Color
 ) {
+
     Card(
         border = BorderStroke(color = borderColor, width = Dp.Hairline),
-        shape = RoundedCornerShape(32.dp),
+        shape = if (text.isNotBlank()) RoundedCornerShape(32.dp) else CircleShape,
         backgroundColor = bgColor
     ) {
         Row(
@@ -160,7 +217,9 @@ fun ChipDirection(
                 contentDescription = null,
                 tint = contentColor
             )
-            Text(text = text, color = contentColor)
+            if (text.isNotBlank()) {
+                Text(text = text, color = contentColor)
+            }
         }
     }
 }
@@ -277,7 +336,8 @@ fun CategoryList() {
             .padding(start = 16.dp, top = 18.dp, end = 16.dp)
             .fillMaxWidth()
             .height(200.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.spacedBy(20.dp),
+//        verticalArrangement = Arrangement.SpaceBetween,
         content = {
             categoryList.forEachIndexed { index, categoryData ->
                 item {
@@ -305,4 +365,94 @@ fun CategoryList() {
                 }
             }
         })
+}
+
+@Composable
+fun DividerLine() {
+    Spacer(modifier = Modifier.height(8.dp))
+    Box(
+        modifier = Modifier
+            .height(1.dp)
+            .fillMaxWidth()
+            .background(color = Color.LightGray)
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+}
+
+@Composable
+fun PlaceDescriptionText() {
+    Text(
+        text = stringResource(id = R.string.GoogleMapsPlaceDescription),
+        color = MaterialTheme.colors.onSurface.copy(alpha = .5f),
+        modifier = Modifier.padding(start = 16.dp, top = 8.dp, end = 16.dp)
+    )
+}
+
+@Composable
+fun IconAndTextInRow(icon: ImageVector, text: String) {
+    Row(modifier = Modifier.padding(start = 16.dp, end = 16.dp)) {
+        Icon(
+            imageVector = icon, contentDescription = null,
+            tint = restaurant_gmap
+        )
+        Spacer(modifier = Modifier.width(20.dp))
+        Text(text = text, color = MaterialTheme.colors.onSurface.copy(alpha = .5f))
+    }
+}
+
+@Composable
+fun StateText() {
+    IconAndTextInRow(icon = Icons.Default.Map, text = "Maharashtra")
+}
+
+@Composable
+fun MeasureDistance() {
+    IconAndTextInRow(icon = Icons.Default.Calculate, text = "Measure distance")
+}
+
+@Composable
+fun PhotosImage() {
+    val density = LocalDensity.current
+    val width = remember { mutableStateOf(0f) }
+    val height = remember { mutableStateOf(0f) }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(150.dp)
+            .padding(start = 16.dp, top = 8.dp, end = 16.dp)
+            .clip(shape = RoundedCornerShape(8.dp)), elevation = 4.dp
+    ) {
+        Box {
+            Image(
+                painter = painterResource(id = R.drawable.gi8),
+                contentScale = ContentScale.Crop,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onGloballyPositioned {
+                        width.value = (it.size.width / density.density.toInt()).toFloat()
+                        height.value = (it.size.height / density.density.toInt()).toFloat()
+                    }
+            )
+            Column(
+                modifier = Modifier
+                    .size(width = width.value.dp, height = height.value.dp)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            listOf(Color.Transparent, Color.Black),
+                            startY = 0f,
+                            endY = 500f
+                        )
+                    )
+            ) {}
+            Text(
+                text = "Photos",
+                color = Color.White,
+                modifier = Modifier
+                    .padding(start = 12.dp, bottom = 12.dp)
+                    .align(Alignment.BottomStart)
+            )
+        }
+    }
 }
