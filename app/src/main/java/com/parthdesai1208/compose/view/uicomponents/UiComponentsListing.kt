@@ -24,6 +24,7 @@ import com.parthdesai1208.compose.view.uicomponents.bottomsheet.BottomSheetNavGr
 
 enum class UIComponentsListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
     TextComponents("Text", { TextComponents("World") }),
+    EditTextCompose("EditText",{ EditTextCompose() }),
     ButtonComponents("Button", { ButtonCompose() }),
     ImageCompose("Image",{ ImageComposeScreen() }),
     IconCompose("Icon",{IconComposeScreen()}),
