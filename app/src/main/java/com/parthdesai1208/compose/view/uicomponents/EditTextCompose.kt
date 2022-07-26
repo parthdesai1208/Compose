@@ -138,8 +138,8 @@ fun TextStyleTextField() {
         value = text,
         singleLine = true,
         onValueChange = { text = it },
-        label = { Text("Max Line", color = MaterialTheme.colors.onSurface) },
-        textStyle = TextStyle(color = Color.Blue, fontWeight = FontWeight.Bold),
+        label = { Text("Text style", color = MaterialTheme.colors.onSurface) },
+        textStyle = TextStyle(color = Color.Cyan.copy(alpha = .5f), fontWeight = FontWeight.Bold),
         modifier = Modifier.padding(20.dp)
     )
 }
@@ -153,7 +153,8 @@ fun CapitalizeAllCharTextField() {
         singleLine = true,
         onValueChange = { text = it },
         label = { Text("Capitalize all characters", color = MaterialTheme.colors.onSurface) },
-        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters)
+        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters),
+        textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
     )
 }
 
@@ -171,7 +172,8 @@ fun CapitalizeFirstCharOfWordTextField() {
                 color = MaterialTheme.colors.onSurface
             )
         },
-        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words)
+        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words),
+        textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
     )
 }
 
@@ -189,7 +191,8 @@ fun CapitalizeFirstCharOfSentenceTextField() {
                 color = MaterialTheme.colors.onSurface
             )
         },
-        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
+        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+        textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
     )
 }
 
@@ -202,7 +205,8 @@ fun AutoCorrectTextField() {
         singleLine = true,
         onValueChange = { text = it },
         label = { Text("AutoCorrect true by default", color = MaterialTheme.colors.onSurface) },
-        keyboardOptions = KeyboardOptions(autoCorrect = true)
+        keyboardOptions = KeyboardOptions(autoCorrect = true),
+        textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
     )
 }
 
@@ -217,7 +221,8 @@ fun KeyBoardTypeTextField(keyboardType: KeyboardType, text: String) {
         visualTransformation = if (text.lowercase()
                 .contains("pass")
         ) PasswordVisualTransformation() else VisualTransformation.None,
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
     )
 }
 
@@ -261,6 +266,7 @@ fun ImeOptionTextField(imeAction: ImeAction, text: String) {
             onNext = {
                 Toast.makeText(context, "Next...", Toast.LENGTH_SHORT).show()
                 keyboardController?.hide()
-            })
+            }),
+        textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
     )
 }
