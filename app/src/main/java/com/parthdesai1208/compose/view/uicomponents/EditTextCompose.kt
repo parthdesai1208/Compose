@@ -8,10 +8,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -55,9 +55,9 @@ fun EditTextCompose() {
         DividerTextCompose()
         AutoCorrectTextField()
         DividerTextCompose()
-        KeyBoardTypeTextField(keyboardType = KeyboardType.Password, "Password")
+        KeyBoardTypeTextFieldPass(keyboardType = KeyboardType.Password, "Password")
         DividerTextCompose()
-        KeyBoardTypeTextField(keyboardType = KeyboardType.NumberPassword, "Number Password")
+        KeyBoardTypeTextFieldPass(keyboardType = KeyboardType.NumberPassword, "Number Password")
         DividerTextCompose()
         KeyBoardTypeTextField(keyboardType = KeyboardType.Number, "Number")
         DividerTextCompose()
@@ -211,6 +211,32 @@ fun AutoCorrectTextField() {
 }
 
 @Composable
+fun KeyBoardTypeTextFieldPass(keyboardType: KeyboardType, text: String) {
+    var password by rememberSaveable { mutableStateOf("") }
+    var passwordVisible by rememberSaveable { mutableStateOf(false) }
+
+    TextField(
+        value = password,
+        onValueChange = { password = it },
+        label = { Text(text) },
+        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
+        trailingIcon =  {
+            val image = if (passwordVisible)
+                Icons.Filled.Visibility
+            else Icons.Filled.VisibilityOff
+
+            val description = if (passwordVisible) "Hide password" else "Show password"
+
+            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                Icon(imageVector = image, contentDescription = description)
+            }
+        }
+    )
+}
+
+@Composable
 fun KeyBoardTypeTextField(keyboardType: KeyboardType, text: String) {
     var password by rememberSaveable { mutableStateOf("") }
 
@@ -218,9 +244,6 @@ fun KeyBoardTypeTextField(keyboardType: KeyboardType, text: String) {
         value = password,
         onValueChange = { password = it },
         label = { Text(text) },
-        visualTransformation = if (text.lowercase()
-                .contains("pass")
-        ) PasswordVisualTransformation() else VisualTransformation.None,
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
     )
