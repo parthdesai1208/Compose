@@ -292,7 +292,7 @@ fun AnnotatedClickableTextWithURL() {
         )
         withStyle(
             style = SpanStyle(
-                color = Color.Blue.copy(alpha = .5f),
+                color = Color.Cyan.copy(alpha = .5f),
                 fontWeight = FontWeight.Bold
             )
         ) {
