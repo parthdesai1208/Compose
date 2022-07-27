@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".BottomSheetActivity"
+            android:name=".view.uicomponents.bottomsheet.BottomSheetActivity"
             android:exported="false" />
         <activity
             android:name=".view.migration.ViewInsideComposeActivity"
