@@ -20,7 +20,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -42,6 +45,8 @@ fun SearchBar(vm: SearchBarViewModel) {
 private fun SearchBarForVMInit(list: List<String>, onSearch: (String) -> Unit) {
     var searchQuery by rememberSaveable { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
 
     Column {
         TextField(
@@ -86,12 +91,14 @@ private fun SearchBarForVMInit(list: List<String>, onSearch: (String) -> Unit) {
                 .fillMaxWidth()
                 .wrapContentHeight(align = Alignment.Top)
                 .heightIn(min = 56.dp)
-                .padding(all = 16.dp),
+                .padding(all = 16.dp)
+                .focusRequester(focusRequester),
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(onSearch = {
                 onSearch(searchQuery)
                 keyboardController?.hide()
+                focusManager.clearFocus(true)
             })
         )
 
