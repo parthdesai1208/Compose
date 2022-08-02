@@ -1,4 +1,5 @@
 @file:Suppress("OPT_IN_IS_NOT_ENABLED")
+@file:OptIn(ExperimentalTextApi::class)
 
 package com.parthdesai1208.compose.view.uicomponents
 
@@ -19,14 +20,17 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
+import com.parthdesai1208.compose.utils.RainbowColors
 
 @Composable
 fun EditTextCompose() {
@@ -76,6 +80,8 @@ fun EditTextCompose() {
         ImeOptionTextField(imeAction = ImeAction.Next, "Next ImeAction")
         DividerTextCompose()
         ImeOptionTextField(imeAction = ImeAction.Done, "Done ImeAction")
+        DividerTextCompose()
+        GradientTextField()
         DividerTextCompose()
     }
 }
@@ -222,7 +228,7 @@ fun KeyBoardTypeTextFieldPass(keyboardType: KeyboardType, text: String) {
         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
-        trailingIcon =  {
+        trailingIcon = {
             val image = if (passwordVisible)
                 Icons.Filled.Visibility
             else Icons.Filled.VisibilityOff
@@ -291,5 +297,23 @@ fun ImeOptionTextField(imeAction: ImeAction, text: String) {
                 keyboardController?.hide()
             }),
         textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
+    )
+}
+
+@Composable
+fun GradientTextField() {
+
+    var text by remember { mutableStateOf("") }
+    val brush = remember {
+        Brush.linearGradient(
+            colors = RainbowColors
+        )
+    }
+
+    TextField(
+        value = text,
+        label = { Text(text = "Gradient Text Field") },
+        onValueChange = { text = it },
+        textStyle = TextStyle(brush = brush)
     )
 }
