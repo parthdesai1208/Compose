@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.utils.RainbowColors
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 
 
@@ -46,7 +47,7 @@ class FakeStringProvider : PreviewParameterProvider<String> {
         get() = sequenceOf("Parth")
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalTextApi::class)
 @Composable
 fun TextComponents(name: String) { //@PreviewParameter(FakeStringProvider::class)
     Column(
@@ -93,6 +94,31 @@ fun TextComponents(name: String) { //@PreviewParameter(FakeStringProvider::class
                     )
                 )
             )
+        )
+        DividerTextCompose()
+        Text(
+            text = "Text with textColor linearGradient".repeat(6),
+            style = TextStyle(brush = Brush.linearGradient(colors = RainbowColors))
+        )
+        DividerTextCompose()
+        Text(
+            text = "Text with textColor horizontalGradient".repeat(6),
+            style = TextStyle(brush = Brush.horizontalGradient(colors = RainbowColors))
+        )
+        DividerTextCompose()
+        Text(
+            text = "Text with textColor verticalGradient".repeat(6),
+            style = TextStyle(brush = Brush.verticalGradient(colors = RainbowColors))
+        )
+        DividerTextCompose()
+        Text(
+            text = "Text with textColor radialGradient".repeat(6),
+            style = TextStyle(brush = Brush.radialGradient(colors = RainbowColors))
+        )
+        DividerTextCompose()
+        Text(
+            text = "Text with textColor sweepGradient".repeat(6),
+            style = TextStyle(brush = Brush.sweepGradient(colors = RainbowColors))
         )
         DividerTextCompose()
         Text(
@@ -249,7 +275,8 @@ fun TextComponents(name: String) { //@PreviewParameter(FakeStringProvider::class
         DividerTextCompose()
         ClickableText(
             text = AnnotatedString(
-                "text with which character clicked", spanStyle = SpanStyle(color = MaterialTheme.colors.onSurface)
+                "text with which character clicked",
+                spanStyle = SpanStyle(color = MaterialTheme.colors.onSurface)
             ),
             onClick = { offset ->
                 Toast
@@ -278,7 +305,7 @@ fun DividerTextCompose() {
 fun AnnotatedClickableTextWithURL() {
     val context = LocalContext.current
     val annotatedText = buildAnnotatedString {
-        withStyle(style = SpanStyle(color = MaterialTheme.colors.onSurface)){
+        withStyle(style = SpanStyle(color = MaterialTheme.colors.onSurface)) {
             append("Text with URL")
             append("\nClick ")
         }
