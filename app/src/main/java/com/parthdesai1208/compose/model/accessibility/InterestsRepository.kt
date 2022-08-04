@@ -16,7 +16,6 @@
 
 package com.parthdesai1208.compose.model.accessibility
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.sync.Mutex
@@ -28,7 +27,6 @@ typealias TopicsMap = Map<String, List<String>>
  * Implementation of InterestRepository that returns a hardcoded list of
  * topics, people and publications synchronously.
  */
-@OptIn(ExperimentalCoroutinesApi::class)
 class InterestsRepository {
 
     /**

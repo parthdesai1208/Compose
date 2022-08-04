@@ -1,3 +1,5 @@
+@file:Suppress("OPT_IN_IS_NOT_ENABLED")
+
 package com.parthdesai1208.compose.view
 
 import androidx.annotation.StringRes
@@ -10,8 +12,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -23,7 +25,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
@@ -273,7 +274,6 @@ fun EditTextView(
     )
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun IconRowFun(
     icon: TodoIcon,
@@ -355,9 +355,9 @@ private fun IconView(
 
 @Composable
 fun AddButton(
+    modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     text: String = "Add",
-    modifier: Modifier = Modifier,
     enabled: Boolean = true
 ) {
     TextButton(

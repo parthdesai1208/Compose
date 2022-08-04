@@ -1,3 +1,5 @@
+@file:Suppress("OPT_IN_IS_NOT_ENABLED")
+
 package com.parthdesai1208.compose.view.accessibility
 
 import android.content.res.Configuration
@@ -133,8 +135,6 @@ fun PostCardPopular(
         shape = MaterialTheme.shapes.medium,
         modifier = modifier.size(280.dp, 240.dp),
         onClick = { navigateToArticle(post.id) },
-        // Step 2: Click labels
-        onClickLabel = stringResource(id = R.string.action_read_article)
     ) {
         Column {
 

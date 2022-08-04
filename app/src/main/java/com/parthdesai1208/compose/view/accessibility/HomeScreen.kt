@@ -30,7 +30,7 @@ import com.parthdesai1208.compose.view.theme.ComposeTheme
 import kotlinx.coroutines.launch
 
 /**
- * Stateful HomeScreen which manages state using [produceUiState]
+ * Stateful HomeScreen which manages state using [produce UI State]
  *
  * @param postsRepository data source for this screen
  * @param navigateToArticle (event) request navigation to Article screen
@@ -58,13 +58,12 @@ fun HomeScreen(
  * Stateless composable is not coupled to any specific state management.
  *
  * @param posts (state) the data to show on the screen
- * @param favorites (state) favorite posts
+ * @param favourites (state) favorite posts
  * @param onToggleFavorite (event) toggles favorite for a post
  * @param navigateToArticle (event) request navigation to Article screen
  * @param openDrawer (event) request opening the app drawer
  * @param scaffoldState (state) state for the [Scaffold] component on this screen
  */
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
     posts: List<Post>,

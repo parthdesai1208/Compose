@@ -12,11 +12,7 @@ import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,7 +38,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -60,7 +55,6 @@ import com.parthdesai1208.compose.model.HorizontalListData
 import com.parthdesai1208.compose.model.StaggeredGridListDataClass
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.viewmodel.HorizontalListViewModel
-import kotlin.math.ceil
 import kotlin.math.max
 
 //region vertical recyclerview
@@ -220,7 +214,7 @@ private fun CardItemCollapsableRecyclerView(name: String) {
 //region vertical grid list
 @Composable
 fun VerticalGridList(gridCells: GridCells = GridCells.Fixed(2)) {
-    androidx.compose.foundation.lazy.grid.LazyVerticalGrid(
+    LazyVerticalGrid(
         columns = gridCells,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -260,7 +254,7 @@ val DoubleSizedLeftRowGridCell = object : GridCells {
 
 @Composable
 fun FirstItemTakeWholeSpace() {
-    androidx.compose.foundation.lazy.grid.LazyVerticalGrid(
+    LazyVerticalGrid(
         columns = DoubleSizedLeftRowGridCell,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -305,7 +299,7 @@ fun ItemViewFirstItemTakeWholeSpace(item: DrawableStringPair) {
 
 @Composable
 fun EveryThirdItemTakeWholeSpace() {
-    androidx.compose.foundation.lazy.grid.LazyVerticalGrid(
+    LazyVerticalGrid(
         columns = DoubleSizedLeftRowGridCell,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -329,9 +323,13 @@ fun EveryThirdItemTakeWholeSpace() {
 fun VerticalStaggeredGridListFun() {
     LazyColumn(contentPadding = PaddingValues(8.dp)){
         item {
-            VerticalStaggeredGridList(totalColumn = 3){
-                HorizontalGridListData.forEachIndexed { index, item ->
-                    Box(modifier = Modifier.fillMaxSize().padding(8.dp)) {
+            VerticalStaggeredGridList(totalColumn = 3) {
+                HorizontalGridListData.forEachIndexed { _, item ->
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(8.dp)
+                    ) {
                         Image(
                             painter = painterResource(id = item.drawable),
                             contentDescription = stringResource(id = item.text),
@@ -423,7 +421,7 @@ fun HorizontalListNavGraph(startDestination: String = HorizontalListDestinations
     NavHost(navController = navController, startDestination = startDestination) {
         composable(route = HorizontalListDestinations.HAGL_MAIN_SCREEN) {
             HorizontalList(
-                androidx.lifecycle.viewmodel.compose.viewModel(),
+                viewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
                 navController = navController
             )
         }
@@ -437,9 +435,9 @@ fun HorizontalListNavGraph(startDestination: String = HorizontalListDestinations
 
 @Composable
 fun HorizontalList(
+    modifier: Modifier = Modifier,
     viewModel: HorizontalListViewModel = HorizontalListViewModel(),
-    navController: NavHostController,
-    modifier: Modifier = Modifier
+    navController: NavHostController
 ) {
     val stateForLazyListStateDemo = rememberLazyListState()
     val lastDetect by remember {

@@ -3,6 +3,7 @@ package com.parthdesai1208.compose.view.uicomponents.bottomsheet
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
@@ -24,13 +25,12 @@ class BottomSheetActivity : AppCompatActivity() {
             ComposeTheme {
                 PreviewFun(this)
             }
-        }
-    }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        startActivity(Intent(this,MainActivity::class.java))
-        finishAffinity()
+            BackHandler {
+                startActivity(Intent(this, MainActivity::class.java))
+                finishAffinity()
+            }
+        }
     }
 
 }

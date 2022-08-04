@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-@file:Suppress("EXPERIMENTAL_IS_NOT_ENABLED")
+@file:Suppress("EXPERIMENTAL_IS_NOT_ENABLED", "OPT_IN_IS_NOT_ENABLED")
 
 package com.parthdesai1208.compose.view.animation
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.BorderStroke
@@ -42,9 +43,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.pointer.consumePositionChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.input.pointer.util.VelocityTracker
@@ -72,6 +73,7 @@ private enum class TabPage {
 /**
  * Shows the entire screen.
  */
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AnimationEx1() {
     // String resources.
@@ -220,7 +222,6 @@ fun AnimationEx1() {
  * @param extended Whether the tab should be shown in its expanded state.
  */
 // AnimatedVisibility is currently an experimental API in Compose Animation.
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun HomeFloatingActionButton(
     extended: Boolean,
@@ -251,7 +252,6 @@ private fun HomeFloatingActionButton(
 /**
  * Shows a message that the edit feature is not available.
  */
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun EditMessage(shown: Boolean) {
     AnimatedVisibility(
@@ -367,7 +367,6 @@ private fun TopicRow(topic: String, expanded: Boolean, onClick: () -> Unit) {
 /**
  * Shows a separator for topics.
  */
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun TopicRowSpacer(visible: Boolean) {
     AnimatedVisibility(visible = visible) {
@@ -650,7 +649,7 @@ private fun Modifier.swipeToDismiss(
                         // Record the velocity of the drag.
                         velocityTracker.addPosition(change.uptimeMillis, change.position)
                         // Consume the gesture event, not passed to external
-                        change.consumePositionChange()
+                        if (change.positionChange() != Offset.Zero) change.consume()
                     }
                 }
                 // Dragging finished. Calculate the velocity of the fling.

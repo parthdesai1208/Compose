@@ -2,7 +2,6 @@
 
 package com.parthdesai1208.compose.view.uicomponents.bottomsheet
 
-import android.content.res.Configuration
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -339,7 +338,7 @@ fun CategoryList() {
         horizontalArrangement = Arrangement.spacedBy(20.dp),
 //        verticalArrangement = Arrangement.SpaceBetween,
         content = {
-            categoryList.forEachIndexed { index, categoryData ->
+            categoryList.forEachIndexed { _, categoryData ->
                 item {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Box(

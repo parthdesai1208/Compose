@@ -1,4 +1,4 @@
-@file:Suppress("EXPERIMENTAL_IS_NOT_ENABLED", "SameParameterValue")
+@file:Suppress("EXPERIMENTAL_IS_NOT_ENABLED", "SameParameterValue", "OPT_IN_IS_NOT_ENABLED")
 
 package com.parthdesai1208.compose.view.animation
 
@@ -677,7 +677,6 @@ fun ContentIcon() {
 /**********************************************************************************************************************************
 animateContentSize
  **********************************************************************************************************************************/
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AnimatedContentSize() {
     Column {
