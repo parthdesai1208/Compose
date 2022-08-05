@@ -25,10 +25,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.parthdesai1208.compose.utils.RainbowColors
 
@@ -82,6 +84,10 @@ fun EditTextCompose() {
         ImeOptionTextField(imeAction = ImeAction.Done, "Done ImeAction")
         DividerTextCompose()
         GradientTextField()
+        DividerTextCompose()
+        NoLeadingZeroes()
+        DividerTextCompose()
+        PhoneNumberWithDash()
         DividerTextCompose()
     }
 }
@@ -316,4 +322,133 @@ fun GradientTextField() {
         onValueChange = { text = it },
         textStyle = TextStyle(brush = brush)
     )
+}
+
+@Composable
+fun NoLeadingZeroes() {
+    var input by rememberSaveable { mutableStateOf("") }
+    TextField(
+        value = input,
+        onValueChange = { newText ->
+            //trimStart = Returns a string with matching expression removed from it.
+            input = newText.trimStart { it == '0' }
+        },
+        textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
+    )
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun PhoneNumberWithDash() {
+    var input by rememberSaveable { mutableStateOf("") }
+    val maxChar = 11
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .focusRequester(focusRequester),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        TextField(
+            value = input,
+            onValueChange = { newText ->
+                input = if (newText.length <= maxChar) newText.trim() else input.trim()
+            },
+            label = {
+                Text(
+                    text = "Phone number with special format",
+                    color = MaterialTheme.colors.onSurface
+                )
+            },
+            visualTransformation = PhoneNumberTransformation(),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Phone,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    keyboardController?.hide()
+                    focusManager.clearFocus(true)
+                    if (input.isNotBlank()) Toast.makeText(context, input, Toast.LENGTH_SHORT)
+                        .show()
+                }
+            ),
+            textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
+        )
+        Text(
+            text = "${input.length} / $maxChar", color = MaterialTheme.colors.onSurface,
+            textAlign = TextAlign.End, style = MaterialTheme.typography.caption,
+            modifier = Modifier
+                .align(alignment = Alignment.End)
+                .padding(end = 50.dp)
+        )
+    }
+}
+
+class PhoneNumberTransformation : VisualTransformation {
+    override fun filter(text: AnnotatedString): TransformedText {
+        return phoneNumFilter(text)
+    }
+}
+
+fun phoneNumFilter(text: AnnotatedString): TransformedText {
+
+    // +X(XXX)_XXX_XX_XX
+    val trimmed = if (text.text.length >= 11) text.text.substring(0..10) else text.text
+    var out = ""
+    for (i in trimmed.indices) {
+        if (i == 0) out += "+"
+        if (i == 1) out += "("
+        out += trimmed[i]
+        if (i == 3) out += ") "
+        if (i == 6 || i == 8) out += " "
+
+    }
+    // +X(XXX)_XXX_XX_XX
+    // +1(234) 567 89 11
+    val phoneNumberOffsetTranslator = object : OffsetMapping {
+        override fun originalToTransformed(offset: Int): Int {
+            //offset = means cursor position
+            //execute when user starts typing from left to right
+            if (offset <= 0) return offset
+            if (offset <= 1) return offset + 1 //user type 1st num,cursor will go to (1+1)2nd position
+            if (offset <= 3) return offset + 2 //user type 2nd num,cursor will go to (2+2)4th position
+            //user type 3rd num,cursor will go to (3+2)5th position
+            if (offset <= 7) return offset + 4 //user type 4th num,cursor will go to (4+4)8th position
+            //user type 5th num,cursor will go to (5+4)9th position
+            //user type 6th num,cursor will go to (6+4)10th position
+            //user type 7th num,cursor will go to (7+4)11th position
+            if (offset <= 9) return offset + 5 //user type 8th num,cursor will go to (8+5)13th position
+            //user type 9th num,cursor will go to (9+5)14th position
+            if (offset <= 11) return offset + 6 //user type 10th num,cursor will go to (10+6)16th position
+            //user type 11th num,cursor will go to (11+6)17th position
+            return 17                           //else 17th position
+
+        }
+
+        // +X(XXX)_XXX_XX_XX
+        // +1(234) 567 89 11
+        override fun transformedToOriginal(offset: Int): Int {
+            //execute when user erase the input from right to left
+            if (offset <= 0) return offset
+            if (offset <= 2) return offset - 1  //user erased from 2nd pos,cursor will go to (2-1)1st position
+            if (offset <= 7) return offset - 2  //user erased from 4th pos,cursor will go to (4-2)2nd position
+            //user erased from 5th pos,cursor will go to (5-2)3rd position
+            if (offset <= 12) return offset - 4 //user erased from 8th pos,cursor will go to (8-4)4th position
+            //user erased from 9th pos,cursor will go to (9-4)5th position
+            //user erased from 10th pos,cursor will go to (10-4)6th position
+            //user erased from 11th pos,cursor will go to (11-4)7th position
+            if (offset <= 15) return offset - 5 //user erased from 13th pos,cursor will go to (13-5)8th position
+            //user erased from 14th pos,cursor will go to (14-5)9th position
+            if (offset <= 18) return offset - 6 //user erased from 16th pos,cursor will go to (16-6)10th position
+            //user erased from 17th pos,cursor will go to (17-6)11th position
+            return 11
+        }
+    }
+
+    return TransformedText(AnnotatedString(out), phoneNumberOffsetTranslator)
 }
