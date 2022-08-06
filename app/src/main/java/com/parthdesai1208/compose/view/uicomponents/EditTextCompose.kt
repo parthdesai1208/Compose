@@ -19,6 +19,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Brush
@@ -78,9 +79,9 @@ fun EditTextCompose() {
         DividerTextCompose()
         ImeOptionTextField(imeAction = ImeAction.Send, "Send ImeAction")
         DividerTextCompose()
-        ImeOptionTextField(imeAction = ImeAction.Previous, "Previous ImeAction")
-        DividerTextCompose()
         ImeOptionTextField(imeAction = ImeAction.Next, "Next ImeAction")
+        DividerTextCompose()
+        ImeOptionTextField(imeAction = ImeAction.Previous, "Previous ImeAction")
         DividerTextCompose()
         ImeOptionTextField(imeAction = ImeAction.Done, "Done ImeAction")
         DividerTextCompose()
@@ -300,10 +301,12 @@ fun ImeOptionTextField(imeAction: ImeAction, text: String) {
             onPrevious = {
                 Toast.makeText(context, "Previous...", Toast.LENGTH_SHORT).show()
                 keyboardController?.hide()
+                focusManager.moveFocus(focusDirection = FocusDirection.Up)
             },
             onNext = {
                 Toast.makeText(context, "Next...", Toast.LENGTH_SHORT).show()
                 keyboardController?.hide()
+                focusManager.moveFocus(focusDirection = FocusDirection.Down)
             }),
         textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
     )
