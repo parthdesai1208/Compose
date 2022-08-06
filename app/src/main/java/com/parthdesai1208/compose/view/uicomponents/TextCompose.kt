@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -287,6 +288,10 @@ fun TextComponents(name: String) { //@PreviewParameter(FakeStringProvider::class
         DividerTextCompose()
         AnnotatedClickableTextWithURL()
         DividerTextCompose()
+        TextWithUnderLine()
+        DividerTextCompose()
+        TextWithMiddleLine()
+        DividerTextCompose()
     }
 }
 
@@ -346,6 +351,24 @@ fun AnnotatedClickableTextWithURL() {
                 }
         },
         modifier = Modifier.padding(all = 8.dp)
+    )
+}
+
+@Composable
+fun TextWithUnderLine() {
+    Text(
+        text = "Text with underline",
+        color = MaterialTheme.colors.onSurface,
+        textDecoration = TextDecoration.Underline
+    )
+}
+
+@Composable
+fun TextWithMiddleLine() {
+    Text(
+        text = "Text with middle line",
+        color = MaterialTheme.colors.onSurface,
+        textDecoration = TextDecoration.LineThrough
     )
 }
 
