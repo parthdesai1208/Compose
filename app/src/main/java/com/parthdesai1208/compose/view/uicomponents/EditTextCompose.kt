@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.*
@@ -88,6 +89,8 @@ fun EditTextCompose() {
         NoLeadingZeroes()
         DividerTextCompose()
         PhoneNumberWithDash()
+        DividerTextCompose()
+        ErrorTextField()
         DividerTextCompose()
     }
 }
@@ -257,7 +260,7 @@ fun KeyBoardTypeTextField(keyboardType: KeyboardType, text: String) {
         onValueChange = { password = it },
         label = { Text(text) },
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-        textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
+        textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
     )
 }
 
@@ -329,6 +332,7 @@ fun NoLeadingZeroes() {
     var input by rememberSaveable { mutableStateOf("") }
     TextField(
         value = input,
+        label = { Text(text = "No Leading Zero") },
         onValueChange = { newText ->
             //trimStart = Returns a string with matching expression removed from it.
             input = newText.trimStart { it == '0' }
@@ -377,7 +381,8 @@ fun PhoneNumberWithDash() {
                         .show()
                 }
             ),
-            textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
+            textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
+            leadingIcon = { Icon(imageVector = Icons.Default.Phone, contentDescription = null) }
         )
         Text(
             text = "${input.length} / $maxChar", color = MaterialTheme.colors.onSurface,
@@ -451,4 +456,55 @@ fun phoneNumFilter(text: AnnotatedString): TransformedText {
     }
 
     return TransformedText(AnnotatedString(out), phoneNumberOffsetTranslator)
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun ErrorTextField() {
+    var text by rememberSaveable { mutableStateOf("") }
+    val invalidInput = text.count() < 5 || '@' !in text
+    val context = LocalContext.current
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        TextField(
+            value = text,
+            onValueChange = { text = it },
+            modifier = Modifier.focusRequester(focusRequester),
+            label = {
+                val label = if (invalidInput) "Email*" else "Email"
+                Text(label)
+            },
+            isError = invalidInput,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Email,
+                imeAction = ImeAction.Send
+            ),
+            keyboardActions = KeyboardActions(
+                onSend = {
+                    if (!invalidInput && text.isNotBlank())
+                        Toast.makeText(context, "Email sent to $text id", Toast.LENGTH_SHORT).show()
+                    keyboardController?.hide()
+                    focusManager.clearFocus(true)
+                }
+            )
+        )
+
+        val textColor = if (invalidInput) {
+            MaterialTheme.colors.error
+        } else {
+            MaterialTheme.colors.onSurface
+        }
+        Text(
+            textAlign = TextAlign.Center,
+            text = if (invalidInput) "Requires '@' and at least 5 symbols" else "Helper message",
+            style = MaterialTheme.typography.caption.copy(color = textColor),
+        )
+    }
 }
