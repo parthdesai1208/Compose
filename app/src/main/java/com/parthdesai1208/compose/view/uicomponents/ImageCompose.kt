@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
@@ -39,23 +40,25 @@ import com.skydoves.landscapist.palette.BitmapPalette
 
 @Composable
 fun ImageComposeScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(state = rememberScrollState())
-    ) {
-        ResourceImage()
-        ImageVectorImage()
-        BitmapImage()
-        Row(modifier = Modifier.horizontalScroll(state = rememberScrollState())) {
-            CircularImage()
-            RoundedCornerImage()
-            ImageWithBorder()
+    Surface {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(state = rememberScrollState())
+        ) {
+            ResourceImage()
+            ImageVectorImage()
+            BitmapImage()
+            Row(modifier = Modifier.horizontalScroll(state = rememberScrollState())) {
+                CircularImage()
+                RoundedCornerImage()
+                ImageWithBorder()
+            }
+            ContentScaleImage()
+            MirrorImage()
+            ImageLoadingUsingGlide()
+            ImageLoadingUsingCoil()
         }
-        ContentScaleImage()
-        MirrorImage()
-        ImageLoadingUsingGlide()
-        ImageLoadingUsingCoil()
     }
 }
 
@@ -64,7 +67,7 @@ fun ImageComposeScreen() {
 fun ImageLoadingUsingCoil() {
     Column(modifier = Modifier.padding(top = 16.dp)) {
         Text(
-            text = "Using Coil", color = MaterialTheme.colors.onSurface,
+            text = "Using Coil",
             modifier = Modifier.padding(horizontal = 24.dp)
         )
         Row(
@@ -85,7 +88,7 @@ fun LoadGifUsingCoil() {
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically)
     ) {
-        Text(text = "Load Gif", color = MaterialTheme.colors.onSurface)
+        Text(text = "Load Gif")
         val context = LocalContext.current
         val imageLoader = ImageLoader.Builder(context)
             .components {
@@ -113,7 +116,7 @@ fun LoadImageUsingCoilURL() {
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically)
     ) {
-        Text(text = "Using URL", color = MaterialTheme.colors.onSurface)
+        Text(text = "Using URL")
         CoilImage(
             imageModel = "https://user-images.githubusercontent.com/24237865/75087934-5a53dc00-553e-11ea-94f1-494c1c68a574.jpg",
             modifier = Modifier
@@ -142,7 +145,7 @@ fun LoadImageUsingCoilURL() {
 fun ImageLoadingUsingGlide() {
     Column {
         Text(
-            text = "Using Glide", color = MaterialTheme.colors.onSurface,
+            text = "Using Glide",
             modifier = Modifier.padding(horizontal = 24.dp)
         )
         Row(
@@ -163,7 +166,7 @@ fun LoadGifUsingGlide() {
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically)
     ) {
-        Text(text = "Load Gif", color = MaterialTheme.colors.onSurface)
+        Text(text = "Load Gif")
         val context = LocalContext.current
         val requestBuilder = Glide.with(context).asDrawable()
             .load("https://media2.giphy.com/media/aQYR1p8saOQla/giphy.gif?cid=ecf05e4701sln9u63lr3z17lh5f3n3h3owrk54zh1183hqmi&rid=giphy.gif&ct=g")
@@ -185,7 +188,7 @@ fun LoadImageUsingGlideURL() {
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically)
     ) {
-        Text(text = "Using URL", color = MaterialTheme.colors.onSurface)
+        Text(text = "Using URL")
         val context = LocalContext.current
         val requestBuilder =
             Glide.with(context).asDrawable().diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -215,7 +218,7 @@ fun LoadImageUsingGlideURL() {
 @Composable
 fun MirrorImage() {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "Mirror Image", color = MaterialTheme.colors.onSurface)
+        Text(text = "Mirror Image")
         Mirror {
             Image(
                 modifier = Modifier
@@ -278,10 +281,7 @@ fun ResourceImage() {
             .fillMaxWidth()
             .wrapContentWidth(align = Alignment.CenterHorizontally)
     ) {
-        Text(
-            text = "Image (from Resource) with full dimensions",
-            color = MaterialTheme.colors.onSurface
-        )
+        Text(text = "Image (from Resource) with full dimensions")
         Spacer(modifier = Modifier.width(8.dp))
         Image(painter = painterResource(id = R.drawable.hl1), contentDescription = null)
     }
@@ -296,13 +296,10 @@ fun ImageVectorImage() {
             .fillMaxWidth()
             .wrapContentWidth(align = Alignment.CenterHorizontally)
     ) {
-        Text(
-            text = "Image (from ImageVector) with full dimensions",
-            color = MaterialTheme.colors.onSurface
-        )
+        Text(text = "Image (from ImageVector) with full dimensions")
         Spacer(modifier = Modifier.width(16.dp))
         Row {
-            Text(text = "Icons.Default", color = MaterialTheme.colors.onSurface)
+            Text(text = "Icons.Default")
             Spacer(modifier = Modifier.width(16.dp))
             Image(
                 imageVector = Icons.Default.AddAPhoto,
@@ -312,7 +309,7 @@ fun ImageVectorImage() {
         }
         Spacer(modifier = Modifier.width(8.dp))
         Row {
-            Text(text = "Icons.Filled", color = MaterialTheme.colors.onSurface)
+            Text(text = "Icons.Filled")
             Spacer(modifier = Modifier.width(16.dp))
             Image(
                 imageVector = Icons.Filled.AddAPhoto,
@@ -322,7 +319,7 @@ fun ImageVectorImage() {
         }
         Spacer(modifier = Modifier.width(8.dp))
         Row {
-            Text(text = "Icons.Outlined", color = MaterialTheme.colors.onSurface)
+            Text(text = "Icons.Outlined")
             Spacer(modifier = Modifier.width(16.dp))
             Image(
                 imageVector = Icons.Outlined.AddAPhoto,
@@ -341,10 +338,7 @@ fun BitmapImage() {
             .fillMaxWidth()
             .wrapContentWidth(align = Alignment.CenterHorizontally)
     ) {
-        Text(
-            text = "Image (with bitmap.bmp extension) with full dimensions\nwe can provide bitmap also",
-            color = MaterialTheme.colors.onSurface
-        )
+        Text(text = "Image (with bitmap.bmp extension) with full dimensions\nwe can provide bitmap also")
         Spacer(modifier = Modifier.height(16.dp))
         Image(
             bitmap = ImageBitmap.imageResource(id = R.drawable.actual_bitmap_image),
@@ -361,7 +355,6 @@ fun CircularImage(text: String = "Circle Image", contentScale: ContentScale = Co
     ) {
         Text(
             text = text,
-            color = MaterialTheme.colors.onSurface,
             modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -383,7 +376,6 @@ fun RoundedCornerImage() {
     ) {
         Text(
             text = "Rounded Corner Shape Image",
-            color = MaterialTheme.colors.onSurface,
             modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -405,7 +397,6 @@ fun ImageWithBorder() {
     ) {
         Text(
             text = "Image with Border",
-            color = MaterialTheme.colors.onSurface,
             modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -431,7 +422,6 @@ fun ContentScaleImage() {
     ) {
         Text(
             text = "Image with different content Scale",
-            color = MaterialTheme.colors.onSurface,
             modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
         )
         Spacer(modifier = Modifier.height(16.dp))

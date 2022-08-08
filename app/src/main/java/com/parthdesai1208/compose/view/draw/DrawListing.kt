@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,7 +22,7 @@ import androidx.navigation.navArgument
 
 
 enum class DrawListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
-    DrawLines("drawLine",{ DrawLine() })
+    DrawLines("drawLine", { DrawLine() })
 }
 
 object DrawDestinations {
@@ -68,19 +68,24 @@ fun DrawListingScreen(navController: NavHostController) {
             Text(title.buttonTitle, textAlign = TextAlign.Center)
         }
     }
-
-    Column {
-        Text(text = "Draw Samples", modifier = Modifier.padding(16.dp), fontSize = 18.sp, fontFamily = FontFamily.SansSerif,
-            color = MaterialTheme.colors.onSurface)
-        Spacer(modifier = Modifier.height(8.dp))
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(8.dp)
-        ) {
-            enumValues<DrawListingEnumType>().forEach {
-                MyButton(it)
+    Surface {
+        Column {
+            Text(
+                text = "Draw Samples",
+                modifier = Modifier.padding(16.dp),
+                fontSize = 18.sp,
+                fontFamily = FontFamily.SansSerif
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(8.dp)
+            ) {
+                enumValues<DrawListingEnumType>().forEach {
+                    MyButton(it)
+                }
             }
         }
     }

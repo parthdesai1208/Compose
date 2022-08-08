@@ -97,7 +97,7 @@ enum class AnimationScreenEnumType(val buttonTitle: String, val func: @Composabl
     Snap("snap", { SnapFun() }),
     AnimationVector("AnimationVector - TypeConverter,Coroutine", { AnimationVectorFun() }),
     AnimationEx1("AnimationEx1", { AnimationEx1() }),
-    BoxWithIconUpDownAnimation("Icon Up-down animation",{ BoxWithIconUpDownAnimation() }),
+    BoxWithIconUpDownAnimation("Icon Up-down animation", { BoxWithIconUpDownAnimation() }),
 }
 
 object AnimationDestinations {
@@ -123,23 +123,24 @@ fun AnimationScreen(navController: NavHostController) {
         }
     }
 
-    Column {
-        Text(
-            text = "Animation Samples",
-            modifier = Modifier.padding(16.dp),
-            fontSize = 18.sp,
-            fontFamily = FontFamily.SansSerif,
-            color = MaterialTheme.colors.onSurface
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(8.dp)
-        ) {
-            enumValues<AnimationScreenEnumType>().forEach {
-                MyButton(it)
+    Surface {
+        Column {
+            Text(
+                text = "Animation Samples",
+                modifier = Modifier.padding(16.dp),
+                fontSize = 18.sp,
+                fontFamily = FontFamily.SansSerif
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(8.dp)
+            ) {
+                enumValues<AnimationScreenEnumType>().forEach {
+                    MyButton(it)
+                }
             }
         }
     }
@@ -181,17 +182,19 @@ AnimatedVisibility - without params
 fun AnimatedVisibilityWithoutParams() {
     var visibility by remember { mutableStateOf(true) }
 
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        AnimatedVisibility(visibility) {
-            Text(text = "Hello, world!", color = MaterialTheme.colors.onSurface)
-        }
+    Surface {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            AnimatedVisibility(visibility) {
+                Text(text = "Hello, world!")
+            }
 
-        Button(onClick = { visibility = !visibility }) {
-            Text(text = "Click Me")
+            Button(onClick = { visibility = !visibility }) {
+                Text(text = "Click Me")
+            }
         }
     }
 }
@@ -250,41 +253,43 @@ fun AnimateVisibilityState() {
             targetState = true
         }
     }
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        AnimatedVisibility(
-            visibleState = state,
-            //execute when view is visible
-            enter = fadeIn(tween(4000)) + expandVertically(
-                animationSpec = tween(
-                    4000,
-                    easing = android.view.animation.BounceInterpolator().toEasing()
-                )
-            ),
-            //execute when view is gone
-            exit = fadeOut(tween(4000)) + shrinkVertically(
-                animationSpec = tween(
-                    4000,
-                    easing = android.view.animation.BounceInterpolator().toEasing()
-                )
-            )
+    Surface {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Use the MutableTransitionState to know the current animation state
-            // of the AnimatedVisibility.
-            Text(
-                text = when {
-                    state.isIdle && state.currentState -> "Hello, World!"
-                    !state.isIdle && state.currentState -> "Disappearing"
-                    state.isIdle && !state.currentState -> ""
-                    else -> "Appearing"
-                }, color = MaterialTheme.colors.onSurface
-            )
-        }
-        Button(onClick = { state.targetState = !state.targetState }) {
-            Text("Click Me")
+            AnimatedVisibility(
+                visibleState = state,
+                //execute when view is visible
+                enter = fadeIn(tween(4000)) + expandVertically(
+                    animationSpec = tween(
+                        4000,
+                        easing = android.view.animation.BounceInterpolator().toEasing()
+                    )
+                ),
+                //execute when view is gone
+                exit = fadeOut(tween(4000)) + shrinkVertically(
+                    animationSpec = tween(
+                        4000,
+                        easing = android.view.animation.BounceInterpolator().toEasing()
+                    )
+                )
+            ) {
+                // Use the MutableTransitionState to know the current animation state
+                // of the AnimatedVisibility.
+                Text(
+                    text = when {
+                        state.isIdle && state.currentState -> "Hello, World!"
+                        !state.isIdle && state.currentState -> "Disappearing"
+                        state.isIdle && !state.currentState -> ""
+                        else -> "Appearing"
+                    }
+                )
+            }
+            Button(onClick = { state.targetState = !state.targetState }) {
+                Text("Click Me")
+            }
         }
     }
 }
@@ -460,21 +465,22 @@ AnimatedContent - with targetState
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AnimatedContentSimple() {
-    Row(
-        modifier = Modifier.fillMaxSize(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        var count by remember { mutableStateOf(0) }
-        Button(onClick = { count++ }) {
-            Text("Add")
-        }
-        AnimatedContent(targetState = count) { targetCount ->
-            Text(
-                text = "Count: $targetCount",
-                modifier = Modifier.padding(start = 8.dp),
-                color = MaterialTheme.colors.onSurface
-            )
+    Surface {
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            var count by remember { mutableStateOf(0) }
+            Button(onClick = { count++ }) {
+                Text("Add")
+            }
+            AnimatedContent(targetState = count) { targetCount ->
+                Text(
+                    text = "Count: $targetCount",
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
         }
     }
 }
@@ -573,44 +579,44 @@ AnimatedContent - with targetState, transitionSpec ex-2
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AnimatedContentWithTransitionSpec2() {
+    Surface {
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            var count by remember { mutableStateOf(0) }
 
-    Row(
-        modifier = Modifier.fillMaxSize(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
-    ) {
-        var count by remember { mutableStateOf(0) }
+            Button(onClick = { count++ }) {
+                Text(text = "Add")
+            }
 
-        Button(onClick = { count++ }) {
-            Text(text = "Add")
-        }
+            Button(onClick = { count-- }, modifier = Modifier.padding(start = 8.dp)) {
+                Text(text = "Minus")
+            }
 
-        Button(onClick = { count-- }, modifier = Modifier.padding(start = 8.dp)) {
-            Text(text = "Minus")
-        }
-
-        AnimatedContent(
-            targetState = count,
-            transitionSpec = {
-                if (targetState > initialState) {
-                    // If the target number is larger than old value
-                    slideInVertically { height -> height } + fadeIn() with
-                            slideOutVertically { height -> -height } + fadeOut()
-                } else {
-                    // If the target number is smaller than old value
-                    slideInVertically { height -> -height } + fadeIn() with
-                            slideOutVertically { height -> height } + fadeOut()
-                }.using(
-                    //for adding effect on slide up-down animation
-                    SizeTransform(clip = false)
+            AnimatedContent(
+                targetState = count,
+                transitionSpec = {
+                    if (targetState > initialState) {
+                        // If the target number is larger than old value
+                        slideInVertically { height -> height } + fadeIn() with
+                                slideOutVertically { height -> -height } + fadeOut()
+                    } else {
+                        // If the target number is smaller than old value
+                        slideInVertically { height -> -height } + fadeIn() with
+                                slideOutVertically { height -> height } + fadeOut()
+                    }.using(
+                        //for adding effect on slide up-down animation
+                        SizeTransform(clip = false)
+                    )
+                }
+            ) { targetCount ->
+                Text(
+                    text = "$targetCount",
+                    modifier = Modifier.padding(start = 8.dp)
                 )
             }
-        ) { targetCount ->
-            Text(
-                text = "$targetCount",
-                modifier = Modifier.padding(start = 8.dp),
-                color = MaterialTheme.colors.onSurface
-            )
         }
     }
 }
@@ -1299,50 +1305,51 @@ fun SpringFun() {
         targetValue,
         animationSpec = spring(dampingRatio = Spring.DampingRatioHighBouncy)
     )
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 16.dp, top = 16.dp)
-                .verticalScroll(rememberScrollState())
-        ) {
-            Text(text = "StiffnessLow", color = MaterialTheme.colors.onSurface)
-            DrawImage(offsetAnimationStiffnessLow)
-            Text(text = "StiffnessVeryLow", color = MaterialTheme.colors.onSurface)
-            DrawImage(offsetAnimationStiffnessVeryLow)
-            Text(text = "StiffnessMediumLow", color = MaterialTheme.colors.onSurface)
-            DrawImage(offsetAnimationStiffnessMediumLow)
-            Text(text = "StiffnessMedium", color = MaterialTheme.colors.onSurface)
-            DrawImage(offsetAnimationStiffnessMedium)
-            Text(text = "StiffnessHigh", color = MaterialTheme.colors.onSurface)
-            DrawImage(offsetAnimationStiffnessHigh)
-            Text(text = "DampingRatioNoBouncy", color = MaterialTheme.colors.onSurface)
-            DrawImage(offsetAnimationDampingRatioNoBouncy)
-            Text(text = "DampingRatioLowBouncy", color = MaterialTheme.colors.onSurface)
-            DrawImage(offsetAnimationDampingRatioLowBouncy)
-            Text(text = "DampingRatioMediumBouncy", color = MaterialTheme.colors.onSurface)
-            DrawImage(offsetAnimationDampingRatioMediumBouncy)
-            Text(text = "DampingRatioHighBouncy", color = MaterialTheme.colors.onSurface)
-            DrawImage(offsetAnimationDampingRatioHighBouncy)
-            Spacer(
+    Surface {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
                 modifier = Modifier
-                    .height(100.dp)
-                    .fillMaxWidth()
+                    .fillMaxSize()
+                    .padding(start = 16.dp, top = 16.dp)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Text(text = "StiffnessLow")
+                DrawImage(offsetAnimationStiffnessLow)
+                Text(text = "StiffnessVeryLow")
+                DrawImage(offsetAnimationStiffnessVeryLow)
+                Text(text = "StiffnessMediumLow")
+                DrawImage(offsetAnimationStiffnessMediumLow)
+                Text(text = "StiffnessMedium")
+                DrawImage(offsetAnimationStiffnessMedium)
+                Text(text = "StiffnessHigh")
+                DrawImage(offsetAnimationStiffnessHigh)
+                Text(text = "DampingRatioNoBouncy")
+                DrawImage(offsetAnimationDampingRatioNoBouncy)
+                Text(text = "DampingRatioLowBouncy")
+                DrawImage(offsetAnimationDampingRatioLowBouncy)
+                Text(text = "DampingRatioMediumBouncy")
+                DrawImage(offsetAnimationDampingRatioMediumBouncy)
+                Text(text = "DampingRatioHighBouncy")
+                DrawImage(offsetAnimationDampingRatioHighBouncy)
+                Spacer(
+                    modifier = Modifier
+                        .height(100.dp)
+                        .fillMaxWidth()
+                )
+
+            }
+
+            ExtendedFloatingActionButton(
+                onClick = {
+                    bikeState = when (bikeState) {
+                        BikePosition.Start -> BikePosition.Finish
+                        BikePosition.Finish -> BikePosition.Start
+                    }
+                }, modifier = Modifier
+                    .align(alignment = Alignment.BottomEnd)
+                    .padding(end = 16.dp, bottom = 16.dp), text = { Text(text = "Ride") }
             )
-
         }
-
-        ExtendedFloatingActionButton(
-            onClick = {
-                bikeState = when (bikeState) {
-                    BikePosition.Start -> BikePosition.Finish
-                    BikePosition.Finish -> BikePosition.Start
-                }
-            }, modifier = Modifier
-                .align(alignment = Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 16.dp), text = { Text(text = "Ride") }
-        )
     }
 }
 
@@ -1396,41 +1403,42 @@ fun TweenFun() {
         targetValue,
         animationSpec = tween(durationMillis = 1000, delayMillis = 1000)
     )
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-        ) {
-            Text(text = "LinearEasing", color = MaterialTheme.colors.onSurface)
-            DrawImage(easingLinearEasing)
-            Text(text = "LinearOutSlowInEasing", color = MaterialTheme.colors.onSurface)
-            DrawImage(easingLinearOutSlowInEasing)
-            Text(text = "FastOutLinearInEasing", color = MaterialTheme.colors.onSurface)
-            DrawImage(easingFastOutLinearInEasing)
-            Text(text = "FastOutLinearInEasing", color = MaterialTheme.colors.onSurface)
-            DrawImage(easingFastOutSlowInEasing)
-            Text(text = "withDelay", color = MaterialTheme.colors.onSurface)
-            DrawImage(withDelay)
-            Spacer(
+    Surface {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
                 modifier = Modifier
-                    .height(100.dp)
-                    .fillMaxWidth()
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Text(text = "LinearEasing")
+                DrawImage(easingLinearEasing)
+                Text(text = "LinearOutSlowInEasing")
+                DrawImage(easingLinearOutSlowInEasing)
+                Text(text = "FastOutLinearInEasing")
+                DrawImage(easingFastOutLinearInEasing)
+                Text(text = "FastOutLinearInEasing")
+                DrawImage(easingFastOutSlowInEasing)
+                Text(text = "withDelay")
+                DrawImage(withDelay)
+                Spacer(
+                    modifier = Modifier
+                        .height(100.dp)
+                        .fillMaxWidth()
+                )
+
+            }
+
+            ExtendedFloatingActionButton(
+                onClick = {
+                    bikeState = when (bikeState) {
+                        BikePosition.Start -> BikePosition.Finish
+                        BikePosition.Finish -> BikePosition.Start
+                    }
+                }, modifier = Modifier
+                    .align(alignment = Alignment.BottomEnd)
+                    .padding(end = 16.dp, bottom = 16.dp), text = { Text(text = "Ride") }
             )
-
         }
-
-        ExtendedFloatingActionButton(
-            onClick = {
-                bikeState = when (bikeState) {
-                    BikePosition.Start -> BikePosition.Finish
-                    BikePosition.Finish -> BikePosition.Start
-                }
-            }, modifier = Modifier
-                .align(alignment = Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 16.dp), text = { Text(text = "Ride") }
-        )
     }
 }
 
@@ -1453,32 +1461,34 @@ fun KeyFramesFun() {
             70.dp at 800 with FastOutLinearInEasing // for 400-800 ms
         }
     )
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-        ) {
-            Text(text = "keyframes", color = MaterialTheme.colors.onSurface)
-            DrawImage(keyframesAnimation)
-
-            Spacer(
+    Surface {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
                 modifier = Modifier
-                    .height(100.dp)
-                    .fillMaxWidth()
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Text(text = "keyframes")
+                DrawImage(keyframesAnimation)
+
+                Spacer(
+                    modifier = Modifier
+                        .height(100.dp)
+                        .fillMaxWidth()
+                )
+            }
+
+            ExtendedFloatingActionButton(
+                onClick = {
+                    bikeState = when (bikeState) {
+                        BikePosition.Start -> BikePosition.Finish
+                        BikePosition.Finish -> BikePosition.Start
+                    }
+                }, modifier = Modifier
+                    .align(alignment = Alignment.BottomEnd)
+                    .padding(end = 16.dp, bottom = 16.dp), text = { Text(text = "Ride") }
             )
         }
-
-        ExtendedFloatingActionButton(
-            onClick = {
-                bikeState = when (bikeState) {
-                    BikePosition.Start -> BikePosition.Finish
-                    BikePosition.Finish -> BikePosition.Start
-                }
-            }, modifier = Modifier
-                .align(alignment = Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 16.dp), text = { Text(text = "Ride") }
-        )
     }
 }
 
@@ -1511,36 +1521,37 @@ fun RepeatableFun() {
         )
         //will reverse the last iteration as the animation repeats.
     )
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-        ) {
-            Text(text = "repeatable Restart", color = MaterialTheme.colors.onSurface)
-            DrawImage(repeatableRestartAnimation)
-
-            Spacer(
+    Surface {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
                 modifier = Modifier
-                    .height(150.dp)
-                    .fillMaxWidth()
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Text(text = "repeatable Restart")
+                DrawImage(repeatableRestartAnimation)
+
+                Spacer(
+                    modifier = Modifier
+                        .height(150.dp)
+                        .fillMaxWidth()
+                )
+
+                Text(text = "repeatable Reverse")
+                DrawImage(repeatableReverseAnimation)
+            }
+
+            ExtendedFloatingActionButton(
+                onClick = {
+                    bikeState = when (bikeState) {
+                        BikePosition.Start -> BikePosition.Finish
+                        BikePosition.Finish -> BikePosition.Start
+                    }
+                }, modifier = Modifier
+                    .align(alignment = Alignment.BottomEnd)
+                    .padding(end = 16.dp, bottom = 16.dp), text = { Text(text = "Ride") }
             )
-
-            Text(text = "repeatable Reverse", color = MaterialTheme.colors.onSurface)
-            DrawImage(repeatableReverseAnimation)
         }
-
-        ExtendedFloatingActionButton(
-            onClick = {
-                bikeState = when (bikeState) {
-                    BikePosition.Start -> BikePosition.Finish
-                    BikePosition.Finish -> BikePosition.Start
-                }
-            }, modifier = Modifier
-                .align(alignment = Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 16.dp), text = { Text(text = "Ride") }
-        )
     }
 }
 
@@ -1565,36 +1576,37 @@ fun InfiniteRepeatableFun() {
         animationSpec = infiniteRepeatable(animation = tween(), repeatMode = RepeatMode.Reverse)
         //will reverse the last iteration as the animation repeats.
     )
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-        ) {
-            Text(text = "infinite repeatable Restart", color = MaterialTheme.colors.onSurface)
-            DrawImage(infiniteRepeatableRestartAnimation)
-
-            Spacer(
+    Surface {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
                 modifier = Modifier
-                    .height(150.dp)
-                    .fillMaxWidth()
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Text(text = "infinite repeatable Restart")
+                DrawImage(infiniteRepeatableRestartAnimation)
+
+                Spacer(
+                    modifier = Modifier
+                        .height(150.dp)
+                        .fillMaxWidth()
+                )
+
+                Text(text = "infinite repeatable Reverse")
+                DrawImage(infiniteRepeatableReverseAnimation)
+            }
+
+            ExtendedFloatingActionButton(
+                onClick = {
+                    bikeState = when (bikeState) {
+                        BikePosition.Start -> BikePosition.Finish
+                        BikePosition.Finish -> BikePosition.Start
+                    }
+                }, modifier = Modifier
+                    .align(alignment = Alignment.BottomEnd)
+                    .padding(end = 16.dp, bottom = 16.dp), text = { Text(text = "Ride") }
             )
-
-            Text(text = "infinite repeatable Reverse", color = MaterialTheme.colors.onSurface)
-            DrawImage(infiniteRepeatableReverseAnimation)
         }
-
-        ExtendedFloatingActionButton(
-            onClick = {
-                bikeState = when (bikeState) {
-                    BikePosition.Start -> BikePosition.Finish
-                    BikePosition.Finish -> BikePosition.Start
-                }
-            }, modifier = Modifier
-                .align(alignment = Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 16.dp), text = { Text(text = "Ride") }
-        )
     }
 }
 
@@ -1613,33 +1625,34 @@ fun SnapFun() {
         targetValue,
         animationSpec = snap(delayMillis = 500)
     )
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-        ) {
-            Text(text = "snap animation", color = MaterialTheme.colors.onSurface)
-            DrawImage(snapAnimation)
-
-            Spacer(
+    Surface {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
                 modifier = Modifier
-                    .height(150.dp)
-                    .fillMaxWidth()
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Text(text = "snap animation")
+                DrawImage(snapAnimation)
+
+                Spacer(
+                    modifier = Modifier
+                        .height(150.dp)
+                        .fillMaxWidth()
+                )
+            }
+
+            ExtendedFloatingActionButton(
+                onClick = {
+                    bikeState = when (bikeState) {
+                        BikePosition.Start -> BikePosition.Finish
+                        BikePosition.Finish -> BikePosition.Start
+                    }
+                }, modifier = Modifier
+                    .align(alignment = Alignment.BottomEnd)
+                    .padding(end = 16.dp, bottom = 16.dp), text = { Text(text = "Ride") }
             )
         }
-
-        ExtendedFloatingActionButton(
-            onClick = {
-                bikeState = when (bikeState) {
-                    BikePosition.Start -> BikePosition.Finish
-                    BikePosition.Finish -> BikePosition.Start
-                }
-            }, modifier = Modifier
-                .align(alignment = Alignment.BottomEnd)
-                .padding(end = 16.dp, bottom = 16.dp), text = { Text(text = "Ride") }
-        )
     }
 }
 

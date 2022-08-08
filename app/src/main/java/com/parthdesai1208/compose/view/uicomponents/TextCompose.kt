@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -51,247 +52,235 @@ class FakeStringProvider : PreviewParameterProvider<String> {
 @OptIn(ExperimentalFoundationApi::class, ExperimentalTextApi::class)
 @Composable
 fun TextComponents(name: String) { //@PreviewParameter(FakeStringProvider::class)
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(state = rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        val context = LocalContext.current
-        Text(
-            text = "single click text",
-            color = MaterialTheme.colors.onSurface,
+    Surface {
+        Column(
             modifier = Modifier
-                .padding(16.dp) //to make clickable area bigger
-                .clickable {
-                    Toast
-                        .makeText(context, "Single Click", Toast.LENGTH_SHORT)
-                        .show()
-                }
-        )
-        DividerTextCompose()
-        Text(
-            text = "disable click text",
-            color = MaterialTheme.colors.onSurface,
-            modifier = Modifier
-                .padding(16.dp)
-                .clickable(enabled = false) {
-                    Toast
-                        .makeText(context, "Single Click", Toast.LENGTH_SHORT)
-                        .show()
-                }
-        )
-        DividerTextCompose()
-        Text(
-            text = "text with gradient background",
-            color = MaterialTheme.colors.onSurface,
-            modifier = Modifier.background(
-                brush = Brush.linearGradient(
-                    colors = listOf(
-                        Color.Cyan,
-                        Color.Magenta,
-                        Color.Yellow,
-                        Color.DarkGray
+                .fillMaxSize()
+                .verticalScroll(state = rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            val context = LocalContext.current
+            Text(
+                text = "single click text",
+                modifier = Modifier
+                    .padding(16.dp) //to make clickable area bigger
+                    .clickable {
+                        Toast
+                            .makeText(context, "Single Click", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+            )
+            DividerTextCompose()
+            Text(
+                text = "disable click text",
+                modifier = Modifier
+                    .padding(16.dp)
+                    .clickable(enabled = false) {
+                        Toast
+                            .makeText(context, "Single Click", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+            )
+            DividerTextCompose()
+            Text(
+                text = "text with gradient background",
+                modifier = Modifier.background(
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            Color.Cyan,
+                            Color.Magenta,
+                            Color.Yellow,
+                            Color.DarkGray
+                        )
                     )
                 )
             )
-        )
-        DividerTextCompose()
-        Text(
-            text = "Text with textColor linearGradient".repeat(6),
-            style = TextStyle(brush = Brush.linearGradient(colors = RainbowColors))
-        )
-        DividerTextCompose()
-        Text(
-            text = "Text with textColor horizontalGradient".repeat(6),
-            style = TextStyle(brush = Brush.horizontalGradient(colors = RainbowColors))
-        )
-        DividerTextCompose()
-        Text(
-            text = "Text with textColor verticalGradient".repeat(6),
-            style = TextStyle(brush = Brush.verticalGradient(colors = RainbowColors))
-        )
-        DividerTextCompose()
-        Text(
-            text = "Text with textColor radialGradient".repeat(6),
-            style = TextStyle(brush = Brush.radialGradient(colors = RainbowColors))
-        )
-        DividerTextCompose()
-        Text(
-            text = "Text with textColor sweepGradient".repeat(6),
-            style = TextStyle(brush = Brush.sweepGradient(colors = RainbowColors))
-        )
-        DividerTextCompose()
-        Text(
-            text = "text with background color",
-            color = MaterialTheme.colors.onSurface,
-            modifier = Modifier.background(color = colorResource(id = R.color.teal_700))
-        )
-        DividerTextCompose()
-        Text(
-            text = "Hello $name, this text is in center",
-            color = MaterialTheme.colors.onSurface
-        )
-        DividerTextCompose()
-        Text(
-            text = "circle shape text",
-            color = MaterialTheme.colors.onSurface,
-            modifier = Modifier
-                .background(
-                    color = colorResource(id = R.color.teal_700),
-                    shape = CircleShape
-                )
-                .padding(horizontal = 5.dp)
-        )
-        DividerTextCompose()
-        Text(
-            text = "Rounded corner shape text",
-            color = MaterialTheme.colors.onSurface,
-            modifier = Modifier
-                .background(
-                    color = colorResource(id = R.color.teal_700),
-                    shape = RoundedCornerShape(8.dp)
-                )
-                .padding(horizontal = 5.dp)
-        )
-        DividerTextCompose()
-        Text(
-            text = "Text with alpha .45f(0f to 1f)",
-            color = MaterialTheme.colors.onSurface,
-            modifier = Modifier.alpha(.45f) //used to dim the color of text
-        )
-        DividerTextCompose()
-        Text(
-            text = "accessibility text with onClickLabel",
-            color = MaterialTheme.colors.onSurface,
-            modifier = Modifier
-                .padding(16.dp)
-                .clickable(onClickLabel = "you are Clicking on accessibility text") {}
-        )
-        DividerTextCompose()
-        Text(
-            text = "onLongClick text with accessibility",
-            color = MaterialTheme.colors.onSurface,
-            modifier = Modifier
-                .padding(16.dp)
-                .combinedClickable(onLongClickLabel = "you are Long Clicking on accessibility text",
-                    onLongClick = {
-                        Toast
-                            .makeText(context, "Long Click", Toast.LENGTH_SHORT)
-                            .show()
-                    }) {}
-        )
-        DividerTextCompose()
-        Text(
-            "Center align text", textAlign = TextAlign.Center,
-            modifier = Modifier.width(150.dp), color = MaterialTheme.colors.onSurface,
-        )
-        DividerTextCompose()
-        Text(
-            text = "text with shadow",
-            color = MaterialTheme.colors.onSurface,
-            style = TextStyle(
-                fontSize = 24.sp,
-                shadow = Shadow(
-                    color = Color.Blue,
-                    offset = Offset(5.0f, 10.0f),
-                    blurRadius = 3f
-                )
-            )
-        )
-        DividerTextCompose()
-        Text(
-            "font family Serif",
-            fontFamily = FontFamily.Serif,
-            color = MaterialTheme.colors.onSurface
-        )
-        DividerTextCompose()
-        val firaSansFamily = FontFamily(Font(resId = R.font.fira_sans_light, FontWeight.Light))
-        Text(
-            text = "font family from resource", fontFamily = firaSansFamily,
-            color = MaterialTheme.colors.onSurface
-        )
-        DividerTextCompose()
-        Text(text = buildAnnotatedString {
-            withStyle(style = SpanStyle(color = Color.Blue)) {
-                append("H")
-            }
-            append("ello ")
-
-            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = Color.Red)) {
-                append("W")
-            }
-            append("orld")
-        }, color = MaterialTheme.colors.onSurface)
-        DividerTextCompose()
-        Text(
-            text = buildAnnotatedString {
-                withStyle(style = ParagraphStyle(lineHeight = 30.sp)) {
-                    append("Paragraph annotated string:\n")
-                    withStyle(style = SpanStyle(color = Color.Blue)) {
-                        append("Hello\n")
-                    }
-                    withStyle(
-                        style = SpanStyle(
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Red
-                        )
-                    ) {
-                        append("World\n")
-                    }
-                    append("Compose")
-                }
-            },
-            color = MaterialTheme.colors.onSurface
-        )
-        DividerTextCompose()
-        Text("max line 2".repeat(50), maxLines = 2, color = MaterialTheme.colors.onSurface)
-        DividerTextCompose()
-        Text(
-            "Text overflow ".repeat(50), maxLines = 1, overflow = TextOverflow.Ellipsis,
-            color = MaterialTheme.colors.onSurface
-        )
-        DividerTextCompose()
-        SelectionContainer {
+            DividerTextCompose()
             Text(
-                "Selectable text,\n\nLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-                modifier = Modifier.padding(all = 8.dp),
-                color = MaterialTheme.colors.onSurface
+                text = "Text with textColor linearGradient".repeat(6),
+                style = TextStyle(brush = Brush.linearGradient(colors = RainbowColors))
             )
-        }
-        DividerTextCompose()
-        SelectionContainer {
-            Column {
-                Text("This text is selectable", color = MaterialTheme.colors.onSurface)
-                Text("This one too", color = MaterialTheme.colors.onSurface)
-                DisableSelection {
-                    Text("But not this one", color = MaterialTheme.colors.onSurface)
-                    Text("Disable selection text", color = MaterialTheme.colors.onSurface)
-                    Text("don't touch me", color = MaterialTheme.colors.onSurface)
+            DividerTextCompose()
+            Text(
+                text = "Text with textColor horizontalGradient".repeat(6),
+                style = TextStyle(brush = Brush.horizontalGradient(colors = RainbowColors))
+            )
+            DividerTextCompose()
+            Text(
+                text = "Text with textColor verticalGradient".repeat(6),
+                style = TextStyle(brush = Brush.verticalGradient(colors = RainbowColors))
+            )
+            DividerTextCompose()
+            Text(
+                text = "Text with textColor radialGradient".repeat(6),
+                style = TextStyle(brush = Brush.radialGradient(colors = RainbowColors))
+            )
+            DividerTextCompose()
+            Text(
+                text = "Text with textColor sweepGradient".repeat(6),
+                style = TextStyle(brush = Brush.sweepGradient(colors = RainbowColors))
+            )
+            DividerTextCompose()
+            Text(
+                text = "text with background color",
+                modifier = Modifier.background(color = colorResource(id = R.color.teal_700))
+            )
+            DividerTextCompose()
+            Text(
+                text = "Hello $name, this text is in center"
+            )
+            DividerTextCompose()
+            Text(
+                text = "circle shape text",
+                modifier = Modifier
+                    .background(
+                        color = colorResource(id = R.color.teal_700),
+                        shape = CircleShape
+                    )
+                    .padding(horizontal = 5.dp)
+            )
+            DividerTextCompose()
+            Text(
+                text = "Rounded corner shape text",
+                modifier = Modifier
+                    .background(
+                        color = colorResource(id = R.color.teal_700),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .padding(horizontal = 5.dp)
+            )
+            DividerTextCompose()
+            Text(
+                text = "Text with alpha .45f(0f to 1f)",
+                modifier = Modifier.alpha(.45f) //used to dim the color of text
+            )
+            DividerTextCompose()
+            Text(
+                text = "accessibility text with onClickLabel",
+                modifier = Modifier
+                    .padding(16.dp)
+                    .clickable(onClickLabel = "you are Clicking on accessibility text") {}
+            )
+            DividerTextCompose()
+            Text(
+                text = "onLongClick text with accessibility",
+                modifier = Modifier
+                    .padding(16.dp)
+                    .combinedClickable(onLongClickLabel = "you are Long Clicking on accessibility text",
+                        onLongClick = {
+                            Toast
+                                .makeText(context, "Long Click", Toast.LENGTH_SHORT)
+                                .show()
+                        }) {}
+            )
+            DividerTextCompose()
+            Text(
+                "Center align text", textAlign = TextAlign.Center,
+                modifier = Modifier.width(150.dp),
+            )
+            DividerTextCompose()
+            Text(
+                text = "text with shadow",
+                style = TextStyle(
+                    fontSize = 24.sp,
+                    shadow = Shadow(
+                        color = Color.Blue,
+                        offset = Offset(5.0f, 10.0f),
+                        blurRadius = 3f
+                    )
+                )
+            )
+            DividerTextCompose()
+            Text(
+                "font family Serif",
+                fontFamily = FontFamily.Serif
+            )
+            DividerTextCompose()
+            val firaSansFamily = FontFamily(Font(resId = R.font.fira_sans_light, FontWeight.Light))
+            Text(
+                text = "font family from resource", fontFamily = firaSansFamily
+            )
+            DividerTextCompose()
+            Text(text = buildAnnotatedString {
+                withStyle(style = SpanStyle(color = Color.Blue)) {
+                    append("H")
                 }
-                Text("But again, you can select this one", color = MaterialTheme.colors.onSurface)
-                Text("And this one too", color = MaterialTheme.colors.onSurface)
+                append("ello ")
+
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = Color.Red)) {
+                    append("W")
+                }
+                append("orld")
+            }, color = MaterialTheme.colors.onSurface)
+            DividerTextCompose()
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(style = ParagraphStyle(lineHeight = 30.sp)) {
+                        append("Paragraph annotated string:\n")
+                        withStyle(style = SpanStyle(color = Color.Blue)) {
+                            append("Hello\n")
+                        }
+                        withStyle(
+                            style = SpanStyle(
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Red
+                            )
+                        ) {
+                            append("World\n")
+                        }
+                        append("Compose")
+                    }
+                }
+            )
+            DividerTextCompose()
+            Text("max line 2".repeat(50), maxLines = 2)
+            DividerTextCompose()
+            Text(
+                "Text overflow ".repeat(50), maxLines = 1, overflow = TextOverflow.Ellipsis
+            )
+            DividerTextCompose()
+            SelectionContainer {
+                Text(
+                    "Selectable text,\n\nLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+                    modifier = Modifier.padding(all = 8.dp)
+                )
             }
+            DividerTextCompose()
+            SelectionContainer {
+                Column {
+                    Text("This text is selectable")
+                    Text("This one too")
+                    DisableSelection {
+                        Text("But not this one")
+                        Text("Disable selection text")
+                        Text("don't touch me")
+                    }
+                    Text(
+                        "But again, you can select this one"
+                    )
+                    Text("And this one too")
+                }
+            }
+            DividerTextCompose()
+            ClickableText(
+                text = AnnotatedString(
+                    "text with which character clicked",
+                    spanStyle = SpanStyle(color = MaterialTheme.colors.onSurface)
+                ),
+                onClick = { offset ->
+                    Toast
+                        .makeText(context, "$offset -th character is clicked.", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            )
+            DividerTextCompose()
+            AnnotatedClickableTextWithURL()
+            DividerTextCompose()
+            TextWithUnderLine()
+            DividerTextCompose()
+            TextWithMiddleLine()
+            DividerTextCompose()
         }
-        DividerTextCompose()
-        ClickableText(
-            text = AnnotatedString(
-                "text with which character clicked",
-                spanStyle = SpanStyle(color = MaterialTheme.colors.onSurface)
-            ),
-            onClick = { offset ->
-                Toast
-                    .makeText(context, "$offset -th character is clicked.", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        )
-        DividerTextCompose()
-        AnnotatedClickableTextWithURL()
-        DividerTextCompose()
-        TextWithUnderLine()
-        DividerTextCompose()
-        TextWithMiddleLine()
-        DividerTextCompose()
     }
 }
 
@@ -358,7 +347,6 @@ fun AnnotatedClickableTextWithURL() {
 fun TextWithUnderLine() {
     Text(
         text = "Text with underline",
-        color = MaterialTheme.colors.onSurface,
         textDecoration = TextDecoration.Underline
     )
 }
@@ -367,7 +355,6 @@ fun TextWithUnderLine() {
 fun TextWithMiddleLine() {
     Text(
         text = "Text with middle line",
-        color = MaterialTheme.colors.onSurface,
         textDecoration = TextDecoration.LineThrough
     )
 }

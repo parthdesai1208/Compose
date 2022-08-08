@@ -31,7 +31,7 @@ import com.parthdesai1208.compose.R
 enum class BoxListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
     WhatIsBox("What Is Box", { WhatIsBox() }),
     BoxAlignment("Box Alignment", { BoxAlignment() }),
-    EditProfileImage("Edit Profile Image",{EditProfileImage()}),
+    EditProfileImage("Edit Profile Image", { EditProfileImage() }),
 }
 
 object BoxDestinations {
@@ -82,24 +82,24 @@ fun BoxListingScreen(navController: NavController) {
             Text(title.buttonTitle, textAlign = TextAlign.Center)
         }
     }
-
-    Column {
-        Text(
-            text = "Box Samples",
-            modifier = Modifier.padding(16.dp),
-            fontSize = 18.sp,
-            fontFamily = FontFamily.SansSerif,
-            color = MaterialTheme.colors.onSurface
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(8.dp)
-        ) {
-            enumValues<BoxListingEnumType>().forEach {
-                MyButton(it)
+    Surface {
+        Column {
+            Text(
+                text = "Box Samples",
+                modifier = Modifier.padding(16.dp),
+                fontSize = 18.sp,
+                fontFamily = FontFamily.SansSerif
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(8.dp)
+            ) {
+                enumValues<BoxListingEnumType>().forEach {
+                    MyButton(it)
+                }
             }
         }
     }
@@ -138,34 +138,59 @@ fun WhatIsBox() {
 
 @Composable
 fun BoxAlignment() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Text(text = "Top start", modifier = Modifier.align(alignment = Alignment.TopStart), color = MaterialTheme.colors.onSurface)
-        Text(
-            text = "Top center hide XXXXX below Box",
-            modifier = Modifier.align(alignment = Alignment.TopCenter)
-            , color = MaterialTheme.colors.onSurface
-        )
-        Text(text = "Top End", modifier = Modifier.align(alignment = Alignment.TopEnd), color = MaterialTheme.colors.onSurface)
-        Box(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(50.dp)
-                .background(color = Color.LightGray)
-                .align(alignment = Alignment.Center)
-        )
-        Text(text = "Center start", modifier = Modifier.align(alignment = Alignment.CenterStart), color = MaterialTheme.colors.onSurface)
-        Text(text = "Center text", modifier = Modifier.align(alignment = Alignment.Center), color = MaterialTheme.colors.onSurface)
-        Text(text = "Center end", modifier = Modifier.align(alignment = Alignment.CenterEnd), color = MaterialTheme.colors.onSurface)
+    Surface {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Text(
+                text = "Top start",
+                modifier = Modifier.align(alignment = Alignment.TopStart)
+            )
+            Text(
+                text = "Top center hide XXXXX below Box",
+                modifier = Modifier.align(alignment = Alignment.TopCenter)
+            )
+            Text(
+                text = "Top End",
+                modifier = Modifier.align(alignment = Alignment.TopEnd)
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(50.dp)
+                    .background(color = Color.LightGray)
+                    .align(alignment = Alignment.Center)
+            )
+            Text(
+                text = "Center start",
+                modifier = Modifier.align(alignment = Alignment.CenterStart)
+            )
+            Text(
+                text = "Center text",
+                modifier = Modifier.align(alignment = Alignment.Center)
+            )
+            Text(
+                text = "Center end",
+                modifier = Modifier.align(alignment = Alignment.CenterEnd)
+            )
 
-        Text(text = "Bottom Start", modifier = Modifier.align(alignment = Alignment.BottomStart), color = MaterialTheme.colors.onSurface)
-        Text(text = "Bottom center", modifier = Modifier.align(alignment = Alignment.BottomCenter), color = MaterialTheme.colors.onSurface)
-        Text(text = "Bottom End", modifier = Modifier.align(alignment = Alignment.BottomEnd), color = MaterialTheme.colors.onSurface)
+            Text(
+                text = "Bottom Start",
+                modifier = Modifier.align(alignment = Alignment.BottomStart)
+            )
+            Text(
+                text = "Bottom center",
+                modifier = Modifier.align(alignment = Alignment.BottomCenter)
+            )
+            Text(
+                text = "Bottom End",
+                modifier = Modifier.align(alignment = Alignment.BottomEnd)
+            )
 
-        FloatingActionButton(
-            onClick = { },
-            modifier = Modifier.align(alignment = Alignment.BottomEnd)
-        ) {
-            Icon(imageVector = Icons.Filled.Add, contentDescription = "Add icon")
+            FloatingActionButton(
+                onClick = { },
+                modifier = Modifier.align(alignment = Alignment.BottomEnd)
+            ) {
+                Icon(imageVector = Icons.Filled.Add, contentDescription = "Add icon")
+            }
         }
     }
 }

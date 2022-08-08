@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -111,24 +111,24 @@ fun ColumnListingScreen(navController: NavController) {
             Text(title.buttonTitle, textAlign = TextAlign.Center)
         }
     }
-
-    Column {
-        Text(
-            text = "Column Samples",
-            modifier = Modifier.padding(16.dp),
-            fontSize = 18.sp,
-            fontFamily = FontFamily.SansSerif,
-            color = MaterialTheme.colors.onSurface
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(8.dp)
-        ) {
-            enumValues<ColumnListingEnumType>().forEach {
-                MyButton(it)
+    Surface {
+        Column {
+            Text(
+                text = "Column Samples",
+                modifier = Modifier.padding(16.dp),
+                fontSize = 18.sp,
+                fontFamily = FontFamily.SansSerif
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(8.dp)
+            ) {
+                enumValues<ColumnListingEnumType>().forEach {
+                    MyButton(it)
+                }
             }
         }
     }
@@ -399,18 +399,20 @@ fun ScrollableColumn() {
 
 @Composable
 fun AlignAllChild() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentWidth()
-            .fillMaxHeight()
-            .wrapContentHeight(), verticalArrangement = Arrangement.spacedBy(space = 16.dp)
-    ) {
-        AlignAllChildText("1st child")
-        AlignAllChildText("2nd child")
-        AlignAllChildText("3rd child")
-        AlignAllChildText("4th child")
-        AlignAllChildText("16dp space applied to all child vertically")
+    Surface {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentWidth()
+                .fillMaxHeight()
+                .wrapContentHeight(), verticalArrangement = Arrangement.spacedBy(space = 16.dp)
+        ) {
+            AlignAllChildText("1st child")
+            AlignAllChildText("2nd child")
+            AlignAllChildText("3rd child")
+            AlignAllChildText("4th child")
+            AlignAllChildText("16dp space applied to all child vertically")
+        }
     }
 }
 
@@ -419,7 +421,6 @@ fun AlignAllChildText(text: String) {
     Text(
         text = text,
         fontWeight = FontWeight.Medium,
-        color = MaterialTheme.colors.onSurface,
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentWidth(),

@@ -97,24 +97,24 @@ fun BottomSheetListingScreen(navController: NavController) {
             Text(title.buttonTitle, textAlign = TextAlign.Center)
         }
     }
-
-    Column {
-        Text(
-            text = "Bottom Sheet Samples",
-            modifier = Modifier.padding(16.dp),
-            fontSize = 18.sp,
-            fontFamily = FontFamily.SansSerif,
-            color = MaterialTheme.colors.onSurface
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(8.dp)
-        ) {
-            enumValues<BottomSheetListingEnumType>().forEach {
-                MyButton(it)
+    Surface {
+        Column {
+            Text(
+                text = "Bottom Sheet Samples",
+                modifier = Modifier.padding(16.dp),
+                fontSize = 18.sp,
+                fontFamily = FontFamily.SansSerif
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(8.dp)
+            ) {
+                enumValues<BottomSheetListingEnumType>().forEach {
+                    MyButton(it)
+                }
             }
         }
     }
@@ -313,7 +313,7 @@ private fun BottomSheetWrapper(
     composeView: ComposeView,
     content: @Composable (() -> Unit) -> Unit
 ) {
-    val TAG = parent::class.java.simpleName
+    val tag = parent::class.java.simpleName
     val coroutineScope = rememberCoroutineScope()
     val modalBottomSheetState =
         rememberModalBottomSheetState(
@@ -361,7 +361,7 @@ private fun BottomSheetWrapper(
                 }
             }
             else -> {
-                Log.i(TAG, "Bottom sheet ${modalBottomSheetState.currentValue} state")
+                Log.i(tag, "Bottom sheet ${modalBottomSheetState.currentValue} state")
             }
         }
     }

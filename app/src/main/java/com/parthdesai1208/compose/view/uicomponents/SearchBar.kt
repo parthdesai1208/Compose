@@ -22,10 +22,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,68 +45,65 @@ private fun SearchBarForVMInit(list: List<String>, onSearch: (String) -> Unit) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
-
-    Column {
-        TextField(
-            value = searchQuery, onValueChange = {
-                searchQuery = it
-                onSearch(searchQuery)
-            },
-            leadingIcon = {
-                Icon(imageVector = Icons.Default.Search, contentDescription = null)
-            }, /*colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = MaterialTheme.colors.surface
-        ),*/textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
-            placeholder = {
-                AnimatedPlaceholder(
-                    hints = listOf(
-                        "Search",
-                        "Type 'India'",
-                        "Type 'Italy'",
-                        "Search by country name"
+    Surface {
+        Column {
+            TextField(
+                value = searchQuery, onValueChange = {
+                    searchQuery = it
+                    onSearch(searchQuery)
+                },
+                leadingIcon = {
+                    Icon(imageVector = Icons.Default.Search, contentDescription = null)
+                },
+                placeholder = {
+                    AnimatedPlaceholder(
+                        hints = listOf(
+                            "Search",
+                            "Type 'India'",
+                            "Type 'Italy'",
+                            "Search by country name"
+                        )
                     )
-                )
-                /*Text(
-          text = stringResource(id = R.string.placeholder_search),
-          color = MaterialTheme.colors.onSurface
-      )*/
-            },
-            trailingIcon = {
-                AnimatedVisibility(
-                    visible = searchQuery != "",
-                    enter = scaleIn(),
-                    exit = scaleOut()
-                ) {
-                    IconButton(onClick = {
-                        searchQuery = ""
-                        onSearch(searchQuery)
-                        keyboardController?.hide()
-                    }) {
-                        Icon(imageVector = Icons.Default.Close, contentDescription = null)
+                },
+                trailingIcon = {
+                    AnimatedVisibility(
+                        visible = searchQuery != "",
+                        enter = scaleIn(),
+                        exit = scaleOut()
+                    ) {
+                        IconButton(onClick = {
+                            searchQuery = ""
+                            onSearch(searchQuery)
+                            keyboardController?.hide()
+                        }) {
+                            Icon(imageVector = Icons.Default.Close, contentDescription = null)
+                        }
                     }
-                }
-            }, modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight(align = Alignment.Top)
-                .heightIn(min = 56.dp)
-                .padding(all = 16.dp)
-                .focusRequester(focusRequester),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            keyboardActions = KeyboardActions(onSearch = {
-                onSearch(searchQuery)
-                keyboardController?.hide()
-                focusManager.clearFocus(true)
-            })
-        )
+                }, modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(align = Alignment.Top)
+                    .heightIn(min = 56.dp)
+                    .padding(all = 16.dp)
+                    .focusRequester(focusRequester),
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                keyboardActions = KeyboardActions(onSearch = {
+                    onSearch(searchQuery)
+                    keyboardController?.hide()
+                    focusManager.clearFocus(true)
+                })
+            )
 
-        LazyColumn(contentPadding = PaddingValues(all = 16.dp), modifier = Modifier.fillMaxSize()) {
-            items(items = list) { item ->
-                Text(
-                    text = item,
-                    modifier = Modifier.padding(5.dp),
-                    color = MaterialTheme.colors.onSurface
-                )
+            LazyColumn(
+                contentPadding = PaddingValues(all = 16.dp),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(items = list) { item ->
+                    Text(
+                        text = item,
+                        modifier = Modifier.padding(5.dp)
+                    )
+                }
             }
         }
     }
@@ -133,8 +128,7 @@ fun PreViewSearchBar() {
 
 @Composable
 fun AnimatedPlaceholder(
-    hints: List<String>,
-    textColor: Color = MaterialTheme.colors.onSurface,
+    hints: List<String>
 ) {
     val iterator = hints.listIterator()
 
@@ -150,8 +144,7 @@ fun AnimatedPlaceholder(
         transitionSpec = { ScrollAnimation() }
     ) { str ->
         Text(
-            text = str,
-            color = textColor,
+            text = str
         )
     }
 }

@@ -96,7 +96,7 @@ enum class VerticalListListingEnumType(val buttonTitle: String, val func: @Compo
         { VerticalGridList(gridCells = DoubleSizedLeftRowGridCell) }),
     CustomGridCell2("First item take entire space", { FirstItemTakeWholeSpace() }),
     CustomGridCell3("Every third Item take entire Space", { EveryThirdItemTakeWholeSpace() }),
-    StaggeredGridList("Staggered Grid List",{ VerticalStaggeredGridListFun() })
+    StaggeredGridList("Staggered Grid List", { VerticalStaggeredGridListFun() })
 }
 
 @Composable
@@ -120,24 +120,24 @@ fun VerticalListListing(navController: NavHostController) {
             Text(title.buttonTitle, textAlign = TextAlign.Center)
         }
     }
-
-    Column {
-        Text(
-            text = "Vertical List Samples",
-            modifier = Modifier.padding(16.dp),
-            fontSize = 18.sp,
-            fontFamily = FontFamily.SansSerif,
-            color = MaterialTheme.colors.onSurface
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(8.dp)
-        ) {
-            enumValues<VerticalListListingEnumType>().forEach {
-                MyButton(it)
+    Surface {
+        Column {
+            Text(
+                text = "Vertical List Samples",
+                modifier = Modifier.padding(16.dp),
+                fontSize = 18.sp,
+                fontFamily = FontFamily.SansSerif
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(8.dp)
+            ) {
+                enumValues<VerticalListListingEnumType>().forEach {
+                    MyButton(it)
+                }
             }
         }
     }
@@ -321,7 +321,7 @@ fun EveryThirdItemTakeWholeSpace() {
 
 @Composable
 fun VerticalStaggeredGridListFun() {
-    LazyColumn(contentPadding = PaddingValues(8.dp)){
+    LazyColumn(contentPadding = PaddingValues(8.dp)) {
         item {
             VerticalStaggeredGridList(totalColumn = 3) {
                 HorizontalGridListData.forEachIndexed { _, item ->
@@ -355,7 +355,11 @@ fun VerticalStaggeredGridListFun() {
 }
 
 @Composable
-fun VerticalStaggeredGridList(modifier: Modifier = Modifier, totalColumn : Int = 0,content: @Composable () -> Unit) {
+fun VerticalStaggeredGridList(
+    modifier: Modifier = Modifier,
+    totalColumn: Int = 0,
+    content: @Composable () -> Unit
+) {
     Layout(
         content = content,
         modifier = modifier
@@ -452,142 +456,138 @@ fun HorizontalList(
     }
     val context = LocalContext.current
     val viewModelState by viewModel.staggeredGridItems.collectAsState()
-    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            modifier = modifier.padding(top = 16.dp)
-        ) {
-            itemsIndexed(HorizontalListData) { position, item ->
-                HorizontalListItem(item.drawable, item.text, onItemClick = {
-                    Toast.makeText(
-                        context,
-                        "$it is clicked at $position position",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                })
+    Surface {
+        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                modifier = modifier.padding(top = 16.dp)
+            ) {
+                itemsIndexed(HorizontalListData) { position, item ->
+                    HorizontalListItem(item.drawable, item.text, onItemClick = {
+                        Toast.makeText(
+                            context,
+                            "$it is clicked at $position position",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    })
+                }
             }
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Reverse Layout",
-            color = MaterialTheme.colors.onSurface,
-            style = MaterialTheme.typography.h5,
-            modifier = Modifier.padding(all = 8.dp)
-        )
-
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            modifier = modifier,
-            reverseLayout = true
-        ) {
-            items(HorizontalListData) { item ->
-                HorizontalListItem(item.drawable, item.text)
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Lazy list state",
-            color = MaterialTheme.colors.onSurface,
-            style = MaterialTheme.typography.h5,
-            modifier = Modifier.padding(all = 8.dp)
-        )
-
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            modifier = modifier.wrapContentHeight(),
-            state = stateForLazyListStateDemo
-        ) {
-            items(HorizontalListData) { item ->
-                HorizontalListItem(item.drawable, item.text)
-            }
-        }
-
-        AnimatedVisibility(visible = lastDetect) {
+            Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Last item detected",
-                color = MaterialTheme.colors.onSurface,
-                modifier = Modifier
-                    .padding(all = 16.dp)
-                    .fillMaxWidth()
-                    .wrapContentWidth(align = Alignment.End)
+                text = "Reverse Layout",
+                style = MaterialTheme.typography.h5,
+                modifier = Modifier.padding(all = 8.dp)
             )
-        }
 
-        AnimatedVisibility(visible = firstDetect) {
-            Text(
-                text = "First item detected",
-                color = MaterialTheme.colors.onSurface,
-                modifier = Modifier
-                    .padding(all = 16.dp)
-                    .fillMaxWidth()
-                    .wrapContentWidth(align = Alignment.Start)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Grid List (Grid:2 (row-fixed))",
-            color = MaterialTheme.colors.onSurface,
-            style = MaterialTheme.typography.h5,
-            modifier = Modifier.padding(all = 8.dp)
-        )
-
-        LazyHorizontalGrid(
-            rows = GridCells.Fixed(2),
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = modifier.height(120.dp)
-        ) {
-            itemsIndexed(HorizontalGridListData) { position, item ->
-                HorizontalGridListItem(item.drawable, item.text,
-                    Modifier
-                        .height(56.dp)
-                        .clickable {
-                            Toast
-                                .makeText(
-                                    context,
-                                    "${context.getString(item.text)} is clicked at $position position",
-                                    Toast.LENGTH_SHORT
-                                )
-                                .show()
-                        })
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                modifier = modifier,
+                reverseLayout = true
+            ) {
+                items(HorizontalListData) { item ->
+                    HorizontalListItem(item.drawable, item.text)
+                }
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Lazy list state",
+                style = MaterialTheme.typography.h5,
+                modifier = Modifier.padding(all = 8.dp)
+            )
+
+            LazyRow(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                modifier = modifier.wrapContentHeight(),
+                state = stateForLazyListStateDemo
+            ) {
+                items(HorizontalListData) { item ->
+                    HorizontalListItem(item.drawable, item.text)
+                }
+            }
+
+            AnimatedVisibility(visible = lastDetect) {
+                Text(
+                    text = "Last item detected",
+                    modifier = Modifier
+                        .padding(all = 16.dp)
+                        .fillMaxWidth()
+                        .wrapContentWidth(align = Alignment.End)
+                )
+            }
+
+            AnimatedVisibility(visible = firstDetect) {
+                Text(
+                    text = "First item detected",
+                    modifier = Modifier
+                        .padding(all = 16.dp)
+                        .fillMaxWidth()
+                        .wrapContentWidth(align = Alignment.Start)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Grid List (Grid:2 (row-fixed))",
+                style = MaterialTheme.typography.h5,
+                modifier = Modifier.padding(all = 8.dp)
+            )
+
+            LazyHorizontalGrid(
+                rows = GridCells.Fixed(2),
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = modifier.height(120.dp)
+            ) {
+                itemsIndexed(HorizontalGridListData) { position, item ->
+                    HorizontalGridListItem(item.drawable, item.text,
+                        Modifier
+                            .height(56.dp)
+                            .clickable {
+                                Toast
+                                    .makeText(
+                                        context,
+                                        "${context.getString(item.text)} is clicked at $position position",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                    .show()
+                            })
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            OutlinedButton(onClick = {
+                navController.navigate(HorizontalListDestinations.HAGL_SCREEN_ROUTE_PREFIX)
+            }, modifier = Modifier.padding(horizontal = 8.dp)) {
+                Text(text = "Adaptive Grid List ->")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Staggered Grid List (Grid:4)",
+                style = MaterialTheme.typography.h5,
+                modifier = Modifier.padding(all = 8.dp)
+            )
+
+            StaggeredGridFun(viewModelState, onChipClick = { index, b ->
+                viewModel.onChipClicked(index, b)
+            })
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(onClick = {
+                val s = StringBuilder()
+                viewModelState.forEach { if (it.isAdded) s.append(it.genre).append(", ") }
+                if (s.isNotEmpty()) Toast.makeText(context, "${s.dropLast(2)}", Toast.LENGTH_SHORT)
+                    .show()
+            }, modifier = Modifier.padding(horizontal = 8.dp)) {
+                Text(text = "Show selection")
+            }
+            Spacer(modifier = Modifier.height(16.dp))
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-        OutlinedButton(onClick = {
-            navController.navigate(HorizontalListDestinations.HAGL_SCREEN_ROUTE_PREFIX)
-        }, modifier = Modifier.padding(horizontal = 8.dp)) {
-            Text(text = "Adaptive Grid List ->")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(
-            text = "Staggered Grid List (Grid:4)",
-            color = MaterialTheme.colors.onSurface,
-            style = MaterialTheme.typography.h5,
-            modifier = Modifier.padding(all = 8.dp)
-        )
-
-        StaggeredGridFun(viewModelState, onChipClick = { index, b ->
-            viewModel.onChipClicked(index, b)
-        })
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(onClick = {
-            val s = StringBuilder()
-            viewModelState.forEach { if (it.isAdded) s.append(it.genre).append(", ") }
-            if (s.isNotEmpty()) Toast.makeText(context, "${s.dropLast(2)}", Toast.LENGTH_SHORT)
-                .show()
-        }, modifier = Modifier.padding(horizontal = 8.dp)) {
-            Text(text = "Show selection")
-        }
-        Spacer(modifier = Modifier.height(16.dp))
     }
 }
 
@@ -618,8 +618,7 @@ fun HorizontalListItem(
             style = MaterialTheme.typography.h6,
             modifier = Modifier.paddingFromBaseline(
                 top = 24.dp, bottom = 8.dp
-            ),
-            color = MaterialTheme.colors.onSurface
+            )
         )
     }
 }
@@ -786,6 +785,7 @@ fun HorizontalStaggeredGrid(
     }
 }
 
+@Suppress("unused")
 @Composable
 fun Chip(modifier: Modifier = Modifier, text: String, onChipClick: (Boolean) -> Unit) {
     val (selected, onSelected) = rememberSaveable { mutableStateOf(false) }

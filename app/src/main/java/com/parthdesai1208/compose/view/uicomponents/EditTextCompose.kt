@@ -38,61 +38,63 @@ import com.parthdesai1208.compose.utils.RainbowColors
 
 @Composable
 fun EditTextCompose() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(state = rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Spacer(modifier = Modifier.height(32.dp))
-        SimpleFilledTextFieldSample()
-        DividerTextCompose()
-        SimpleOutlinedTextFieldSample()
-        DividerTextCompose()
-        SingleLineTextField()
-        DividerTextCompose()
-        MaxLineTextField()
-        DividerTextCompose()
-        TextStyleTextField()
-        DividerTextCompose()
-        CapitalizeAllCharTextField()
-        DividerTextCompose()
-        CapitalizeFirstCharOfWordTextField()
-        DividerTextCompose()
-        CapitalizeFirstCharOfSentenceTextField()
-        DividerTextCompose()
-        AutoCorrectTextField()
-        DividerTextCompose()
-        KeyBoardTypeTextFieldPass(keyboardType = KeyboardType.Password, "Password")
-        DividerTextCompose()
-        KeyBoardTypeTextFieldPass(keyboardType = KeyboardType.NumberPassword, "Number Password")
-        DividerTextCompose()
-        KeyBoardTypeTextField(keyboardType = KeyboardType.Number, "Number")
-        DividerTextCompose()
-        KeyBoardTypeTextField(keyboardType = KeyboardType.Phone, "Phone")
-        DividerTextCompose()
-        KeyBoardTypeTextField(keyboardType = KeyboardType.Email, "Email")
-        DividerTextCompose()
-        ImeOptionTextField(imeAction = ImeAction.Go, "Go ImeAction")
-        DividerTextCompose()
-        ImeOptionTextField(imeAction = ImeAction.Search, "Search ImeAction")
-        DividerTextCompose()
-        ImeOptionTextField(imeAction = ImeAction.Send, "Send ImeAction")
-        DividerTextCompose()
-        ImeOptionTextField(imeAction = ImeAction.Next, "Next ImeAction")
-        DividerTextCompose()
-        ImeOptionTextField(imeAction = ImeAction.Previous, "Previous ImeAction")
-        DividerTextCompose()
-        ImeOptionTextField(imeAction = ImeAction.Done, "Done ImeAction")
-        DividerTextCompose()
-        GradientTextField()
-        DividerTextCompose()
-        NoLeadingZeroes()
-        DividerTextCompose()
-        PhoneNumberWithDash()
-        DividerTextCompose()
-        ErrorTextField()
-        DividerTextCompose()
+    Surface {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(state = rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Spacer(modifier = Modifier.height(32.dp))
+            SimpleFilledTextFieldSample()
+            DividerTextCompose()
+            SimpleOutlinedTextFieldSample()
+            DividerTextCompose()
+            SingleLineTextField()
+            DividerTextCompose()
+            MaxLineTextField()
+            DividerTextCompose()
+            TextStyleTextField()
+            DividerTextCompose()
+            CapitalizeAllCharTextField()
+            DividerTextCompose()
+            CapitalizeFirstCharOfWordTextField()
+            DividerTextCompose()
+            CapitalizeFirstCharOfSentenceTextField()
+            DividerTextCompose()
+            AutoCorrectTextField()
+            DividerTextCompose()
+            KeyBoardTypeTextFieldPass(keyboardType = KeyboardType.Password, "Password")
+            DividerTextCompose()
+            KeyBoardTypeTextFieldPass(keyboardType = KeyboardType.NumberPassword, "Number Password")
+            DividerTextCompose()
+            KeyBoardTypeTextField(keyboardType = KeyboardType.Number, "Number")
+            DividerTextCompose()
+            KeyBoardTypeTextField(keyboardType = KeyboardType.Phone, "Phone")
+            DividerTextCompose()
+            KeyBoardTypeTextField(keyboardType = KeyboardType.Email, "Email")
+            DividerTextCompose()
+            ImeOptionTextField(imeAction = ImeAction.Go, "Go ImeAction")
+            DividerTextCompose()
+            ImeOptionTextField(imeAction = ImeAction.Search, "Search ImeAction")
+            DividerTextCompose()
+            ImeOptionTextField(imeAction = ImeAction.Send, "Send ImeAction")
+            DividerTextCompose()
+            ImeOptionTextField(imeAction = ImeAction.Next, "Next ImeAction")
+            DividerTextCompose()
+            ImeOptionTextField(imeAction = ImeAction.Previous, "Previous ImeAction")
+            DividerTextCompose()
+            ImeOptionTextField(imeAction = ImeAction.Done, "Done ImeAction")
+            DividerTextCompose()
+            GradientTextField()
+            DividerTextCompose()
+            NoLeadingZeroes()
+            DividerTextCompose()
+            PhoneNumberWithDash()
+            DividerTextCompose()
+            ErrorTextField()
+            DividerTextCompose()
+        }
     }
 }
 
@@ -103,8 +105,7 @@ fun SimpleFilledTextFieldSample() {
     TextField(
         value = text,
         onValueChange = { text = it },
-        label = { Text("Filled EditText", color = MaterialTheme.colors.onSurface) },
-        textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
+        label = { Text("Filled EditText") }
     )
 }
 
@@ -115,8 +116,7 @@ fun SimpleOutlinedTextFieldSample() {
     OutlinedTextField(
         value = text,
         onValueChange = { text = it },
-        label = { Text("Outlined EditText", color = MaterialTheme.colors.onSurface) },
-        textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
+        label = { Text("Outlined EditText") }
     )
 }
 
@@ -128,8 +128,7 @@ fun SingleLineTextField() {
         value = text,
         singleLine = true,
         onValueChange = { text = it },
-        label = { Text("Single Line", color = MaterialTheme.colors.onSurface) },
-        textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
+        label = { Text("Single Line") }
     )
 }
 
@@ -141,8 +140,7 @@ fun MaxLineTextField() {
         value = text,
         maxLines = 2,
         onValueChange = { text = it },
-        label = { Text("Max Line:2", color = MaterialTheme.colors.onSurface) },
-        textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
+        label = { Text("Max Line:2") }
     )
 }
 
@@ -154,7 +152,7 @@ fun TextStyleTextField() {
         value = text,
         singleLine = true,
         onValueChange = { text = it },
-        label = { Text("Text style", color = MaterialTheme.colors.onSurface) },
+        label = { Text("Text style") },
         textStyle = TextStyle(color = Color.Cyan.copy(alpha = .5f), fontWeight = FontWeight.Bold),
         modifier = Modifier.padding(20.dp)
     )
@@ -168,9 +166,8 @@ fun CapitalizeAllCharTextField() {
         value = text,
         singleLine = true,
         onValueChange = { text = it },
-        label = { Text("Capitalize all characters", color = MaterialTheme.colors.onSurface) },
-        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters),
-        textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
+        label = { Text("Capitalize all characters") },
+        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Characters)
     )
 }
 
@@ -183,13 +180,9 @@ fun CapitalizeFirstCharOfWordTextField() {
         singleLine = true,
         onValueChange = { text = it },
         label = {
-            Text(
-                "Capitalize first char of every word",
-                color = MaterialTheme.colors.onSurface
-            )
+            Text("Capitalize first char of every word")
         },
-        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words),
-        textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
+        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words)
     )
 }
 
@@ -202,13 +195,9 @@ fun CapitalizeFirstCharOfSentenceTextField() {
         singleLine = true,
         onValueChange = { text = it },
         label = {
-            Text(
-                "Capitalize first char of every sentence",
-                color = MaterialTheme.colors.onSurface
-            )
+            Text("Capitalize first char of every sentence")
         },
-        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-        textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
+        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
     )
 }
 
@@ -220,9 +209,8 @@ fun AutoCorrectTextField() {
         value = text,
         singleLine = true,
         onValueChange = { text = it },
-        label = { Text("AutoCorrect true by default", color = MaterialTheme.colors.onSurface) },
-        keyboardOptions = KeyboardOptions(autoCorrect = true),
-        textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
+        label = { Text("AutoCorrect true by default") },
+        keyboardOptions = KeyboardOptions(autoCorrect = true)
     )
 }
 
@@ -237,7 +225,6 @@ fun KeyBoardTypeTextFieldPass(keyboardType: KeyboardType, text: String) {
         label = { Text(text) },
         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-        textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
         trailingIcon = {
             val image = if (passwordVisible)
                 Icons.Filled.Visibility
@@ -260,8 +247,7 @@ fun KeyBoardTypeTextField(keyboardType: KeyboardType, text: String) {
         value = password,
         onValueChange = { password = it },
         label = { Text(text) },
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-        textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType)
     )
 }
 
@@ -307,8 +293,7 @@ fun ImeOptionTextField(imeAction: ImeAction, text: String) {
                 Toast.makeText(context, "Next...", Toast.LENGTH_SHORT).show()
                 keyboardController?.hide()
                 focusManager.moveFocus(focusDirection = FocusDirection.Down)
-            }),
-        textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
+            })
     )
 }
 
@@ -339,8 +324,7 @@ fun NoLeadingZeroes() {
         onValueChange = { newText ->
             //trimStart = Returns a string with matching expression removed from it.
             input = newText.trimStart { it == '0' }
-        },
-        textStyle = TextStyle(color = MaterialTheme.colors.onSurface)
+        }
     )
 }
 
@@ -366,10 +350,7 @@ fun PhoneNumberWithDash() {
                 input = if (newText.length <= maxChar) newText.trim() else input.trim()
             },
             label = {
-                Text(
-                    text = "Phone number with special format",
-                    color = MaterialTheme.colors.onSurface
-                )
+                Text(text = "Phone number with special format")
             },
             visualTransformation = PhoneNumberTransformation(),
             keyboardOptions = KeyboardOptions(
@@ -384,11 +365,10 @@ fun PhoneNumberWithDash() {
                         .show()
                 }
             ),
-            textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
             leadingIcon = { Icon(imageVector = Icons.Default.Phone, contentDescription = null) }
         )
         Text(
-            text = "${input.length} / $maxChar", color = MaterialTheme.colors.onSurface,
+            text = "${input.length} / $maxChar",
             textAlign = TextAlign.End, style = MaterialTheme.typography.caption,
             modifier = Modifier
                 .align(alignment = Alignment.End)

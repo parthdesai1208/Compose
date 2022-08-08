@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,10 +24,10 @@ import com.parthdesai1208.compose.view.uicomponents.bottomsheet.BottomSheetNavGr
 
 enum class UIComponentsListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
     TextComponents("Text", { TextComponents("World") }),
-    EditTextCompose("EditText",{ EditTextCompose() }),
+    EditTextCompose("EditText", { EditTextCompose() }),
     ButtonComponents("Button", { ButtonCompose() }),
-    ImageCompose("Image",{ ImageComposeScreen() }),
-    IconCompose("Icon",{IconComposeScreen()}),
+    ImageCompose("Image", { ImageComposeScreen() }),
+    IconCompose("Icon", { IconComposeScreen() }),
     SearchBarComponents(
         "SearchBar",
         { SearchBar(androidx.lifecycle.viewmodel.compose.viewModel()) }),
@@ -39,7 +39,7 @@ enum class UIComponentsListingEnumType(val buttonTitle: String, val func: @Compo
     HorizontalListScreen("Horizontal List", { HorizontalListNavGraph() }),
     ConstraintLayoutContent("Constraint Layout Content", { ConstraintLayoutContent() }),
     ConstraintLayoutScreen("runtime Constraint Layout", { DecoupledConstraintLayout() }),
-    BottomSheetScreen("Bottom Sheet",{ BottomSheetNavGraph() }),
+    BottomSheetScreen("Bottom Sheet", { BottomSheetNavGraph() }),
 }
 
 object UIComponentsDestinations {
@@ -85,24 +85,24 @@ fun UIComponentsListingScreen(navController: NavHostController) {
             Text(title.buttonTitle, textAlign = TextAlign.Center)
         }
     }
-
-    Column {
-        Text(
-            text = "UI Components Samples",
-            modifier = Modifier.padding(16.dp),
-            fontSize = 18.sp,
-            fontFamily = FontFamily.SansSerif,
-            color = MaterialTheme.colors.onSurface
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(8.dp)
-        ) {
-            enumValues<UIComponentsListingEnumType>().forEach {
-                MyButton(it)
+    Surface {
+        Column {
+            Text(
+                text = "UI Components Samples",
+                modifier = Modifier.padding(16.dp),
+                fontSize = 18.sp,
+                fontFamily = FontFamily.SansSerif
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(8.dp)
+            ) {
+                enumValues<UIComponentsListingEnumType>().forEach {
+                    MyButton(it)
+                }
             }
         }
     }

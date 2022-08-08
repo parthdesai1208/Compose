@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,13 +25,14 @@ class MigrationActivity : AppCompatActivity() {
 
         binding.composeView.setContent {
             ComposeTheme {
-                Text(
-                    text = stringResource(id = R.string.hello_i_am_from_compose),
-                    color = MaterialTheme.colors.onSurface,
-                    modifier = Modifier
-                        .wrapContentWidth(align = Alignment.CenterHorizontally)
-                        .wrapContentHeight()
-                )
+                Surface {
+                    Text(
+                        text = stringResource(id = R.string.hello_i_am_from_compose),
+                        modifier = Modifier
+                            .wrapContentWidth(align = Alignment.CenterHorizontally)
+                            .wrapContentHeight()
+                    )
+                }
             }
         }
 

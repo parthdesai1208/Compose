@@ -53,32 +53,36 @@ fun GoogleMapsLikeBottomSheet() {
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
     val scope = rememberCoroutineScope()
-
-    BottomSheetScaffold(
-        sheetContent = {
-            ComposeTheme {
-                MapsLikeContent()
-            }
-        }, scaffoldState = scaffoldState,
-        sheetPeekHeight = 200.dp
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentWidth(align = Alignment.CenterHorizontally)
-                .fillMaxHeight()
-                .wrapContentHeight(align = Alignment.CenterVertically)
-        ) {
-            Button(onClick = {
-                scope.launch {
-                    if (sheetState.isCollapsed) {
-                        sheetState.expand()
-                    } else {
-                        sheetState.collapse()
-                    }
+    Surface {
+        BottomSheetScaffold(
+            sheetContent = {
+                ComposeTheme {
+                    MapsLikeContent()
                 }
-            }) {
-                Text(text = "Google maps like BottomSheet", color = MaterialTheme.colors.onPrimary)
+            }, scaffoldState = scaffoldState,
+            sheetPeekHeight = 200.dp
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth(align = Alignment.CenterHorizontally)
+                    .fillMaxHeight()
+                    .wrapContentHeight(align = Alignment.CenterVertically)
+            ) {
+                Button(onClick = {
+                    scope.launch {
+                        if (sheetState.isCollapsed) {
+                            sheetState.expand()
+                        } else {
+                            sheetState.collapse()
+                        }
+                    }
+                }) {
+                    Text(
+                        text = "Google maps like BottomSheet",
+                        color = MaterialTheme.colors.onPrimary
+                    )
+                }
             }
         }
     }
@@ -102,21 +106,18 @@ fun MapsLikeContent() {
         )
         Text(
             text = "Pune",
-            color = MaterialTheme.colors.onSurface,
             style = MaterialTheme.typography.h5,
             modifier = commonPadding.padding(top = 16.dp)
         )
 
         Text(
             text = "पुणे",
-            color = MaterialTheme.colors.onSurface,
             style = MaterialTheme.typography.h6,
             modifier = commonPadding.alpha(0.5f)
         )
 
         Text(
             text = "Maharashtra",
-            color = MaterialTheme.colors.onSurface,
             style = MaterialTheme.typography.h6,
             modifier = commonPadding.alpha(0.5f)
         )
@@ -356,8 +357,7 @@ fun CategoryList() {
                         }
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text = categoryData.categoryName,
-                            color = MaterialTheme.colors.onSurface,
+                            text = categoryData.categoryName
                         )
 
                     }

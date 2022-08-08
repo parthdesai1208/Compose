@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -80,21 +80,24 @@ enum class MainScreenEnumType(
     val func: @Composable () -> Unit,
     val buttonTitleForAccessibility: String = buttonTitle,
 ) {
-    TextComponents("UI Components", { com.parthdesai1208.compose.view.uicomponents.UIComponentsNavGraph() }),
+    TextComponents(
+        "UI Components",
+        { com.parthdesai1208.compose.view.uicomponents.UIComponentsNavGraph() }),
     LearnStateScreen("Learn state (VM)", {
-        androidx.compose.material.Surface {
+        Surface {
             TodoActivityScreen(androidx.lifecycle.viewmodel.compose.viewModel())
         }
     }, buttonTitleForAccessibility = "Learn state with view model"),
     CustomModifierScreen("custom modifier", {
-        Text(
-            "Hi there!",
-            Modifier
-                .baseLineToTop(32.dp)
-                .wrapContentWidth()
-                .wrapContentHeight(),
-            color = MaterialTheme.colors.onSurface
-        )
+        Surface {
+            Text(
+                "Hi there!",
+                Modifier
+                    .baseLineToTop(32.dp)
+                    .wrapContentWidth()
+                    .wrapContentHeight()
+            )
+        }
     }),
     AnimationScreen("Animation Samples", { AnimationNavGraph() }),
     NavigationEx1(
@@ -104,7 +107,7 @@ enum class MainScreenEnumType(
     ),
     Accessibility("Accessibility", {}),
     Migration("Migration to compose", {}),
-    DrawScreen("Draw Samples",{ com.parthdesai1208.compose.view.draw.DrawNavGraph() })
+    DrawScreen("Draw Samples", { com.parthdesai1208.compose.view.draw.DrawNavGraph() })
 }
 
 @Composable
@@ -161,12 +164,12 @@ fun MainScreen(navController: NavHostController) {
     fun MyButton(
         title: MainScreenEnumType,
     ) {
-        val context  = LocalContext.current
+        val context = LocalContext.current
 
         Button(
             onClick = {
-                if(title.buttonTitle == "Migration to compose"){
-                    context.startActivity(Intent(context,MigrationActivity::class.java))
+                if (title.buttonTitle == "Migration to compose") {
+                    context.startActivity(Intent(context, MigrationActivity::class.java))
                     return@Button
                 }
                 navController.navigate("$MAIN_SCREEN_ROUTE_PREFIX/${title.buttonTitle}")
@@ -183,24 +186,24 @@ fun MainScreen(navController: NavHostController) {
                 })
         }
     }
-
-    Column {
-        Text(
-            text = "Compose Samples",
-            modifier = Modifier.padding(16.dp),
-            fontSize = 18.sp,
-            fontFamily = FontFamily.SansSerif,
-            color = MaterialTheme.colors.onSurface
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(8.dp)
-        ) {
-            enumValues<MainScreenEnumType>().forEach {
-                MyButton(it)
+    Surface {
+        Column {
+            Text(
+                text = "Compose Samples",
+                modifier = Modifier.padding(16.dp),
+                fontSize = 18.sp,
+                fontFamily = FontFamily.SansSerif
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(8.dp)
+            ) {
+                enumValues<MainScreenEnumType>().forEach {
+                    MyButton(it)
+                }
             }
         }
     }

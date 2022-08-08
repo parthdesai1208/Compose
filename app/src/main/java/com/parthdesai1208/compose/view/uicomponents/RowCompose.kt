@@ -7,6 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -45,14 +46,17 @@ enum class RowListingEnumType(val buttonTitle: String, val func: @Composable () 
     FillMaxRowBottomStart("FillMaxRowBottomStart", { FillMaxRowBottomStart() }),
     FillMaxRowBottom("FillMaxRowBottom", { FillMaxRowBottom() }),
     FillMaxRowBottomEnd("FillMaxRowBottomEnd", { FillMaxRowBottomEnd() }),
-    FillMaxSizeRowChildSpaceEvenly("FillMaxSizeRowChildSpaceEvenly",{FillMaxSizeRowChildSpaceEvenly()}),
-    FillMaxSizeRowChildSpaceAround("FillMaxSizeRowChildSpaceAround",{FillMaxSizeRowChildSpaceAround()}),
-    FillMaxSizeRowChildSpaceBetween("FillMaxSizeRowChildSpaceBetween",{FillMaxSizeRowChildSpaceBetween()}),
+    FillMaxSizeRowChildSpaceEvenly("FillMaxSizeRowChildSpaceEvenly",
+        { FillMaxSizeRowChildSpaceEvenly() }),
+    FillMaxSizeRowChildSpaceAround("FillMaxSizeRowChildSpaceAround",
+        { FillMaxSizeRowChildSpaceAround() }),
+    FillMaxSizeRowChildSpaceBetween("FillMaxSizeRowChildSpaceBetween",
+        { FillMaxSizeRowChildSpaceBetween() }),
 
     IndividualChildAlignmentRow("IndividualChildAlignment", { IndividualChildAlignmentRow() }),
     ChildWeightRow("ChildWeight (.25f for all)", { ChildWeightRow() }),
-    ScrollableRow("ScrollableRow",{ScrollableRow()}),
-    AlignAllChildRow("Apply same space between All Child",{AlignAllChildRow()}),
+    ScrollableRow("ScrollableRow", { ScrollableRow() }),
+    AlignAllChildRow("Apply same space between All Child", { AlignAllChildRow() }),
 }
 
 object RowDestinations {
@@ -103,24 +107,24 @@ fun RowListingScreen(navController: NavController) {
             Text(title.buttonTitle, textAlign = TextAlign.Center)
         }
     }
-
-    Column {
-        Text(
-            text = "Row Samples",
-            modifier = Modifier.padding(16.dp),
-            fontSize = 18.sp,
-            fontFamily = FontFamily.SansSerif,
-            color = MaterialTheme.colors.onSurface
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(8.dp)
-        ) {
-            enumValues<RowListingEnumType>().forEach {
-                MyButton(it)
+    Surface {
+        Column {
+            Text(
+                text = "Row Samples",
+                modifier = Modifier.padding(16.dp),
+                fontSize = 18.sp,
+                fontFamily = FontFamily.SansSerif
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(8.dp)
+            ) {
+                enumValues<RowListingEnumType>().forEach {
+                    MyButton(it)
+                }
             }
         }
     }
@@ -408,10 +412,12 @@ fun ScrollableRow() {
 
 @Composable
 fun AlignAllChildRow() {
-    Row(modifier = Modifier
-        .fillMaxSize()
-        .commonBorder(color = MaterialTheme.colors.onSurface),
-    horizontalArrangement = Arrangement.spacedBy(20.dp)){
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .commonBorder(color = MaterialTheme.colors.onSurface),
+        horizontalArrangement = Arrangement.spacedBy(20.dp)
+    ) {
         CommonBoxForRow(color = Color.Red)
         CommonBoxForRow(color = Color.Yellow)
         CommonBoxForRow(color = Color.Green)
