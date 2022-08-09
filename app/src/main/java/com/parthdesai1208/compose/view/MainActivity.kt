@@ -88,6 +88,7 @@ enum class MainScreenEnumType(
             TodoActivityScreen(androidx.lifecycle.viewmodel.compose.viewModel())
         }
     }, buttonTitleForAccessibility = "Learn state with view model"),
+    CompositionLocal("Learn Composition Local", { CompositionLocalFun() }),
     CustomModifierScreen("custom modifier", {
         Surface {
             Text(
