@@ -19,6 +19,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -35,6 +36,7 @@ import androidx.compose.ui.text.input.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.parthdesai1208.compose.utils.RainbowColors
+import com.parthdesai1208.compose.utils.autofill
 
 @Composable
 fun EditTextCompose() {
@@ -297,6 +299,7 @@ fun ImeOptionTextField(imeAction: ImeAction, text: String) {
     )
 }
 
+@OptIn(ExperimentalTextApi::class)
 @Composable
 fun GradientTextField() {
 
@@ -441,6 +444,10 @@ fun phoneNumFilter(text: AnnotatedString): TransformedText {
     return TransformedText(AnnotatedString(out), phoneNumberOffsetTranslator)
 }
 
+enum class CursorSelectionBehaviour {
+    START, END, SELECT_ALL
+}
+
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ErrorTextField() {
@@ -459,7 +466,12 @@ fun ErrorTextField() {
         TextField(
             value = text,
             onValueChange = { text = it },
-            modifier = Modifier.focusRequester(focusRequester),
+            modifier = Modifier
+                .focusRequester(focusRequester)
+                .autofill(autofillTypes = listOf(AutofillType.EmailAddress),
+                    onFill = {
+                        text = it
+                    }),
             label = {
                 val label = if (invalidInput) "Email*" else "Email"
                 Text(label)
