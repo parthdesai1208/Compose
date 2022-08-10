@@ -16,6 +16,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -40,6 +41,9 @@ import androidx.compose.ui.unit.sp
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.utils.RainbowColors
 import com.parthdesai1208.compose.view.theme.ComposeTheme
+import com.parthdesai1208.compose.view.theme.attractions_gmap
+import com.parthdesai1208.compose.view.theme.shopping_gmap
+import me.saket.extendedspans.*
 
 
 /*all text related compose things is here in this file*/
@@ -233,6 +237,8 @@ fun TextComponents(name: String) { //@PreviewParameter(FakeStringProvider::class
                 }
             )
             DividerTextCompose()
+            AnimatingUnderLineWithBackgroundColorText()
+            DividerTextCompose()
             Text("max line 2".repeat(50), maxLines = 2)
             DividerTextCompose()
             Text(
@@ -356,6 +362,72 @@ fun TextWithMiddleLine() {
     Text(
         text = "Text with middle line",
         textDecoration = TextDecoration.LineThrough
+    )
+}
+
+@Composable
+fun AnimatingUnderLineWithBackgroundColorText() {
+    Column(
+        modifier = Modifier.padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(20.dp),
+    ) {
+        ExtendedSpansText(text = buildAnnotatedString {
+            append("Give your   ")
+            withStyle(SpanStyle(background = shopping_gmap.copy(alpha = 0.5f))) {
+                append("heart and soul")
+            }
+            append("   to me")
+        })
+        ExtendedSpansText(text = buildAnnotatedString {
+            append("And life will always be ")
+            withStyle(
+                SpanStyle(
+                    textDecoration = TextDecoration.Underline,
+                    color = attractions_gmap
+                )
+            ) {
+                append("la vie en rose")
+            }
+        })
+    }
+}
+
+@Composable
+fun ExtendedSpansText(
+    text: AnnotatedString,
+    modifier: Modifier = Modifier
+) {
+    val underlineAnimator = rememberSquigglyUnderlineAnimator()
+    val extendedSpans = remember {
+        ExtendedSpans(
+            RoundedCornerSpanPainter(
+                cornerRadius = 8.sp,
+                padding = RoundedCornerSpanPainter.TextPaddingValues(horizontal = 4.sp),
+                topMargin = 2.sp,
+                bottomMargin = 2.sp,
+                stroke = RoundedCornerSpanPainter.Stroke(
+                    color = Color(0xFFBF97FF).copy(alpha = 0.6f)
+                ),
+            ),
+            SquigglyUnderlineSpanPainter(
+                width = 4.sp,
+                wavelength = 20.sp,
+                amplitude = 2.sp,
+                bottomOffset = 2.sp,
+                animator = underlineAnimator
+            )
+        )
+    }
+
+    Text(
+        modifier = modifier.drawBehind(extendedSpans),
+        text = remember(text) {
+            extendedSpans.extend(text)
+        },
+        onTextLayout = { result ->
+            extendedSpans.onTextLayout(result)
+        }
     )
 }
 
