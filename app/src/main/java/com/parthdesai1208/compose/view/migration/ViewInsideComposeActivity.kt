@@ -3,6 +3,7 @@ package com.parthdesai1208.compose.view.migration
 import android.content.res.Configuration
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
+import android.widget.NumberPicker
 import android.widget.TextView
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -10,9 +11,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -21,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 import com.parthdesai1208.compose.view.theme.ComposeTheme
+import com.parthdesai1208.compose.view.uicomponents.DividerTextCompose
 
 class ViewInsideComposeActivity : AppCompatActivity() {
 
@@ -80,7 +83,29 @@ class ViewInsideComposeActivity : AppCompatActivity() {
                             it.text = htmlDescription
                         }
                     )
-
+                    DividerTextCompose()
+                    var value by remember { mutableStateOf(0) }
+                    val numberPickerMaxValue = 20
+                    Text(text = "Value = $value")
+                    Button(onClick = { value++ }, enabled = value != numberPickerMaxValue) {
+                        Text(
+                            text = "Click to Add 1\n(update value from compose to view)",
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                    AndroidView(factory = { context ->
+                        NumberPicker(context).apply {
+                            setOnValueChangedListener { _, _, newValue ->
+                                value = newValue
+                                //update value from view to compose
+                            }
+                        }
+                    }, update = {
+                        it.apply {
+                            this.value = value
+                            maxValue = numberPickerMaxValue
+                        }
+                    })
                 }
             }
         }
