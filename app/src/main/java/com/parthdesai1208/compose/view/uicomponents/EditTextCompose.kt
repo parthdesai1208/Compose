@@ -3,8 +3,13 @@
 
 package com.parthdesai1208.compose.view.uicomponents
 
+import android.graphics.Rect
+import android.view.ViewTreeObserver
 import android.widget.Toast
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -23,11 +28,13 @@ import androidx.compose.ui.autofill.AutofillType
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
@@ -37,6 +44,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.parthdesai1208.compose.utils.RainbowColors
 import com.parthdesai1208.compose.utils.autofill
+import kotlinx.coroutines.launch
 
 @Composable
 fun EditTextCompose() {
@@ -448,16 +456,51 @@ enum class CursorSelectionBehaviour {
     START, END, SELECT_ALL
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
 fun ErrorTextField() {
     var text by rememberSaveable { mutableStateOf("") }
+    var isErrorTextFieldVisible by remember { mutableStateOf(false) }
     val invalidInput = text.count() < 5 || '@' !in text
     val context = LocalContext.current
-    val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    val coroutine = rememberCoroutineScope()
+    val bringIntoViewRequester = BringIntoViewRequester()
+    val view = LocalView.current
+    var kbOpened: () -> Unit = {}
+    var kbClosed: () -> Unit = {}
 
+    //region detect keyboard is open/closed?
+    DisposableEffect(view) {
+        val onGlobalListener = ViewTreeObserver.OnGlobalLayoutListener {
+            val rect = Rect()
+            view.getWindowVisibleDisplayFrame(rect)
+            val screenHeight = view.rootView.height
+            val keypadHeight = screenHeight - rect.bottom
+            if (keypadHeight > screenHeight * 0.15) {
+                kbOpened()
+            } else {
+                kbClosed()
+            }
+        }
+        view.viewTreeObserver.addOnGlobalLayoutListener(onGlobalListener)
+
+        onDispose {
+            view.viewTreeObserver.removeOnGlobalLayoutListener(onGlobalListener)
+        }
+    }
+    kbOpened = {
+        if (isErrorTextFieldVisible) {
+            coroutine.launch {
+                bringIntoViewRequester.bringIntoView()
+            }
+        }
+    }
+    kbClosed = {
+
+    }
+    //endregion
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -467,11 +510,13 @@ fun ErrorTextField() {
             value = text,
             onValueChange = { text = it },
             modifier = Modifier
-                .focusRequester(focusRequester)
                 .autofill(autofillTypes = listOf(AutofillType.EmailAddress),
                     onFill = {
                         text = it
-                    }),
+                    })
+                .onFocusChanged {
+                    isErrorTextFieldVisible = it.isFocused
+                },
             label = {
                 val label = if (invalidInput) "Email*" else "Email"
                 Text(label)
@@ -501,5 +546,17 @@ fun ErrorTextField() {
             text = if (invalidInput) "Requires '@' and at least 5 symbols" else "Helper message",
             style = MaterialTheme.typography.caption.copy(color = textColor),
         )
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            onClick = { },
+            modifier = Modifier
+                .padding(horizontal = 32.dp)
+                .bringIntoViewRequester(bringIntoViewRequester)
+        ) {
+            Text(
+                text = "when you click on Above editText i will jump up with keyboard",
+                textAlign = TextAlign.Center,
+            )
+        }
     }
 }
