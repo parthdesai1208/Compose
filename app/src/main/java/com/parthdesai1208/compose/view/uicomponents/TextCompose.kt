@@ -4,6 +4,7 @@ package com.parthdesai1208.compose.view.uicomponents
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.widget.Toast
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -16,6 +17,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +26,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.Font
@@ -103,6 +107,13 @@ fun TextComponents(name: String) { //@PreviewParameter(FakeStringProvider::class
             Text(
                 text = "Text with textColor linearGradient".repeat(6),
                 style = TextStyle(brush = Brush.linearGradient(colors = RainbowColors))
+            )
+            DividerTextCompose()
+            TextColorGradientAnimation("Text with textColor linearGradient with animation")
+            DividerTextCompose()
+            TextColorGradientAnimation(
+                "Text with textColor linearGradient with reverse animation",
+                repeatMode = RepeatMode.Reverse
             )
             DividerTextCompose()
             Text(
@@ -288,6 +299,35 @@ fun TextComponents(name: String) { //@PreviewParameter(FakeStringProvider::class
             DividerTextCompose()
         }
     }
+}
+
+@OptIn(ExperimentalTextApi::class)
+@Composable
+private fun TextColorGradientAnimation(text: String, repeatMode: RepeatMode = RepeatMode.Restart) {
+    val currentFontSizePx = with(LocalDensity.current) { 20.sp.toPx() }
+    //20.sp.toPx() = length between the 2 gradient animation
+    val currentFontSizeDoublePx = currentFontSizePx * 2
+
+    val infiniteTransition = rememberInfiniteTransition()
+    val offset by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = currentFontSizeDoublePx,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000, easing = LinearEasing),
+            repeatMode = repeatMode
+        )
+    )
+    Text(
+        text = text.repeat(6),
+        style = TextStyle(
+            brush = Brush.linearGradient(
+                colors = RainbowColors,
+                start = Offset(offset, offset),
+                end = Offset(offset + currentFontSizePx, offset + currentFontSizePx),
+                tileMode = TileMode.Mirror
+            )
+        )
+    )
 }
 
 @Composable
