@@ -98,6 +98,9 @@ enum class AnimationScreenEnumType(val buttonTitle: String, val func: @Composabl
     AnimationVector("AnimationVector - TypeConverter,Coroutine", { AnimationVectorFun() }),
     AnimationEx1("AnimationEx1", { AnimationEx1() }),
     BoxWithIconUpDownAnimation("Icon Up-down animation", { BoxWithIconUpDownAnimation() }),
+    DuolingoBirdAnimation(
+        "Duolingo Bird Animation",
+        { Surface(Modifier.fillMaxSize()) { DuolingoBird() } }),
 }
 
 object AnimationDestinations {
