@@ -126,6 +126,10 @@ fun MainActivityNavGraph(
             route = "$MAIN_SCREEN_ROUTE_PREFIX/{$MAIN_SCREEN_ROUTE_POSTFIX}",
             arguments = listOf(navArgument(MAIN_SCREEN_ROUTE_POSTFIX) {
                 type = NavType.StringType
+                /*type: NavType<Any?>, <-- type of the arguments
+                isNullable: Boolean,   <-- type of the arguments is nullable or not
+                defaultValue: Any?,    <-- default value if you want to provide
+                defaultValuePresent: Boolean*/ //<-- default value is present or not
             })
         ) { backStackEntry ->
             val arguments = requireNotNull(backStackEntry.arguments)
