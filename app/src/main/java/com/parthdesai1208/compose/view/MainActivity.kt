@@ -40,6 +40,7 @@ import com.parthdesai1208.compose.view.animation.AnimationNavGraph
 import com.parthdesai1208.compose.view.migration.MigrationActivity
 import com.parthdesai1208.compose.view.navigation.NavigationEx1
 import com.parthdesai1208.compose.view.navigation.RallyScreen
+import com.parthdesai1208.compose.view.navigation.composeDestination.StartForComposeDestination
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 
 class MainActivity : AppCompatActivity() {
@@ -106,6 +107,7 @@ enum class MainScreenEnumType(
         { NavigationEx1() },
         buttonTitleForAccessibility = "Navigation Example 1 with arg,DeepLink"
     ),
+    ComposeDestination("ComposeDestination lib", { StartForComposeDestination() }),
     Accessibility("Accessibility", {}),
     Migration("Migration to compose", {}),
     DrawScreen("Draw Samples", { com.parthdesai1208.compose.view.draw.DrawNavGraph() })
