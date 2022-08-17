@@ -1,17 +1,14 @@
 package com.parthdesai1208.compose.view.navigation.composeDestination
 
 import android.os.Parcelable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Button
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import com.parthdesai1208.compose.view.navigation.composeDestination.destinations.DialogComposeDestination
 import com.parthdesai1208.compose.view.navigation.composeDestination.destinations.SecondScreenDestination
 import com.parthdesai1208.compose.view.navigation.composeDestination.destinations.ThirdScreenDestination
 import com.ramcosta.composedestinations.DestinationsNavHost
@@ -47,6 +44,9 @@ fun FirstScreen(navigator: DestinationsNavigator) {
                 )
             }) {
                 Text(text = "Go to second screen")
+            }
+            Button(onClick = { navigator.navigate(direction = DialogComposeDestination) }) {
+                Text(text = "Open Dialog")
             }
         }
     }
@@ -89,3 +89,27 @@ data class User(
     val id: String,
     val created: String
 ) : Parcelable
+
+
+@Destination(style = MyDialogStyle::class)
+@Composable
+fun DialogCompose(navigator: DestinationsNavigator) {
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Column {
+            Spacer(modifier = Modifier.height(28.dp))
+            Text(
+                text = "This is an error prompt",
+                style = MaterialTheme.typography.body1,
+                modifier = Modifier.padding(horizontal = 24.dp)
+            )
+            TextButton(
+                onClick = { navigator.popBackStack() },
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(8.dp)
+            ) {
+                Text(text = "OK")
+            }
+        }
+    }
+}
