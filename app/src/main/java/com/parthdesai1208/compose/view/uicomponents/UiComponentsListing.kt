@@ -35,6 +35,7 @@ enum class UIComponentsListingEnumType(val buttonTitle: String, val func: @Compo
     ColumnCompose("Column", { ColumnNavGraph() }),
     RowCompose("Row", { RowNavGraph() }),
     BoxCompose("Box", { BoxNavGraph() }),
+    CardCompose("Card", { CardCompose() }),
     CollapsableRecyclerviewScreen("Vertical List", { VerticalListNavGraph() }),
     HorizontalListScreen("Horizontal List", { HorizontalListNavGraph() }),
     ConstraintLayoutContent("Constraint Layout Content", { ConstraintLayoutContent() }),
