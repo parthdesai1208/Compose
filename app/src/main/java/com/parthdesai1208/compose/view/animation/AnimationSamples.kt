@@ -101,6 +101,8 @@ enum class AnimationScreenEnumType(val buttonTitle: String, val func: @Composabl
     DuolingoBirdAnimation(
         "Duolingo Bird Animation",
         { Surface(Modifier.fillMaxSize()) { DuolingoBird() } }),
+    ThreeDCardMoving("3D card moving",
+        { ThreeDCardMoving() }),
 }
 
 object AnimationDestinations {
