@@ -44,6 +44,7 @@ enum class UIComponentsListingEnumType(val buttonTitle: String, val func: @Compo
     SwitchCompose("Switch", { SwitchCompose() }),
     RadioCompose("Radio Button", { RadioButtonCompose() }),
     DropdownMenuCompose("Drop-down Menu", { DropdownMenu() }),
+    SliderCompose("Slider", { SliderCompose() }),
 }
 
 object UIComponentsDestinations {
