@@ -1,18 +1,15 @@
 package com.parthdesai1208.compose.view.uicomponents
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.material.Surface
-import androidx.compose.material.Switch
-import androidx.compose.material.SwitchDefaults
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.adwi.neumorph.android.MorphSwitch
 import com.parthdesai1208.compose.view.theme.*
 
 @Composable
@@ -22,7 +19,9 @@ fun SwitchCompose() {
 
     Surface {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(state = rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(text = "Default Switch")
@@ -55,8 +54,26 @@ fun SwitchCompose() {
             )
 
             DividerTextCompose()
+            MorphSwitchCompose()
+            DividerTextCompose()
         }
     }
+}
+
+@Composable
+fun MorphSwitchCompose() {
+    var value by remember { mutableStateOf(false) }
+
+    MorphSwitch(
+        elevation = 10.dp,
+        cornerRadius = 10.dp,
+        switchColor = MaterialTheme.colors.secondary,
+        value = value,
+        onValueChange = { value = !value },
+        modifier = Modifier
+            .width(80.dp)
+            .height(40.dp)
+    )
 }
 
 @Preview

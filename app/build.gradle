@@ -116,4 +116,9 @@ dependencies {
     implementation 'io.github.raamcosta.compose-destinations:core:1.7.15-beta'
     implementation 'io.github.raamcosta.compose-destinations:animations-core:1.7.15-beta'
     ksp 'io.github.raamcosta.compose-destinations:ksp:1.7.15-beta'
+
+    //morph switch
+    //https://github.com/adrianwitaszak/neumorph-ui
+    implementation 'com.github.adrianwitaszak:neumorph-ui:0.7.7'
+
 }
