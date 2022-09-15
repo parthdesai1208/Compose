@@ -7,6 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.adwi.neumorph.android.MorphSwitch
@@ -68,12 +69,20 @@ fun MorphSwitchCompose() {
         elevation = 10.dp,
         cornerRadius = 10.dp,
         switchColor = MaterialTheme.colors.secondary,
+        //lightShadowColor = right-bottom color inside switch
+        lightShadowColor = Color.LightGray,
+        //darkShadowColor = left-top color inside switch
+        darkShadowColor = Color.DarkGray,
+        //backgroundColor = color of switch tracker
+        backgroundColor = MaterialTheme.colors.surface,
         value = value,
         onValueChange = { value = !value },
         modifier = Modifier
             .width(80.dp)
             .height(40.dp)
     )
+    Spacer(modifier = Modifier.height(8.dp))
+    Text(text = "Morph Switch State: $value")
 }
 
 @Preview
