@@ -58,17 +58,17 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.7.10"
-    implementation 'androidx.core:core-ktx:1.8.0'
-    implementation 'androidx.appcompat:appcompat:1.5.0'
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.google.android.material:material:1.6.1'
 
     //compose core
-    implementation 'androidx.compose.ui:ui:1.3.0-alpha03'
+    implementation 'androidx.compose.ui:ui:1.3.0-beta02'
     //activity compose
     implementation 'androidx.activity:activity-compose:1.5.1'
     //compose foundation
-    implementation 'androidx.compose.foundation:foundation:1.3.0-alpha03'
+    implementation 'androidx.compose.foundation:foundation:1.3.0-beta02'
     implementation "androidx.compose.foundation:foundation-layout:1.2.1"
     //material compose
     implementation "androidx.compose.material:material:1.2.1"
@@ -91,11 +91,11 @@ dependencies {
 
     //navigation
     //https://developer.android.com/jetpack/compose/navigation#setup
-    implementation "androidx.navigation:navigation-compose:2.5.1"
+    implementation "androidx.navigation:navigation-compose:2.5.2"
 
     //animation
     //https://developer.android.com/jetpack/androidx/releases/compose-animation#declaring_dependencies
-    implementation "androidx.compose.animation:animation:1.3.0-alpha03"
+    implementation "androidx.compose.animation:animation:1.3.0-beta02"
 
     //accompanist - for insets & system UI
     implementation "com.google.accompanist:accompanist-insets:0.23.1"
