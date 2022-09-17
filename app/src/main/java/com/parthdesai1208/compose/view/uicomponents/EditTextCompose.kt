@@ -42,12 +42,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.parthdesai1208.compose.utils.RainbowColors
 import com.parthdesai1208.compose.utils.autofill
+import com.parthdesai1208.compose.view.theme.red1000
+import com.parthdesai1208.compose.viewmodel.ManageStateOnTextChangeViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun EditTextCompose() {
+fun EditTextCompose(vm: ManageStateOnTextChangeViewModel) {
     Surface {
         Column(
             modifier = Modifier
@@ -103,6 +107,8 @@ fun EditTextCompose() {
             PhoneNumberWithDash()
             DividerTextCompose()
             ErrorTextField()
+            DividerTextCompose()
+            ManageStateOnTextChange(vm)
             DividerTextCompose()
         }
     }
@@ -557,6 +563,27 @@ fun ErrorTextField() {
                 text = "when you click on Above editText i will jump up with keyboard",
                 textAlign = TextAlign.Center,
             )
+        }
+    }
+}
+
+@OptIn(ExperimentalLifecycleComposeApi::class)
+@Composable
+fun ManageStateOnTextChange(vm: ManageStateOnTextChangeViewModel) {
+
+    OutlinedTextField(value = vm.userName, onValueChange = {
+        vm.updateUserName(it)
+    }, label = { Text(text = "Manage State on TextChange") })
+    val userNameHasError by vm.isUserNameHasError.collectAsStateWithLifecycle()
+    if (userNameHasError) {
+        Text(
+            text = "Username not available. Please choose a different one.",
+            color = red1000, modifier = Modifier.padding(horizontal = 16.dp),
+            textAlign = TextAlign.Center
+        )
+    } else {
+        if (vm.userName.isNotBlank()) {
+            Text(text = "Checking...", color = MaterialTheme.colors.onSurface)
         }
     }
 }
