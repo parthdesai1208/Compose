@@ -1,10 +1,12 @@
 package com.parthdesai1208.compose.view.uicomponents
 
 import android.widget.Toast
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -247,16 +249,19 @@ fun ButtonCompose() {
             Spacer(modifier = Modifier.width(8.dp))
             HeartAnimation()
         }
+        PressedButton()
     }
 }
 
 @Composable
 fun ButtonWithGradientBorder() {
-    OutlinedButton(onClick = { },
+    OutlinedButton(
+        onClick = { },
         border = BorderStroke(
             width = 3.dp,
             brush = Brush.linearGradient(colors = listOf(Color(0xFFffe53b), Color(0xFFff2525)))
-        )) {
+        )
+    ) {
         Text(text = "(Outlined) Button with gradient border")
     }
 }
@@ -426,5 +431,24 @@ fun CircularIconButton(icon: ImageVector) {
         ),
         border = BorderStroke(0.dp, Color.Transparent), onClick = {}) {
         Icon(imageVector = icon, contentDescription = null, tint = MaterialTheme.colors.onPrimary)
+    }
+}
+
+@Composable
+fun PressedButton() {
+    val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+//more at https://developer.android.com/jetpack/compose/handling-interaction?s=09&utm_source=pocket_mylist
+
+    Button(onClick = { }, interactionSource = interactionSource) {
+        AnimatedVisibility(visible = isPressed) {
+            if (isPressed) {
+                Row {
+                    Icon(Icons.Filled.ShoppingCart, contentDescription = null)
+                    Spacer(Modifier.size(ButtonDefaults.IconSpacing))
+                }
+            }
+        }
+        Text("Add to cart(press & hold)")
     }
 }
