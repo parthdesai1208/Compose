@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.colorspace.ColorSpaces
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -103,6 +104,7 @@ enum class AnimationScreenEnumType(val buttonTitle: String, val func: @Composabl
         { Surface(Modifier.fillMaxSize()) { DuolingoBird() } }),
     ThreeDCardMoving("3D card moving",
         { ThreeDCardMoving() }),
+    InstagramLikeParticles("Instagram Like Particles", { InstagramLikeParticles() }),
 }
 
 object AnimationDestinations {
@@ -1375,6 +1377,12 @@ fun getScreenWidth(): Float {
     val context = LocalContext.current
     val displayMetrics: DisplayMetrics = context.resources.displayMetrics
     return displayMetrics.widthPixels / displayMetrics.density
+}
+
+@Composable
+fun getScreenHeight(): Dp {
+    val configuration = LocalConfiguration.current
+    return configuration.screenHeightDp.dp
 }
 
 /**********************************************************************************************************************************
