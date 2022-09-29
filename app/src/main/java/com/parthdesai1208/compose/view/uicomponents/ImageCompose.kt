@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import coil.ImageLoader
 import coil.decode.ImageDecoderDecoder
 import com.bumptech.glide.Glide
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.view.animation.getScreenWidth
@@ -57,17 +58,18 @@ fun ImageComposeScreen() {
             ContentScaleImage()
             MirrorImage()
             ImageLoadingUsingGlide()
-            ImageLoadingUsingCoil()
+            ImageLoadingUsingLandscapistGlide()
+            ImageLoadingUsingLandscapistCoil()
         }
     }
 }
 
-//region coil
+//region Landscapist-coil
 @Composable
-fun ImageLoadingUsingCoil() {
+fun ImageLoadingUsingLandscapistCoil() {
     Column(modifier = Modifier.padding(top = 16.dp)) {
         Text(
-            text = "Using Coil",
+            text = "Using Coil(landscapist-coil)",
             modifier = Modifier.padding(horizontal = 24.dp)
         )
         Row(
@@ -75,14 +77,14 @@ fun ImageLoadingUsingCoil() {
                 .horizontalScroll(state = rememberScrollState())
                 .padding(top = 24.dp)
         ) {
-            LoadImageUsingCoilURL()
-            LoadGifUsingCoil()
+            LoadImageUsingLandscapistCoilURL()
+            LoadGifUsingLandscapistCoil()
         }
     }
 }
 
 @Composable
-fun LoadGifUsingCoil() {
+fun LoadGifUsingLandscapistCoil() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
@@ -110,7 +112,7 @@ fun LoadGifUsingCoil() {
 }
 
 @Composable
-fun LoadImageUsingCoilURL() {
+fun LoadImageUsingLandscapistCoilURL() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
@@ -140,12 +142,12 @@ fun LoadImageUsingCoilURL() {
 
 //endregion
 
-//region Glide
+//region Landscapist-Glide
 @Composable
-fun ImageLoadingUsingGlide() {
+fun ImageLoadingUsingLandscapistGlide() {
     Column {
         Text(
-            text = "Using Glide",
+            text = "Using Glide(landscapist-glide)",
             modifier = Modifier.padding(horizontal = 24.dp)
         )
         Row(
@@ -153,14 +155,14 @@ fun ImageLoadingUsingGlide() {
                 .horizontalScroll(state = rememberScrollState())
                 .padding(top = 24.dp)
         ) {
-            LoadImageUsingGlideURL()
-            LoadGifUsingGlide()
+            LoadImageUsingLandscapistGlideURL()
+            LoadGifUsingLandscapistGlide()
         }
     }
 }
 
 @Composable
-fun LoadGifUsingGlide() {
+fun LoadGifUsingLandscapistGlide() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
@@ -182,7 +184,7 @@ fun LoadGifUsingGlide() {
 }
 
 @Composable
-fun LoadImageUsingGlideURL() {
+fun LoadImageUsingLandscapistGlideURL() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
@@ -213,6 +215,67 @@ fun LoadImageUsingGlideURL() {
     }
 }
 
+//endregion
+
+//region Glide
+@Composable
+fun ImageLoadingUsingGlide() {
+    Column {
+        Text(
+            text = "Using Glide",
+            modifier = Modifier.padding(horizontal = 24.dp)
+        )
+        Row(
+            modifier = Modifier
+                .horizontalScroll(state = rememberScrollState())
+                .padding(top = 24.dp)
+        ) {
+            LoadImageUsingGlideURL()
+            LoadGifUsingGlide()
+        }
+    }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun LoadImageUsingGlideURL() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically)
+    ) {
+        Text(text = "Using URL")
+        com.bumptech.glide.integration.compose.GlideImage(
+            model = "https://whc.unesco.org/uploads/thumbs/site_0252_0008-750-750-20151104113424.jpg",
+            contentDescription = null,
+            modifier = Modifier
+                .height(height = 400.dp)
+                .width(width = getScreenWidth().dp - 30.dp)
+                .clip(shape = RoundedCornerShape(16.dp)),
+        )
+    }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun LoadGifUsingGlide() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically)
+    ) {
+        Text(text = "Load Gif")
+        com.bumptech.glide.integration.compose.GlideImage(
+            model = "https://media2.giphy.com/media/aQYR1p8saOQla/giphy.gif?cid=ecf05e4701sln9u63lr3z17lh5f3n3h3owrk54zh1183hqmi&rid=giphy.gif&ct=g",
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier
+                .width(width = getScreenWidth().dp - 30.dp)
+                .height(height = 350.dp) //need to provide height & width here
+                .clip(shape = RoundedCornerShape(16.dp))
+        )
+    }
+}
 //endregion
 
 @Composable
