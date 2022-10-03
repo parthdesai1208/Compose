@@ -10,6 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.window.SecureFlagPolicy
 import com.parthdesai1208.compose.view.theme.RainbowOrange
 import com.parthdesai1208.compose.view.theme.RainbowRed
 
@@ -18,6 +19,10 @@ import com.parthdesai1208.compose.view.theme.RainbowRed
 fun DialogCompose() {
     var isAlertDialogOpened1 by remember { mutableStateOf(false) }
     var isAlertDialogOpened2 by remember { mutableStateOf(false) }
+    var isAlertDialogOpened3 by remember { mutableStateOf(false) }
+    var isAlertDialogOpened4 by remember { mutableStateOf(false) }
+    var isAlertDialogOpened5 by remember { mutableStateOf(false) }
+    var isAlertDialogOpened6 by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     Surface {
@@ -78,7 +83,80 @@ fun DialogCompose() {
                     }
                 }, backgroundColor = RainbowRed, contentColor = RainbowOrange)
             }
-
+            Button(onClick = { isAlertDialogOpened3 = true }) {
+                Text(text = "Alert Dialog dismissOnBackPress off")
+            }
+            if (isAlertDialogOpened3) {
+                CommonAlertDialog(onDismissRequest = { isAlertDialogOpened3 = false }, buttons = {
+                    Column {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            TextButton(onClick = { isAlertDialogOpened3 = false }) {
+                                Text(text = "No")
+                            }
+                            TextButton(onClick = { isAlertDialogOpened3 = false }) {
+                                Text(text = "Yes")
+                            }
+                        }
+                    }
+                }, properties = DialogProperties(dismissOnBackPress = false))
+            }
+            Button(onClick = { isAlertDialogOpened4 = true }) {
+                Text(text = "Alert Dialog dismissOnClickOutside off")
+            }
+            if (isAlertDialogOpened4) {
+                CommonAlertDialog(onDismissRequest = { isAlertDialogOpened4 = false }, buttons = {
+                    Column {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            TextButton(onClick = { isAlertDialogOpened4 = false }) {
+                                Text(text = "No")
+                            }
+                            TextButton(onClick = { isAlertDialogOpened4 = false }) {
+                                Text(text = "Yes")
+                            }
+                        }
+                    }
+                }, properties = DialogProperties(dismissOnClickOutside = false))
+            }
+            Button(onClick = { isAlertDialogOpened5 = true }) {
+                Text(text = "Alert Dialog securePolicy off")
+            }
+            if (isAlertDialogOpened5) {
+                CommonAlertDialog(onDismissRequest = { isAlertDialogOpened5 = false }, buttons = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        TextButton(onClick = { isAlertDialogOpened5 = false }) {
+                            Text(text = "ok")
+                        }
+                    }
+                }, properties = DialogProperties(securePolicy = SecureFlagPolicy.SecureOff),
+                    bodyText = "you can take screenshot of this alertDialog"
+                )
+            }
+            Button(onClick = { isAlertDialogOpened6 = true }) {
+                Text(text = "Alert Dialog securePolicy on")
+            }
+            if (isAlertDialogOpened6) {
+                CommonAlertDialog(onDismissRequest = { isAlertDialogOpened6 = false }, buttons = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        TextButton(onClick = { isAlertDialogOpened6 = false }) {
+                            Text(text = "ok")
+                        }
+                    }
+                }, properties = DialogProperties(securePolicy = SecureFlagPolicy.SecureOn),
+                    bodyText = "you can not take screenshot of this alertDialog"
+                )
+            }
         }
     }
 }
