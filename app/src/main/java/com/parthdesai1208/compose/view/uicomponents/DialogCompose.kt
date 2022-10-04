@@ -1,15 +1,20 @@
 package com.parthdesai1208.compose.view.uicomponents
 
 import android.widget.Toast
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import androidx.compose.ui.window.SecureFlagPolicy
 import com.parthdesai1208.compose.view.theme.RainbowOrange
 import com.parthdesai1208.compose.view.theme.RainbowRed
@@ -23,6 +28,7 @@ fun DialogCompose() {
     var isAlertDialogOpened4 by remember { mutableStateOf(false) }
     var isAlertDialogOpened5 by remember { mutableStateOf(false) }
     var isAlertDialogOpened6 by remember { mutableStateOf(false) }
+    var isPopUpOpened1 by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     Surface {
@@ -156,6 +162,31 @@ fun DialogCompose() {
                 }, properties = DialogProperties(securePolicy = SecureFlagPolicy.SecureOn),
                     bodyText = "you can not take screenshot of this alertDialog"
                 )
+            }
+            Button(onClick = { isPopUpOpened1 = true }) {
+                Text(text = "PopUp")
+            }
+            if (isPopUpOpened1) {
+                Popup(
+                    alignment = Alignment.Center,
+                    onDismissRequest = { isPopUpOpened1 = false },
+                    properties = PopupProperties(dismissOnBackPress = false)
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .border(
+                                width = 1.dp, color = MaterialTheme.colors.onSurface,
+                                shape = RoundedCornerShape(5.dp)
+                            )
+                    ) {
+                        TextButton(onClick = { isPopUpOpened1 = false }) {
+                            Text(
+                                text = "hello I am PopUp\nUsed for small things like\nCut/Copy/Paste banner",
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+                }
             }
         }
     }
