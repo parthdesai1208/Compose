@@ -42,6 +42,7 @@ enum class UIComponentsListingEnumType(val buttonTitle: String, val func: @Compo
     HorizontalListScreen("Horizontal List", { HorizontalListNavGraph() }),
     ConstraintLayoutContent("Constraint Layout Content", { ConstraintLayoutContent() }),
     ConstraintLayoutScreen("runtime Constraint Layout", { DecoupledConstraintLayout() }),
+    ConstraintLayoutClock("Clock using constraint layout", { ClockByConstraintLayout() }),
     BottomSheetScreen("Bottom Sheet", { BottomSheetNavGraph() }),
     SwitchCompose("Switch", { SwitchCompose() }),
     RadioCompose("Radio Button", { RadioButtonCompose() }),
