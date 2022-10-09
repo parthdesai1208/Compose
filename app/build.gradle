@@ -114,6 +114,10 @@ dependencies {
     //https://bumptech.github.io/glide/int/compose.html
     implementation "com.github.bumptech.glide:compose:1.0.0-alpha.0"
 
+    //coil
+    //https://github.com/coil-kt/coil#jetpack-compose
+    implementation("io.coil-kt:coil-compose:2.2.2")
+
     //https://github.com/saket/ExtendedSpans
     //for background text & animating underline text
     implementation "me.saket.extendedspans:extendedspans:1.3.0"

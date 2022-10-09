@@ -29,7 +29,11 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
+import coil.request.ImageRequest
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -58,18 +62,19 @@ fun ImageComposeScreen() {
             ContentScaleImage()
             MirrorImage()
             ImageLoadingUsingGlide()
+            ImageLoadingUsingCoil()
             ImageLoadingUsingLandscapistGlide()
             ImageLoadingUsingLandscapistCoil()
         }
     }
 }
 
-//region Landscapist-coil
+//region Glide
 @Composable
-fun ImageLoadingUsingLandscapistCoil() {
-    Column(modifier = Modifier.padding(top = 16.dp)) {
+fun ImageLoadingUsingGlide() {
+    Column {
         Text(
-            text = "Using Coil(landscapist-coil)",
+            text = "Using Glide",
             modifier = Modifier.padding(horizontal = 24.dp)
         )
         Row(
@@ -77,34 +82,86 @@ fun ImageLoadingUsingLandscapistCoil() {
                 .horizontalScroll(state = rememberScrollState())
                 .padding(top = 24.dp)
         ) {
-            LoadImageUsingLandscapistCoilURL()
-            LoadGifUsingLandscapistCoil()
+            LoadImageUsingGlideURL()
+            LoadGifUsingGlide()
         }
     }
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun LoadGifUsingLandscapistCoil() {
+fun LoadImageUsingGlideURL() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically)
+    ) {
+        Text(text = "Using URL")
+        com.bumptech.glide.integration.compose.GlideImage(
+            model = "https://whc.unesco.org/uploads/thumbs/site_0252_0008-750-750-20151104113424.jpg",
+            contentDescription = null,
+            modifier = Modifier
+                .height(height = 400.dp)
+                .width(width = getScreenWidth().dp - 30.dp)
+                .clip(shape = RoundedCornerShape(16.dp)),
+        )
+    }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun LoadGifUsingGlide() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically)
     ) {
         Text(text = "Load Gif")
-        val context = LocalContext.current
-        val imageLoader = ImageLoader.Builder(context)
-            .components {
-                if (SDK_INT >= 28) {
-                    add(ImageDecoderDecoder.Factory())
-                } else {
-                    add(coil.decode.GifDecoder.Factory())
-                }
-            }
-            .build()
-        CoilImage(
-            imageModel = "https://media2.giphy.com/media/aQYR1p8saOQla/giphy.gif?cid=ecf05e4701sln9u63lr3z17lh5f3n3h3owrk54zh1183hqmi&rid=giphy.gif&ct=g",
-            imageLoader = { imageLoader },
+        com.bumptech.glide.integration.compose.GlideImage(
+            model = "https://media2.giphy.com/media/aQYR1p8saOQla/giphy.gif?cid=ecf05e4701sln9u63lr3z17lh5f3n3h3owrk54zh1183hqmi&rid=giphy.gif&ct=g",
+            contentDescription = null,
+            contentScale = ContentScale.FillBounds,
             modifier = Modifier
+                .width(width = getScreenWidth().dp - 30.dp)
+                .height(height = 350.dp) //need to provide height & width here
+                .clip(shape = RoundedCornerShape(16.dp))
+        )
+    }
+}
+//endregion
+
+//region Coil
+@Composable
+fun ImageLoadingUsingCoil() {
+    Column {
+        Text(
+            text = "Using Coil",
+            modifier = Modifier.padding(horizontal = 24.dp)
+        )
+        Row(
+            modifier = Modifier
+                .horizontalScroll(state = rememberScrollState())
+                .padding(top = 24.dp)
+        ) {
+            LoadImageUsingCoilURL()
+            LoadGifUsingCoil()
+        }
+    }
+}
+
+@Composable
+fun LoadImageUsingCoilURL() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically)
+    ) {
+        Text(text = "Using URL")
+        AsyncImage(
+            model = "https://whc.unesco.org/uploads/thumbs/site_0252_0008-750-750-20151104113424.jpg",
+            contentDescription = null,
+            modifier = Modifier
+                .height(height = 400.dp)
                 .width(width = getScreenWidth().dp - 30.dp)
                 .clip(shape = RoundedCornerShape(16.dp))
         )
@@ -112,34 +169,47 @@ fun LoadGifUsingLandscapistCoil() {
 }
 
 @Composable
-fun LoadImageUsingLandscapistCoilURL() {
+fun LoadGifUsingCoil() {
+    val context = LocalContext.current
+    val imageLoader = ImageLoader.Builder(context)
+        .components {
+            if (SDK_INT >= 28) {
+                add(ImageDecoderDecoder.Factory())
+            } else {
+                add(GifDecoder.Factory())
+            }
+        }
+        .build()
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically)
     ) {
-        Text(text = "Using URL")
-        CoilImage(
-            imageModel = "https://user-images.githubusercontent.com/24237865/75087934-5a53dc00-553e-11ea-94f1-494c1c68a574.jpg",
+        Text(text = "Load Gif")
+        Image(
+            painter = rememberAsyncImagePainter(
+                ImageRequest.Builder(context)
+                    .data(data = "https://media2.giphy.com/media/aQYR1p8saOQla/giphy.gif?cid=ecf05e4701sln9u63lr3z17lh5f3n3h3owrk54zh1183hqmi&rid=giphy.gif&ct=g")
+                    .apply(block = {
+                        size(coil.size.Size.ORIGINAL)
+                    }).build(), imageLoader = imageLoader
+            ),
+            contentDescription = null,
             modifier = Modifier
-                .height(450.dp)
-                .width(getScreenWidth().dp - 30.dp)
-                .clip(shape = RoundedCornerShape(16.dp)),
-            // shows a placeholder ImageBitmap when loading.
-            placeHolder = painterResource(R.drawable.hl1),
-            // shows an error ImageBitmap when the request failed.
-            error = painterResource(id = R.drawable.hl3),
-            //for preview only
-            previewPlaceholder = R.drawable.hl1,
-            contentScale = ContentScale.FillBounds,
-            bitmapPalette = BitmapPalette {
-                //it.paletteColorList() will get List<Int> color from image
-            },
+                .width(width = getScreenWidth().dp - 30.dp)
+                .height(height = 350.dp) //need to provide height & width here
+                .clip(shape = RoundedCornerShape(16.dp))
         )
+/*        AsyncImage(
+            model = "https://media2.giphy.com/media/aQYR1p8saOQla/giphy.gif?cid=ecf05e4701sln9u63lr3z17lh5f3n3h3owrk54zh1183hqmi&rid=giphy.gif&ct=g",
+            contentDescription = null,
+            modifier = Modifier
+                .width(width = getScreenWidth().dp - 30.dp)
+                .height(height = 350.dp) //need to provide height & width here
+                .clip(shape = RoundedCornerShape(16.dp))
+        )*/
     }
 }
-
-
 //endregion
 
 //region Landscapist-Glide
@@ -217,12 +287,12 @@ fun LoadImageUsingLandscapistGlideURL() {
 
 //endregion
 
-//region Glide
+//region Landscapist-coil
 @Composable
-fun ImageLoadingUsingGlide() {
-    Column {
+fun ImageLoadingUsingLandscapistCoil() {
+    Column(modifier = Modifier.padding(top = 16.dp)) {
         Text(
-            text = "Using Glide",
+            text = "Using Coil(landscapist-coil)",
             modifier = Modifier.padding(horizontal = 24.dp)
         )
         Row(
@@ -230,52 +300,69 @@ fun ImageLoadingUsingGlide() {
                 .horizontalScroll(state = rememberScrollState())
                 .padding(top = 24.dp)
         ) {
-            LoadImageUsingGlideURL()
-            LoadGifUsingGlide()
+            LoadImageUsingLandscapistCoilURL()
+            LoadGifUsingLandscapistCoil()
         }
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun LoadImageUsingGlideURL() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically)
-    ) {
-        Text(text = "Using URL")
-        com.bumptech.glide.integration.compose.GlideImage(
-            model = "https://whc.unesco.org/uploads/thumbs/site_0252_0008-750-750-20151104113424.jpg",
-            contentDescription = null,
-            modifier = Modifier
-                .height(height = 400.dp)
-                .width(width = getScreenWidth().dp - 30.dp)
-                .clip(shape = RoundedCornerShape(16.dp)),
-        )
-    }
-}
-
-@OptIn(ExperimentalGlideComposeApi::class)
-@Composable
-fun LoadGifUsingGlide() {
+fun LoadGifUsingLandscapistCoil() {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically)
     ) {
         Text(text = "Load Gif")
-        com.bumptech.glide.integration.compose.GlideImage(
-            model = "https://media2.giphy.com/media/aQYR1p8saOQla/giphy.gif?cid=ecf05e4701sln9u63lr3z17lh5f3n3h3owrk54zh1183hqmi&rid=giphy.gif&ct=g",
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds,
+        val context = LocalContext.current
+        val imageLoader = ImageLoader.Builder(context)
+            .components {
+                if (SDK_INT >= 28) {
+                    add(ImageDecoderDecoder.Factory())
+                } else {
+                    add(GifDecoder.Factory())
+                }
+            }
+            .build()
+        CoilImage(
+            imageModel = "https://media2.giphy.com/media/aQYR1p8saOQla/giphy.gif?cid=ecf05e4701sln9u63lr3z17lh5f3n3h3owrk54zh1183hqmi&rid=giphy.gif&ct=g",
+            imageLoader = { imageLoader },
             modifier = Modifier
                 .width(width = getScreenWidth().dp - 30.dp)
-                .height(height = 350.dp) //need to provide height & width here
                 .clip(shape = RoundedCornerShape(16.dp))
         )
     }
 }
+
+@Composable
+fun LoadImageUsingLandscapistCoilURL() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.CenterVertically)
+    ) {
+        Text(text = "Using URL")
+        CoilImage(
+            imageModel = "https://user-images.githubusercontent.com/24237865/75087934-5a53dc00-553e-11ea-94f1-494c1c68a574.jpg",
+            modifier = Modifier
+                .height(450.dp)
+                .width(getScreenWidth().dp - 30.dp)
+                .clip(shape = RoundedCornerShape(16.dp)),
+            // shows a placeholder ImageBitmap when loading.
+            placeHolder = painterResource(R.drawable.hl1),
+            // shows an error ImageBitmap when the request failed.
+            error = painterResource(id = R.drawable.hl3),
+            //for preview only
+            previewPlaceholder = R.drawable.hl1,
+            contentScale = ContentScale.FillBounds,
+            bitmapPalette = BitmapPalette {
+                //it.paletteColorList() will get List<Int> color from image
+            },
+        )
+    }
+}
+
+
 //endregion
 
 @Composable
