@@ -1,4 +1,4 @@
-package com.parthdesai1208.compose.view
+package com.parthdesai1208.compose.view.custom
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text

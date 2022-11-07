@@ -37,6 +37,8 @@ import com.parthdesai1208.compose.view.MainDestinations.MAIN_SCREEN_ROUTE_POSTFI
 import com.parthdesai1208.compose.view.MainDestinations.MAIN_SCREEN_ROUTE_PREFIX
 import com.parthdesai1208.compose.view.accessibility.AccessibilityScreen
 import com.parthdesai1208.compose.view.animation.AnimationNavGraph
+import com.parthdesai1208.compose.view.custom.BottomBarCustomCompose
+import com.parthdesai1208.compose.view.custom.baseLineToTop
 import com.parthdesai1208.compose.view.migration.MigrationActivity
 import com.parthdesai1208.compose.view.navigation.NavigationEx1
 import com.parthdesai1208.compose.view.navigation.RallyScreen
@@ -101,6 +103,7 @@ enum class MainScreenEnumType(
             )
         }
     }),
+    CustomLayout("Custom Layout", { BottomBarCustomCompose() }),
     AnimationScreen("Animation Samples", { AnimationNavGraph() }),
     NavigationEx1(
         "NavigationEx1 with arg,DeepLink",

@@ -86,4 +86,11 @@
     <string name="hgl6">Nightly wind down</string>
     <string name="GoogleMapsPlaceDescription">Pune is a sprawling city in the western Indian state of Maharashtra. It was once the base of the Peshwas (prime ministers) of the Maratha Empire, which lasted from 1674 to 1818. It\'s known for the grand Aga Khan Palace, built in 1892 and now a memorial to Mahatma Gandhi, whose ashes are preserved in the garden. The 8th-century Pataleshwar Cave Temple is dedicated to the Hindu god Shiva.</string>
     <!--    end region-->
+
+    <!--    region custom compose-->
+    <string name="home_feed">Home</string>
+    <string name="home_search">Search</string>
+    <string name="home_cart">My Cart</string>
+    <string name="home_profile">Profile</string>
+    <!--    end region-->
 </resources>
