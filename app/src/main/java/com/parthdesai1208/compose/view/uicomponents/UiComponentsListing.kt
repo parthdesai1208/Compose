@@ -46,6 +46,7 @@ enum class UIComponentsListingEnumType(val buttonTitle: String, val func: @Compo
     BottomSheetScreen("Bottom Sheet", { BottomSheetNavGraph() }),
     SwitchCompose("Switch", { SwitchCompose() }),
     RadioCompose("Radio Button", { RadioButtonCompose() }),
+    CheckBoxCompose("CheckBox", { CheckBoxCompose() }),
     DropdownMenuCompose("Drop-down Menu", { DropdownMenu() }),
     SliderCompose("Slider", { SliderCompose() }),
     BadgeCompose("Badge", { BadgeCompose() }),
