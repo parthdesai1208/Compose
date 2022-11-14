@@ -1,7 +1,8 @@
 plugins{
     id 'com.android.application'
     id 'kotlin-android'
-    id 'com.google.devtools.ksp' version '1.7.10-1.0.6' //compose destination library
+    //https://search.maven.org/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin
+    id 'com.google.devtools.ksp' version '1.7.20-1.0.8' //compose destination library
     id 'kotlin-parcelize'
 }
 
@@ -39,7 +40,7 @@ android {
     }
     composeOptions {
 //        kotlinCompilerVersion "1.4.10"
-        kotlinCompilerExtensionVersion "1.3.0-rc02"
+        kotlinCompilerExtensionVersion "1.3.2"
     }
     namespace 'com.parthdesai1208.compose'
     buildFeatures {
@@ -57,32 +58,41 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.7.10"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.7.20"
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.google.android.material:material:1.7.0'
 
     //compose core
-    implementation 'androidx.compose.ui:ui:1.3.0-rc01'
+    implementation 'androidx.compose.ui:ui:1.4.0-alpha02'
     //compose util
-    implementation "androidx.compose.ui:ui-util:1.3.0"
+    implementation "androidx.compose.ui:ui-util:1.3.1"
     //activity compose
-    implementation 'androidx.activity:activity-compose:1.6.0'
+    implementation 'androidx.activity:activity-compose:1.6.1'
     //compose foundation
-    implementation 'androidx.compose.foundation:foundation:1.3.0-rc01'
-    implementation "androidx.compose.foundation:foundation-layout:1.2.1"
+    implementation 'androidx.compose.foundation:foundation:1.4.0-alpha02'
+    implementation "androidx.compose.foundation:foundation-layout:1.3.1"
     //lifecycle compose (use for state with lifecycle)
-    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha02"
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha03"
     //material compose
-    implementation "androidx.compose.material:material:1.2.1"
+    implementation "androidx.compose.material:material:1.3.1"
+    //for calculating window width/height using material3 lib
+//    https://developer.android.com/jetpack/androidx/releases/compose-material3
+    implementation "androidx.compose.material3:material3-window-size-class:1.1.0-alpha02"
+    //for navigation rail
+    //https://developer.android.com/jetpack/androidx/releases/compose-material3
+    implementation 'androidx.compose.material3:material3:1.1.0-alpha02'
+    //for device postures
+//    https://developer.android.com/jetpack/androidx/releases/window
+    implementation "androidx.window:window:1.0.0"
     // Tooling support (Previews, etc.)
     implementation 'androidx.ui:ui-tooling:1.0.0-alpha07'
     //for preview
-    implementation 'androidx.compose.ui:ui-tooling:1.2.1'
-    implementation "androidx.compose.ui:ui-tooling-preview:1.2.1"
+    implementation 'androidx.compose.ui:ui-tooling:1.3.1'
+    implementation "androidx.compose.ui:ui-tooling-preview:1.3.1"
     //icon
-    implementation "androidx.compose.material:material-icons-extended:1.2.1"
+    implementation "androidx.compose.material:material-icons-extended:1.3.1"
     //compose constraint layout
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
     //for fragment
@@ -91,21 +101,21 @@ dependencies {
     //testing
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'
 
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.7.10" //1.1.0
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.7.20" //1.1.0
 
     //navigation
     //https://developer.android.com/jetpack/compose/navigation#setup
-    implementation "androidx.navigation:navigation-compose:2.5.2"
+    implementation "androidx.navigation:navigation-compose:2.5.3"
 
     //animation
     //https://developer.android.com/jetpack/androidx/releases/compose-animation#declaring_dependencies
-    implementation "androidx.compose.animation:animation:1.3.0-rc01"
+    implementation "androidx.compose.animation:animation:1.4.0-alpha02"
 
     //accompanist - for insets & system UI
     implementation "com.google.accompanist:accompanist-insets:0.23.1"
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.23.1"
 
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
 
 //    image loading library
 //    https://github.com/skydoves/landscapist

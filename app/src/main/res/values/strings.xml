@@ -93,4 +93,18 @@
     <string name="home_cart">My Cart</string>
     <string name="home_profile">Profile</string>
     <!--    end region-->
+
+    <!--    region any screen-->
+    <string name="navigation_drawer">Navigation Drawer</string>
+    <string name="tab_inbox">Inbox</string>
+    <string name="tab_article">Articles</string>
+    <string name="tab_dm">Direct Messages</string>
+    <string name="tab_groups">Groups</string>
+    <string name="reply">Reply</string>
+    <string name="reply_all">Reply All</string>
+    <string name="search">Search</string>
+    <string name="search_replies">search replies</string>
+    <string name="profile">Profile</string>
+
+    <!--    end region-->
 </resources>

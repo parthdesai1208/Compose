@@ -37,6 +37,7 @@ import com.parthdesai1208.compose.view.MainDestinations.MAIN_SCREEN_ROUTE_POSTFI
 import com.parthdesai1208.compose.view.MainDestinations.MAIN_SCREEN_ROUTE_PREFIX
 import com.parthdesai1208.compose.view.accessibility.AccessibilityScreen
 import com.parthdesai1208.compose.view.animation.AnimationNavGraph
+import com.parthdesai1208.compose.view.anyscreen.AnyScreenListingNavGraph
 import com.parthdesai1208.compose.view.custom.BottomBarCustomCompose
 import com.parthdesai1208.compose.view.custom.baseLineToTop
 import com.parthdesai1208.compose.view.migration.MigrationActivity
@@ -113,7 +114,8 @@ enum class MainScreenEnumType(
     ComposeDestination("ComposeDestination lib", { StartForComposeDestination() }),
     Accessibility("Accessibility", {}),
     Migration("Migration to compose", {}),
-    DrawScreen("Draw Samples", { com.parthdesai1208.compose.view.draw.DrawNavGraph() })
+    DrawScreen("Draw Samples", { com.parthdesai1208.compose.view.draw.DrawNavGraph() }),
+    AnyScreen("Any Screen", { AnyScreenListingNavGraph() }),
 }
 
 @Composable

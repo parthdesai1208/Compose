@@ -15,6 +15,9 @@
             android:name=".view.uicomponents.bottomsheet.BottomSheetActivity"
             android:exported="false" />
         <activity
+            android:name=".view.anyscreen.sample1.AnyScreenSample1Activity"
+            android:exported="false" />
+        <activity
             android:name=".view.migration.ViewInsideComposeActivity"
             android:exported="false" />
         <activity
@@ -25,8 +28,8 @@
             android:exported="false" />
         <activity
             android:name=".view.MainActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
