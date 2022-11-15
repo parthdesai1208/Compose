@@ -23,107 +23,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.parthdesai1208.compose.view.anyscreen.sample1.AnyScreenSample1Activity
 
-/*class AnyScreenActivity : AppCompatActivity() {
-    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        //region get foldable posture
-        val devicePostureFlow = WindowInfoTracker.getOrCreate(this).windowLayoutInfo(this)
-            .flowWithLifecycle(this.lifecycle)
-            .map { layoutInfo ->
-                val foldingFeature =
-                    layoutInfo.displayFeatures
-                        .filterIsInstance<FoldingFeature>()
-                        .firstOrNull()
-                when {
-                    isBookPosture(foldingFeature) ->
-                        DevicePosture.BookPosture(foldingFeature.bounds)
-
-                    isSeparating(foldingFeature) ->
-                        DevicePosture.Separating(foldingFeature.bounds, foldingFeature.orientation)
-
-                    else -> DevicePosture.NormalPosture
-                }
-            }
-            .stateIn(
-                scope = lifecycleScope,
-                started = SharingStarted.Eagerly,
-                initialValue = DevicePosture.NormalPosture
-            )
-        //endregion
-
-        setContent {
-            var buttonClick by remember("") { mutableStateOf("") }
-
-            ComposeTheme {
-                Surface {
-                    val buttonModifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentWidth(align = Alignment.CenterHorizontally)
-                        .padding(8.dp)
-
-                    when (buttonClick) {
-                        "sample1" -> {
-                            val windowSize =
-                                calculateWindowSizeClass(activity = this@AnyScreenActivity)
-                            val devicePosture = devicePostureFlow.collectAsState().value
-                            ReplyApp(
-                                vm = viewModel(),
-                                windowSize = windowSize.widthSizeClass,
-                                foldingDevicePosture = devicePosture
-                            )
-                        }
-                    }
-
-                    AnimatedVisibility(visible = buttonClick.isBlank()) {
-                        Column {
-                            Text(
-                                text = "Any Screen Samples",
-                                modifier = Modifier.padding(16.dp),
-                                fontSize = 18.sp,
-                                fontFamily = FontFamily.SansSerif
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .verticalScroll(rememberScrollState())
-                                    .padding(8.dp)
-                            ) {
-                                Button(
-                                    onClick = { buttonClick = "sample1" },
-                                    modifier = buttonModifier
-                                ) {
-                                    Text(
-                                        "Tablet,Foldable & Desktop compatible UI\n (sample from codelabs)",
-                                        textAlign = TextAlign.Center
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            BackHandler {
-                if (buttonClick.isNotBlank()) {
-                    buttonClick = ""
-                }
-            }
-        }
-
-
-    }
-
-
-}*/
-
-
 enum class AnyScreenListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
     DemonstrateUIForTabletFoldableDesktop(
         "Tablet,Foldable & Desktop compatible UI\n (sample from codelabs)",
         { NavigateToAnyScreenSample1Activity() }),
+    InsetsLearning("Insets", { StatusNavigationBarInsets() }),
 }
 
 object AnyScreenDestinations {
