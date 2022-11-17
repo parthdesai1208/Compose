@@ -39,7 +39,7 @@ import com.parthdesai1208.compose.view.accessibility.AccessibilityScreen
 import com.parthdesai1208.compose.view.animation.AnimationNavGraph
 import com.parthdesai1208.compose.view.anyscreen.AnyScreenListingNavGraph
 import com.parthdesai1208.compose.view.custom.BottomBarCustomCompose
-import com.parthdesai1208.compose.view.custom.baseLineToTop
+import com.parthdesai1208.compose.view.custom.CustomModifierNavGraph
 import com.parthdesai1208.compose.view.migration.MigrationActivity
 import com.parthdesai1208.compose.view.navigation.NavigationEx1
 import com.parthdesai1208.compose.view.navigation.RallyScreen
@@ -93,17 +93,7 @@ enum class MainScreenEnumType(
         }
     }, buttonTitleForAccessibility = "Learn state with view model"),
     CompositionLocal("Learn Composition Local", { CompositionLocalFun() }),
-    CustomModifierScreen("custom modifier", {
-        Surface {
-            Text(
-                "Hi there!",
-                Modifier
-                    .baseLineToTop(32.dp)
-                    .wrapContentWidth()
-                    .wrapContentHeight()
-            )
-        }
-    }),
+    CustomModifierScreen("Custom Modifier", { CustomModifierNavGraph() }),
     CustomLayout("Custom Layout", { BottomBarCustomCompose() }),
     AnimationScreen("Animation Samples", { AnimationNavGraph() }),
     NavigationEx1(
