@@ -38,7 +38,7 @@ import com.parthdesai1208.compose.view.MainDestinations.MAIN_SCREEN_ROUTE_PREFIX
 import com.parthdesai1208.compose.view.accessibility.AccessibilityScreen
 import com.parthdesai1208.compose.view.animation.AnimationNavGraph
 import com.parthdesai1208.compose.view.anyscreen.AnyScreenListingNavGraph
-import com.parthdesai1208.compose.view.custom.BottomBarCustomCompose
+import com.parthdesai1208.compose.view.custom.CustomLayoutNavGraph
 import com.parthdesai1208.compose.view.custom.CustomModifierNavGraph
 import com.parthdesai1208.compose.view.migration.MigrationActivity
 import com.parthdesai1208.compose.view.navigation.NavigationEx1
@@ -94,7 +94,7 @@ enum class MainScreenEnumType(
     }, buttonTitleForAccessibility = "Learn state with view model"),
     CompositionLocal("Learn Composition Local", { CompositionLocalFun() }),
     CustomModifierScreen("Custom Modifier", { CustomModifierNavGraph() }),
-    CustomLayout("Custom Layout", { BottomBarCustomCompose() }),
+    CustomLayout("Custom Layout", { CustomLayoutNavGraph() }),
     AnimationScreen("Animation Samples", { AnimationNavGraph() }),
     NavigationEx1(
         "NavigationEx1 with arg,DeepLink",

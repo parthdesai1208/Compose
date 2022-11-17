@@ -9,8 +9,10 @@ import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
@@ -33,21 +35,101 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import androidx.core.os.ConfigurationCompat
-import androidx.navigation.NavDestination
-import androidx.navigation.NavGraph
-import androidx.navigation.NavHostController
+import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
 import com.parthdesai1208.compose.R
 import java.util.*
 
+//region Custom Modifier listing screen
+enum class CustomLayoutListingEnumType(
+    val buttonTitle: String,
+    val func: @Composable () -> Unit
+) {
+    BottomBarCustomCompose("Bottom Bar", { BottomBarCustomCompose() }),
+    MyOwnColumnFun("Column", { MyOwnColumnFun() }),
+}
+
+object CustomLayoutDestinations {
+    const val CUSTOM_LAYOUT_MAIN_SCREEN = "CUSTOM_LAYOUT_MAIN_SCREEN"
+    const val CUSTOM_LAYOUT_ROUTE_PREFIX = "CUSTOM_LAYOUT_ROUTE_PREFIX"
+    const val CUSTOM_LAYOUT_ROUTE_POSTFIX = "CUSTOM_LAYOUT_ROUTE_POSTFIX"
+}
+
+@Composable
+fun CustomLayoutNavGraph(startDestination: String = CustomLayoutDestinations.CUSTOM_LAYOUT_MAIN_SCREEN) {
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = startDestination) {
+        composable(route = CustomLayoutDestinations.CUSTOM_LAYOUT_MAIN_SCREEN) {
+            CustomLayoutListingScreen(navController = navController)
+        }
+
+        composable(
+            route = "${CustomLayoutDestinations.CUSTOM_LAYOUT_ROUTE_PREFIX}/{${CustomLayoutDestinations.CUSTOM_LAYOUT_ROUTE_POSTFIX}}",
+            arguments = listOf(navArgument(CustomLayoutDestinations.CUSTOM_LAYOUT_ROUTE_POSTFIX) {
+                type = NavType.StringType
+            })
+        ) { backStackEntry ->
+            val arguments = requireNotNull(backStackEntry.arguments)
+            ChildCustomLayoutScreen(arguments.getString(CustomLayoutDestinations.CUSTOM_LAYOUT_ROUTE_POSTFIX))
+        }
+    }
+}
+
+@Composable
+fun CustomLayoutListingScreen(navController: NavHostController) {
+    @Composable
+    fun MyButton(
+        title: CustomLayoutListingEnumType
+    ) {
+        Button(
+            onClick = { navController.navigate("${CustomLayoutDestinations.CUSTOM_LAYOUT_ROUTE_PREFIX}/${title.buttonTitle}") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentWidth(align = Alignment.CenterHorizontally)
+                .padding(8.dp)
+        ) {
+            Text(title.buttonTitle, textAlign = TextAlign.Center)
+        }
+    }
+    Surface {
+        Column {
+            Text(
+                text = "Custom Layout Samples",
+                modifier = Modifier.padding(16.dp),
+                fontSize = 18.sp,
+                fontFamily = FontFamily.SansSerif
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(8.dp)
+            ) {
+                enumValues<CustomLayoutListingEnumType>().forEach {
+                    MyButton(it)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ChildCustomLayoutScreen(onClickButtonTitle: String?) {
+    enumValues<CustomLayoutListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke()
+}
+//endregion
 
 //region custom compose bottom bar
 object BottomBarCustomComposeDestinations {
@@ -399,4 +481,51 @@ class BottomBarCustomComposeAppState(
 
 }
 
+//endregion
+
+//region my own column
+@Composable
+fun MyOwnColumn(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    Layout(
+        modifier = modifier,
+        content = content
+    ) { measurables, constraints ->
+        // Don't constrain child views further, measure them with given constraints
+        // List of measured children
+        val placeables = measurables.map { measurable ->
+            // Measure each child
+            measurable.measure(constraints)
+        }
+
+        // Track the y co-ord we have placed children up to
+        var yPosition = 0
+
+        // Set the size of the layout as big as it can
+        layout(constraints.maxWidth, constraints.maxHeight) {
+            // Place children in the parent layout
+            placeables.forEach { placeable ->
+                // Position item on the screen
+                placeable.placeRelative(x = 0, y = yPosition)
+
+                // Record the y co-ord placed up to
+                yPosition += placeable.height
+            }
+        }
+    }
+}
+
+@Composable
+fun MyOwnColumnFun(modifier: Modifier = Modifier) {
+    Surface {
+        MyOwnColumn(modifier.padding(8.dp)) {
+            Text("MyOwnColumn")
+            Text("places items")
+            Text("vertically.")
+            Text("We've done it by hand!")
+        }
+    }
+}
 //endregion
