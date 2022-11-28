@@ -16,9 +16,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -27,12 +25,14 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -135,6 +135,8 @@ fun TextComponents(name: String) { //@PreviewParameter(FakeStringProvider::class
                 text = "Text with textColor sweepGradient".repeat(6),
                 style = TextStyle(brush = Brush.sweepGradient(colors = RainbowColors))
             )
+            DividerTextCompose()
+            DrawTextAPI()
             DividerTextCompose()
             Text(
                 text = "text with background color",
@@ -297,6 +299,79 @@ fun TextComponents(name: String) { //@PreviewParameter(FakeStringProvider::class
             DividerTextCompose()
             TextWithMiddleLine()
             DividerTextCompose()
+        }
+    }
+}
+
+@OptIn(ExperimentalTextApi::class)
+@Composable
+fun DrawTextAPI(modifier: Modifier = Modifier) {
+    val textMeasurer = rememberTextMeasurer()
+    val text = buildAnnotatedString {
+        withStyle(
+            style = SpanStyle(
+                fontSize = 22.sp, fontStyle = FontStyle.Italic,
+                color = MaterialTheme.colors.onSurface
+            )
+        ) {
+            append("Hello,")
+        }
+        withStyle(
+            style = SpanStyle(
+                brush = Brush.horizontalGradient(colors = RainbowColors),
+                fontSize = 28.sp, fontWeight = FontWeight.Bold
+            )
+        ) {
+            append("\nText using drawTextAPI compose 1.3.0")
+        }
+    }
+    var textLayoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
+
+    Column {
+        Canvas(modifier = modifier
+            .fillMaxWidth()
+            .height(100.dp),
+            onDraw = {
+                drawText(
+                    textMeasurer = textMeasurer,
+                    text = text,
+                    topLeft = Offset(x = 40.dp.toPx(), y = 0.dp.toPx()),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            })
+
+        Canvas(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(80.dp)
+                .layout { measurable, constraints ->
+                    val placeable = measurable.measure(constraints)
+
+                    textLayoutResult = textMeasurer.measure(
+                        AnnotatedString(
+                            "Text on Canvas!",
+                            spanStyle = SpanStyle(
+                                color = Color.Yellow,
+                                fontSize = 28.sp,
+                                fontFamily = FontFamily.SansSerif,
+                            )
+                        )
+                    )
+
+                    layout(placeable.width, placeable.height) {
+                        placeable.place(0, 0)
+                    }
+                }
+        ) {
+            textLayoutResult?.let {
+                drawText(
+                    textLayoutResult = it,
+                    shadow = Shadow(color = Color.Red, offset = Offset(x = 5f, y = 5f)),
+                    textDecoration = TextDecoration.Underline,
+                    topLeft = Offset(40.dp.toPx(), 0.dp.toPx())
+                )
+            }
         }
     }
 }
