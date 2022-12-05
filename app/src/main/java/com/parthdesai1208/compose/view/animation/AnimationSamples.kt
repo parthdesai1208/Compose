@@ -105,6 +105,7 @@ enum class AnimationScreenEnumType(val buttonTitle: String, val func: @Composabl
     ThreeDCardMoving("3D card moving",
         { ThreeDCardMoving() }),
     InstagramLikeParticles("Instagram Like Particles", { InstagramLikeParticles() }),
+    RotatingBorders("Rotating Borders", { RotatingBorders() }),
 }
 
 object AnimationDestinations {
