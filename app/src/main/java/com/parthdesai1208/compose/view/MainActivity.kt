@@ -106,6 +106,7 @@ enum class MainScreenEnumType(
     Migration("Migration to compose", {}),
     DrawScreen("Draw Samples", { com.parthdesai1208.compose.view.draw.DrawNavGraph() }),
     AnyScreen("Any Screen", { AnyScreenListingNavGraph() }),
+    SlotAPI("Slot API", { SlotAPI() }),
 }
 
 @Composable
