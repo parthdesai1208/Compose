@@ -37,3 +37,8 @@ val RainbowGreen = Color(0xFF4CAF50)
 val RainbowBlue = Color(0xFF2196F3)
 val RainbowIndigo = Color(0xFF3F51B5)
 val RainbowViolet = Color(0xFF9C27B0)
+
+val red = Color(0xFFEF5350)
+val purple = Color(0xFFAB47BC)
+val blue = Color(0xFF42A5F5)
+val green = Color(0xFF66BB6A)

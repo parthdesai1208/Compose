@@ -106,6 +106,9 @@ enum class AnimationScreenEnumType(val buttonTitle: String, val func: @Composabl
         { ThreeDCardMoving() }),
     InstagramLikeParticles("Instagram Like Particles", { InstagramLikeParticles() }),
     RotatingBorders("Rotating Borders", { RotatingBorders() }),
+    PhysicsBasedAnimation(
+        "Physics Based Animation",
+        { com.parthdesai1208.compose.view.animation.physicsbasedanimation.PhysicsBasedAnimationFun() }),
 }
 
 object AnimationDestinations {

@@ -144,4 +144,7 @@ dependencies {
     //https://github.com/adrianwitaszak/neumorph-ui
     implementation 'com.github.adrianwitaszak:neumorph-ui:0.7.7'
 
+    //physics based animation
+    //https://github.com/dyn4j/dyn4j
+    implementation 'org.dyn4j:dyn4j:4.2.2'
 }
