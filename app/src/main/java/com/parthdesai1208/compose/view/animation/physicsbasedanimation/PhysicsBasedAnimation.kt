@@ -252,5 +252,6 @@ fun PhysicsLayoutScope.IconWithPhysicsLayoutScope(onClick: () -> Unit) {
                 detectTapGestures(onPress = {
                     onClick()
                 })
-            })
+            }, tint = MaterialTheme.colors.onBackground
+    )
 }
