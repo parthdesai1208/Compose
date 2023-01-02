@@ -7,10 +7,13 @@ import android.graphics.Rect
 import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -46,6 +49,8 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.parthdesai1208.compose.utils.RainbowColors
 import com.parthdesai1208.compose.utils.autofill
+import com.parthdesai1208.compose.view.theme.GreyDark
+import com.parthdesai1208.compose.view.theme.GreyLight
 import com.parthdesai1208.compose.view.theme.red1000
 import com.parthdesai1208.compose.viewmodel.ManageStateOnTextChangeViewModel
 import kotlinx.coroutines.launch
@@ -109,6 +114,8 @@ fun EditTextCompose(vm: ManageStateOnTextChangeViewModel) {
             ErrorTextField()
             DividerTextCompose()
             ManageStateOnTextChange(vm)
+            DividerTextCompose()
+            OTPInputField()
             DividerTextCompose()
         }
     }
@@ -458,9 +465,9 @@ fun phoneNumFilter(text: AnnotatedString): TransformedText {
     return TransformedText(AnnotatedString(out), phoneNumberOffsetTranslator)
 }
 
-enum class CursorSelectionBehaviour {
+/*enum class CursorSelectionBehaviour {
     START, END, SELECT_ALL
-}
+}*/
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 @Composable
@@ -587,3 +594,78 @@ fun ManageStateOnTextChange(vm: ManageStateOnTextChangeViewModel) {
         }
     }
 }
+
+//region otp input field
+@Composable
+fun OTPInputField() {
+    var otpValue by rememberSaveable { mutableStateOf("") }
+
+    OtpTextField(
+        otpText = otpValue,
+        onOtpTextChange = { value, _ ->
+            otpValue = value
+        }
+    )
+}
+
+@Composable
+fun OtpTextField(
+    modifier: Modifier = Modifier,
+    otpText: String,
+    otpCount: Int = 6,
+    onOtpTextChange: (String, Boolean) -> Unit
+) {
+    BasicTextField(
+        modifier = modifier,
+        value = otpText,
+        onValueChange = {
+            if (it.length <= otpCount) {
+                onOtpTextChange.invoke(it, it.length == otpCount)
+            }
+        },
+       keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword, imeAction = ImeAction.Done),
+        decorationBox = {  //allows to add decorations around text field
+            Row(horizontalArrangement = Arrangement.Center) {
+                repeat(otpCount) { index ->
+                    CharView(
+                        index = index,
+                        text = otpText
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+            }
+        }
+    )
+}
+
+@Composable
+private fun CharView(
+    index: Int,
+    text: String
+) {
+    val isFocused = text.length == index
+    val char = when {
+        index == text.length -> "0"
+        index > text.length -> ""
+        else -> text[index].toString()
+    }
+    Text(
+        modifier = Modifier
+            .width(40.dp)
+            .border(
+                width = if (isFocused) 2.dp else 1.dp,
+                color = if (isFocused) GreyDark else GreyLight,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(2.dp),
+        text = char,
+        style = MaterialTheme.typography.h4,
+        color = if (isFocused) {
+            GreyLight
+        } else {
+            GreyDark
+        },
+        textAlign = TextAlign.Center
+    )
+}
+//endregion

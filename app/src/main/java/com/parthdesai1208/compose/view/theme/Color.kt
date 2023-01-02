@@ -42,3 +42,6 @@ val red = Color(0xFFEF5350)
 val purple = Color(0xFFAB47BC)
 val blue = Color(0xFF42A5F5)
 val green = Color(0xFF66BB6A)
+
+val GreyLight = Color(0xFFB5B6BA)
+val GreyDark = Color(0xFF60626C)
