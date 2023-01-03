@@ -2,7 +2,6 @@
 
 package com.parthdesai1208.compose.view.uicomponents
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.widget.Toast
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
@@ -37,13 +36,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.parthdesai1208.compose.R
-import com.parthdesai1208.compose.utils.RainbowColors
+import com.parthdesai1208.compose.utils.*
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.view.theme.attractions_gmap
 import com.parthdesai1208.compose.view.theme.shopping_gmap
@@ -546,17 +543,9 @@ fun ExtendedSpansText(
     )
 }
 
-@Preview(name = "Light", showSystemUi = true)
-@Preview(name = "Dark", showSystemUi = true, uiMode = UI_MODE_NIGHT_YES)
-@Preview(
-    name = "landscape",
-    showSystemUi = true,
-    device = Devices.AUTOMOTIVE_1024p,
-    widthDp = 720,
-    heightDp = 360
-)
+@AllDevices
 @Composable
-fun PreTextInCenter() {
+fun TextComposePreview() {
     ComposeTheme {
         TextComponents("World")
     }
