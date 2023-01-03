@@ -2,7 +2,7 @@ plugins{
     id 'com.android.application'
     id 'kotlin-android'
     //https://search.maven.org/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin
-    id 'com.google.devtools.ksp' version '1.7.20-1.0.8' //compose destination library
+    id 'com.google.devtools.ksp' version '1.7.21-1.0.8' //compose destination library
     id 'kotlin-parcelize'
 }
 
@@ -40,7 +40,7 @@ android {
     }
     composeOptions {
 //        kotlinCompilerVersion "1.4.10"
-        kotlinCompilerExtensionVersion "1.3.2"
+        kotlinCompilerExtensionVersion "1.4.0-alpha02"
     }
     namespace 'com.parthdesai1208.compose'
     buildFeatures {
@@ -58,7 +58,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.7.20"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.7.21"
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -101,7 +101,8 @@ dependencies {
     //testing
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'
 
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.7.20" //1.1.0
+    //https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-reflect
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.7.21" //1.1.0
 
     //navigation
     //https://developer.android.com/jetpack/compose/navigation#setup
