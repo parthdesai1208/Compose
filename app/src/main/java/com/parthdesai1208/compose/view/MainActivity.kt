@@ -32,6 +32,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.parthdesai1208.compose.ComposeApp
+import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.model.UserData
 import com.parthdesai1208.compose.view.MainDestinations.MAIN_SCREEN_ROUTE_POSTFIX
 import com.parthdesai1208.compose.view.MainDestinations.MAIN_SCREEN_ROUTE_PREFIX
@@ -80,33 +81,32 @@ object MainDestinations {
 }
 
 enum class MainScreenEnumType(
-    val buttonTitle: String,
+    val buttonTitle: Int,
     val func: @Composable () -> Unit,
-    val buttonTitleForAccessibility: String = buttonTitle,
+    val buttonTitleForAccessibility: Int = buttonTitle,
 ) {
     TextComponents(
-        "UI Components",
+        R.string.uicomponents,
         { com.parthdesai1208.compose.view.uicomponents.UIComponentsNavGraph() }),
-    LearnStateScreen("Learn state (VM)", {
+    LearnStateScreen(R.string.learnstate, {
         Surface {
             TodoActivityScreen(androidx.lifecycle.viewmodel.compose.viewModel())
         }
-    }, buttonTitleForAccessibility = "Learn state with view model"),
-    CompositionLocal("Learn Composition Local", { CompositionLocalFun() }),
-    CustomModifierScreen("Custom Modifier", { CustomModifierNavGraph() }),
-    CustomLayout("Custom Layout", { CustomLayoutNavGraph() }),
-    AnimationScreen("Animation Samples", { AnimationNavGraph() }),
+    }, buttonTitleForAccessibility = R.string.learnstatewithviewmodel),
+    CompositionLocal(R.string.learncompositionlocal, { CompositionLocalFun() }),
+    CustomModifierScreen(R.string.custommodifier, { CustomModifierNavGraph() }),
+    CustomLayout(R.string.customlayout, { CustomLayoutNavGraph() }),
+    AnimationScreen(R.string.animationsamples, { AnimationNavGraph() }),
     NavigationEx1(
-        "NavigationEx1 with arg,DeepLink",
-        { NavigationEx1() },
-        buttonTitleForAccessibility = "Navigation Example 1 with arg,DeepLink"
+        R.string.navigationex1, { NavigationEx1() },
+        buttonTitleForAccessibility = R.string.navigationexample
     ),
-    ComposeDestination("ComposeDestination lib", { StartForComposeDestination() }),
-    Accessibility("Accessibility", {}),
-    Migration("Migration to compose", {}),
-    DrawScreen("Draw Samples", { com.parthdesai1208.compose.view.draw.DrawNavGraph() }),
-    AnyScreen("Any Screen", { AnyScreenListingNavGraph() }),
-    SlotAPI("Slot API", { SlotAPI() }),
+    ComposeDestination(R.string.composedestination, { StartForComposeDestination() }),
+    Accessibility(R.string.accessibility, {}),
+    Migration(R.string.migrationtocompose, {}),
+    DrawScreen(R.string.drawsamples, { com.parthdesai1208.compose.view.draw.DrawNavGraph() }),
+    AnyScreen(R.string.anyscreen, { AnyScreenListingNavGraph() }),
+    SlotAPI(R.string.slotapi, { SlotAPI() }),
 }
 
 @Composable
@@ -157,7 +157,7 @@ fun MainActivityNavGraph(
 
 @Composable
 fun ChildScreen(onClickButtonTitle: String?) {
-    enumValues<MainScreenEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke()
+    enumValues<MainScreenEnumType>().first { it.buttonTitle.toString() == onClickButtonTitle }.func.invoke()
 }
 
 @Composable
@@ -171,7 +171,7 @@ fun MainScreen(navController: NavHostController) {
 
         Button(
             onClick = {
-                if (title.buttonTitle == "Migration to compose") {
+                if (title.buttonTitle == R.string.migrationToCompose) {
                     context.startActivity(Intent(context, MigrationActivity::class.java))
                     return@Button
                 }
@@ -182,10 +182,10 @@ fun MainScreen(navController: NavHostController) {
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
                 .padding(8.dp)
         ) {
-            Text(title.buttonTitle,
+            Text(context.getString(title.buttonTitle),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.semantics {
-                    contentDescription = title.buttonTitleForAccessibility
+                    contentDescription = context.getString(title.buttonTitleForAccessibility)
                 })
         }
     }

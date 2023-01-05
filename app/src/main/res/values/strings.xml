@@ -107,4 +107,23 @@
     <string name="profile">Profile</string>
 
     <!--    end region-->
+
+    <!--    region MainActivity-->
+    <string name="uicomponents">UI Components</string>
+    <string name="migrationToCompose">Migration to compose</string>
+    <string name="learnstate">Learn state (VM)</string>
+    <string name="learnstatewithviewmodel">Learn state with view model</string>
+    <string name="learncompositionlocal">Learn Composition Local</string>
+    <string name="custommodifier">Custom Modifier</string>
+    <string name="customlayout">Custom Layout</string>
+    <string name="animationsamples">Animation Samples</string>
+    <string name="navigationex1">NavigationEx1 with arg,DeepLink</string>
+    <string name="navigationexample">Navigation Example 1 with arg,DeepLink</string>
+    <string name="composedestination">ComposeDestination lib</string>
+    <string name="accessibility">Accessibility</string>
+    <string name="migrationtocompose">Migration to compose</string>
+    <string name="drawsamples">Draw Samples</string>
+    <string name="anyscreen">Any Screen</string>
+    <string name="slotapi">Slot API</string>
+    <!--    end region-->
 </resources>
