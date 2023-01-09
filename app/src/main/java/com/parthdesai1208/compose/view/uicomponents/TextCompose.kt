@@ -28,6 +28,7 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -66,7 +67,7 @@ fun TextComponents(name: String) { //@PreviewParameter(FakeStringProvider::class
         ) {
             val context = LocalContext.current
             Text(
-                text = "single click text",
+                text = stringResource(R.string.singleClickText),
                 modifier = Modifier
                     .padding(16.dp) //to make clickable area bigger
                     .clickable {

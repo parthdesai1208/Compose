@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -19,38 +20,35 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.view.uicomponents.bottomsheet.BottomSheetNavGraph
 
 
-enum class UIComponentsListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
-    TextComponents("Text", { TextComponents("World") }),
-    EditTextCompose(
-        "EditText",
-        { EditTextCompose(androidx.lifecycle.viewmodel.compose.viewModel()) }),
-    ButtonComponents("Button", { ButtonCompose() }),
-    ImageCompose("Image", { ImageComposeScreen() }),
-    IconCompose("Icon", { IconComposeScreen() }),
-    SearchBarComponents(
-        "SearchBar",
-        { SearchBar(androidx.lifecycle.viewmodel.compose.viewModel()) }),
-    SnackBarComponents("SnackBar", { SnackBarCompose() }),
-    ColumnCompose("Column", { ColumnNavGraph() }),
-    RowCompose("Row", { RowNavGraph() }),
-    BoxCompose("Box", { BoxNavGraph() }),
-    CardCompose("Card", { CardCompose() }),
-    CollapsableRecyclerviewScreen("Vertical List", { VerticalListNavGraph() }),
-    HorizontalListScreen("Horizontal List", { HorizontalListNavGraph() }),
-    ConstraintLayoutContent("Constraint Layout Content", { ConstraintLayoutContent() }),
-    ConstraintLayoutScreen("runtime Constraint Layout", { DecoupledConstraintLayout() }),
-    ConstraintLayoutClock("Clock using constraint layout", { ClockByConstraintLayout() }),
-    BottomSheetScreen("Bottom Sheet", { BottomSheetNavGraph() }),
-    SwitchCompose("Switch", { SwitchCompose() }),
-    RadioCompose("Radio Button", { RadioButtonCompose() }),
-    CheckBoxCompose("CheckBox", { CheckBoxCompose() }),
-    DropdownMenuCompose("Drop-down Menu", { DropdownMenu() }),
-    SliderCompose("Slider", { SliderCompose() }),
-    BadgeCompose("Badge", { BadgeCompose() }),
-    DialogCompose("Dialog", { DialogCompose() }),
+enum class UIComponentsListingEnumType(val buttonTitle: Int, val func: @Composable () -> Unit) {
+    TextComponents(R.string.text, { TextComponents("World") }),
+    EditTextCompose(R.string.edittext, { EditTextCompose(androidx.lifecycle.viewmodel.compose.viewModel()) }),
+    ButtonComponents(R.string.button, { ButtonCompose() }),
+    ImageCompose(R.string.image, { ImageComposeScreen() }),
+    IconCompose(R.string.icon, { IconComposeScreen() }),
+    SearchBarComponents(R.string.searchbar, { SearchBar(androidx.lifecycle.viewmodel.compose.viewModel()) }),
+    SnackBarComponents(R.string.snackbar, { SnackBarCompose() }),
+    ColumnCompose(R.string.column, { ColumnNavGraph() }),
+    RowCompose(R.string.row, { RowNavGraph() }),
+    BoxCompose(R.string.box, { BoxNavGraph() }),
+    CardCompose(R.string.card, { CardCompose() }),
+    CollapsableRecyclerviewScreen(R.string.verticallist, { VerticalListNavGraph() }),
+    HorizontalListScreen(R.string.horizontallist, { HorizontalListNavGraph() }),
+    ConstraintLayoutContent(R.string.constraintlayoutcontent, { ConstraintLayoutContent() }),
+    ConstraintLayoutScreen(R.string.runtimeconstraintlayout, { DecoupledConstraintLayout() }),
+    ConstraintLayoutClock(R.string.clockusingconstraintlayout, { ClockByConstraintLayout() }),
+    BottomSheetScreen(R.string.bottomsheet, { BottomSheetNavGraph() }),
+    SwitchCompose(R.string.switch1, { SwitchCompose() }),
+    RadioCompose(R.string.radiobutton, { RadioButtonCompose() }),
+    CheckBoxCompose(R.string.checkbox, { CheckBoxCompose() }),
+    DropdownMenuCompose(R.string.dropdownmenu, { DropdownMenu() }),
+    SliderCompose(R.string.slider, { SliderCompose() }),
+    BadgeCompose(R.string.badge, { BadgeCompose() }),
+    DialogCompose(R.string.dialog, { DialogCompose() }),
 }
 
 object UIComponentsDestinations {
@@ -86,6 +84,8 @@ fun UIComponentsListingScreen(navController: NavHostController) {
     fun MyButton(
         title: UIComponentsListingEnumType
     ) {
+        val context = LocalContext.current
+
         Button(
             onClick = { navController.navigate("${UIComponentsDestinations.DRAW_SCREEN_ROUTE_PREFIX}/${title.buttonTitle}") },
             modifier = Modifier
@@ -93,7 +93,7 @@ fun UIComponentsListingScreen(navController: NavHostController) {
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
                 .padding(8.dp)
         ) {
-            Text(title.buttonTitle, textAlign = TextAlign.Center)
+            Text(context.getString(title.buttonTitle), textAlign = TextAlign.Center)
         }
     }
     Surface {
@@ -121,5 +121,5 @@ fun UIComponentsListingScreen(navController: NavHostController) {
 
 @Composable
 fun ChildUIComponentsScreen(onClickButtonTitle: String?) {
-    enumValues<UIComponentsListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke()
+    enumValues<UIComponentsListingEnumType>().first { it.buttonTitle.toString() == onClickButtonTitle }.func.invoke()
 }

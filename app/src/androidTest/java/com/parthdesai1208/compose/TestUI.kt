@@ -23,10 +23,24 @@ class TestUI {
                 MainActivityNavGraph(application = composeTestRule.activity.application)
             }
         }
+        //region go to TextCompose screen & verify is it displayed
+        //region check whether button displayed & should be clickable
         val uIComponentButtonString = composeTestRule.activity.getString(R.string.uicomponents)
         val uIComponentsButton = composeTestRule.onNodeWithText(uIComponentButtonString)
         uIComponentsButton.assertIsDisplayed()
         uIComponentsButton.performClick()
+        //endregion
+        //region check whether text button displayed & should be clickable
+        val textString = composeTestRule.activity.getString(R.string.text)
+        val textButton = composeTestRule.onNodeWithText(textString)
+        textButton.assertIsDisplayed()
+        textButton.performClick()
+        //endregion
+        val singleClickTextString = composeTestRule.activity.getString(R.string.singleClickText)
+        val singleClickText = composeTestRule.onNodeWithText(singleClickTextString)
+        singleClickText.assertIsDisplayed()
+        //endregion
+
     }
 
 }

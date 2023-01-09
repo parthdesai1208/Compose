@@ -125,5 +125,30 @@
     <string name="drawsamples">Draw Samples</string>
     <string name="anyscreen">Any Screen</string>
     <string name="slotapi">Slot API</string>
+    <string name="text">Text</string>
+    <string name="edittext">EditText</string>
+    <string name="button">Button</string>
+    <string name="image">Image</string>
+    <string name="icon">Icon</string>
+    <string name="searchbar">SearchBar</string>
+    <string name="snackbar">SnackBar</string>
+    <string name="column">Column</string>
+    <string name="row">Row</string>
+    <string name="box">Box</string>
+    <string name="card">Card</string>
+    <string name="verticallist">Vertical List</string>
+    <string name="horizontallist">Horizontal List</string>
+    <string name="constraintlayoutcontent">Constraint Layout Content</string>
+    <string name="runtimeconstraintlayout">runtime Constraint Layout</string>
+    <string name="clockusingconstraintlayout">Clock using constraint layout</string>
+    <string name="bottomsheet">Bottom Sheet</string>
+    <string name="switch1">Switch</string>
+    <string name="radiobutton">Radio Button</string>
+    <string name="checkbox">CheckBox</string>
+    <string name="dropdownmenu">Drop-down Menu</string>
+    <string name="slider">Slider</string>
+    <string name="badge">Badge</string>
+    <string name="dialog">Dialog</string>
+    <string name="singleClickText">single click text</string>
     <!--    end region-->
 </resources>
