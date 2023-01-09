@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -23,7 +24,7 @@ import androidx.navigation.navArgument
 import com.parthdesai1208.compose.R
 
 enum class NetworkingListingEnumType(val buttonTitle: Int, val func: @Composable () -> Unit) {
-    MoviesList(R.string.moviesList, { MoviesListScreen() })
+    MoviesList(R.string.moviesList, { MoviesListScreen(viewModel()) })
 }
 
 object NetworkingListingDestinations {
