@@ -48,7 +48,7 @@ enum class UIComponentsListingEnumType(val buttonTitle: Int, val func: @Composab
     DropdownMenuCompose(R.string.dropdownmenu, { DropdownMenu() }),
     SliderCompose(R.string.slider, { SliderCompose() }),
     BadgeCompose(R.string.badge, { BadgeCompose() }),
-    DialogCompose(R.string.dialog, { DialogCompose() }),
+    DialogCompose(R.string.dialog1, { DialogCompose() }),
 }
 
 object UIComponentsDestinations {

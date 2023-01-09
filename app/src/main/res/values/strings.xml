@@ -148,7 +148,15 @@
     <string name="dropdownmenu">Drop-down Menu</string>
     <string name="slider">Slider</string>
     <string name="badge">Badge</string>
-    <string name="dialog">Dialog</string>
-    <string name="singleClickText">single click text</string>
+    <string name="dialog1">Dialog</string>
     <!--    end region-->
+
+<!--    region textCompose-->
+    <string name="singleClickText">single click text</string>
+<!--    endregion -->
+
+<!--    region networking-->
+    <string name="networking">Networking</string>
+    <string name="moviesList">Movies list</string>
+<!--    end region-->
 </resources>

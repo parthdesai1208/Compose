@@ -45,6 +45,7 @@ import com.parthdesai1208.compose.view.migration.MigrationActivity
 import com.parthdesai1208.compose.view.navigation.NavigationEx1
 import com.parthdesai1208.compose.view.navigation.RallyScreen
 import com.parthdesai1208.compose.view.navigation.composeDestination.StartForComposeDestination
+import com.parthdesai1208.compose.view.networking.NetworkingListNavGraph
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 
 class MainActivity : AppCompatActivity() {
@@ -107,6 +108,7 @@ enum class MainScreenEnumType(
     DrawScreen(R.string.drawsamples, { com.parthdesai1208.compose.view.draw.DrawNavGraph() }),
     AnyScreen(R.string.anyscreen, { AnyScreenListingNavGraph() }),
     SlotAPI(R.string.slotapi, { SlotAPI() }),
+    Networking(R.string.networking, { NetworkingListNavGraph() }),
 }
 
 @Composable
