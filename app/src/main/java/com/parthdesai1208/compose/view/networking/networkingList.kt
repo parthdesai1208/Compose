@@ -23,8 +23,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.parthdesai1208.compose.R
 
-enum class NetworkingListingEnumType(val buttonTitle: Int, val func: @Composable () -> Unit) {
-    MoviesList(R.string.moviesList, { MoviesListScreen(viewModel()) })
+enum class NetworkingListingEnumType(val buttonTitle: Int, val func: @Composable (NavHostController) -> Unit) {
+    MoviesList(R.string.moviesList, { MoviesListScreen(viewModel(), navHostController = it) })
 }
 
 object NetworkingListingDestinations {
@@ -39,7 +39,7 @@ fun NetworkingListNavGraph(startDestination: String = NetworkingListingDestinati
 
     NavHost(navController = navController, startDestination = startDestination) {
         composable(route = NetworkingListingDestinations.NETWORKING_LISTING_MAIN_SCREEN) {
-            DrawListingScreen(navController = navController)
+            NetworkingListingScreen(navController = navController)
         }
 
         composable(
@@ -49,13 +49,13 @@ fun NetworkingListNavGraph(startDestination: String = NetworkingListingDestinati
             })
         ) { backStackEntry ->
             val arguments = requireNotNull(backStackEntry.arguments)
-            ChildDrawScreen(arguments.getString(NetworkingListingDestinations.NETWORKING_LISTING_SCREEN_ROUTE_POSTFIX))
+            ChildDrawScreen(arguments.getString(NetworkingListingDestinations.NETWORKING_LISTING_SCREEN_ROUTE_POSTFIX),navController)
         }
     }
 }
 
 @Composable
-fun DrawListingScreen(navController: NavHostController) {
+fun NetworkingListingScreen(navController: NavHostController) {
     @Composable
     fun MyButton(
         title: NetworkingListingEnumType
@@ -73,7 +73,7 @@ fun DrawListingScreen(navController: NavHostController) {
     Surface {
         Column {
             Text(
-                text = "Draw Samples",
+                text = "Networking Samples",
                 modifier = Modifier.padding(16.dp),
                 fontSize = 18.sp,
                 fontFamily = FontFamily.SansSerif
@@ -94,6 +94,6 @@ fun DrawListingScreen(navController: NavHostController) {
 }
 
 @Composable
-fun ChildDrawScreen(onClickButtonTitle: String?) {
-    enumValues<NetworkingListingEnumType>().first { it.buttonTitle.toString() == onClickButtonTitle }.func.invoke()
+fun ChildDrawScreen(onClickButtonTitle: String?,navController: NavHostController) {
+    enumValues<NetworkingListingEnumType>().first { it.buttonTitle.toString() == onClickButtonTitle }.func.invoke(navController)
 }
