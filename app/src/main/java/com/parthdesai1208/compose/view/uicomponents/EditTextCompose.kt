@@ -93,6 +93,8 @@ fun EditTextCompose(vm: ManageStateOnTextChangeViewModel) {
             DividerTextCompose()
             KeyBoardTypeTextField(keyboardType = KeyboardType.Email, "Email")
             DividerTextCompose()
+            GainFocusEditTextCompose()
+            DividerTextCompose()
             ImeOptionTextField(imeAction = ImeAction.Go, "Go ImeAction")
             DividerTextCompose()
             ImeOptionTextField(imeAction = ImeAction.Search, "Search ImeAction")
@@ -117,6 +119,32 @@ fun EditTextCompose(vm: ManageStateOnTextChangeViewModel) {
             DividerTextCompose()
             OTPInputField()
             DividerTextCompose()
+        }
+    }
+}
+
+@Composable
+fun GainFocusEditTextCompose() {
+    Column {
+        val focusRequester = remember { FocusRequester() }
+        var value by rememberSaveable { mutableStateOf("") }
+        val focusManager = LocalFocusManager.current
+
+        TextField(
+            modifier = Modifier.focusRequester(focusRequester),
+            value = value,
+            onValueChange = {
+                value = it
+            },
+            label = { Text("you will get focus here") },
+            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+        )
+
+        Button(onClick = {
+            focusRequester.requestFocus()
+        }) {
+            Text("Gain focus")
         }
     }
 }
@@ -623,7 +651,10 @@ fun OtpTextField(
                 onOtpTextChange.invoke(it, it.length == otpCount)
             }
         },
-       keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword, imeAction = ImeAction.Done),
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.NumberPassword,
+            imeAction = ImeAction.Done
+        ),
         decorationBox = {  //allows to add decorations around text field
             Row(horizontalArrangement = Arrangement.Center) {
                 repeat(otpCount) { index ->
