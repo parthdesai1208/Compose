@@ -31,6 +31,7 @@ import coil.size.Scale
 import coil.transform.CircleCropTransformation
 import com.parthdesai1208.compose.model.networking.MoviesList
 import com.parthdesai1208.compose.model.networking.moviesPreviewList
+import com.parthdesai1208.compose.utils.rememberMutableStateListOf
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.viewmodel.networking.MoviesListVM
 
@@ -117,16 +118,16 @@ fun MoviesLoadingScreen(isLoading: Boolean) {
 
 @Composable
 fun MoviesList(moviesList: List<MoviesList>) {
-    val selectedItemList = remember { mutableStateListOf<Int>() }
+    val selectedItemList = rememberMutableStateListOf<Int>()
 
     LazyColumn(content = {
         itemsIndexed(items = moviesList) { index, item ->
             MovieItem(index, movie = item, selectedList = selectedItemList, onItemClick = {
-                    if (!selectedItemList.contains(it)) {
-                        selectedItemList.add(it)
-                    } else {
-                        selectedItemList.removeAt(selectedItemList.indexOf(it))
-                    }
+                if (!selectedItemList.contains(it)) {
+                    selectedItemList.add(it)
+                } else {
+                    selectedItemList.removeAt(selectedItemList.indexOf(it))
+                }
             })
         }
     })
