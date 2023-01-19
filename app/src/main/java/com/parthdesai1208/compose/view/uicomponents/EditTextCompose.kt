@@ -1,5 +1,4 @@
-@file:Suppress("OPT_IN_IS_NOT_ENABLED")
-@file:OptIn(ExperimentalTextApi::class)
+@file:Suppress("OPT_IN_IS_NOT_ENABLED") @file:OptIn(ExperimentalTextApi::class)
 
 package com.parthdesai1208.compose.view.uicomponents
 
@@ -19,19 +18,14 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.AutofillType
-import androidx.compose.ui.focus.FocusDirection
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.focus.*
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -107,6 +101,8 @@ fun EditTextCompose(vm: ManageStateOnTextChangeViewModel) {
             DividerTextCompose()
             ImeOptionTextField(imeAction = ImeAction.Done, "Done ImeAction")
             DividerTextCompose()
+            FocusOrderTextField()
+            DividerTextCompose()
             GradientTextField()
             DividerTextCompose()
             NoLeadingZeroes()
@@ -119,6 +115,67 @@ fun EditTextCompose(vm: ManageStateOnTextChangeViewModel) {
             DividerTextCompose()
             OTPInputField()
             DividerTextCompose()
+        }
+    }
+}
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+fun FocusOrderTextField() {
+    val focusManager = LocalFocusManager.current
+    val (a, b, c) = FocusRequester.createRefs()
+
+    Row(
+        modifier = Modifier.padding(horizontal = 20.dp),
+        horizontalArrangement = Arrangement.spacedBy(
+            space = 8.dp, alignment = Alignment.CenterHorizontally
+        ),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column {
+            TextField(
+                label = { Text(text = "focus:a, next:c") },
+                value = "",
+                onValueChange = {},
+                modifier = Modifier
+                    .focusRequester(a)
+                    .focusProperties { next = c },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(focusDirection = FocusDirection.Next) })
+            )
+            TextField(
+                label = { Text(text = "focus:b, last") },
+                value = "",
+                onValueChange = {},
+                modifier = Modifier
+                    .focusRequester(b)
+                    .focusProperties {
+                        previous = c
+                    },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+            )
+            TextField(
+                label = { Text(text = "focus:c, next:b") },
+                value = "",
+                onValueChange = {},
+                modifier = Modifier
+                    .focusRequester(c)
+                    .focusProperties {
+                        previous = a
+                        next = b
+                    },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) })
+            )
+        }
+        Column {
+            Button(onClick = { focusManager.moveFocus(FocusDirection.Next) }) {
+                Icon(imageVector = Icons.Default.ArrowRight, contentDescription = null)
+            }
+            Button(onClick = { focusManager.moveFocus(FocusDirection.Previous) }) {
+                Icon(imageVector = Icons.Default.ArrowLeft, contentDescription = null)
+            }
         }
     }
 }
@@ -153,46 +210,36 @@ fun GainFocusEditTextCompose() {
 fun SimpleFilledTextFieldSample() {
     var text by rememberSaveable { mutableStateOf("") }
 
-    TextField(
-        value = text,
-        onValueChange = { text = it },
-        label = { Text("Filled EditText") }
-    )
+    TextField(value = text, onValueChange = { text = it }, label = { Text("Filled EditText") })
 }
 
 @Composable
 fun SimpleOutlinedTextFieldSample() {
     var text by rememberSaveable { mutableStateOf("") }
 
-    OutlinedTextField(
-        value = text,
+    OutlinedTextField(value = text,
         onValueChange = { text = it },
-        label = { Text("Outlined EditText") }
-    )
+        label = { Text("Outlined EditText") })
 }
 
 @Composable
 fun SingleLineTextField() {
     var text by rememberSaveable { mutableStateOf("") }
 
-    TextField(
-        value = text,
+    TextField(value = text,
         singleLine = true,
         onValueChange = { text = it },
-        label = { Text("Single Line") }
-    )
+        label = { Text("Single Line") })
 }
 
 @Composable
 fun MaxLineTextField() {
     var text by rememberSaveable { mutableStateOf("First line\nSecond line, scroll for 3rd line\nthird line") }
 
-    TextField(
-        value = text,
+    TextField(value = text,
         maxLines = 2,
         onValueChange = { text = it },
-        label = { Text("Max Line:2") }
-    )
+        label = { Text("Max Line:2") })
 }
 
 @Composable
@@ -226,14 +273,9 @@ fun CapitalizeAllCharTextField() {
 fun CapitalizeFirstCharOfWordTextField() {
     var text by rememberSaveable { mutableStateOf("") }
 
-    TextField(
-        value = text,
-        singleLine = true,
-        onValueChange = { text = it },
-        label = {
-            Text("Capitalize first char of every word")
-        },
-        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words)
+    TextField(value = text, singleLine = true, onValueChange = { text = it }, label = {
+        Text("Capitalize first char of every word")
+    }, keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Words)
     )
 }
 
@@ -241,14 +283,9 @@ fun CapitalizeFirstCharOfWordTextField() {
 fun CapitalizeFirstCharOfSentenceTextField() {
     var text by rememberSaveable { mutableStateOf("") }
 
-    TextField(
-        value = text,
-        singleLine = true,
-        onValueChange = { text = it },
-        label = {
-            Text("Capitalize first char of every sentence")
-        },
-        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
+    TextField(value = text, singleLine = true, onValueChange = { text = it }, label = {
+        Text("Capitalize first char of every sentence")
+    }, keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences)
     )
 }
 
@@ -270,15 +307,13 @@ fun KeyBoardTypeTextFieldPass(keyboardType: KeyboardType, text: String) {
     var password by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
-    TextField(
-        value = password,
+    TextField(value = password,
         onValueChange = { password = it },
         label = { Text(text) },
         visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         trailingIcon = {
-            val image = if (passwordVisible)
-                Icons.Filled.Visibility
+            val image = if (passwordVisible) Icons.Filled.Visibility
             else Icons.Filled.VisibilityOff
 
             val description = if (passwordVisible) "Hide password" else "Show password"
@@ -286,8 +321,7 @@ fun KeyBoardTypeTextFieldPass(keyboardType: KeyboardType, text: String) {
             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                 Icon(imageVector = image, contentDescription = description)
             }
-        }
-    )
+        })
 }
 
 @Composable
@@ -317,34 +351,28 @@ fun ImeOptionTextField(imeAction: ImeAction, text: String) {
         onValueChange = { text1 = it },
         label = { Text(text) },
         keyboardOptions = KeyboardOptions(imeAction = imeAction),
-        keyboardActions = KeyboardActions(
-            onGo = {
-                Toast.makeText(context, "Go...", Toast.LENGTH_SHORT).show()
-                keyboardController?.hide()
-            },
-            onDone = {
-                Toast.makeText(context, "Done...", Toast.LENGTH_SHORT).show()
-                keyboardController?.hide()
-                focusManager.clearFocus(true)
-            },
-            onSearch = {
-                Toast.makeText(context, "Search...", Toast.LENGTH_SHORT).show()
-                keyboardController?.hide()
-            },
-            onSend = {
-                Toast.makeText(context, "Send...", Toast.LENGTH_SHORT).show()
-                keyboardController?.hide()
-            },
-            onPrevious = {
-                Toast.makeText(context, "Previous...", Toast.LENGTH_SHORT).show()
-                keyboardController?.hide()
-                focusManager.moveFocus(focusDirection = FocusDirection.Up)
-            },
-            onNext = {
-                Toast.makeText(context, "Next...", Toast.LENGTH_SHORT).show()
-                keyboardController?.hide()
-                focusManager.moveFocus(focusDirection = FocusDirection.Down)
-            })
+        keyboardActions = KeyboardActions(onGo = {
+            Toast.makeText(context, "Go...", Toast.LENGTH_SHORT).show()
+            keyboardController?.hide()
+        }, onDone = {
+            Toast.makeText(context, "Done...", Toast.LENGTH_SHORT).show()
+            keyboardController?.hide()
+            focusManager.clearFocus(true)
+        }, onSearch = {
+            Toast.makeText(context, "Search...", Toast.LENGTH_SHORT).show()
+            keyboardController?.hide()
+        }, onSend = {
+            Toast.makeText(context, "Send...", Toast.LENGTH_SHORT).show()
+            keyboardController?.hide()
+        }, onPrevious = {
+            Toast.makeText(context, "Previous...", Toast.LENGTH_SHORT).show()
+            keyboardController?.hide()
+            focusManager.moveFocus(focusDirection = FocusDirection.Up)
+        }, onNext = {
+            Toast.makeText(context, "Next...", Toast.LENGTH_SHORT).show()
+            keyboardController?.hide()
+            focusManager.moveFocus(focusDirection = FocusDirection.Down)
+        })
     )
 }
 
@@ -370,14 +398,12 @@ fun GradientTextField() {
 @Composable
 fun NoLeadingZeroes() {
     var input by rememberSaveable { mutableStateOf("") }
-    TextField(
-        value = input,
+    TextField(value = input,
         label = { Text(text = "No Leading Zero") },
         onValueChange = { newText ->
             //trimStart = Returns a string with matching expression removed from it.
             input = newText.trimStart { it == '0' }
-        }
-    )
+        })
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -396,8 +422,7 @@ fun PhoneNumberWithDash() {
             .focusRequester(focusRequester),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        TextField(
-            value = input,
+        TextField(value = input,
             onValueChange = { newText ->
                 input = if (newText.length <= maxChar) newText.trim() else input.trim()
             },
@@ -406,22 +431,18 @@ fun PhoneNumberWithDash() {
             },
             visualTransformation = PhoneNumberTransformation(),
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Phone,
-                imeAction = ImeAction.Done
+                keyboardType = KeyboardType.Phone, imeAction = ImeAction.Done
             ),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    keyboardController?.hide()
-                    focusManager.clearFocus(true)
-                    if (input.isNotBlank()) Toast.makeText(context, input, Toast.LENGTH_SHORT)
-                        .show()
-                }
-            ),
-            leadingIcon = { Icon(imageVector = Icons.Default.Phone, contentDescription = null) }
-        )
+            keyboardActions = KeyboardActions(onDone = {
+                keyboardController?.hide()
+                focusManager.clearFocus(true)
+                if (input.isNotBlank()) Toast.makeText(context, input, Toast.LENGTH_SHORT).show()
+            }),
+            leadingIcon = { Icon(imageVector = Icons.Default.Phone, contentDescription = null) })
         Text(
             text = "${input.length} / $maxChar",
-            textAlign = TextAlign.End, style = MaterialTheme.typography.caption,
+            textAlign = TextAlign.End,
+            style = MaterialTheme.typography.caption,
             modifier = Modifier
                 .align(alignment = Alignment.End)
                 .padding(end = 50.dp)
@@ -543,18 +564,16 @@ fun ErrorTextField() {
     }
     //endregion
     Column(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         TextField(
             value = text,
             onValueChange = { text = it },
             modifier = Modifier
-                .autofill(autofillTypes = listOf(AutofillType.EmailAddress),
-                    onFill = {
-                        text = it
-                    })
+                .autofill(autofillTypes = listOf(AutofillType.EmailAddress), onFill = {
+                    text = it
+                })
                 .onFocusChanged {
                     isErrorTextFieldVisible = it.isFocused
                 },
@@ -564,17 +583,17 @@ fun ErrorTextField() {
             },
             isError = invalidInput,
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Send
+                keyboardType = KeyboardType.Email, imeAction = ImeAction.Send
             ),
-            keyboardActions = KeyboardActions(
-                onSend = {
-                    if (!invalidInput && text.isNotBlank())
-                        Toast.makeText(context, "Email sent to $text id", Toast.LENGTH_SHORT).show()
-                    keyboardController?.hide()
-                    focusManager.clearFocus(true)
-                }
-            )
+            keyboardActions = KeyboardActions(onSend = {
+                if (!invalidInput && text.isNotBlank()) Toast.makeText(
+                    context,
+                    "Email sent to $text id",
+                    Toast.LENGTH_SHORT
+                ).show()
+                keyboardController?.hide()
+                focusManager.clearFocus(true)
+            })
         )
 
         val textColor = if (invalidInput) {
@@ -613,7 +632,8 @@ fun ManageStateOnTextChange(vm: ManageStateOnTextChangeViewModel) {
     if (userNameHasError) {
         Text(
             text = "Username not available. Please choose a different one.",
-            color = red1000, modifier = Modifier.padding(horizontal = 16.dp),
+            color = red1000,
+            modifier = Modifier.padding(horizontal = 16.dp),
             textAlign = TextAlign.Center
         )
     } else {
@@ -628,12 +648,9 @@ fun ManageStateOnTextChange(vm: ManageStateOnTextChangeViewModel) {
 fun OTPInputField() {
     var otpValue by rememberSaveable { mutableStateOf("") }
 
-    OtpTextField(
-        otpText = otpValue,
-        onOtpTextChange = { value, _ ->
-            otpValue = value
-        }
-    )
+    OtpTextField(otpText = otpValue, onOtpTextChange = { value, _ ->
+        otpValue = value
+    })
 }
 
 @Composable
@@ -643,36 +660,27 @@ fun OtpTextField(
     otpCount: Int = 6,
     onOtpTextChange: (String, Boolean) -> Unit
 ) {
-    BasicTextField(
-        modifier = modifier,
-        value = otpText,
-        onValueChange = {
-            if (it.length <= otpCount) {
-                onOtpTextChange.invoke(it, it.length == otpCount)
-            }
-        },
-        keyboardOptions = KeyboardOptions(
-            keyboardType = KeyboardType.NumberPassword,
-            imeAction = ImeAction.Done
-        ),
-        decorationBox = {  //allows to add decorations around text field
-            Row(horizontalArrangement = Arrangement.Center) {
-                repeat(otpCount) { index ->
-                    CharView(
-                        index = index,
-                        text = otpText
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                }
+    BasicTextField(modifier = modifier, value = otpText, onValueChange = {
+        if (it.length <= otpCount) {
+            onOtpTextChange.invoke(it, it.length == otpCount)
+        }
+    }, keyboardOptions = KeyboardOptions(
+        keyboardType = KeyboardType.NumberPassword, imeAction = ImeAction.Done
+    ), decorationBox = {  //allows to add decorations around text field
+        Row(horizontalArrangement = Arrangement.Center) {
+            repeat(otpCount) { index ->
+                CharView(
+                    index = index, text = otpText
+                )
+                Spacer(modifier = Modifier.width(8.dp))
             }
         }
-    )
+    })
 }
 
 @Composable
 private fun CharView(
-    index: Int,
-    text: String
+    index: Int, text: String
 ) {
     val isFocused = text.length == index
     val char = when {
