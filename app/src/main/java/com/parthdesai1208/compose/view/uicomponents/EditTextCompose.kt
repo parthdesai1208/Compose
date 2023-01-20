@@ -39,7 +39,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.parthdesai1208.compose.utils.RainbowColors
 import com.parthdesai1208.compose.utils.autofill
@@ -621,7 +620,6 @@ fun ErrorTextField() {
     }
 }
 
-@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun ManageStateOnTextChange(vm: ManageStateOnTextChangeViewModel) {
 
