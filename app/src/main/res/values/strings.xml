@@ -175,5 +175,7 @@
     <string name="swipetodelete">Swipe to delete</string>
     <string name="swipetorightleftgesture">Swipe right &amp; left gesture</string>
     <string name="swipetorightleftgestureacc">Swipe right &amp; left gesture icon</string>
+    <string name="swipetorightleftgesturewithdifferentcompose">Swipe right &amp; left gesture with different compose</string>
+    <string name="swipetorightleftgesturewithdifferentcomposeacc">Swipe right &amp; left gesture with different compose icon</string>
 <!--    end region-->
 </resources>

@@ -2,6 +2,8 @@ package com.parthdesai1208.compose.view
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -13,6 +15,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -243,8 +246,7 @@ fun GestureScreen() {
             SwipeToDismiss(state = dismissState2, //listen to state changes
                 dismissThresholds = { FractionalThreshold(0.5f) },//row must be over 50% of the screen before it is dismissed.
                 directions = setOf(
-                    DismissDirection.StartToEnd,
-                    DismissDirection.EndToStart
+                    DismissDirection.StartToEnd, DismissDirection.EndToStart
                 ), //swipe direction
                 //upper layout
                 dismissContent = {
@@ -280,6 +282,109 @@ fun GestureScreen() {
                                 modifier = iconModifier
                             )
                             Text(text = stringResource(R.string.swipetodelete))
+                        }
+                    }
+                })
+            //endregion
+            //region swipe to right & left with different view
+            var isVisibleBackground3 by remember { mutableStateOf(true) }
+            val dismissState3 = rememberDismissState(confirmStateChange = {
+                when (it) {
+                    DismissValue.Default -> {
+//                        Toast.makeText(context, "default state", Toast.LENGTH_SHORT).show()
+                    }
+                    DismissValue.DismissedToStart -> {
+                        isVisibleBackground3 = false
+                        Toast.makeText(
+                            context, "dismiss to start detected", Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    DismissValue.DismissedToEnd -> {
+                        isVisibleBackground3 = false
+                        Toast.makeText(context, "dismiss to end detected", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+                true
+            })
+            SwipeToDismiss(state = dismissState3, //listen to state changes
+                dismissThresholds = { FractionalThreshold(0.5f) },//row must be over 50% of the screen before it is dismissed.
+                directions = setOf(
+                    DismissDirection.StartToEnd, DismissDirection.EndToStart
+                ), //swipe direction
+                //upper layout
+                dismissContent = {
+                    Card(modifier = cardModifier, shape = cardShape, elevation = cardElevation) {
+                        Row(
+                            horizontalArrangement = rowHorizontalArrangement, modifier = rowModifier
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.swipe_right_to_left_gesture),
+                                contentDescription = stringResource(id = R.string.swipetorightleftgesturewithdifferentcomposeacc),
+                                modifier = iconModifier
+                            )
+                            Text(text = stringResource(R.string.swipetorightleftgesturewithdifferentcompose))
+                        }
+                    }
+                },
+                //lower layout
+                background = {
+
+                    val direction = dismissState3.dismissDirection ?: return@SwipeToDismiss
+
+                    val backgroundColor by animateColorAsState(
+                        targetValue = when (dismissState3.targetValue) {
+                            DismissValue.Default -> Color.Green
+                            DismissValue.DismissedToEnd -> Color.Red
+                            DismissValue.DismissedToStart -> Color.Blue
+                        }
+                    )
+                    val bgIconScale by animateFloatAsState(targetValue = if (dismissState3.targetValue == DismissValue.Default) 0.75f else 1f)
+                    AnimatedVisibility(
+                        visible = isVisibleBackground3, enter = fadeIn(), exit = fadeOut()
+                    ) {
+                        Card(
+                            modifier = cardModifier.fillMaxSize(),
+                            shape = cardShape,
+                            backgroundColor = backgroundColor
+                        ) {
+                            Row(
+                                horizontalArrangement = when (direction) {
+                                    DismissDirection.StartToEnd -> Arrangement.Start
+                                    DismissDirection.EndToStart -> Arrangement.End
+                                    else -> Arrangement.Center
+                                },
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(horizontal = 8.dp)
+                            ) {
+                                when (direction) {
+                                    DismissDirection.StartToEnd -> {
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = stringResource(id = R.string.swipetodelete),
+                                            modifier = iconModifier.scale(scale = bgIconScale)
+                                        )
+                                        Text(text = stringResource(R.string.swipetodelete))
+                                    }
+                                    DismissDirection.EndToStart -> {
+                                        Text(text = stringResource(R.string.swipetodelete).split(" ").reversed().joinToString(" "))
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = stringResource(id = R.string.swipetodelete),
+                                            modifier = iconModifier.scale(scale = bgIconScale)
+                                        )
+                                    }
+                                    else -> {
+                                        Icon(
+                                            imageVector = Icons.Default.Delete,
+                                            contentDescription = stringResource(id = R.string.swipetodelete),
+                                            modifier = iconModifier.scale(scale = bgIconScale)
+                                        )
+                                        Text(text = stringResource(R.string.swipetodelete))
+                                    }
+                                }
+
+                            }
                         }
                     }
                 })
