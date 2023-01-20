@@ -168,7 +168,10 @@
     <string name="double_tap_gesture_acc">Double tap gesture icon</string>
     <string name="swipelefttorightgesture">Swipe left to right gesture</string>
     <string name="swipelefttorightgestureacc">Swipe left to right gesture icon</string>
+    <string name="swiperighttoleftgesture">Swipe right to left gesture</string>
+    <string name="swiperighttoleftgestureacc">Swipe right to left gesture icon</string>
     <string name="longpressgesture">Long press gesture</string>
     <string name="longpressgestureacc">Long press gesture icon</string>
+    <string name="swipetodelete">Swipe to delete</string>
 <!--    end region-->
 </resources>
