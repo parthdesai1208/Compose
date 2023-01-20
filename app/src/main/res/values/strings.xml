@@ -173,5 +173,7 @@
     <string name="longpressgesture">Long press gesture</string>
     <string name="longpressgestureacc">Long press gesture icon</string>
     <string name="swipetodelete">Swipe to delete</string>
+    <string name="swipetorightleftgesture">Swipe right &amp; left gesture</string>
+    <string name="swipetorightleftgestureacc">Swipe right &amp; left gesture icon</string>
 <!--    end region-->
 </resources>

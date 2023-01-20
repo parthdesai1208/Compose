@@ -39,6 +39,7 @@ fun GestureScreen() {
         Column(
             modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            //region tap & on press
             Card(modifier = cardModifier.pointerInput(Unit) {
                 detectTapGestures(onTap = {
                     Toast.makeText(context, "tap detected", Toast.LENGTH_SHORT).show()
@@ -58,7 +59,8 @@ fun GestureScreen() {
                     Text(text = stringResource(R.string.tap_gesture))
                 }
             }
-
+            //endregion
+            //region double tap detected
             Card(modifier = cardModifier.pointerInput(Unit) {
                 detectTapGestures(onDoubleTap = {
                     Toast.makeText(context, "double tap detected", Toast.LENGTH_SHORT).show()
@@ -76,6 +78,8 @@ fun GestureScreen() {
                     Text(text = stringResource(R.string.double_tap_gesture))
                 }
             }
+            //endregion
+            //region long press
             Card(modifier = cardModifier.pointerInput(Unit) {
                 detectTapGestures(onLongPress = {
                     Toast.makeText(context, "Long press detected", Toast.LENGTH_SHORT).show()
@@ -92,6 +96,8 @@ fun GestureScreen() {
                     Text(text = stringResource(R.string.longpressgesture))
                 }
             }
+            //endregion
+            //region swipe to right
             var isVisibleBackground by remember { mutableStateOf(true) }
             val dismissState = rememberDismissState(confirmStateChange = {
                 when (it) {
@@ -148,6 +154,8 @@ fun GestureScreen() {
                         }
                     }
                 })
+            //endregion
+            //region swipe to left
             var isVisibleBackground1 by remember { mutableStateOf(true) }
             val dismissState1 = rememberDismissState(confirmStateChange = {
                 when (it) {
@@ -161,8 +169,8 @@ fun GestureScreen() {
                         ).show()
                     }
                     DismissValue.DismissedToEnd -> {
-                       /* Toast.makeText(context, "dismiss to end detected", Toast.LENGTH_SHORT)
-                            .show()*/
+                        /* Toast.makeText(context, "dismiss to end detected", Toast.LENGTH_SHORT)
+                             .show()*/
                     }
                 }
                 true
@@ -210,6 +218,72 @@ fun GestureScreen() {
                         }
                     }
                 })
+            //endregion
+            //region swipe to right & left
+            var isVisibleBackground2 by remember { mutableStateOf(true) }
+            val dismissState2 = rememberDismissState(confirmStateChange = {
+                when (it) {
+                    DismissValue.Default -> {
+//                        Toast.makeText(context, "default state", Toast.LENGTH_SHORT).show()
+                    }
+                    DismissValue.DismissedToStart -> {
+                        isVisibleBackground2 = false
+                        Toast.makeText(
+                            context, "dismiss to start detected", Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    DismissValue.DismissedToEnd -> {
+                        isVisibleBackground2 = false
+                        Toast.makeText(context, "dismiss to end detected", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+                true
+            })
+            SwipeToDismiss(state = dismissState2, //listen to state changes
+                dismissThresholds = { FractionalThreshold(0.5f) },//row must be over 50% of the screen before it is dismissed.
+                directions = setOf(
+                    DismissDirection.StartToEnd,
+                    DismissDirection.EndToStart
+                ), //swipe direction
+                //upper layout
+                dismissContent = {
+                    Card(modifier = cardModifier, shape = cardShape, elevation = cardElevation) {
+                        Row(
+                            horizontalArrangement = rowHorizontalArrangement, modifier = rowModifier
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.swipe_right_to_left_gesture),
+                                contentDescription = stringResource(id = R.string.swipetorightleftgestureacc),
+                                modifier = iconModifier
+                            )
+                            Text(text = stringResource(R.string.swipetorightleftgesture))
+                        }
+                    }
+                },
+                //lower layout
+                background = {
+                    AnimatedVisibility(
+                        visible = isVisibleBackground2, enter = fadeIn(), exit = fadeOut()
+                    ) {
+                        Row(
+                            horizontalArrangement = rowHorizontalArrangement,
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = rowModifier
+                                .padding(all = 16.dp)
+                                .fillMaxWidth()
+                                .wrapContentWidth(align = Alignment.CenterHorizontally)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = stringResource(id = R.string.swipetodelete),
+                                modifier = iconModifier
+                            )
+                            Text(text = stringResource(R.string.swipetodelete))
+                        }
+                    }
+                })
+            //endregion
         }
     }
 }
