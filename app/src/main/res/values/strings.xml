@@ -150,6 +150,7 @@
     <string name="badge">Badge</string>
     <string name="dialog1">Dialog</string>
     <string name="gesture">Gesture</string>
+    <string name="permission">Permission</string>
     <!--    end region-->
 
 <!--    region textCompose-->

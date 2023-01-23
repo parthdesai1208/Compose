@@ -109,7 +109,8 @@ enum class MainScreenEnumType(
     AnyScreen(R.string.anyscreen, { AnyScreenListingNavGraph() }),
     SlotAPI(R.string.slotapi, { SlotAPI() }),
     Networking(R.string.networking, { NetworkingListNavGraph() }),
-    GestureScreen(R.string.gesture,{ GestureScreen() })
+    GestureScreen(R.string.gesture,{ GestureScreen() }),
+    PermissionScreen(R.string.permission,{ PermissionScreen() })
 }
 
 @Composable
