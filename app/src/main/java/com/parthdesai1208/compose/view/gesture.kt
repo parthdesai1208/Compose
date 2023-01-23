@@ -1,5 +1,6 @@
 package com.parthdesai1208.compose.view
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -141,21 +142,13 @@ fun GestureScreen() {
                 },
                 //lower layout
                 background = {
-                    AnimatedVisibility(
-                        visible = isVisibleBackground, enter = fadeIn(), exit = fadeOut()
-                    ) {
-                        Row(
-                            horizontalArrangement = rowHorizontalArrangement,
-                            modifier = rowModifier.padding(all = 16.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = stringResource(id = R.string.swipetodelete),
-                                modifier = iconModifier
-                            )
-                            Text(text = stringResource(R.string.swipetodelete))
-                        }
-                    }
+                    SwipeToRightBackground(
+                        dismissState = dismissState,
+                        isVisibleBackground = isVisibleBackground,
+                        rowHorizontalArrangement = rowHorizontalArrangement,
+                        rowModifier = rowModifier,
+                        iconModifier = iconModifier
+                    )
                 })
             //endregion
             //region swipe to left
@@ -198,28 +191,13 @@ fun GestureScreen() {
                 },
                 //lower layout
                 background = {
-                    AnimatedVisibility(
-                        visible = isVisibleBackground1, enter = fadeIn(), exit = fadeOut()
-                    ) {
-                        Row(
-                            horizontalArrangement = rowHorizontalArrangement,
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = rowModifier
-                                .padding(all = 16.dp)
-                                .fillMaxWidth()
-                                .wrapContentWidth(align = Alignment.End)
-                        ) {
-                            Text(
-                                text = stringResource(R.string.swipetodelete).split(" ").reversed()
-                                    .joinToString(" ")
-                            )
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = stringResource(id = R.string.swipetodelete),
-                                modifier = iconModifier
-                            )
-                        }
-                    }
+                    SwipeToLeftBackground(
+                        dismissState = dismissState1,
+                        isVisibleBackground1 = isVisibleBackground1,
+                        rowHorizontalArrangement = rowHorizontalArrangement,
+                        rowModifier = rowModifier,
+                        iconModifier = iconModifier
+                    )
                 })
             //endregion
             //region swipe to right & left
@@ -265,25 +243,13 @@ fun GestureScreen() {
                 },
                 //lower layout
                 background = {
-                    AnimatedVisibility(
-                        visible = isVisibleBackground2, enter = fadeIn(), exit = fadeOut()
-                    ) {
-                        Row(
-                            horizontalArrangement = rowHorizontalArrangement,
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = rowModifier
-                                .padding(all = 16.dp)
-                                .fillMaxWidth()
-                                .wrapContentWidth(align = Alignment.CenterHorizontally)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = stringResource(id = R.string.swipetodelete),
-                                modifier = iconModifier
-                            )
-                            Text(text = stringResource(R.string.swipetodelete))
-                        }
-                    }
+                    SwipeToRightLeftBackground(
+                        dismissState = dismissState2,
+                        isVisibleBackground2 = isVisibleBackground2,
+                        rowHorizontalArrangement = rowHorizontalArrangement,
+                        rowModifier = rowModifier,
+                        iconModifier = iconModifier
+                    )
                 })
             //endregion
             //region swipe to right & left with different view
@@ -330,65 +296,185 @@ fun GestureScreen() {
                 //lower layout
                 background = {
 
-                    val direction = dismissState3.dismissDirection ?: return@SwipeToDismiss
-
-                    val backgroundColor by animateColorAsState(
-                        targetValue = when (dismissState3.targetValue) {
-                            DismissValue.Default -> Color.Green
-                            DismissValue.DismissedToEnd -> Color.Red
-                            DismissValue.DismissedToStart -> Color.Blue
-                        }
+                    SwipeRightLeftWithDifferentCompose(
+                        dismissState3,
+                        isVisibleBackground3,
+                        cardModifier,
+                        cardShape,
+                        iconModifier
                     )
-                    val bgIconScale by animateFloatAsState(targetValue = if (dismissState3.targetValue == DismissValue.Default) 0.75f else 1f)
-                    AnimatedVisibility(
-                        visible = isVisibleBackground3, enter = fadeIn(), exit = fadeOut()
-                    ) {
-                        Card(
-                            modifier = cardModifier.fillMaxSize(),
-                            shape = cardShape,
-                            backgroundColor = backgroundColor
-                        ) {
-                            Row(
-                                horizontalArrangement = when (direction) {
-                                    DismissDirection.StartToEnd -> Arrangement.Start
-                                    DismissDirection.EndToStart -> Arrangement.End
-                                    else -> Arrangement.Center
-                                },
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(horizontal = 8.dp)
-                            ) {
-                                when (direction) {
-                                    DismissDirection.StartToEnd -> {
-                                        Icon(
-                                            imageVector = Icons.Default.Delete,
-                                            contentDescription = stringResource(id = R.string.swipetodelete),
-                                            modifier = iconModifier.scale(scale = bgIconScale)
-                                        )
-                                        Text(text = stringResource(R.string.swipetodelete))
-                                    }
-                                    DismissDirection.EndToStart -> {
-                                        Text(text = stringResource(R.string.swipetodelete).split(" ").reversed().joinToString(" "))
-                                        Icon(
-                                            imageVector = Icons.Default.Delete,
-                                            contentDescription = stringResource(id = R.string.swipetodelete),
-                                            modifier = iconModifier.scale(scale = bgIconScale)
-                                        )
-                                    }
-                                    else -> {
-                                        Icon(
-                                            imageVector = Icons.Default.Delete,
-                                            contentDescription = stringResource(id = R.string.swipetodelete),
-                                            modifier = iconModifier.scale(scale = bgIconScale)
-                                        )
-                                        Text(text = stringResource(R.string.swipetodelete))
-                                    }
-                                }
-
-                            }
-                        }
-                    }
                 })
             //endregion
+        }
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterialApi::class)
+private fun RowScope.SwipeRightLeftWithDifferentCompose(
+    dismissState3: DismissState,
+    isVisibleBackground3: Boolean,
+    @SuppressLint("ModifierParameter") cardModifier: Modifier,
+    cardShape: RoundedCornerShape,
+    iconModifier: Modifier
+) {
+    val direction = dismissState3.dismissDirection
+        ?: return //no rendering when there’s no Swipe To Dismiss happening
+
+    val backgroundColor by animateColorAsState(
+        targetValue = when (dismissState3.targetValue) {
+            DismissValue.Default -> Color.Green
+            DismissValue.DismissedToEnd -> Color.Red
+            DismissValue.DismissedToStart -> Color.Blue
+        }
+    )
+    val bgIconScale by animateFloatAsState(targetValue = if (dismissState3.targetValue == DismissValue.Default) 0.75f else 1f)
+    AnimatedVisibility(
+        visible = isVisibleBackground3, enter = fadeIn(), exit = fadeOut()
+    ) {
+        Card(
+            modifier = cardModifier.fillMaxSize(),
+            shape = cardShape,
+            backgroundColor = backgroundColor
+        ) {
+            Row(
+                horizontalArrangement = when (direction) {
+                    DismissDirection.StartToEnd -> Arrangement.Start
+                    DismissDirection.EndToStart -> Arrangement.End
+                    else -> Arrangement.Center
+                },
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(horizontal = 8.dp)
+            ) {
+                when (direction) {
+                    DismissDirection.StartToEnd -> {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = stringResource(id = R.string.swipetodelete),
+                            modifier = iconModifier.scale(scale = bgIconScale)
+                        )
+                        Text(text = stringResource(R.string.swipetodelete))
+                    }
+                    DismissDirection.EndToStart -> {
+                        Text(
+                            text = stringResource(R.string.swipetodelete).split(" ")
+                                .reversed().joinToString(" ")
+                        )
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = stringResource(id = R.string.swipetodelete),
+                            modifier = iconModifier.scale(scale = bgIconScale)
+                        )
+                    }
+                    else -> {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = stringResource(id = R.string.swipetodelete),
+                            modifier = iconModifier.scale(scale = bgIconScale)
+                        )
+                        Text(text = stringResource(R.string.swipetodelete))
+                    }
+                }
+
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun RowScope.SwipeToRightLeftBackground(
+    dismissState: DismissState,
+    isVisibleBackground2: Boolean,
+    rowHorizontalArrangement: Arrangement.Horizontal,
+    @SuppressLint("ModifierParameter") rowModifier: Modifier,
+    iconModifier: Modifier
+) {
+    dismissState.dismissDirection
+        ?: return  //no rendering when there’s no Swipe To Dismiss happening
+
+    AnimatedVisibility(
+        visible = isVisibleBackground2, enter = fadeIn(), exit = fadeOut()
+    ) {
+        Row(
+            horizontalArrangement = rowHorizontalArrangement,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = rowModifier
+                .padding(all = 16.dp)
+                .fillMaxWidth()
+                .wrapContentWidth(align = Alignment.CenterHorizontally)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = stringResource(id = R.string.swipetodelete),
+                modifier = iconModifier
+            )
+            Text(text = stringResource(R.string.swipetodelete))
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun RowScope.SwipeToLeftBackground(
+    dismissState: DismissState,
+    isVisibleBackground1: Boolean,
+    rowHorizontalArrangement: Arrangement.Horizontal,
+    @SuppressLint("ModifierParameter") rowModifier: Modifier,
+    iconModifier: Modifier
+) {
+    dismissState.dismissDirection
+        ?: return  //no rendering when there’s no Swipe To Dismiss happening
+
+    AnimatedVisibility(
+        visible = isVisibleBackground1, enter = fadeIn(), exit = fadeOut()
+    ) {
+        Row(
+            horizontalArrangement = rowHorizontalArrangement,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = rowModifier
+                .padding(all = 16.dp)
+                .fillMaxWidth()
+                .wrapContentWidth(align = Alignment.End)
+        ) {
+            Text(
+                text = stringResource(R.string.swipetodelete).split(" ").reversed()
+                    .joinToString(" ")
+            )
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = stringResource(id = R.string.swipetodelete),
+                modifier = iconModifier
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun SwipeToRightBackground(
+    dismissState: DismissState,
+    isVisibleBackground: Boolean,
+    rowHorizontalArrangement: Arrangement.Horizontal,
+    @SuppressLint("ModifierParameter") rowModifier: Modifier,
+    iconModifier: Modifier
+) {
+    dismissState.dismissDirection
+        ?: return   //no rendering when there’s no Swipe To Dismiss happening
+
+    AnimatedVisibility(
+        visible = isVisibleBackground, enter = fadeIn(), exit = fadeOut()
+    ) {
+        Row(
+            horizontalArrangement = rowHorizontalArrangement,
+            modifier = rowModifier.padding(all = 16.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = stringResource(id = R.string.swipetodelete),
+                modifier = iconModifier
+            )
+            Text(text = stringResource(R.string.swipetodelete))
         }
     }
 }
