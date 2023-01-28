@@ -178,5 +178,10 @@
     <string name="swipetorightleftgestureacc">Swipe right &amp; left gesture icon</string>
     <string name="swipetorightleftgesturewithdifferentcompose">Swipe right &amp; left gesture with different compose</string>
     <string name="swipetorightleftgesturewithdifferentcomposeacc">Swipe right &amp; left gesture with different compose icon</string>
-<!--    end region-->
+    <!--    end region-->
+
+    <!--    region permission-->
+    <string name="singlepermission">Single permission</string>
+
+    <!--    endregion-->
 </resources>
