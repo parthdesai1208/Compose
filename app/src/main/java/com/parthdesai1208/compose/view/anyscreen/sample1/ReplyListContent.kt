@@ -233,7 +233,7 @@ fun ReplySearchBar(modifier: Modifier = Modifier) {
     ) {
         Icon(
             imageVector = Icons.Default.Search,
-            contentDescription = stringResource(id = R.string.search),
+            contentDescription = stringResource(id = R.string.search1),
             modifier = Modifier.padding(start = 16.dp),
             tint = MaterialTheme.colorScheme.outline
         )
