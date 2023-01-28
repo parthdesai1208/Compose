@@ -41,7 +41,8 @@ import com.parthdesai1208.compose.R
 
 
 enum class PermissionListingEnumType(val buttonTitle: Int, val func: @Composable () -> Unit) {
-    SinglePermission(R.string.singlepermission, { SinglePermissionScreen() })
+    SinglePermission(R.string.singlePermission, { SinglePermissionScreen() }),
+    MultiplePermission(R.string.multiplePermission, { MultiplePermissionScreen() }),
 }
 
 object PermissionListingDestinations {
@@ -169,6 +170,108 @@ fun SinglePermissionScreen() {
                                 startActivity(context, intent, null)
                             }) {
                                 Text(text = "OK")
+                            }
+                        }
+                    },
+                    properties = DialogProperties(
+                        dismissOnBackPress = false, dismissOnClickOutside = false
+                    )
+                )
+            }
+        }
+
+    })
+
+}
+//endregion
+
+
+//region multiple permission screen
+@Composable
+fun MultiplePermissionScreen() {
+    val context = LocalContext.current
+    var isDialogOpened by rememberSaveable { mutableStateOf(false) }
+    var requiredPermissionName by rememberSaveable { mutableStateOf("") }
+
+    val requestPermission = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { wasGranted ->
+        wasGranted.forEach {
+            if (it.value) {
+                //permission granted
+                /* Toast.makeText(
+                     context,
+                     "${it.key.split(".").last()} Permission approved",
+                     Toast.LENGTH_SHORT
+                 ).show()*/
+            } else {
+                //denied permission
+                //show dialog with explanation how much permission is required for the task
+                requiredPermissionName = it.key.split(".").last()
+                isDialogOpened = true
+                return@rememberLauncherForActivityResult
+            }
+        }
+        if (!wasGranted.values.contains(false)) {
+            Toast.makeText(
+                context,
+                "Done with Permissions, now proceed with task",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    Scaffold(floatingActionButton = {
+        FloatingActionButton(onClick = {
+            requestPermission.launch(
+                arrayOf(
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+            )
+        }) {
+            Icon(imageVector = Icons.Default.Camera, contentDescription = null)
+        }
+    }, floatingActionButtonPosition = FabPosition.End, content = {
+
+        Surface(
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize()
+        ) {
+            AnimatedVisibility(visible = isDialogOpened, enter = fadeIn(), exit = fadeOut()) {
+                AlertDialog(
+                    //Executes when the user tries to dismiss the Dialog by clicking outside
+                    // or pressing the back button
+                    onDismissRequest = { },
+                    title = {
+                        Text(
+                            text = "$requiredPermissionName Permission required",
+                            style = MaterialTheme.typography.body1
+                        )
+                    },
+                    text = {
+                        Text(
+                            text = "This is required in order for the app to work properly",
+                            style = MaterialTheme.typography.body1
+                        )
+                    },
+                    buttons = {
+                        Row(
+                            horizontalArrangement = Arrangement.End,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            TextButton(onClick = {
+                                isDialogOpened = false
+                                //open settings screen directly
+                                val intent =
+                                    Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                        data =
+                                            Uri.fromParts("package", context.packageName, null)
+                                    }
+                                startActivity(context, intent, null)
+                            }) {
+                                Text(text = "OK", style = MaterialTheme.typography.button)
                             }
                         }
                     },

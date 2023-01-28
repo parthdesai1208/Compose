@@ -181,7 +181,7 @@
     <!--    end region-->
 
     <!--    region permission-->
-    <string name="singlepermission">Single permission</string>
-
+    <string name="singlePermission">Single permission</string>
+    <string name="multiplePermission">Multiple permission</string>
     <!--    endregion-->
 </resources>
