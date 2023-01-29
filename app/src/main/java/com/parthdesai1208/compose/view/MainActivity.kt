@@ -135,7 +135,7 @@ fun MainActivityNavGraph(
             })
         ) { backStackEntry ->
             val arguments = requireNotNull(backStackEntry.arguments)
-            if (arguments.getString(MAIN_SCREEN_ROUTE_POSTFIX) == "Accessibility") {
+            if (arguments.getString(MAIN_SCREEN_ROUTE_POSTFIX) == R.string.accessibility.toString()) {
                 val container = (application as ComposeApp).container
                 AccessibilityScreen(appContainer = container)
             } else {
