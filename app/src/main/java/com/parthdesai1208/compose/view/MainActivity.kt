@@ -104,7 +104,7 @@ enum class MainScreenEnumType(
     ),
     ComposeDestination(R.string.composedestination, { StartForComposeDestination() }),
     Accessibility(R.string.accessibility, {}),
-    Migration(R.string.migrationtocompose, {}),
+    Migration(R.string.migrationToCompose, {}),
     DrawScreen(R.string.drawsamples, { com.parthdesai1208.compose.view.draw.DrawNavGraph() }),
     AnyScreen(R.string.anyscreen, { AnyScreenListingNavGraph() }),
     SlotAPI(R.string.slotapi, { SlotAPI() }),

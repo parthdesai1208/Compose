@@ -121,7 +121,6 @@
     <string name="navigationexample">Navigation Example 1 with arg,DeepLink</string>
     <string name="composedestination">ComposeDestination lib</string>
     <string name="accessibility">Accessibility</string>
-    <string name="migrationtocompose">Migration to compose</string>
     <string name="drawsamples">Draw Samples</string>
     <string name="anyscreen">Any Screen</string>
     <string name="slotapi">Slot API</string>
