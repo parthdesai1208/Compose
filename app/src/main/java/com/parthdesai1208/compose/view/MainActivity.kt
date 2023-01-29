@@ -110,7 +110,8 @@ enum class MainScreenEnumType(
     SlotAPI(R.string.slotapi, { SlotAPI() }),
     Networking(R.string.networking, { NetworkingListNavGraph() }),
     GestureScreen(R.string.gesture, { GestureScreen() }),
-    PermissionScreen(R.string.permission, { PermissionListNavGraph() })
+    PermissionScreen(R.string.permission, { PermissionListNavGraph() }),
+    PictureInPicture(R.string.pictureinpicture, {}),
 }
 
 @Composable
@@ -177,6 +178,9 @@ fun MainScreen(navController: NavHostController) {
             onClick = {
                 if (title.buttonTitle == R.string.migrationToCompose) {
                     context.startActivity(Intent(context, MigrationActivity::class.java))
+                    return@Button
+                } else if (title.buttonTitle == R.string.pictureinpicture) {
+                    context.startActivity(Intent(context, PIPActivity::class.java))
                     return@Button
                 }
                 navController.navigate("$MAIN_SCREEN_ROUTE_PREFIX/${title.buttonTitle}")

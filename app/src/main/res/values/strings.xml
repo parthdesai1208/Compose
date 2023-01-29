@@ -150,18 +150,19 @@
     <string name="dialog1">Dialog</string>
     <string name="gesture">Gesture</string>
     <string name="permission">Permission</string>
+    <string name="pictureinpicture">Picture In Picture</string>
     <!--    end region-->
 
-<!--    region textCompose-->
+    <!--    region textCompose-->
     <string name="singleClickText">single click text</string>
-<!--    endregion -->
+    <!--    endregion -->
 
-<!--    region networking-->
+    <!--    region networking-->
     <string name="networking">Networking</string>
     <string name="moviesList">Movies list</string>
-<!--    end region-->
+    <!--    end region-->
 
-<!--  region gesture-->
+    <!--  region gesture-->
     <string name="tap_gesture">Tap gesture</string>
     <string name="double_tap_gesture">Double tap gesture</string>
     <string name="tap_gesture_acc">Tap gesture icon</string>
@@ -182,5 +183,6 @@
     <!--    region permission-->
     <string name="singlePermission">Single permission</string>
     <string name="multiplePermission">Multiple permission</string>
+    <string name="title_activity_pipactivity">PIPActivity</string>
     <!--    endregion-->
 </resources>
