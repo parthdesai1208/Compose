@@ -1,5 +1,6 @@
 package com.parthdesai1208.compose.view.accessibility
 
+import android.annotation.SuppressLint
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
@@ -12,6 +13,7 @@ import com.parthdesai1208.compose.model.accessibility.AppContainer
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import kotlinx.coroutines.launch
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AccessibilityScreen(
     appContainer: AppContainer
