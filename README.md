@@ -9,3 +9,4 @@ Jetpack Compose sample
 7. Custom Modifier & layout
 8. Gesture
 9. Permission
+10. Picture in Picture mode
