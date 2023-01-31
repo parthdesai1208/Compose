@@ -20,6 +20,7 @@
             android:exported="false"
             android:label="@string/title_activity_pipactivity"
             android:launchMode="singleTask"
+            android:excludeFromRecents="true"
             android:supportsPictureInPicture="true"
             tools:targetApi="n" />
         <!--android:launchMode="singleTask"|To make sure that there are no multiple instances of the same activity running-->
