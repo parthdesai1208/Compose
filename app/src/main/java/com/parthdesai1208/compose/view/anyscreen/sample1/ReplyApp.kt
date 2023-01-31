@@ -142,7 +142,6 @@ fun ReplyApp(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ReplyNavigationWrapperUI(
     navigationType: ReplyNavigationType,
@@ -191,7 +190,6 @@ object ReplyDestinations {
     const val GROUPS = "Groups"
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavigationDrawerContent(
     selectedDestination: String,
