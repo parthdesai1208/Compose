@@ -26,11 +26,15 @@ import com.parthdesai1208.compose.view.uicomponents.bottomsheet.BottomSheetNavGr
 
 enum class UIComponentsListingEnumType(val buttonTitle: Int, val func: @Composable () -> Unit) {
     TextComponents(R.string.text, { TextComponents("World") }),
-    EditTextCompose(R.string.edittext, { EditTextCompose(androidx.lifecycle.viewmodel.compose.viewModel()) }),
+    EditTextCompose(
+        R.string.edittext,
+        { EditTextCompose(androidx.lifecycle.viewmodel.compose.viewModel()) }),
     ButtonComponents(R.string.button, { ButtonCompose() }),
     ImageCompose(R.string.image, { ImageComposeScreen() }),
     IconCompose(R.string.icon, { IconComposeScreen() }),
-    SearchBarComponents(R.string.searchbar, { SearchBar(androidx.lifecycle.viewmodel.compose.viewModel()) }),
+    SearchBarComponents(
+        R.string.searchbar,
+        { SearchBar(androidx.lifecycle.viewmodel.compose.viewModel()) }),
     SnackBarComponents(R.string.snackbar, { SnackBarCompose() }),
     ColumnCompose(R.string.column, { ColumnNavGraph() }),
     RowCompose(R.string.row, { RowNavGraph() }),
@@ -49,6 +53,7 @@ enum class UIComponentsListingEnumType(val buttonTitle: Int, val func: @Composab
     SliderCompose(R.string.slider, { SliderCompose() }),
     BadgeCompose(R.string.badge, { BadgeCompose() }),
     DialogCompose(R.string.dialog1, { DialogCompose() }),
+    ToolTipCompose(R.string.tooltip, { TooltipOnLongClickExample() }),
 }
 
 object UIComponentsDestinations {
