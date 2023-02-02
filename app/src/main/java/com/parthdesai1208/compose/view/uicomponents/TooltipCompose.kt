@@ -3,28 +3,32 @@
 package com.parthdesai1208.compose.view.uicomponents
 
 
-import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import com.parthdesai1208.compose.utils.ConditionalModifier
 import kotlinx.coroutines.delay
 
 @Composable
@@ -32,9 +36,9 @@ fun Tooltip(
     expanded: MutableState<Boolean>,
     modifier: Modifier = Modifier,
     timeoutMillis: Long = TooltipTimeout,
-    backgroundColor: Color = Color.Black,
+    backgroundColor: Color = MaterialTheme.colors.onSurface,
     properties: PopupProperties = TooltipPopupProperties,
-    content: @Composable() (ColumnScope.() -> Unit),
+    content: @Composable (ColumnScope.() -> Unit),
 ) {
     val expandedStates = remember { MutableTransitionState(false) }
     expandedStates.targetState = expanded.value
@@ -54,32 +58,13 @@ fun Tooltip(
         ) {
             Box(
                 // Add space for elevation shadow
-                modifier = Modifier.padding(TooltipElevation),
+                modifier = Modifier.padding(top = 40.dp),
             ) {
                 TooltipContent(expandedStates, backgroundColor, modifier, content)
             }
         }
     }
 }
-
-/**
- * Simple text version of [Tooltip]
- */
-/*@Composable
-fun Tooltip(
-    expanded: MutableState<Boolean>,
-    text: String,
-    modifier: Modifier = Modifier,
-    timeoutMillis: Long = TooltipTimeout,
-    backgroundColor: Color = Color.Black,
-    offset: DpOffset = TooltipOffset,
-    properties: PopupProperties = TooltipPopupProperties,
-) {
-    Tooltip(expanded, modifier, timeoutMillis, backgroundColor, offset, properties) {
-        Text(text)
-    }
-}*/
-
 
 /** @see androidx.compose.material.DropdownMenuContent */
 @Composable
@@ -102,28 +87,32 @@ private fun TooltipContent(
         }
     }) { if (it) 1f else 0f }
 
-    Card(
-        backgroundColor = backgroundColor.copy(alpha = 0.75f),
-        contentColor = MaterialTheme.colors.contentColorFor(backgroundColor)
-            .takeOrElse { backgroundColor.onColor() },
-        modifier = Modifier.alpha(alpha),
-        elevation = TooltipElevation,
-    ) {
-        val p = TooltipPadding
-        Column(
-            modifier = modifier
-                .padding(start = p, top = p * 0.5f, end = p, bottom = p * 0.7f)
-                .verticalScroll(rememberScrollState()),
-            content = content,
+    Column {
+        Icon(
+            imageVector = Icons.Default.KeyboardArrowUp,
+            contentDescription = null,
+            tint = backgroundColor.copy(alpha = 0.75f),
+            modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
         )
+        Card(
+            backgroundColor = backgroundColor.copy(alpha = 0.75f),
+            contentColor = MaterialTheme.colors.contentColorFor(backgroundColor)
+                .takeOrElse { backgroundColor.onColor() },
+            modifier = Modifier.alpha(alpha),
+            elevation = 16.dp,
+        ) {
+            Column(
+                modifier = modifier
+                    .padding(all = 16.dp)
+                    //.padding(start = p, top = p * 0.5f, end = p, bottom = p * 0.7f)
+                    .verticalScroll(rememberScrollState()),
+                content = content,
+            )
+        }
     }
 }
 
-private val TooltipElevation = 32.dp
-private val TooltipPadding = 16.dp
-
 private val TooltipPopupProperties = PopupProperties(focusable = true)
-private val TooltipOffset = DpOffset(0.dp, 0.dp)
 
 // Tooltip open/close animation duration.
 private const val InTransitionDuration = 64
@@ -165,28 +154,66 @@ fun Color.calculateContrastFor(foreground: Color): Double {
 fun TooltipOnLongClickExample(onClick: () -> Unit = {}) {
     // Commonly a Tooltip can be placed in a Box with a sibling
     // that will be used as the 'anchor' for positioning.
-    Surface {
-        Box(
+    val showTooltip = remember { mutableStateOf(false) }
+    var boxWidth by rememberSaveable { mutableStateOf(0f) }
+    var boxHeight by rememberSaveable { mutableStateOf(0f) }
+
+    val animateableSize by animateSizeAsState(
+        targetValue = if (showTooltip.value) Size(
+            width = boxWidth + 2f,
+            height = boxHeight + 2f
+        ) else Size(width = boxWidth, height = boxHeight),
+        animationSpec = infiniteRepeatable(
+            animation = tween(3000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
+    Surface(color = if (showTooltip.value) MaterialTheme.colors.onSurface.copy(alpha = 0.20f) else MaterialTheme.colors.surface) {
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
                 .wrapContentHeight(align = Alignment.CenterVertically)
         ) {
-            val showTooltip = remember { mutableStateOf(false) }
 
             // Buttons and Surfaces don't support onLongClick out of the box,
             // so use a simple Box with combinedClickable
             Box(
-                modifier = Modifier.combinedClickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = rememberRipple(),
-                    onClickLabel = "Button action description",
-                    role = Role.Button,
-                    onClick = onClick,
-                    onLongClick = { showTooltip.value = true },
-                ),
+                modifier = Modifier
+                    .combinedClickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = rememberRipple(),
+                        onClickLabel = "Button action description",
+                        role = Role.Button,
+                        onClick = onClick,
+                        onLongClick = { showTooltip.value = true },
+                    )
+                    .ConditionalModifier(showTooltip.value) {
+                        border(
+                            width = 2.dp,
+                            shape = RoundedCornerShape(8.dp),
+                            color = MaterialTheme.colors.onSurface
+                        )
+                    }
+                    .background(
+                        color = MaterialTheme.colors.surface, shape = RoundedCornerShape(8.dp)
+                    )
+                    .onGloballyPositioned {
+                        boxWidth = it.size.width.toFloat()
+                        boxHeight = it.size.height.toFloat()
+                    }
+                    .ConditionalModifier(showTooltip.value) {
+                        size(
+                            width = animateableSize.width.dp,
+                            height = animateableSize.height.dp
+                        )
+                    }
             ) {
-                Text("Click Me (will show tooltip on long click)")
+                Text(
+                    "Click Me (will show tooltip on long click)",
+                    modifier = Modifier.padding(all = 10.dp)
+                )
             }
 
             Tooltip(
