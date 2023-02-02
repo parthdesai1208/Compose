@@ -17,7 +17,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.graphics.toArgb
@@ -151,21 +150,31 @@ fun Color.calculateContrastFor(foreground: Color): Double {
 
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
-fun TooltipOnLongClickExample(onClick: () -> Unit = {}) {
+fun TooltipOnLongClickExample() {
     // Commonly a Tooltip can be placed in a Box with a sibling
     // that will be used as the 'anchor' for positioning.
-    val showTooltip = remember { mutableStateOf(false) }
+    val showTooltip = rememberSaveable { mutableStateOf(false) }
     var boxWidth by rememberSaveable { mutableStateOf(0f) }
     var boxHeight by rememberSaveable { mutableStateOf(0f) }
+    val density = LocalDensity.current
 
-    val animateableSize by animateSizeAsState(
-        targetValue = if (showTooltip.value) Size(
-            width = boxWidth + 2f,
-            height = boxHeight + 2f
-        ) else Size(width = boxWidth, height = boxHeight),
+    val animateWidth by rememberInfiniteTransition().animateValue(
+        initialValue = boxWidth,
+        targetValue = boxWidth + 8f,
+        typeConverter = Float.VectorConverter,
         animationSpec = infiniteRepeatable(
-            animation = tween(3000, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
+            animation = tween(1000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        )
+    )
+
+    val animateHeight by rememberInfiniteTransition().animateValue(
+        initialValue = boxHeight,
+        targetValue = boxHeight + 8f,
+        typeConverter = Float.VectorConverter,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
         )
     )
 
@@ -186,7 +195,7 @@ fun TooltipOnLongClickExample(onClick: () -> Unit = {}) {
                         indication = rememberRipple(),
                         onClickLabel = "Button action description",
                         role = Role.Button,
-                        onClick = onClick,
+                        onClick = { },
                         onLongClick = { showTooltip.value = true },
                     )
                     .ConditionalModifier(showTooltip.value) {
@@ -199,20 +208,23 @@ fun TooltipOnLongClickExample(onClick: () -> Unit = {}) {
                     .background(
                         color = MaterialTheme.colors.surface, shape = RoundedCornerShape(8.dp)
                     )
-                    .onGloballyPositioned {
-                        boxWidth = it.size.width.toFloat()
-                        boxHeight = it.size.height.toFloat()
+                    .ConditionalModifier(!showTooltip.value) {
+                        onGloballyPositioned {
+                            boxWidth = it.size.width.toFloat() / density.density
+                            boxHeight = it.size.height.toFloat() / density.density
+                        }
                     }
                     .ConditionalModifier(showTooltip.value) {
                         size(
-                            width = animateableSize.width.dp,
-                            height = animateableSize.height.dp
+                            width = animateWidth.dp,
+                            height = animateHeight.dp
                         )
                     }
             ) {
                 Text(
                     "Click Me (will show tooltip on long click)",
-                    modifier = Modifier.padding(all = 10.dp)
+                    modifier = Modifier.padding(all = 10.dp),
+                    color = MaterialTheme.colors.onSurface
                 )
             }
 
