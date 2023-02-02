@@ -21,7 +21,6 @@ import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
@@ -32,9 +31,9 @@ fun Tooltip(
     expanded: MutableState<Boolean>,
     modifier: Modifier = Modifier,
     timeoutMillis: Long = TooltipTimeout,
-    backgroundColor: Color = Color.Black,
+    backgroundColor: Color = MaterialTheme.colors.onSurface,
     properties: PopupProperties = TooltipPopupProperties,
-    content: @Composable() (ColumnScope.() -> Unit),
+    content: @Composable (ColumnScope.() -> Unit),
 ) {
     val expandedStates = remember { MutableTransitionState(false) }
     expandedStates.targetState = expanded.value
@@ -61,25 +60,6 @@ fun Tooltip(
         }
     }
 }
-
-/**
- * Simple text version of [Tooltip]
- */
-/*@Composable
-fun Tooltip(
-    expanded: MutableState<Boolean>,
-    text: String,
-    modifier: Modifier = Modifier,
-    timeoutMillis: Long = TooltipTimeout,
-    backgroundColor: Color = Color.Black,
-    offset: DpOffset = TooltipOffset,
-    properties: PopupProperties = TooltipPopupProperties,
-) {
-    Tooltip(expanded, modifier, timeoutMillis, backgroundColor, offset, properties) {
-        Text(text)
-    }
-}*/
-
 
 /** @see androidx.compose.material.DropdownMenuContent */
 @Composable
@@ -123,7 +103,6 @@ private val TooltipElevation = 32.dp
 private val TooltipPadding = 16.dp
 
 private val TooltipPopupProperties = PopupProperties(focusable = true)
-private val TooltipOffset = DpOffset(0.dp, 0.dp)
 
 // Tooltip open/close animation duration.
 private const val InTransitionDuration = 64
