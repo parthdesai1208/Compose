@@ -24,10 +24,15 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.parthdesai1208.compose.utils.ConditionalModifier
+import com.parthdesai1208.compose.view.animation.physicsbasedanimation.GravitySensor
+import com.parthdesai1208.compose.view.animation.physicsbasedanimation.PhysicsLayout
+import com.parthdesai1208.compose.view.animation.physicsbasedanimation.PhysicsLayoutScope
+import com.parthdesai1208.compose.view.animation.physicsbasedanimation.rememberSimulation
 import kotlinx.coroutines.delay
 
 @Composable
@@ -37,7 +42,7 @@ fun Tooltip(
     timeoutMillis: Long = TooltipTimeout,
     backgroundColor: Color = MaterialTheme.colors.onSurface,
     properties: PopupProperties = TooltipPopupProperties,
-    content: @Composable (ColumnScope.() -> Unit),
+    content: @Composable() (ColumnScope.() -> Unit),
 ) {
     val expandedStates = remember { MutableTransitionState(false) }
     expandedStates.targetState = expanded.value
@@ -49,17 +54,18 @@ fun Tooltip(
                 //expanded.value = false
             }
         }
-
-        Popup(
-            onDismissRequest = { expanded.value = false },
-            properties = properties,
-            alignment = Alignment.TopCenter
-        ) {
-            Box(
-                // Add space for elevation shadow
-                modifier = Modifier.padding(top = 40.dp),
+        Box {
+            Popup(
+                onDismissRequest = { expanded.value = false },
+                properties = properties,
+                alignment = Alignment.TopCenter,
             ) {
-                TooltipContent(expandedStates, backgroundColor, modifier, content)
+                Box(
+                    // Add space for elevation shadow
+                    modifier = Modifier.padding(top = 40.dp),
+                ) {
+                    TooltipContent(expandedStates, backgroundColor, modifier, content)
+                }
             }
         }
     }
@@ -178,62 +184,96 @@ fun TooltipOnLongClickExample() {
         )
     )
 
-    Surface(color = if (showTooltip.value) MaterialTheme.colors.onSurface.copy(alpha = 0.20f) else MaterialTheme.colors.surface) {
-        Column(
+    val simulation = rememberSimulation()
+    GravitySensor {
+        simulation.setGravity(it.copy(x = -it.x).times(3f))
+    }
+
+    PhysicsLayout(
+        modifier = Modifier.background(
+            color = if (showTooltip.value) MaterialTheme.colors.onSurface.copy(
+                alpha = 0.20f
+            ) else MaterialTheme.colors.surface
+        ), simulation = simulation
+    ) {
+        ColumnWithPhysicsLayoutScope(
+            showTooltip,
+            boxWidth,
+            density,
+            boxHeight,
+            animateWidth,
+            animateHeight
+        )
+    }
+}
+
+@Composable
+@OptIn(ExperimentalFoundationApi::class)
+private fun PhysicsLayoutScope.ColumnWithPhysicsLayoutScope(
+    showTooltip: MutableState<Boolean>,
+    boxWidth: Float,
+    density: Density,
+    boxHeight: Float,
+    animateWidth: Float,
+    animateHeight: Float
+) {
+    var boxWidth1 = boxWidth
+    var boxHeight1 = boxHeight
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentWidth(align = Alignment.CenterHorizontally)
+            .wrapContentHeight(align = Alignment.CenterVertically)
+            .body(isStatic = true)
+    ) {
+
+        // Buttons and Surfaces don't support onLongClick out of the box,
+        // so use a simple Box with combinedClickable
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                .wrapContentWidth(align = Alignment.CenterHorizontally)
-                .wrapContentHeight(align = Alignment.CenterVertically)
-        ) {
-
-            // Buttons and Surfaces don't support onLongClick out of the box,
-            // so use a simple Box with combinedClickable
-            Box(
-                modifier = Modifier
-                    .combinedClickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple(),
-                        onClickLabel = "Button action description",
-                        role = Role.Button,
-                        onClick = { },
-                        onLongClick = { showTooltip.value = true },
-                    )
-                    .ConditionalModifier(showTooltip.value) {
-                        border(
-                            width = 2.dp,
-                            shape = RoundedCornerShape(8.dp),
-                            color = MaterialTheme.colors.onSurface
-                        )
-                    }
-                    .background(
-                        color = MaterialTheme.colors.surface, shape = RoundedCornerShape(8.dp)
-                    )
-                    .ConditionalModifier(!showTooltip.value) {
-                        onGloballyPositioned {
-                            boxWidth = it.size.width.toFloat() / density.density
-                            boxHeight = it.size.height.toFloat() / density.density
-                        }
-                    }
-                    .ConditionalModifier(showTooltip.value) {
-                        size(
-                            width = animateWidth.dp,
-                            height = animateHeight.dp
-                        )
-                    }
-            ) {
-                Text(
-                    "Click Me (will show tooltip on long click)",
-                    modifier = Modifier.padding(all = 10.dp),
-                    color = MaterialTheme.colors.onSurface
+                .combinedClickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = rememberRipple(),
+                    onClickLabel = "Button action description",
+                    role = Role.Button,
+                    onClick = { },
+                    onLongClick = { showTooltip.value = true },
                 )
-            }
+                .ConditionalModifier(showTooltip.value) {
+                    border(
+                        width = 2.dp,
+                        shape = RoundedCornerShape(8.dp),
+                        color = MaterialTheme.colors.onSurface
+                    )
+                }
+                .background(
+                    color = MaterialTheme.colors.surface, shape = RoundedCornerShape(8.dp)
+                )
+                .ConditionalModifier(!showTooltip.value) {
+                    onGloballyPositioned {
+                        boxWidth1 = it.size.width.toFloat() / density.density
+                        boxHeight1 = it.size.height.toFloat() / density.density
+                    }
+                }
+                .ConditionalModifier(showTooltip.value) {
+                    size(
+                        width = animateWidth.dp,
+                        height = animateHeight.dp
+                    )
+                }
+        ) {
+            Text(
+                "Click Me (will show tooltip on long click)",
+                modifier = Modifier.padding(all = 10.dp),
+                color = MaterialTheme.colors.onSurface
+            )
+        }
 
-            Tooltip(
-                expanded = showTooltip
-            ) {
-                // Tooltip content goes here.
-                Text("Tooltip Text!!", textAlign = TextAlign.Center)
-            }
+        Tooltip(
+            expanded = showTooltip
+        ) {
+            // Tooltip content goes here.
+            Text("Tooltip Text!!", textAlign = TextAlign.Center)
         }
     }
 }
