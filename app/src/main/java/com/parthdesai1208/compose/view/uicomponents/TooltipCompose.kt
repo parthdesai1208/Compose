@@ -20,11 +20,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
@@ -42,7 +42,7 @@ fun Tooltip(
     timeoutMillis: Long = TooltipTimeout,
     backgroundColor: Color = MaterialTheme.colors.onSurface,
     properties: PopupProperties = TooltipPopupProperties,
-    content: @Composable() (ColumnScope.() -> Unit),
+    content: @Composable (ColumnScope.() -> Unit),
 ) {
     val expandedStates = remember { MutableTransitionState(false) }
     expandedStates.targetState = expanded.value
@@ -155,7 +155,6 @@ fun Color.calculateContrastFor(foreground: Color): Double {
 
 
 @Composable
-@OptIn(ExperimentalFoundationApi::class)
 fun TooltipOnLongClickExample() {
     // Commonly a Tooltip can be placed in a Box with a sibling
     // that will be used as the 'anchor' for positioning.
@@ -198,12 +197,12 @@ fun TooltipOnLongClickExample() {
     ) {
         ColumnWithPhysicsLayoutScope(
             showTooltip,
-            boxWidth,
-            density,
-            boxHeight,
             animateWidth,
             animateHeight
-        )
+        ) {
+            boxWidth = it.size.width.toFloat() / density.density
+            boxHeight = it.size.height.toFloat() / density.density
+        }
     }
 }
 
@@ -211,14 +210,11 @@ fun TooltipOnLongClickExample() {
 @OptIn(ExperimentalFoundationApi::class)
 private fun PhysicsLayoutScope.ColumnWithPhysicsLayoutScope(
     showTooltip: MutableState<Boolean>,
-    boxWidth: Float,
-    density: Density,
-    boxHeight: Float,
     animateWidth: Float,
-    animateHeight: Float
+    animateHeight: Float,
+    onGloballyPositioned: (LayoutCoordinates) -> Unit
 ) {
-    var boxWidth1 = boxWidth
-    var boxHeight1 = boxHeight
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -251,8 +247,7 @@ private fun PhysicsLayoutScope.ColumnWithPhysicsLayoutScope(
                 )
                 .ConditionalModifier(!showTooltip.value) {
                     onGloballyPositioned {
-                        boxWidth1 = it.size.width.toFloat() / density.density
-                        boxHeight1 = it.size.height.toFloat() / density.density
+                        onGloballyPositioned(it)
                     }
                 }
                 .ConditionalModifier(showTooltip.value) {
