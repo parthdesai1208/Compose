@@ -18,7 +18,10 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
@@ -50,6 +53,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.parthdesai1208.compose.R
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -88,7 +92,9 @@ enum class AnimationScreenEnumType(val buttonTitle: String, val func: @Composabl
     UpdateTransitionExtension("multiple anim updateTransition", { UpdateTransitionExtension() }),
     MultipleAnimCoroutineAnimateTo("multiple anim Coroutine animateTo()\n(Rotate & color change)",
         { MultipleAnimCoroutineAnimateTo() }),
-    InfiniteAnimation("InfiniteAnimation", { InfiniteAnimation() }),
+    InfiniteColorAnimation("InfiniteAnimation color", { InfiniteColorAnimation() }),
+    InfiniteFloatAnimation("InfiniteAnimation float", { InfiniteFloatAnimation() }),
+    InfiniteOffsetAnimation("InfiniteAnimation offset", { InfiniteOffsetAnimation() }),
     TargetBasedAnimation("TargetBasedAnimation", { TargetBasedAnimationFun() }),
     Spring("spring", { SpringFun() }),
     Tween("tween", { TweenFun() }),
@@ -1202,10 +1208,10 @@ fun MultipleAnimCoroutineAnimateTo() {
 }
 
 /**********************************************************************************************************************************
-InfiniteAnimation
+InfiniteAnimation - color
  **********************************************************************************************************************************/
 @Composable
-fun InfiniteAnimation() {
+fun InfiniteColorAnimation() {
     val infiniteTransition = rememberInfiniteTransition()
     val color by infiniteTransition.animateColor(
         initialValue = Red,
@@ -1221,6 +1227,70 @@ fun InfiniteAnimation() {
             .fillMaxSize()
             .background(color)
     )
+}
+
+/**********************************************************************************************************************************
+InfiniteAnimation - float
+ **********************************************************************************************************************************/
+@Composable
+fun InfiniteFloatAnimation() {
+    val infiniteTransition = rememberInfiniteTransition()
+    val animationProgress by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 800)
+        )
+    )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentSize(align = Alignment.Center)
+            .scale(animationProgress)
+            .alpha(1 - animationProgress)
+            .size(100.dp)
+            .clipToBounds()
+            .background(color = MaterialTheme.colors.onSurface, shape = CircleShape)
+    )
+}
+
+/**********************************************************************************************************************************
+InfiniteAnimation - offset
+ **********************************************************************************************************************************/
+@Composable
+fun InfiniteOffsetAnimation() {
+    val animationValues = (1..3).map { index ->
+        var animatedValue by rememberSaveable { mutableStateOf(0f) }
+
+        LaunchedEffect(key1 = Unit) {
+            delay(70L * index)
+            animate(
+                initialValue = 0f, targetValue = 16f, animationSpec = infiniteRepeatable(
+                    animation = tween(durationMillis = 350),
+                    repeatMode = RepeatMode.Reverse
+                )
+            ) { value, _ ->
+                animatedValue = value
+            }
+        }
+        animatedValue
+    }
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentSize(align = Alignment.Center)
+    ) {
+        animationValues.forEach { animatedValue ->
+            Box(
+                modifier = Modifier
+                    .offset(y = animatedValue.dp)
+                    .padding(horizontal = 4.dp)
+                    .size(50.dp)
+                    .clipToBounds()
+                    .background(MaterialTheme.colors.onSurface, CircleShape)
+            )
+        }
+    }
 }
 
 /**********************************************************************************************************************************
