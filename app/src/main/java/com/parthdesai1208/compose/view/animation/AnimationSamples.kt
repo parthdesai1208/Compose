@@ -10,6 +10,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -59,61 +60,96 @@ import kotlin.math.roundToInt
 
 //region default screen & Navigation
 enum class AnimationScreenEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
-    AnimatedVisibilityWithoutParams(
-        "AnimatedVisibility - without params",
+    AnimatedVisibilityWithoutParams("AnimatedVisibility - without params",
         { AnimatedVisibilityWithoutParams() }),
-    AnimatedVisibilityWithParams(
-        "AnimatedVisibility - with params",
+    AnimatedVisibilityWithParams("AnimatedVisibility - with params",
         { AnimatedVisibilityWithParams() }),
-    AnimateVisibilityState("AnimatedVisibility - with state", { AnimateVisibilityState() }),
-    AnimateEnterExitChild("enter exit visibility animation", { AnimateEnterExitChild() }),
-    CrossFade("CrossFade", { CrossFade() }),
-    AnimatableOnly("AnimatableOnly", { AnimatableOnly() }),
-    AnimatedContentSimple("AnimatedContentSimple", { AnimatedContentSimple() }),
+    AnimateVisibilityState(
+        "AnimatedVisibility - with state",
+        { AnimateVisibilityState() }),
+    AnimateEnterExitChild(
+        "enter exit visibility animation",
+        { AnimateEnterExitChild() }),
+    CrossFade("CrossFade", { CrossFade() }), AnimatableOnly(
+        "AnimatableOnly",
+        { AnimatableOnly() }),
+    AnimatedContentSimple(
+        "AnimatedContentSimple",
+        { AnimatedContentSimple() }),
     AnimatedContentWithTransitionSpec1("AnimatedContent - with targetState, transitionSpec ex-1",
         { AnimatedContentWithTransitionSpec1() }),
-    AnimatedContentWithTransitionSpec2(
-        "AnimatedContent - with targetState, transitionSpec ex-2",
+    AnimatedContentWithTransitionSpec2("AnimatedContent - with targetState, transitionSpec ex-2",
         { AnimatedContentWithTransitionSpec2() }),
-    AnimatedContentWithTransitionSpec3(
-        "AnimatedContent - with targetState, transitionSpec ex-3",
+    AnimatedContentWithTransitionSpec3("AnimatedContent - with targetState, transitionSpec ex-3",
         { AnimatedContentWithTransitionSpec3() }),
-    AnimatedContentSize("AnimatedContentSize", { AnimatedContentSize() }),
-    AnimatedContentSizeTransform(
-        "AnimatedContentSizeTransform",
+    AnimatedContentSize(
+        "AnimatedContentSize",
+        { AnimatedContentSize() }),
+    AnimatedContentSizeTransform("AnimatedContentSizeTransform",
         { AnimatedContentSizeTransform() }),
-    AnimateFloatAsState("AnimateFloatAsState", { AnimateFloatAsState() }),
-    AnimateColorAsState("AnimateColorAsState", { AnimateColorAsState() }),
-    AnimateDpAsState("animateDpAsState", { AnimateDpAsState() }),
-    AnimateSizeAsState("AnimateSizeAsState", { AnimateSizeAsState() }),
-    UpdateTransition1("updateTransition-1", { UpdateTransitionBasic1() }),
-    UpdateTransition2("updateTransition-2", { UpdateTransitionBasic2() }),
-    UpdateTransitionChild("UpdateTransitionChild", { UpdateTransitionChild() }),
-    UpdateTransitionExtension("multiple anim updateTransition", { UpdateTransitionExtension() }),
+    AnimateFloatAsState(
+        "AnimateFloatAsState",
+        { AnimateFloatAsState() }),
+    AnimateColorAsState(
+        "AnimateColorAsState",
+        { AnimateColorAsState() }),
+    AnimateDpAsState(
+        "animateDpAsState",
+        { AnimateDpAsState() }),
+    AnimateSizeAsState(
+        "AnimateSizeAsState",
+        { AnimateSizeAsState() }),
+    UpdateTransition1(
+        "updateTransition-1",
+        { UpdateTransitionBasic1() }),
+    UpdateTransition2(
+        "updateTransition-2",
+        { UpdateTransitionBasic2() }),
+    UpdateTransitionChild(
+        "UpdateTransitionChild",
+        { UpdateTransitionChild() }),
+    UpdateTransitionExtension(
+        "multiple anim updateTransition",
+        { UpdateTransitionExtension() }),
     MultipleAnimCoroutineAnimateTo("multiple anim Coroutine animateTo()\n(Rotate & color change)",
         { MultipleAnimCoroutineAnimateTo() }),
-    InfiniteColorAnimation("InfiniteAnimation color", { InfiniteColorAnimation() }),
-    InfiniteFloatAnimation("InfiniteAnimation float", { InfiniteFloatAnimation() }),
-    InfiniteOffsetAnimation("InfiniteAnimation offset", { InfiniteOffsetAnimation() }),
-    TargetBasedAnimation("TargetBasedAnimation", { TargetBasedAnimationFun() }),
-    Spring("spring", { SpringFun() }),
-    Tween("tween", { TweenFun() }),
-    Keyframes("keyframes", { KeyFramesFun() }),
-    Repeatable("repeatable", { RepeatableFun() }),
-    InfiniteRepeatable("InfiniteRepeatable", { InfiniteRepeatableFun() }),
-    Snap("snap", { SnapFun() }),
-    AnimationVector("AnimationVector - TypeConverter,Coroutine", { AnimationVectorFun() }),
-    AnimationEx1("AnimationEx1", { AnimationEx1() }),
-    BoxWithIconUpDownAnimation("Icon Up-down animation", { BoxWithIconUpDownAnimation() }),
-    DuolingoBirdAnimation(
-        "Duolingo Bird Animation",
+    InfiniteColorAnimation(
+        "InfiniteAnimation color",
+        { InfiniteColorAnimation() }),
+    InfiniteFloatAnimation(
+        "InfiniteAnimation float",
+        { InfiniteFloatAnimation() }),
+    InfiniteOffsetAnimation(
+        "InfiniteAnimation offset",
+        { InfiniteOffsetAnimation() }),
+    InfiniteRotation("Infinite Rotation", { InfiniteRotation() }),
+    TargetBasedAnimation("TargetBasedAnimation", { TargetBasedAnimationFun() }), Spring(
+        "spring",
+        { SpringFun() }),
+    Tween("tween", { TweenFun() }), Keyframes(
+        "keyframes",
+        { KeyFramesFun() }),
+    Repeatable("repeatable", { RepeatableFun() }), InfiniteRepeatable(
+        "InfiniteRepeatable",
+        { InfiniteRepeatableFun() }),
+    Snap("snap", { SnapFun() }), AnimationVector(
+        "AnimationVector - TypeConverter,Coroutine",
+        { AnimationVectorFun() }),
+    AnimationEx1(
+        "AnimationEx1",
+        { AnimationEx1() }),
+    BoxWithIconUpDownAnimation(
+        "Icon Up-down animation",
+        { BoxWithIconUpDownAnimation() }),
+    DuolingoBirdAnimation("Duolingo Bird Animation",
         { Surface(Modifier.fillMaxSize()) { DuolingoBird() } }),
-    ThreeDCardMoving("3D card moving",
-        { ThreeDCardMoving() }),
-    InstagramLikeParticles("Instagram Like Particles", { InstagramLikeParticles() }),
-    RotatingBorders("Rotating Borders", { RotatingBorders() }),
-    PhysicsBasedAnimation(
-        "Physics Based Animation",
+    ThreeDCardMoving("3D card moving", { ThreeDCardMoving() }), InstagramLikeParticles(
+        "Instagram Like Particles",
+        { InstagramLikeParticles() }),
+    RotatingBorders(
+        "Rotating Borders",
+        { RotatingBorders() }),
+    PhysicsBasedAnimation("Physics Based Animation",
         { com.parthdesai1208.compose.view.animation.physicsbasedanimation.PhysicsBasedAnimationFun() }),
 }
 
@@ -236,15 +272,13 @@ fun AnimatedVisibilityWithParams() {
             //execute when view is visible
             enter = fadeIn(tween(4000)) + expandVertically(
                 animationSpec = tween(
-                    4000,
-                    easing = android.view.animation.BounceInterpolator().toEasing()
+                    4000, easing = android.view.animation.BounceInterpolator().toEasing()
                 )
             ),
             //execute when view is gone
             exit = fadeOut(tween(4000)) + shrinkVertically(
                 animationSpec = tween(
-                    4000,
-                    easing = android.view.animation.BounceInterpolator().toEasing()
+                    4000, easing = android.view.animation.BounceInterpolator().toEasing()
                 )
             )
         ) {
@@ -281,15 +315,13 @@ fun AnimateVisibilityState() {
                 //execute when view is visible
                 enter = fadeIn(tween(4000)) + expandVertically(
                     animationSpec = tween(
-                        4000,
-                        easing = android.view.animation.BounceInterpolator().toEasing()
+                        4000, easing = android.view.animation.BounceInterpolator().toEasing()
                     )
                 ),
                 //execute when view is gone
                 exit = fadeOut(tween(4000)) + shrinkVertically(
                     animationSpec = tween(
-                        4000,
-                        easing = android.view.animation.BounceInterpolator().toEasing()
+                        4000, easing = android.view.animation.BounceInterpolator().toEasing()
                     )
                 )
             ) {
@@ -336,17 +368,13 @@ fun AnimateEnterExitChild() {
                 .background(color)
         )
         AnimatedVisibility(
-            visible = visible,
-            enter = fadeIn(
+            visible = visible, enter = fadeIn(
                 animationSpec = tween(
-                    durationMillis = 3000,
-                    easing = LinearOutSlowInEasing
+                    durationMillis = 3000, easing = LinearOutSlowInEasing
                 )
-            ),
-            exit = fadeOut(
+            ), exit = fadeOut(
                 animationSpec = tween(
-                    durationMillis = 3000,
-                    easing = LinearOutSlowInEasing
+                    durationMillis = 3000, easing = LinearOutSlowInEasing
                 )
             )
         ) {
@@ -373,14 +401,11 @@ fun AnimateEnterExitChild() {
                             // Slide in/out the inner box.
                             enter = slideInVertically(
                                 animationSpec = tween(
-                                    durationMillis = 3000,
-                                    easing = LinearOutSlowInEasing
+                                    durationMillis = 3000, easing = LinearOutSlowInEasing
                                 )
-                            ),
-                            exit = slideOutVertically(
+                            ), exit = slideOutVertically(
                                 animationSpec = tween(
-                                    durationMillis = 3000,
-                                    easing = LinearOutSlowInEasing
+                                    durationMillis = 3000, easing = LinearOutSlowInEasing
                                 )
                             )
                         )
@@ -406,8 +431,7 @@ fun CrossFade() {
     ) {
         var currentPage by remember { mutableStateOf(0) }
         Crossfade(
-            targetState = currentPage,
-            animationSpec = tween(durationMillis = 1000)
+            targetState = currentPage, animationSpec = tween(durationMillis = 1000)
         ) { screen ->
             ColorBox(screen)
         }
@@ -436,10 +460,8 @@ fun get6DigitHex(value: Int): String {
 }
 
 fun contrastColor(color: Int): Color {
-    return if (ColorUtils.calculateLuminance(color) < 0.5)
-        Color.White
-    else
-        Color.Black
+    return if (ColorUtils.calculateLuminance(color) < 0.5) Color.White
+    else Color.Black
 }
 
 /**********************************************************************************************************************************
@@ -458,10 +480,8 @@ fun AnimatableOnly() {
         LaunchedEffect(currentPage) {  //animateTo() is suspend function
             color.animateTo(
                 //target value must be color because we use color.animateTo()
-                targetValue = Color(currentPage + 0xFF000000),
-                animationSpec = tween(
-                    durationMillis = 3000,
-                    easing = LinearOutSlowInEasing
+                targetValue = Color(currentPage + 0xFF000000), animationSpec = tween(
+                    durationMillis = 3000, easing = LinearOutSlowInEasing
                 )
             )
         }
@@ -494,8 +514,7 @@ fun AnimatedContentSimple() {
             }
             AnimatedContent(targetState = count) { targetCount ->
                 Text(
-                    text = "Count: $targetCount",
-                    modifier = Modifier.padding(start = 8.dp)
+                    text = "Count: $targetCount", modifier = Modifier.padding(start = 8.dp)
                 )
             }
         }
@@ -517,20 +536,17 @@ fun AnimatedContentWithTransitionSpec1() {
 
         Box {
             Crossfade(
-                targetState = currentPage,
-                animationSpec = animationSpec()
+                targetState = currentPage, animationSpec = animationSpec()
             ) { screen -> ColorBoxOnly(screen) }
 
-            AnimatedContent(targetState = currentPage,
-                transitionSpec = {
-                    if (targetState > initialState) {
-                        upColorTransition()
-                    } else {
-                        downColorTransition()
-                    } //display animation outside the box
-                        .using(SizeTransform(clip = false))
-                }
-            ) { screen ->
+            AnimatedContent(targetState = currentPage, transitionSpec = {
+                if (targetState > initialState) {
+                    upColorTransition()
+                } else {
+                    downColorTransition()
+                } //display animation outside the box
+                    .using(SizeTransform(clip = false))
+            }) { screen ->
                 ColorBoxTextOnly(screen)
             }
         }
@@ -543,32 +559,25 @@ fun AnimatedContentWithTransitionSpec1() {
 }
 
 @OptIn(ExperimentalAnimationApi::class)
-private fun downColorTransition() =
-    slideInHorizontally(
-        initialOffsetX = { fullWidth -> -fullWidth },
-        animationSpec = animationSpec()
-    ) + fadeIn(
-        animationSpec = animationSpec()
-    ) with slideOutVertically(
-        targetOffsetY = { fullHeight -> fullHeight },
-        animationSpec = animationSpec()
-    ) + fadeOut(animationSpec = animationSpec())
+private fun downColorTransition() = slideInHorizontally(
+    initialOffsetX = { fullWidth -> -fullWidth }, animationSpec = animationSpec()
+) + fadeIn(
+    animationSpec = animationSpec()
+) with slideOutVertically(
+    targetOffsetY = { fullHeight -> fullHeight }, animationSpec = animationSpec()
+) + fadeOut(animationSpec = animationSpec())
 
 @OptIn(ExperimentalAnimationApi::class)
-private fun upColorTransition() =
-    slideInHorizontally(
-        initialOffsetX = { fullWidth -> fullWidth },
-        animationSpec = animationSpec()
-    ) + fadeIn(
-        animationSpec = animationSpec()
-    ) with slideOutVertically(
-        targetOffsetY = { fullHeight -> -fullHeight },
-        animationSpec = animationSpec()
-    ) + fadeOut(animationSpec = animationSpec())
+private fun upColorTransition() = slideInHorizontally(
+    initialOffsetX = { fullWidth -> fullWidth }, animationSpec = animationSpec()
+) + fadeIn(
+    animationSpec = animationSpec()
+) with slideOutVertically(
+    targetOffsetY = { fullHeight -> -fullHeight }, animationSpec = animationSpec()
+) + fadeOut(animationSpec = animationSpec())
 
 fun <T> animationSpec() = tween<T>(
-    durationMillis = 3000,
-    easing = LinearOutSlowInEasing
+    durationMillis = 3000, easing = LinearOutSlowInEasing
 )
 
 @Composable
@@ -583,8 +592,7 @@ fun ColorBoxOnly(screen: Int) {
 @Composable
 fun ColorBoxTextOnly(screen: Int) {
     Box(
-        Modifier.size(100.dp),
-        contentAlignment = Alignment.Center
+        Modifier.size(100.dp), contentAlignment = Alignment.Center
     ) {
         Text(get6DigitHex(screen), color = contrastColor(screen))
     }
@@ -612,26 +620,20 @@ fun AnimatedContentWithTransitionSpec2() {
                 Text(text = "Minus")
             }
 
-            AnimatedContent(
-                targetState = count,
-                transitionSpec = {
-                    if (targetState > initialState) {
-                        // If the target number is larger than old value
-                        slideInVertically { height -> height } + fadeIn() with
-                                slideOutVertically { height -> -height } + fadeOut()
-                    } else {
-                        // If the target number is smaller than old value
-                        slideInVertically { height -> -height } + fadeIn() with
-                                slideOutVertically { height -> height } + fadeOut()
-                    }.using(
-                        //for adding effect on slide up-down animation
-                        SizeTransform(clip = false)
-                    )
-                }
-            ) { targetCount ->
+            AnimatedContent(targetState = count, transitionSpec = {
+                if (targetState > initialState) {
+                    // If the target number is larger than old value
+                    slideInVertically { height -> height } + fadeIn() with slideOutVertically { height -> -height } + fadeOut()
+                } else {
+                    // If the target number is smaller than old value
+                    slideInVertically { height -> -height } + fadeIn() with slideOutVertically { height -> height } + fadeOut()
+                }.using(
+                    //for adding effect on slide up-down animation
+                    SizeTransform(clip = false)
+                )
+            }) { targetCount ->
                 Text(
-                    text = "$targetCount",
-                    modifier = Modifier.padding(start = 8.dp)
+                    text = "$targetCount", modifier = Modifier.padding(start = 8.dp)
                 )
             }
         }
@@ -645,32 +647,29 @@ AnimatedContent - with targetState, transitionSpec ex-3 between 2 content
 @Composable
 fun AnimatedContentWithTransitionSpec3() {
     var expanded by remember { mutableStateOf(false) }
-    Surface(
-        color = MaterialTheme.colors.primary,
-        onClick = { expanded = !expanded }
-    ) {
-        AnimatedContent(
-            targetState = expanded,
-            transitionSpec = {
-                fadeIn(animationSpec = tween(150, 150)) with
-                        fadeOut(animationSpec = tween(150)) using
-                        SizeTransform { initialSize, targetSize ->
-                            if (targetState) {
-                                keyframes {
-                                    // Expand horizontally first.
-                                    IntSize(targetSize.width, initialSize.height) at 150
-                                    durationMillis = 300
-                                }
-                            } else {
-                                keyframes {
-                                    // Shrink vertically first.
-                                    IntSize(initialSize.width, targetSize.height) at 150
-                                    durationMillis = 300
-                                }
-                            }
-                        }
+    Surface(color = MaterialTheme.colors.primary, onClick = { expanded = !expanded }) {
+        AnimatedContent(targetState = expanded, transitionSpec = {
+            fadeIn(
+                animationSpec = tween(
+                    150,
+                    150
+                )
+            ) with fadeOut(animationSpec = tween(150)) using SizeTransform { initialSize, targetSize ->
+                if (targetState) {
+                    keyframes {
+                        // Expand horizontally first.
+                        IntSize(targetSize.width, initialSize.height) at 150
+                        durationMillis = 300
+                    }
+                } else {
+                    keyframes {
+                        // Shrink vertically first.
+                        IntSize(initialSize.width, targetSize.height) at 150
+                        durationMillis = 300
+                    }
+                }
             }
-        ) { targetExpanded ->
+        }) { targetExpanded ->
             if (targetExpanded) {
                 Expanded()
             } else {
@@ -709,10 +708,8 @@ fun AnimatedContentSize() {
 
         Image(
             painter = painterResource(
-                id = if (expanded)
-                    R.drawable.download
-                else
-                    R.drawable.ic_launcher_background
+                id = if (expanded) R.drawable.download
+                else R.drawable.ic_launcher_background
             ),
             contentDescription = "",
             modifier = Modifier
@@ -738,26 +735,19 @@ fun AnimatedContentSizeTransform() {
             mutableStateOf(false)
         }
 
-        AnimatedContent(
-            targetState = expanded,
-            transitionSpec = {
-                if (targetState) {
-                    expandFading(time) using expandSizing(time)
-                } else {
-                    shrinkFading(time) using shrinkSizing(time)
-                }
-
+        AnimatedContent(targetState = expanded, transitionSpec = {
+            if (targetState) {
+                expandFading(time) using expandSizing(time)
+            } else {
+                shrinkFading(time) using shrinkSizing(time)
             }
-        ) { targetExpanded ->
+
+        }) { targetExpanded ->
             Image(
                 painter = painterResource(
-                    id = if (targetExpanded)
-                        R.drawable.download
-                    else
-                        R.drawable.ic_launcher_background
-                ),
-                contentDescription = "",
-                modifier = Modifier.background(Yellow)
+                    id = if (targetExpanded) R.drawable.download
+                    else R.drawable.ic_launcher_background
+                ), contentDescription = "", modifier = Modifier.background(Yellow)
             )
         }
 
@@ -768,36 +758,32 @@ fun AnimatedContentSizeTransform() {
 }
 
 @OptIn(ExperimentalAnimationApi::class)
-private fun shrinkSizing(time: Int) =
-    SizeTransform { initialSize, targetSize ->
-        keyframes {
-            // Shrink to target height first
-            IntSize(initialSize.width, targetSize.height) at time
-            // Then shrink to target width
-            durationMillis = time * 3
-        }
+private fun shrinkSizing(time: Int) = SizeTransform { initialSize, targetSize ->
+    keyframes {
+        // Shrink to target height first
+        IntSize(initialSize.width, targetSize.height) at time
+        // Then shrink to target width
+        durationMillis = time * 3
     }
+}
 
 @OptIn(ExperimentalAnimationApi::class)
 private fun shrinkFading(time: Int) =
-    fadeIn(animationSpec = tween(time, time * 2)) with
-            fadeOut(animationSpec = tween(time * 3))
+    fadeIn(animationSpec = tween(time, time * 2)) with fadeOut(animationSpec = tween(time * 3))
 
 @OptIn(ExperimentalAnimationApi::class)
-private fun expandSizing(time: Int) =
-    SizeTransform { initialSize, targetSize ->
-        keyframes {
-            // Expand to target width first
-            IntSize(targetSize.width, initialSize.height) at time
-            // Then expand to target height
-            durationMillis = time * 3
-        }
+private fun expandSizing(time: Int) = SizeTransform { initialSize, targetSize ->
+    keyframes {
+        // Expand to target width first
+        IntSize(targetSize.width, initialSize.height) at time
+        // Then expand to target height
+        durationMillis = time * 3
     }
+}
 
 @OptIn(ExperimentalAnimationApi::class)
 private fun expandFading(time: Int) =
-    fadeIn(animationSpec = tween(time * 3)) with
-            fadeOut(animationSpec = tween(time))
+    fadeIn(animationSpec = tween(time * 3)) with fadeOut(animationSpec = tween(time))
 
 /**********************************************************************************************************************************
 animateFloatAsState
@@ -811,10 +797,8 @@ fun AnimateFloatAsState() {
     ) {
         var enabled by remember { mutableStateOf(true) }
         val alpha: Float by animateFloatAsState(
-            if (enabled) 1f else 0.2f,
-            animationSpec = tween(
-                durationMillis = 3000,
-                easing = LinearOutSlowInEasing
+            if (enabled) 1f else 0.2f, animationSpec = tween(
+                durationMillis = 3000, easing = LinearOutSlowInEasing
             )
         )
         Box(
@@ -870,8 +854,7 @@ fun AnimateDpAsState() {
         if (bikeState == BikePosition.Start) 5.dp else 300.dp,
     )
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         Image(
             painter = painterResource(R.drawable.ic_launcher_foreground),
@@ -908,8 +891,7 @@ fun AnimateSizeAsState() {
         var isOn by remember { mutableStateOf(true) }
         val size1: Size by animateSizeAsState(
             targetValue = if (isOn) Size(100f, 100f) else Size(
-                200f,
-                200f
+                200f, 200f
             )
         )
         Box(
@@ -935,17 +917,16 @@ fun UpdateTransitionBasic1() {
     //create updateTransition object
     val transition = updateTransition(targetState = boxState, label = "Box transition")
 
-    val color by transition.animateColor(
-        label = "Color",
-        transitionSpec = { tween(2000, easing = FastOutSlowInEasing) }
-    ) {
+    val color by transition.animateColor(label = "Color",
+        transitionSpec = { tween(2000, easing = FastOutSlowInEasing) }) {
         when (it) {
             BoxState1.Small -> Red
             BoxState1.Large -> Yellow
         }
     }
 
-    val size by transition.animateDp(label = "size",
+    val size by transition.animateDp(
+        label = "size",
         transitionSpec = { tween(2000, easing = LinearOutSlowInEasing) }) {
         when (it) {
             BoxState1.Small -> 32.dp
@@ -977,8 +958,7 @@ private enum class BoxState1 {
 updateTransition-2
  **********************************************************************************************************************************/
 enum class BoxState {
-    Collapsed,
-    Expanded
+    Collapsed, Expanded
 }
 
 @Composable
@@ -994,8 +974,7 @@ fun UpdateTransitionBasic2() {
     }
 
     val color by transition.animateColor(
-        transitionSpec = transitioningSpec(),
-        label = ""
+        transitionSpec = transitioningSpec(), label = ""
     ) { state ->
         when (state) {
             BoxState.Collapsed -> MaterialTheme.colors.primary
@@ -1004,8 +983,7 @@ fun UpdateTransitionBasic2() {
     }
 
     val borderWidth by transition.animateDp(
-        transitionSpec = transitioningSpec(),
-        label = ""
+        transitionSpec = transitioningSpec(), label = ""
     ) { state ->
         when (state) {
             BoxState.Collapsed -> 5.dp
@@ -1023,8 +1001,8 @@ fun UpdateTransitionBasic2() {
             drawPath(Path().apply { addRect(rect) }, color)
         }
         Button(onClick = {
-            currentState = if (currentState == BoxState.Expanded)
-                BoxState.Collapsed else BoxState.Expanded
+            currentState =
+                if (currentState == BoxState.Expanded) BoxState.Collapsed else BoxState.Expanded
         }) {
             Text("Click Me")
         }
@@ -1035,10 +1013,11 @@ fun UpdateTransitionBasic2() {
 fun <T> transitioningSpec(): @Composable (Transition.Segment<BoxState>.() -> FiniteAnimationSpec<T>) =
     {
         when {
-            BoxState.Expanded isTransitioningTo BoxState.Collapsed ->
-                spring(stiffness = 20f, dampingRatio = 0.25f)
-            else ->
-                tween(durationMillis = 3000)
+            BoxState.Expanded isTransitioningTo BoxState.Collapsed -> spring(
+                stiffness = 20f,
+                dampingRatio = 0.25f
+            )
+            else -> tween(durationMillis = 3000)
         }
     }
 
@@ -1069,9 +1048,8 @@ fun UpdateTransitionChild() {
         }
         Child(transition.createChildTransition { currentState })
         Button(onClick = {
-            currentState =
-                if (currentState == BoxState.Expanded) BoxState.Collapsed
-                else BoxState.Expanded
+            currentState = if (currentState == BoxState.Expanded) BoxState.Collapsed
+            else BoxState.Expanded
         }) {
             Text("Click Me")
         }
@@ -1146,8 +1124,7 @@ fun UpdateTransitionExtension() {
                     Text(text = "Selected")
                 } else {
                     Icon(
-                        imageVector = Icons.Default.Phone,
-                        contentDescription = "Phone"
+                        imageVector = Icons.Default.Phone, contentDescription = "Phone"
                     )
                 }
             }
@@ -1200,8 +1177,7 @@ fun MultipleAnimCoroutineAnimateTo() {
         }, onDraw = {
         rotate(degrees = angle.value) {
             drawRoundRect(
-                color = color.value,
-                cornerRadius = CornerRadius(16.dp.toPx())
+                color = color.value, cornerRadius = CornerRadius(16.dp.toPx())
             )
         }
     })
@@ -1214,11 +1190,8 @@ InfiniteAnimation - color
 fun InfiniteColorAnimation() {
     val infiniteTransition = rememberInfiniteTransition()
     val color by infiniteTransition.animateColor(
-        initialValue = Red,
-        targetValue = Color.Green,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1000, easing = LinearEasing),
-            repeatMode = RepeatMode.Reverse
+        initialValue = Red, targetValue = Color.Green, animationSpec = infiniteRepeatable(
+            animation = tween(1000, easing = LinearEasing), repeatMode = RepeatMode.Reverse
         )
     )
 
@@ -1236,9 +1209,7 @@ InfiniteAnimation - float
 fun InfiniteFloatAnimation() {
     val infiniteTransition = rememberInfiniteTransition()
     val animationProgress by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
+        initialValue = 0f, targetValue = 1f, animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 800)
         )
     )
@@ -1266,8 +1237,7 @@ fun InfiniteOffsetAnimation() {
             delay(70L * index)
             animate(
                 initialValue = 0f, targetValue = 16f, animationSpec = infiniteRepeatable(
-                    animation = tween(durationMillis = 350),
-                    repeatMode = RepeatMode.Reverse
+                    animation = tween(durationMillis = 350), repeatMode = RepeatMode.Reverse
                 )
             ) { value, _ ->
                 animatedValue = value
@@ -1291,6 +1261,85 @@ fun InfiniteOffsetAnimation() {
             )
         }
     }
+}
+
+/**********************************************************************************************************************************
+InfiniteAnimation - rotation
+ **********************************************************************************************************************************/
+@Composable
+fun InfiniteRotation() {
+    val animationSpec = infiniteRepeatable<Float>(
+        animation = tween(durationMillis = 2500, easing = LinearEasing)
+    )
+    val xRotation by animateValues(
+        values = listOf(0f, 180f, 180f, 0f, 0f), animationSpec = animationSpec
+    )
+    val yRotation by animateValues(
+        values = listOf(0f, 0f, 180f, 180f, 0f), animationSpec = animationSpec
+    )
+    //NOTE : xRotation & yRotation are running parallel
+    //rotation steps
+    //1) 0 to 180 x-axis(rotate) & 0 to 0(not rotate) y-axis
+    //2) 180 to 180 x-axis(not rotate) & 0 to 180(rotate) y-axis
+    //3) 180 to 0(rotate) x-axis & 180 to 180(not rotate) y-axis
+    //4) 0 to 0 x-axis(not rotate) & 180 to 0(rotate) y-axis
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentSize(align = Alignment.Center)
+            .graphicsLayer(
+                rotationX = xRotation,
+                rotationY = yRotation
+            )
+            .size(64.dp)
+            .clipToBounds()
+            .background(color = MaterialTheme.colors.onSurface, shape = TriangleShape)
+    )
+}
+
+private val TriangleShape = GenericShape { size, _ ->
+    moveTo(x = size.width / 2f, y = 0f)
+    lineTo(x = size.width, y = size.height)
+    lineTo(x = 0f, y = size.height)
+}
+
+@Composable
+fun animateValues(
+    values: List<Float>,
+    animationSpec: AnimationSpec<Float> = spring(),
+): State<Float> {
+    // 1. Create the groups zipping with next entry
+    val groups by rememberUpdatedState(newValue = values.zipWithNext())
+    //rememberUpdatedState - remember newValue on each recomposition
+    //zipWithNext - Returns a list of pairs of each two adjacent elements
+
+    // 2. Start the state with the first value
+    val state = remember { mutableStateOf(values.first()) }
+
+    LaunchedEffect(key1 = groups) {
+        val (_, setValue) = state
+
+        // Start the animation from 0 to groups quantity(4 in this case)
+        animate(
+            initialValue = 0f,
+            targetValue = groups.size.toFloat(),
+            animationSpec = animationSpec,
+        ) { frame, _ ->
+            // Get which group is being evaluated
+            val integerPart = frame.toInt()
+            val (initialValue, finalValue) = groups[frame.toInt()]
+
+            // Get the current "position" from the group animation
+            val decimalPart = frame - integerPart
+
+            // Calculate the progress between the initial and final value
+            setValue(
+                initialValue + (finalValue - initialValue) * decimalPart
+            )
+        }
+    }
+
+    return state
 }
 
 /**********************************************************************************************************************************
@@ -1351,40 +1400,31 @@ fun SpringFun() {
     val targetValue = if (bikeState == BikePosition.Start) 5.dp else getScreenWidth().dp - 100.dp
 
     val offsetAnimationStiffnessLow: Dp by animateDpAsState(
-        targetValue,
-        animationSpec = spring(stiffness = Spring.StiffnessLow)
+        targetValue, animationSpec = spring(stiffness = Spring.StiffnessLow)
     )
     val offsetAnimationStiffnessVeryLow: Dp by animateDpAsState(
-        targetValue,
-        animationSpec = spring(stiffness = Spring.StiffnessVeryLow)
+        targetValue, animationSpec = spring(stiffness = Spring.StiffnessVeryLow)
     )
     val offsetAnimationStiffnessMediumLow: Dp by animateDpAsState(
-        targetValue,
-        animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+        targetValue, animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
     )
     val offsetAnimationStiffnessMedium: Dp by animateDpAsState(
-        targetValue,
-        animationSpec = spring(stiffness = Spring.StiffnessMedium)
+        targetValue, animationSpec = spring(stiffness = Spring.StiffnessMedium)
     )
     val offsetAnimationStiffnessHigh: Dp by animateDpAsState(
-        targetValue,
-        animationSpec = spring(stiffness = Spring.StiffnessHigh)
+        targetValue, animationSpec = spring(stiffness = Spring.StiffnessHigh)
     )
     val offsetAnimationDampingRatioNoBouncy: Dp by animateDpAsState(
-        targetValue,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioNoBouncy)
+        targetValue, animationSpec = spring(dampingRatio = Spring.DampingRatioNoBouncy)
     )
     val offsetAnimationDampingRatioLowBouncy: Dp by animateDpAsState(
-        targetValue,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioLowBouncy)
+        targetValue, animationSpec = spring(dampingRatio = Spring.DampingRatioLowBouncy)
     )
     val offsetAnimationDampingRatioMediumBouncy: Dp by animateDpAsState(
-        targetValue,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
+        targetValue, animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy)
     )
     val offsetAnimationDampingRatioHighBouncy: Dp by animateDpAsState(
-        targetValue,
-        animationSpec = spring(dampingRatio = Spring.DampingRatioHighBouncy)
+        targetValue, animationSpec = spring(dampingRatio = Spring.DampingRatioHighBouncy)
     )
     Surface {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -1420,16 +1460,16 @@ fun SpringFun() {
 
             }
 
-            ExtendedFloatingActionButton(
-                onClick = {
-                    bikeState = when (bikeState) {
-                        BikePosition.Start -> BikePosition.Finish
-                        BikePosition.Finish -> BikePosition.Start
-                    }
-                }, modifier = Modifier
+            ExtendedFloatingActionButton(onClick = {
+                bikeState = when (bikeState) {
+                    BikePosition.Start -> BikePosition.Finish
+                    BikePosition.Finish -> BikePosition.Start
+                }
+            },
+                modifier = Modifier
                     .align(alignment = Alignment.BottomEnd)
-                    .padding(end = 16.dp, bottom = 16.dp), text = { Text(text = "Ride") }
-            )
+                    .padding(end = 16.dp, bottom = 16.dp),
+                text = { Text(text = "Ride") })
         }
     }
 }
@@ -1471,24 +1511,19 @@ fun TweenFun() {
     val targetValue = if (bikeState == BikePosition.Start) 5.dp else getScreenWidth().dp - 100.dp
 
     val easingLinearEasing: Dp by animateDpAsState(
-        targetValue,
-        animationSpec = tween(durationMillis = 1000, easing = LinearEasing)
+        targetValue, animationSpec = tween(durationMillis = 1000, easing = LinearEasing)
     )
     val easingLinearOutSlowInEasing: Dp by animateDpAsState(
-        targetValue,
-        animationSpec = tween(durationMillis = 1000, easing = LinearOutSlowInEasing)
+        targetValue, animationSpec = tween(durationMillis = 1000, easing = LinearOutSlowInEasing)
     )
     val easingFastOutLinearInEasing: Dp by animateDpAsState(
-        targetValue,
-        animationSpec = tween(durationMillis = 1000, easing = FastOutLinearInEasing)
+        targetValue, animationSpec = tween(durationMillis = 1000, easing = FastOutLinearInEasing)
     )
     val easingFastOutSlowInEasing: Dp by animateDpAsState(
-        targetValue,
-        animationSpec = tween(durationMillis = 1000, easing = FastOutSlowInEasing)
+        targetValue, animationSpec = tween(durationMillis = 1000, easing = FastOutSlowInEasing)
     )
     val withDelay: Dp by animateDpAsState(
-        targetValue,
-        animationSpec = tween(durationMillis = 1000, delayMillis = 1000)
+        targetValue, animationSpec = tween(durationMillis = 1000, delayMillis = 1000)
     )
     Surface {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -1515,16 +1550,16 @@ fun TweenFun() {
 
             }
 
-            ExtendedFloatingActionButton(
-                onClick = {
-                    bikeState = when (bikeState) {
-                        BikePosition.Start -> BikePosition.Finish
-                        BikePosition.Finish -> BikePosition.Start
-                    }
-                }, modifier = Modifier
+            ExtendedFloatingActionButton(onClick = {
+                bikeState = when (bikeState) {
+                    BikePosition.Start -> BikePosition.Finish
+                    BikePosition.Finish -> BikePosition.Start
+                }
+            },
+                modifier = Modifier
                     .align(alignment = Alignment.BottomEnd)
-                    .padding(end = 16.dp, bottom = 16.dp), text = { Text(text = "Ride") }
-            )
+                    .padding(end = 16.dp, bottom = 16.dp),
+                text = { Text(text = "Ride") })
         }
     }
 }
@@ -1540,14 +1575,11 @@ fun KeyFramesFun() {
     //100.dp = 90.dp is width of the image & 10.dp is for padding
     val targetValue = if (bikeState == BikePosition.Start) 5.dp else getScreenWidth().dp - 100.dp
 
-    val keyframesAnimation: Dp by animateDpAsState(
-        targetValue,
-        animationSpec = keyframes {
-            durationMillis = 1000
-            50.dp at 400 with LinearOutSlowInEasing // for 0-400 ms
-            70.dp at 800 with FastOutLinearInEasing // for 400-800 ms
-        }
-    )
+    val keyframesAnimation: Dp by animateDpAsState(targetValue, animationSpec = keyframes {
+        durationMillis = 1000
+        50.dp at 400 with LinearOutSlowInEasing // for 0-400 ms
+        70.dp at 800 with FastOutLinearInEasing // for 400-800 ms
+    })
     Surface {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
@@ -1565,16 +1597,16 @@ fun KeyFramesFun() {
                 )
             }
 
-            ExtendedFloatingActionButton(
-                onClick = {
-                    bikeState = when (bikeState) {
-                        BikePosition.Start -> BikePosition.Finish
-                        BikePosition.Finish -> BikePosition.Start
-                    }
-                }, modifier = Modifier
+            ExtendedFloatingActionButton(onClick = {
+                bikeState = when (bikeState) {
+                    BikePosition.Start -> BikePosition.Finish
+                    BikePosition.Finish -> BikePosition.Start
+                }
+            },
+                modifier = Modifier
                     .align(alignment = Alignment.BottomEnd)
-                    .padding(end = 16.dp, bottom = 16.dp), text = { Text(text = "Ride") }
-            )
+                    .padding(end = 16.dp, bottom = 16.dp),
+                text = { Text(text = "Ride") })
         }
     }
 }
@@ -1591,20 +1623,14 @@ fun RepeatableFun() {
     val targetValue = if (bikeState == BikePosition.Start) 5.dp else getScreenWidth().dp - 100.dp
 
     val repeatableRestartAnimation: Dp by animateDpAsState(
-        targetValue,
-        animationSpec = repeatable(
-            iterations = 5,
-            animation = tween(),
-            repeatMode = RepeatMode.Restart
+        targetValue, animationSpec = repeatable(
+            iterations = 5, animation = tween(), repeatMode = RepeatMode.Restart
         )
         //will restart the animation from the start value to the end value.
     )
     val repeatableReverseAnimation: Dp by animateDpAsState(
-        targetValue,
-        animationSpec = repeatable(
-            iterations = 5,
-            animation = tween(),
-            repeatMode = RepeatMode.Reverse
+        targetValue, animationSpec = repeatable(
+            iterations = 5, animation = tween(), repeatMode = RepeatMode.Reverse
         )
         //will reverse the last iteration as the animation repeats.
     )
@@ -1628,16 +1654,16 @@ fun RepeatableFun() {
                 DrawImage(repeatableReverseAnimation)
             }
 
-            ExtendedFloatingActionButton(
-                onClick = {
-                    bikeState = when (bikeState) {
-                        BikePosition.Start -> BikePosition.Finish
-                        BikePosition.Finish -> BikePosition.Start
-                    }
-                }, modifier = Modifier
+            ExtendedFloatingActionButton(onClick = {
+                bikeState = when (bikeState) {
+                    BikePosition.Start -> BikePosition.Finish
+                    BikePosition.Finish -> BikePosition.Start
+                }
+            },
+                modifier = Modifier
                     .align(alignment = Alignment.BottomEnd)
-                    .padding(end = 16.dp, bottom = 16.dp), text = { Text(text = "Ride") }
-            )
+                    .padding(end = 16.dp, bottom = 16.dp),
+                text = { Text(text = "Ride") })
         }
     }
 }
@@ -1683,16 +1709,16 @@ fun InfiniteRepeatableFun() {
                 DrawImage(infiniteRepeatableReverseAnimation)
             }
 
-            ExtendedFloatingActionButton(
-                onClick = {
-                    bikeState = when (bikeState) {
-                        BikePosition.Start -> BikePosition.Finish
-                        BikePosition.Finish -> BikePosition.Start
-                    }
-                }, modifier = Modifier
+            ExtendedFloatingActionButton(onClick = {
+                bikeState = when (bikeState) {
+                    BikePosition.Start -> BikePosition.Finish
+                    BikePosition.Finish -> BikePosition.Start
+                }
+            },
+                modifier = Modifier
                     .align(alignment = Alignment.BottomEnd)
-                    .padding(end = 16.dp, bottom = 16.dp), text = { Text(text = "Ride") }
-            )
+                    .padding(end = 16.dp, bottom = 16.dp),
+                text = { Text(text = "Ride") })
         }
     }
 }
@@ -1709,8 +1735,7 @@ fun SnapFun() {
     val targetValue = if (bikeState == BikePosition.Start) 5.dp else getScreenWidth().dp - 100.dp
 
     val snapAnimation: Dp by animateDpAsState(
-        targetValue,
-        animationSpec = snap(delayMillis = 500)
+        targetValue, animationSpec = snap(delayMillis = 500)
     )
     Surface {
         Box(modifier = Modifier.fillMaxSize()) {
@@ -1729,16 +1754,16 @@ fun SnapFun() {
                 )
             }
 
-            ExtendedFloatingActionButton(
-                onClick = {
-                    bikeState = when (bikeState) {
-                        BikePosition.Start -> BikePosition.Finish
-                        BikePosition.Finish -> BikePosition.Start
-                    }
-                }, modifier = Modifier
+            ExtendedFloatingActionButton(onClick = {
+                bikeState = when (bikeState) {
+                    BikePosition.Start -> BikePosition.Finish
+                    BikePosition.Finish -> BikePosition.Start
+                }
+            },
+                modifier = Modifier
                     .align(alignment = Alignment.BottomEnd)
-                    .padding(end = 16.dp, bottom = 16.dp), text = { Text(text = "Ride") }
-            )
+                    .padding(end = 16.dp, bottom = 16.dp),
+                text = { Text(text = "Ride") })
         }
     }
 }
@@ -1751,30 +1776,26 @@ AnimationVector - TypeConverter
 fun AnimationVectorFun() {
     //here we want to animate circle to touch position
     val offset = remember { Animatable(Offset(0f, 0f), Offset.VectorConverter) }
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .pointerInput(Unit) {
-                coroutineScope {
-                    while (true) {
-                        // Detect a tap event and obtain its position.
-                        val position = awaitPointerEventScope {
-                            awaitFirstDown().position //consume tap down event & its position
-                        }
-                        launch {
-                            // Animate to the tap position.
-                            offset.animateTo(
-                                position,
-                                animationSpec = tween(
-                                    durationMillis = 500,
-                                    easing = LinearOutSlowInEasing
-                                )
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .pointerInput(Unit) {
+            coroutineScope {
+                while (true) {
+                    // Detect a tap event and obtain its position.
+                    val position = awaitPointerEventScope {
+                        awaitFirstDown().position //consume tap down event & its position
+                    }
+                    launch {
+                        // Animate to the tap position.
+                        offset.animateTo(
+                            position, animationSpec = tween(
+                                durationMillis = 500, easing = LinearOutSlowInEasing
                             )
-                        }
+                        )
                     }
                 }
             }
-    ) {
+        }) {
         Circle(modifier = Modifier.offset { offset.value.toIntOffset() })
     }
 }
@@ -1783,8 +1804,7 @@ private fun Offset.toIntOffset() = IntOffset(x.roundToInt(), y.roundToInt())
 
 @Composable
 fun Circle(
-    modifier: Modifier = Modifier,
-    color: Color = Red
+    modifier: Modifier = Modifier, color: Color = Red
 ) {
     Box(
         modifier = modifier
