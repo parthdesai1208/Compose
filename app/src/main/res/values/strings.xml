@@ -131,6 +131,7 @@
     <string name="icon">Icon</string>
     <string name="searchbar">SearchBar</string>
     <string name="snackbar">SnackBar</string>
+    <string name="scaffold">Scaffold</string>
     <string name="column">Column</string>
     <string name="row">Row</string>
     <string name="box">Box</string>

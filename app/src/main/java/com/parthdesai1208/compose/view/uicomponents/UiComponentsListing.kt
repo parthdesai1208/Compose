@@ -36,6 +36,7 @@ enum class UIComponentsListingEnumType(val buttonTitle: Int, val func: @Composab
         R.string.searchbar,
         { SearchBar(androidx.lifecycle.viewmodel.compose.viewModel()) }),
     SnackBarComponents(R.string.snackbar, { SnackBarCompose() }),
+    ScaffoldCompose(R.string.scaffold, { ScaffoldCompose() }),
     ColumnCompose(R.string.column, { ColumnNavGraph() }),
     RowCompose(R.string.row, { RowNavGraph() }),
     BoxCompose(R.string.box, { BoxNavGraph() }),
