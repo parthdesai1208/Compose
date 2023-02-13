@@ -1,6 +1,7 @@
 package com.parthdesai1208.compose.view.uicomponents
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -56,6 +57,13 @@ fun ScaffoldCompose() {
         }, drawerContent = {
             DrawerContent()
         })
+    }
+
+    //Note: whatever boolean we pass in "enabled" if its true then block of code will execute otherwise system back press will execute
+    BackHandler(enabled = scaffoldState.drawerState.isOpen) {
+        coroutineScope.launch {
+            scaffoldState.drawerState.close()
+        }
     }
 }
 
