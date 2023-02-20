@@ -55,6 +55,7 @@ enum class UIComponentsListingEnumType(val buttonTitle: Int, val func: @Composab
     BadgeCompose(R.string.badge, { BadgeCompose() }),
     DialogCompose(R.string.dialog1, { DialogCompose() }),
     ToolTipCompose(R.string.tooltip, { TooltipOnLongClickExample() }),
+    DateTimeCompose(R.string.dateTimePicker, { DateTimeCompose() }),
 }
 
 object UIComponentsDestinations {

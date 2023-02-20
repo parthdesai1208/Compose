@@ -153,6 +153,7 @@
     <string name="permission">Permission</string>
     <string name="pictureinpicture">Picture In Picture</string>
     <string name="tooltip">Tooltip</string>
+    <string name="dateTimePicker">Date-time picker</string>
     <!--    end region-->
 
     <!--    region textCompose-->
