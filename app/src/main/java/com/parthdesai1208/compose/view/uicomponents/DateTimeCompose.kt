@@ -1,11 +1,9 @@
 package com.parthdesai1208.compose.view.uicomponents
 
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.*
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -17,12 +15,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.parthdesai1208.compose.utils.currentDateTime12HourFormat
-import com.parthdesai1208.compose.utils.currentDateTime24HourFormat
-import com.parthdesai1208.compose.utils.currentDateTimeWithTimeZone24HourFormat
-import com.parthdesai1208.compose.utils.dateFormatterDDMMYYYY
+import com.parthdesai1208.compose.utils.*
 import kotlinx.coroutines.delay
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun DateTimeCompose() {
     var selectedDateText by rememberSaveable { mutableStateOf("") }
@@ -30,6 +26,11 @@ fun DateTimeCompose() {
     var varCurrentDateTimeWithTimeZone24HourFormat by remember { mutableStateOf("") }
     var varCurrentDateTime24HourFormat by remember { mutableStateOf("") }
     var varCurrentDateTime12HourFormat by remember { mutableStateOf("") }
+    var varCurrentTime12HourFormat by remember { mutableStateOf("") }
+    var animatedHour by remember { mutableStateOf(0) }
+    var animatedMinute by remember { mutableStateOf(0) }
+    var animatedSecond by remember { mutableStateOf(0) }
+    var animatedAMPM by remember { mutableStateOf("") }
 
     val activity = LocalContext.current as AppCompatActivity
 
@@ -57,6 +58,19 @@ fun DateTimeCompose() {
         }
     })
 
+    LaunchedEffect(key1 = 0, block = {
+        while (true) {
+            varCurrentTime12HourFormat =
+                currentTimeWithAnimationWith12Hour() ?: ""
+            animatedAMPM = varCurrentTime12HourFormat.split(" ")[1]
+            val time = varCurrentTime12HourFormat.split(" ")[0]
+            animatedHour = time.split(":")[0].toInt()
+            animatedMinute = time.split(":")[1].toInt()
+            animatedSecond = time.split(":")[2].toInt()
+            delay(1000)
+        }
+    })
+
     Surface {
         Column(
             modifier = Modifier
@@ -67,19 +81,51 @@ fun DateTimeCompose() {
         ) {
 
             Text(
-                text = "Current Date & time with timezone 24 hour: $varCurrentDateTimeWithTimeZone24HourFormat",
+                text = "Current Date & time with timezone 24 hour:\n $varCurrentDateTimeWithTimeZone24HourFormat",
                 textAlign = TextAlign.Center
             )
 
             Text(
-                text = "Current Date & time 24 hour: $varCurrentDateTime24HourFormat",
+                text = "Current Date & time 24 hour:\n $varCurrentDateTime24HourFormat",
                 textAlign = TextAlign.Center
             )
 
             Text(
-                text = "Current Date & time 12 hour: $varCurrentDateTime12HourFormat",
+                text = "Current Date & time 12 hour:\n $varCurrentDateTime12HourFormat",
                 textAlign = TextAlign.Center
             )
+
+            Row(horizontalArrangement = Arrangement.Center) {
+                AnimatedContent(
+                    targetState = animatedHour,
+                    transitionSpec = { currentTimeAnimation() }) {
+                    Text(
+                        text = "$it:",
+                        textAlign = TextAlign.Center
+                    )
+                }
+                AnimatedContent(targetState = animatedMinute,
+                    transitionSpec = { currentTimeAnimation() }) {
+                    Text(
+                        text = "$it:",
+                        textAlign = TextAlign.Center
+                    )
+                }
+                AnimatedContent(targetState = animatedSecond,
+                    transitionSpec = { currentTimeAnimation() }) {
+                    Text(
+                        text = "$it",
+                        textAlign = TextAlign.Center
+                    )
+                }
+                AnimatedContent(targetState = animatedAMPM) {
+                    Text(
+                        text = " $it",
+                        textAlign = TextAlign.Center
+                    )
+                }
+            }
+
 
             Text(
                 text = if (selectedDateText.isNotEmpty()) {
@@ -119,6 +165,20 @@ fun DateTimeCompose() {
             )
         }
     }
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+fun AnimatedContentScope<Int>.currentTimeAnimation(): ContentTransform {
+    return if (targetState > initialState) {
+        // If the target number is larger than old value
+        slideInVertically { height -> height } + fadeIn() with slideOutVertically { height -> -height } + fadeOut()
+    } else {
+        // If the target number is smaller than old value
+        slideInVertically { height -> -height } + fadeIn() with slideOutVertically { height -> height } + fadeOut()
+    }.using(
+        //for adding effect on slide up-down animation
+        SizeTransform(clip = false)
+    )
 }
 
 private fun showDatePicker(activity: AppCompatActivity, updateDate: (Long?) -> Unit) {

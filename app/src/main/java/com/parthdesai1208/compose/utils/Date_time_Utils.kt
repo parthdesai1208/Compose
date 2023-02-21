@@ -27,3 +27,8 @@ fun currentDateTime12HourFormat(): String? {
     val formatter = SimpleDateFormat("dd/MM/yyyy KK:mm:ss aa", Locale.getDefault())
     return formatter.format(Date())
 }
+
+fun currentTimeWithAnimationWith12Hour(): String? {
+    val formatter = SimpleDateFormat("KK:mm:ss aa", Locale.getDefault())
+    return formatter.format(Date())
+}
