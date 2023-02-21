@@ -17,3 +17,8 @@ fun currentDateTimeWithTimeZone24HourFormat(): String? {
     val formatter = SimpleDateFormat("dd/MM/yyyy HH:mm:ss z", Locale.getDefault())
     return formatter.format(Date())
 }
+
+fun currentDateTime24HourFormat(): String? {
+    val formatter = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+    return formatter.format(Date())
+}

@@ -1,7 +1,6 @@
 package com.parthdesai1208.compose.view.uicomponents
 
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.animation.*
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,15 +16,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.parthdesai1208.compose.utils.currentDateTime24HourFormat
 import com.parthdesai1208.compose.utils.currentDateTimeWithTimeZone24HourFormat
 import com.parthdesai1208.compose.utils.dateFormatterDDMMYYYY
 import kotlinx.coroutines.delay
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun DateTimeCompose() {
     var selectedDateText by remember { mutableStateOf("") }
     var varCurrentDateTimeWithTimeZone24HourFormat by remember { mutableStateOf("") }
+    var varCurrentDateTime24HourFormat by remember { mutableStateOf("") }
 
     val activity = LocalContext.current as AppCompatActivity
 
@@ -33,6 +33,14 @@ fun DateTimeCompose() {
         while (true) {
             varCurrentDateTimeWithTimeZone24HourFormat =
                 currentDateTimeWithTimeZone24HourFormat() ?: ""
+            delay(1000)
+        }
+    })
+
+    LaunchedEffect(key1 = 0, block = {
+        while (true) {
+            varCurrentDateTime24HourFormat =
+                currentDateTime24HourFormat() ?: ""
             delay(1000)
         }
     })
@@ -48,6 +56,11 @@ fun DateTimeCompose() {
 
             Text(
                 text = "Current Date & time with timezone 24 hour: $varCurrentDateTimeWithTimeZone24HourFormat",
+                textAlign = TextAlign.Center
+            )
+
+            Text(
+                text = "Current Date & time 24 hour: $varCurrentDateTime24HourFormat",
                 textAlign = TextAlign.Center
             )
 
