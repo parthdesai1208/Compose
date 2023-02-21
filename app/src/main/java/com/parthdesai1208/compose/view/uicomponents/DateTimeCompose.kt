@@ -17,7 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.parthdesai1208.compose.utils.currentDateTime
+import com.parthdesai1208.compose.utils.currentDateTimeWithTimeZone24HourFormat
 import com.parthdesai1208.compose.utils.dateFormatterDDMMYYYY
 import kotlinx.coroutines.delay
 
@@ -25,13 +25,14 @@ import kotlinx.coroutines.delay
 @Composable
 fun DateTimeCompose() {
     var selectedDateText by remember { mutableStateOf("") }
-    var currentDateTimeVar by remember { mutableStateOf("") }
+    var varCurrentDateTimeWithTimeZone24HourFormat by remember { mutableStateOf("") }
 
     val activity = LocalContext.current as AppCompatActivity
 
     LaunchedEffect(key1 = 0, block = {
         while (true) {
-            currentDateTimeVar = currentDateTime() ?: ""
+            varCurrentDateTimeWithTimeZone24HourFormat =
+                currentDateTimeWithTimeZone24HourFormat() ?: ""
             delay(1000)
         }
     })
@@ -45,23 +46,10 @@ fun DateTimeCompose() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            AnimatedContent(targetState = currentDateTimeVar, transitionSpec = {
-                if (targetState > initialState) {
-                    // If the target number is larger than old value
-                    slideInVertically { height -> height } + fadeIn() with slideOutVertically { height -> -height } + fadeOut()
-                } else {
-                    // If the target number is smaller than old value
-                    slideInVertically { height -> -height } + fadeIn() with slideOutVertically { height -> height } + fadeOut()
-                }.using(
-                    //for adding effect on slide up-down animation
-                    SizeTransform(clip = false)
-                )
-            }) {
-                Text(
-                    text = "Current Date & time: $it",
-                    textAlign = TextAlign.Center
-                )
-            }
+            Text(
+                text = "Current Date & time with timezone 24 hour: $varCurrentDateTimeWithTimeZone24HourFormat",
+                textAlign = TextAlign.Center
+            )
 
             Text(
                 text = if (selectedDateText.isNotEmpty()) {
