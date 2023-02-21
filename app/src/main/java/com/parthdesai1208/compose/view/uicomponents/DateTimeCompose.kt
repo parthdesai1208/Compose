@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -24,7 +25,8 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun DateTimeCompose() {
-    var selectedDateText by remember { mutableStateOf("") }
+    var selectedDateText by rememberSaveable { mutableStateOf("") }
+    var selectedDateRangeText by rememberSaveable { mutableStateOf("") }
     var varCurrentDateTimeWithTimeZone24HourFormat by remember { mutableStateOf("") }
     var varCurrentDateTime24HourFormat by remember { mutableStateOf("") }
     var varCurrentDateTime12HourFormat by remember { mutableStateOf("") }
@@ -96,6 +98,25 @@ fun DateTimeCompose() {
                         })
                     }
             )
+
+            Text(
+                text = if (selectedDateRangeText.isNotEmpty()) {
+                    "Select any DateRange: $selectedDateRangeText"
+                } else {
+                    "you can pick any date range"
+                },
+                modifier = Modifier
+                    .pointerInput(Unit) {
+                        detectTapGestures(onPress = {
+                            showDateRangePicker(
+                                activity,
+                                updateDate = { it1, it2 ->
+                                    selectedDateRangeText =
+                                        it1.dateFormatterDDMMYYYY() + " to " + it2.dateFormatterDDMMYYYY()
+                                })
+                        })
+                    }, textAlign = TextAlign.Center
+            )
         }
     }
 }
@@ -105,5 +126,13 @@ private fun showDatePicker(activity: AppCompatActivity, updateDate: (Long?) -> U
     picker.show(activity.supportFragmentManager, picker.tag)
     picker.addOnPositiveButtonClickListener {
         updateDate(it)
+    }
+}
+
+private fun showDateRangePicker(activity: AppCompatActivity, updateDate: (Long?, Long?) -> Unit) {
+    val picker = MaterialDatePicker.Builder.dateRangePicker().build()
+    picker.show(activity.supportFragmentManager, picker.tag)
+    picker.addOnPositiveButtonClickListener {
+        updateDate(it.first, it.second)
     }
 }
