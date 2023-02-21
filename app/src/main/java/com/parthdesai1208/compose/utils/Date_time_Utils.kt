@@ -24,6 +24,6 @@ fun currentDateTime24HourFormat(): String? {
 }
 
 fun currentDateTime12HourFormat(): String? {
-    val formatter = SimpleDateFormat("dd/MM/yyyy HH:mm:ss aa", Locale.getDefault())
+    val formatter = SimpleDateFormat("dd/MM/yyyy KK:mm:ss aa", Locale.getDefault())
     return formatter.format(Date())
 }
