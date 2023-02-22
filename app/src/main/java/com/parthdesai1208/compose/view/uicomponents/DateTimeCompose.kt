@@ -15,6 +15,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import com.parthdesai1208.compose.utils.*
 import kotlinx.coroutines.delay
 
@@ -22,6 +24,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun DateTimeCompose() {
     var selectedDateText by rememberSaveable { mutableStateOf("") }
+    var selectedTimeText12H by rememberSaveable { mutableStateOf("") }
     var selectedDateRangeText by rememberSaveable { mutableStateOf("") }
     var varCurrentDateTimeWithTimeZone24HourFormat by remember { mutableStateOf("") }
     var varCurrentDateTime24HourFormat by remember { mutableStateOf("") }
@@ -163,6 +166,29 @@ fun DateTimeCompose() {
                         })
                     }, textAlign = TextAlign.Center
             )
+
+            Text(
+                text = if (selectedTimeText12H.isNotEmpty()) {
+                    "Select any time(12H): $selectedTimeText12H"
+                } else {
+                    "you can pick any time(12H)"
+                },
+                modifier = Modifier
+                    .pointerInput(Unit) {
+                        detectTapGestures(onPress = {
+                            showTimePicker12H(activity, updateTime = { it1, it2 ->
+                                it1.getTimeWithMeridiem { hour, meridiem ->
+                                    selectedTimeText12H = "${String.format("%02d", hour)}:${
+                                        String.format(
+                                            "%02d",
+                                            it2
+                                        )
+                                    } $meridiem"
+                                }
+                            })
+                        })
+                    }
+            )
         }
     }
 }
@@ -194,5 +220,13 @@ private fun showDateRangePicker(activity: AppCompatActivity, updateDate: (Long?,
     picker.show(activity.supportFragmentManager, picker.tag)
     picker.addOnPositiveButtonClickListener {
         updateDate(it.first, it.second)
+    }
+}
+
+private fun showTimePicker12H(activity: AppCompatActivity, updateTime: (Int, Int) -> Unit) {
+    val timePicker = MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_12H).build()
+    timePicker.show(activity.supportFragmentManager, timePicker.tag)
+    timePicker.addOnPositiveButtonClickListener {
+        updateTime(timePicker.hour, timePicker.minute)
     }
 }

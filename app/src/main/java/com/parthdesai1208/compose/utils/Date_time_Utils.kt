@@ -32,3 +32,20 @@ fun currentTimeWithAnimationWith12Hour(): String? {
     val formatter = SimpleDateFormat("KK:mm:ss aa", Locale.getDefault())
     return formatter.format(Date())
 }
+
+fun Int.getTimeWithMeridiem(hourWithMeriDiem: (Int, String) -> Unit) {
+    val meridiem: String?
+    var hour = this
+    if (this > 12) {
+        hour = this - 12
+        meridiem = "pm"
+    } else if (this == 0) {
+        hour = 12
+        meridiem = "am"
+    } else if (this == 12) {
+        meridiem = "pm"
+    } else {
+        meridiem = "am"
+    }
+    hourWithMeriDiem(hour, meridiem)
+}
