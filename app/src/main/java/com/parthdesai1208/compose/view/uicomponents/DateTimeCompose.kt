@@ -25,6 +25,7 @@ import kotlinx.coroutines.delay
 fun DateTimeCompose() {
     var selectedDateText by rememberSaveable { mutableStateOf("") }
     var selectedTimeText12H by rememberSaveable { mutableStateOf("") }
+    var selectedTimeText24H by rememberSaveable { mutableStateOf("") }
     var selectedDateRangeText by rememberSaveable { mutableStateOf("") }
     var varCurrentDateTimeWithTimeZone24HourFormat by remember { mutableStateOf("") }
     var varCurrentDateTime24HourFormat by remember { mutableStateOf("") }
@@ -103,21 +104,21 @@ fun DateTimeCompose() {
                     targetState = animatedHour,
                     transitionSpec = { currentTimeAnimation() }) {
                     Text(
-                        text = "$it:",
+                        text = it.asTwoDigit() + ":",
                         textAlign = TextAlign.Center
                     )
                 }
                 AnimatedContent(targetState = animatedMinute,
                     transitionSpec = { currentTimeAnimation() }) {
                     Text(
-                        text = "$it:",
+                        text = it.asTwoDigit() + ":",
                         textAlign = TextAlign.Center
                     )
                 }
                 AnimatedContent(targetState = animatedSecond,
                     transitionSpec = { currentTimeAnimation() }) {
                     Text(
-                        text = "$it",
+                        text = it.asTwoDigit(),
                         textAlign = TextAlign.Center
                     )
                 }
@@ -178,12 +179,27 @@ fun DateTimeCompose() {
                         detectTapGestures(onPress = {
                             showTimePicker12H(activity, updateTime = { it1, it2 ->
                                 it1.getTimeWithMeridiem { hour, meridiem ->
-                                    selectedTimeText12H = "${String.format("%02d", hour)}:${
-                                        String.format(
-                                            "%02d",
-                                            it2
-                                        )
-                                    } $meridiem"
+                                    selectedTimeText12H =
+                                        "${hour.asTwoDigit()}:${it2.asTwoDigit()} $meridiem"
+                                }
+                            })
+                        })
+                    }
+            )
+
+            Text(
+                text = if (selectedTimeText24H.isNotEmpty()) {
+                    "Select any time(24H): $selectedTimeText24H"
+                } else {
+                    "you can pick any time(24H)"
+                },
+                modifier = Modifier
+                    .pointerInput(Unit) {
+                        detectTapGestures(onPress = {
+                            showTimePicker24H(activity, updateTime = { it1, it2 ->
+                                it1.getTimeWithMeridiem { hour, meridiem ->
+                                    selectedTimeText24H =
+                                        "${hour.asTwoDigit()}:${it2.asTwoDigit()} $meridiem"
                                 }
                             })
                         })
@@ -230,3 +246,12 @@ private fun showTimePicker12H(activity: AppCompatActivity, updateTime: (Int, Int
         updateTime(timePicker.hour, timePicker.minute)
     }
 }
+
+private fun showTimePicker24H(activity: AppCompatActivity, updateTime: (Int, Int) -> Unit) {
+    val timePicker = MaterialTimePicker.Builder().setTimeFormat(TimeFormat.CLOCK_24H).build()
+    timePicker.show(activity.supportFragmentManager, timePicker.tag)
+    timePicker.addOnPositiveButtonClickListener {
+        updateTime(timePicker.hour, timePicker.minute)
+    }
+}
+
