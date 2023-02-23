@@ -163,6 +163,7 @@
     <!--    region networking-->
     <string name="networking">Networking</string>
     <string name="moviesList">Movies list</string>
+    <string name="newListUsingPaging3">News list using paging3</string>
     <!--    end region-->
 
     <!--  region gesture-->

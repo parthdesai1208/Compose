@@ -23,8 +23,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.parthdesai1208.compose.R
 
-enum class NetworkingListingEnumType(val buttonTitle: Int, val func: @Composable (NavHostController) -> Unit) {
-    MoviesList(R.string.moviesList, { MoviesListScreen(viewModel(), navHostController = it) })
+enum class NetworkingListingEnumType(
+    val buttonTitle: Int,
+    val func: @Composable (NavHostController) -> Unit
+) {
+    MoviesList(R.string.moviesList, { MoviesListScreen(viewModel(), navHostController = it) }),
+    NewsList(R.string.newListUsingPaging3, { NewsListUsingPaging3(viewModel = viewModel()) })
 }
 
 object NetworkingListingDestinations {
@@ -49,7 +53,10 @@ fun NetworkingListNavGraph(startDestination: String = NetworkingListingDestinati
             })
         ) { backStackEntry ->
             val arguments = requireNotNull(backStackEntry.arguments)
-            ChildDrawScreen(arguments.getString(NetworkingListingDestinations.NETWORKING_LISTING_SCREEN_ROUTE_POSTFIX),navController)
+            ChildDrawScreen(
+                arguments.getString(NetworkingListingDestinations.NETWORKING_LISTING_SCREEN_ROUTE_POSTFIX),
+                navController
+            )
         }
     }
 }
@@ -94,6 +101,8 @@ fun NetworkingListingScreen(navController: NavHostController) {
 }
 
 @Composable
-fun ChildDrawScreen(onClickButtonTitle: String?,navController: NavHostController) {
-    enumValues<NetworkingListingEnumType>().first { it.buttonTitle.toString() == onClickButtonTitle }.func.invoke(navController)
+fun ChildDrawScreen(onClickButtonTitle: String?, navController: NavHostController) {
+    enumValues<NetworkingListingEnumType>().first { it.buttonTitle.toString() == onClickButtonTitle }.func.invoke(
+        navController
+    )
 }

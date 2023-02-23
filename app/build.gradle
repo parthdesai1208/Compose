@@ -1,4 +1,4 @@
-plugins{
+plugins {
     id 'com.android.application'
     id 'kotlin-android'
     //https://search.maven.org/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin
@@ -6,6 +6,10 @@ plugins{
     id 'kotlin-parcelize'
     id 'org.jetbrains.kotlin.android'
 }
+
+def localPropertiesFile = rootProject.file("local.properties")
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(localPropertiesFile))
 
 android {
     compileSdkVersion 33
@@ -18,6 +22,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "String", "NEWS_API_KEY", localProperties['NEWS_KEY']
     }
 
     buildTypes {
@@ -130,8 +136,10 @@ dependencies {
     implementation "androidx.compose.animation:animation:1.4.0-alpha05"
 
     //accompanist - for insets & system UI
-    implementation "com.google.accompanist:accompanist-insets:0.23.1" //https://mvnrepository.com/artifact/com.google.accompanist/accompanist-insets
-    implementation "com.google.accompanist:accompanist-systemuicontroller:0.23.1" //https://search.maven.org/artifact/com.google.accompanist/accompanist-systemuicontroller
+    implementation "com.google.accompanist:accompanist-insets:0.23.1"
+    //https://mvnrepository.com/artifact/com.google.accompanist/accompanist-insets
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.23.1"
+    //https://search.maven.org/artifact/com.google.accompanist/accompanist-systemuicontroller
 
     //https://mvnrepository.com/artifact/androidx.test.ext/junit
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -180,4 +188,11 @@ dependencies {
     //https://mvnrepository.com/artifact/com.squareup.retrofit2/converter-gson
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
 
+    //paging3
+    //https://mvnrepository.com/artifact/androidx.paging/paging-runtime
+    implementation 'androidx.paging:paging-runtime:3.1.1'
+    //https://developer.android.com/jetpack/androidx/releases/paging
+    implementation "androidx.paging:paging-compose:1.0.0-alpha18"
+
+    implementation 'androidx.browser:browser:1.5.0'
 }
