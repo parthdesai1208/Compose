@@ -4,6 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.parthdesai1208.compose.BuildConfig
 import com.parthdesai1208.compose.view.networking.PageSize
+import kotlinx.coroutines.delay
 
 class NewsPagingSource(private val newsApiService: NewsListApiService) :
     PagingSource<Int, Article>() {
@@ -18,6 +19,7 @@ class NewsPagingSource(private val newsApiService: NewsListApiService) :
         return try {
             val page = params.key ?: 1
             val newsKey = BuildConfig.NEWS_API_KEY
+            delay(3000)
             val response = newsApiService.getNews(page, newsKey, PageSize)
 
             LoadResult.Page(
