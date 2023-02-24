@@ -51,7 +51,7 @@ fun NewsListUsingPaging3(viewModel: NewsListViewModel) {
 
     val tapToUpVisibility by remember {
         derivedStateOf {
-            listState.firstVisibleItemIndex > 2
+            listState.firstVisibleItemIndex > 2 && !listState.isScrollInProgress
         }
     }
 
@@ -145,8 +145,8 @@ fun NewsListUsingPaging3(viewModel: NewsListViewModel) {
             AnimatedVisibility(
                 visible = tapToUpVisibility,
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(vertical = 10.dp),
+                    .align(Alignment.BottomEnd)
+                    .padding(all = 10.dp),
                 enter = scaleIn(), exit = scaleOut()
             ) {
                 FloatingActionButton(onClick = {
