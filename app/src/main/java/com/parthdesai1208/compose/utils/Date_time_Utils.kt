@@ -50,10 +50,10 @@ fun Int.getTimeWithMeridiem(hourWithMeriDiem: (Int, String) -> Unit) {
     hourWithMeriDiem(hour, meridiem)
 }
 
-fun String.convertToAnotherDateFormat(inputDate: String, outputDate: String): String {
+fun String?.convertToAnotherDateFormat(inputDate: String, outputDate: String): String {
     val inputFormat = SimpleDateFormat(inputDate, Locale.getDefault())
     val outputFormat = SimpleDateFormat(outputDate, Locale.getDefault())
-    val parsedDate = inputFormat.parse(this)
+    val parsedDate = this?.let { inputFormat.parse(it) }
     val formattedDate = parsedDate?.let { outputFormat.format(it) }
-    return formattedDate ?: ""
+    return formattedDate.orEmpty()
 }

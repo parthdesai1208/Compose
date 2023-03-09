@@ -5,6 +5,7 @@ plugins {
     id 'com.google.devtools.ksp' version '1.8.0-1.0.8' //compose destination library
     id 'kotlin-parcelize'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 def localPropertiesFile = rootProject.file("local.properties")
@@ -71,6 +72,8 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.9.0'
 //    https://androidx.tech/artifacts/appcompat/appcompat/
     implementation 'androidx.appcompat:appcompat:1.6.1'
+    //https://developer.android.com/jetpack/androidx/releases/activity
+    implementation "androidx.activity:activity-ktx:1.6.1"
 //    https://androidx.tech/artifacts/constraintlayout/constraintlayout/
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 //    https://mvnrepository.com/artifact/com.google.android.material/material/1.7.0-alpha01
@@ -120,6 +123,13 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
     //livedata to state = https://androidx.tech/artifacts/compose.runtime/runtime-livedata/
     implementation "androidx.compose.runtime:runtime-livedata:1.3.3"
+
+    //room
+    //https://androidx.tech/artifacts/room/room-ktx/
+    implementation 'androidx.room:room-ktx:2.5.0'
+    implementation "androidx.room:room-runtime:2.5.0"
+    kapt "androidx.room:room-compiler:2.5.0"
+    implementation "androidx.room:room-paging:2.5.0"
 
     //testing //https://mvnrepository.com/artifact/junit/junit
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'

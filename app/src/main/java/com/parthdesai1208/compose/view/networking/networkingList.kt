@@ -28,7 +28,8 @@ enum class NetworkingListingEnumType(
     val func: @Composable (NavHostController) -> Unit
 ) {
     MoviesList(R.string.moviesList, { MoviesListScreen(viewModel(), navHostController = it) }),
-    NewsList(R.string.newListUsingPaging3, { NewsListUsingPaging3(viewModel = viewModel()) })
+    NewsList(R.string.newListUsingPaging3, { NewsListUsingPaging3(viewModel = viewModel()) }),
+    Paging3Room(R.string.Paging3Room, { Paging3Room() }),
 }
 
 object NetworkingListingDestinations {
