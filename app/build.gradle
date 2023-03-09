@@ -80,26 +80,26 @@ dependencies {
     implementation 'com.google.android.material:material:1.8.0'
 
     //compose core //https://androidx.tech/artifacts/compose.ui/ui/index
-    implementation 'androidx.compose.ui:ui:1.4.0-beta01'
+    implementation 'androidx.compose.ui:ui:1.4.0-beta02'
     //compose util //https://androidx.tech/artifacts/compose.ui/ui-util/
     implementation "androidx.compose.ui:ui-util:1.3.3"
     //activity compose //https://androidx.tech/artifacts/activity/activity-compose/
     implementation 'androidx.activity:activity-compose:1.6.1'
     //compose foundation
     //https://androidx.tech/artifacts/compose.foundation/foundation/
-    implementation 'androidx.compose.foundation:foundation:1.4.0-beta01'
+    implementation 'androidx.compose.foundation:foundation:1.4.0-beta02'
 //    https://androidx.tech/artifacts/compose.foundation/foundation-layout/
     implementation "androidx.compose.foundation:foundation-layout:1.3.1"
     //lifecycle compose (use for state with lifecycle) //https://androidx.tech/artifacts/lifecycle/lifecycle-runtime-compose/
-    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.0-beta01"
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.0-rc01"
     //material compose //https://androidx.tech/artifacts/compose.material/material/
-    implementation "androidx.compose.material:material:1.4.0-beta01"
+    implementation "androidx.compose.material:material:1.4.0-beta02"
     //for calculating window width/height using material3 lib
 //    https://developer.android.com/jetpack/androidx/releases/compose-material3
-    implementation "androidx.compose.material3:material3-window-size-class:1.1.0-alpha06"
+    implementation "androidx.compose.material3:material3-window-size-class:1.1.0-alpha07"
     //for navigation rail
     //https://developer.android.com/jetpack/androidx/releases/compose-material3
-    implementation 'androidx.compose.material3:material3:1.1.0-alpha06'
+    implementation 'androidx.compose.material3:material3:1.1.0-alpha07'
     //for device postures
 //    https://developer.android.com/jetpack/androidx/releases/window
     implementation "androidx.window:window:1.0.0"
@@ -112,7 +112,7 @@ dependencies {
     implementation "androidx.compose.ui:ui-tooling-preview:1.3.3"
     //icon //https://mvnrepository.com/artifact/androidx.compose.material/material-icons-extended?repo=google
     //source = https://developer.android.com/jetpack/androidx/releases/compose-material
-    implementation "androidx.compose.material:material-icons-extended:1.4.0-beta01"
+    implementation "androidx.compose.material:material-icons-extended:1.4.0-beta02"
     //compose constraint layout //https://androidx.tech/artifacts/constraintlayout/constraintlayout-compose/
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
     //for fragment //https://androidx.tech/artifacts/legacy/legacy-support-v4/
@@ -143,7 +143,7 @@ dependencies {
 
     //animation
     //https://developer.android.com/jetpack/androidx/releases/compose-animation#declaring_dependencies
-    implementation "androidx.compose.animation:animation:1.4.0-beta01"
+    implementation "androidx.compose.animation:animation:1.4.0-beta02"
 
     //accompanist - for insets & system UI
     implementation "com.google.accompanist:accompanist-insets:0.23.1"
