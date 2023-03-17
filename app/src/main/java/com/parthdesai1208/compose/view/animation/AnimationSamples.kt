@@ -151,6 +151,7 @@ enum class AnimationScreenEnumType(val buttonTitle: String, val func: @Composabl
         { RotatingBorders() }),
     PhysicsBasedAnimation("Physics Based Animation",
         { com.parthdesai1208.compose.view.animation.physicsbasedanimation.PhysicsBasedAnimationFun() }),
+    ProgressAnimation("ProgressAnimation", { ProgressAnimation() }),
 }
 
 object AnimationDestinations {

@@ -1,5 +1,7 @@
 package com.parthdesai1208.compose.view.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 val purple200 = Color(0xFFBB86FC)
@@ -18,6 +20,7 @@ val Green300 = Color(0xFF81C784)
 val Green800 = Color(0xFF2E7D32)
 val Amber600 = Color(0xFFFFB300)
 val red1000 = Color(0xFFF52A26)
+val red500 = Color(0x80F52A26)
 
 val blueDirectionColor = Color(0xFF1A73E8)
 
@@ -45,3 +48,13 @@ val green = Color(0xFF66BB6A)
 
 val GreyLight = Color(0xFFB5B6BA)
 val GreyDark = Color(0xFF60626C)
+val CircleOffsetInitialColor = Color(0xff712B75)
+val CircleOffsetTargetColor = Color(0xFFE4AEC5)
+
+val LightDarkGrey: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color.DarkGray else Color.LightGray
+
+val LightDarkRed: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) red500 else red1000
