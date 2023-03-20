@@ -26,6 +26,9 @@ enum class StateListingEnumType(val buttonTitle: Int, val func: @Composable () -
     LearnState(R.string.learnstate, {
         TodoActivityScreen(androidx.lifecycle.viewmodel.compose.viewModel())
     }),
+    DependentVariableState(
+        R.string.dependentVariableState,
+        { DependentVariableState(androidx.lifecycle.viewmodel.compose.viewModel()) })
 }
 
 object StateDestinations {

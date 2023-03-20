@@ -158,6 +158,7 @@
 
     <!--    region state listing screen-->
     <string name="learnstate">Learn state (VM)</string>
+    <string name="dependentVariableState">Dependent variable state</string>
     <!--    end region-->
 
     <!--    region textCompose-->
