@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.parthdesai1208.compose.model
+package com.parthdesai1208.compose.model.state
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons

@@ -46,6 +46,7 @@ import com.parthdesai1208.compose.view.navigation.NavigationEx1
 import com.parthdesai1208.compose.view.navigation.RallyScreen
 import com.parthdesai1208.compose.view.navigation.composeDestination.StartForComposeDestination
 import com.parthdesai1208.compose.view.networking.NetworkingListNavGraph
+import com.parthdesai1208.compose.view.state.StateListingNavGraph
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 
 class MainActivity : AppCompatActivity() {
@@ -89,10 +90,8 @@ enum class MainScreenEnumType(
     TextComponents(
         R.string.uicomponents,
         { com.parthdesai1208.compose.view.uicomponents.UIComponentsNavGraph() }),
-    LearnStateScreen(R.string.learnstate, {
-        Surface {
-            TodoActivityScreen(androidx.lifecycle.viewmodel.compose.viewModel())
-        }
+    StateListingScreen(R.string.state, {
+        StateListingNavGraph()
     }, buttonTitleForAccessibility = R.string.learnstatewithviewmodel),
     CompositionLocal(R.string.learncompositionlocal, { CompositionLocalFun() }),
     CustomModifierScreen(R.string.custommodifier, { CustomModifierNavGraph() }),

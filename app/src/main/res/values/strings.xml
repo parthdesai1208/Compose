@@ -111,7 +111,7 @@
     <!--    region MainActivity-->
     <string name="uicomponents">UI Components</string>
     <string name="migrationToCompose">Migration to compose</string>
-    <string name="learnstate">Learn state (VM)</string>
+    <string name="state">State</string>
     <string name="learnstatewithviewmodel">Learn state with view model</string>
     <string name="learncompositionlocal">Learn Composition Local</string>
     <string name="custommodifier">Custom Modifier</string>
@@ -154,6 +154,10 @@
     <string name="pictureinpicture">Picture In Picture</string>
     <string name="tooltip">Tooltip</string>
     <string name="dateTimePicker">Date-time picker</string>
+    <!--    end region-->
+
+    <!--    region state listing screen-->
+    <string name="learnstate">Learn state (VM)</string>
     <!--    end region-->
 
     <!--    region textCompose-->
