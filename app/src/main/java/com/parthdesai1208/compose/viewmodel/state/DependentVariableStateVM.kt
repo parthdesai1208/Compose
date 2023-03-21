@@ -16,12 +16,8 @@ class DependentVariableStateVM : ViewModel() {
     var age by mutableStateOf(18)
     var creditScore by mutableStateOf(0)
 
-
-    fun updateCreditScore(creditScore: Int) {
+    fun updateCreditScoreAge(creditScore: Int, age: Int) {
         this.creditScore = creditScore
-    }
-
-    fun updateAge(age: Int) {
         this.age = age
     }
 
