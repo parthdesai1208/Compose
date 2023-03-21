@@ -19,7 +19,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
@@ -45,6 +47,7 @@ import com.parthdesai1208.compose.utils.*
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.view.theme.attractions_gmap
 import com.parthdesai1208.compose.view.theme.shopping_gmap
+import kotlinx.coroutines.delay
 import me.saket.extendedspans.*
 
 
@@ -58,45 +61,48 @@ class FakeStringProvider : PreviewParameterProvider<String> {
 @OptIn(ExperimentalFoundationApi::class, ExperimentalTextApi::class)
 @Composable
 fun TextComponents(name: String) { //@PreviewParameter(FakeStringProvider::class)
+    val changingEndStrings = remember {
+        listOf(
+            "reach your goals.",
+            "achieve your dreams.",
+            "be happy.",
+            "be healthy.",
+            "get rid of depression."
+        )
+    }
+
     Surface {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(state = rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .verticalScroll(state = rememberScrollState())
+                .padding(start = 8.dp, end = 8.dp, bottom = 64.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val context = LocalContext.current
-            Text(
-                text = stringResource(R.string.singleClickText),
+            Text(text = stringResource(R.string.singleClickText),
                 modifier = Modifier
                     .padding(16.dp) //to make clickable area bigger
                     .clickable {
                         Toast
                             .makeText(context, "Single Click", Toast.LENGTH_SHORT)
                             .show()
-                    }
-            )
+                    })
             DividerTextCompose()
-            Text(
-                text = "disable click text",
+            Text(text = "disable click text",
                 modifier = Modifier
                     .padding(16.dp)
                     .clickable(enabled = false) {
                         Toast
                             .makeText(context, "Single Click", Toast.LENGTH_SHORT)
                             .show()
-                    }
-            )
+                    })
             DividerTextCompose()
             Text(
-                text = "text with gradient background",
-                modifier = Modifier.background(
+                text = "text with gradient background", modifier = Modifier.background(
                     brush = Brush.linearGradient(
                         colors = listOf(
-                            Color.Cyan,
-                            Color.Magenta,
-                            Color.Yellow,
-                            Color.DarkGray
+                            Color.Cyan, Color.Magenta, Color.Yellow, Color.DarkGray
                         )
                     )
                 )
@@ -146,18 +152,15 @@ fun TextComponents(name: String) { //@PreviewParameter(FakeStringProvider::class
             )
             DividerTextCompose()
             Text(
-                text = "circle shape text",
-                modifier = Modifier
+                text = "circle shape text", modifier = Modifier
                     .background(
-                        color = colorResource(id = R.color.teal_700),
-                        shape = CircleShape
+                        color = colorResource(id = R.color.teal_700), shape = CircleShape
                     )
                     .padding(horizontal = 5.dp)
             )
             DividerTextCompose()
             Text(
-                text = "Rounded corner shape text",
-                modifier = Modifier
+                text = "Rounded corner shape text", modifier = Modifier
                     .background(
                         color = colorResource(id = R.color.teal_700),
                         shape = RoundedCornerShape(8.dp)
@@ -170,15 +173,12 @@ fun TextComponents(name: String) { //@PreviewParameter(FakeStringProvider::class
                 modifier = Modifier.alpha(.45f) //used to dim the color of text
             )
             DividerTextCompose()
-            Text(
-                text = "accessibility text with onClickLabel",
+            Text(text = "accessibility text with onClickLabel",
                 modifier = Modifier
                     .padding(16.dp)
-                    .clickable(onClickLabel = "you are Clicking on accessibility text") {}
-            )
+                    .clickable(onClickLabel = "you are Clicking on accessibility text") {})
             DividerTextCompose()
-            Text(
-                text = "onLongClick text with accessibility",
+            Text(text = "onLongClick text with accessibility",
                 modifier = Modifier
                     .padding(16.dp)
                     .combinedClickable(onLongClickLabel = "you are Long Clicking on accessibility text",
@@ -186,8 +186,7 @@ fun TextComponents(name: String) { //@PreviewParameter(FakeStringProvider::class
                             Toast
                                 .makeText(context, "Long Click", Toast.LENGTH_SHORT)
                                 .show()
-                        }) {}
-            )
+                        }) {})
             DividerTextCompose()
             Text(
                 "Center align text", textAlign = TextAlign.Center,
@@ -195,20 +194,15 @@ fun TextComponents(name: String) { //@PreviewParameter(FakeStringProvider::class
             )
             DividerTextCompose()
             Text(
-                text = "text with shadow",
-                style = TextStyle(
-                    fontSize = 24.sp,
-                    shadow = Shadow(
-                        color = Color.Blue,
-                        offset = Offset(5.0f, 10.0f),
-                        blurRadius = 3f
+                text = "text with shadow", style = TextStyle(
+                    fontSize = 24.sp, shadow = Shadow(
+                        color = Color.Blue, offset = Offset(5.0f, 10.0f), blurRadius = 3f
                     )
                 )
             )
             DividerTextCompose()
             Text(
-                "font family Serif",
-                fontFamily = FontFamily.Serif
+                "font family Serif", fontFamily = FontFamily.Serif
             )
             DividerTextCompose()
             val firaSansFamily = FontFamily(Font(resId = R.font.fira_sans_light, FontWeight.Light))
@@ -228,25 +222,22 @@ fun TextComponents(name: String) { //@PreviewParameter(FakeStringProvider::class
                 append("orld")
             }, color = MaterialTheme.colors.onSurface)
             DividerTextCompose()
-            Text(
-                text = buildAnnotatedString {
-                    withStyle(style = ParagraphStyle(lineHeight = 30.sp)) {
-                        append("Paragraph annotated string:\n")
-                        withStyle(style = SpanStyle(color = Color.Blue)) {
-                            append("Hello\n")
-                        }
-                        withStyle(
-                            style = SpanStyle(
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Red
-                            )
-                        ) {
-                            append("World\n")
-                        }
-                        append("Compose")
+            Text(text = buildAnnotatedString {
+                withStyle(style = ParagraphStyle(lineHeight = 30.sp)) {
+                    append("Paragraph annotated string:\n")
+                    withStyle(style = SpanStyle(color = Color.Blue)) {
+                        append("Hello\n")
                     }
+                    withStyle(
+                        style = SpanStyle(
+                            fontWeight = FontWeight.Bold, color = Color.Red
+                        )
+                    ) {
+                        append("World\n")
+                    }
+                    append("Compose")
                 }
-            )
+            })
             DividerTextCompose()
             AnimatingUnderLineWithBackgroundColorText()
             DividerTextCompose()
@@ -279,23 +270,25 @@ fun TextComponents(name: String) { //@PreviewParameter(FakeStringProvider::class
                 }
             }
             DividerTextCompose()
-            ClickableText(
-                text = AnnotatedString(
-                    "text with which character clicked",
-                    spanStyle = SpanStyle(color = MaterialTheme.colors.onSurface)
-                ),
-                onClick = { offset ->
-                    Toast
-                        .makeText(context, "$offset -th character is clicked.", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            )
+            ClickableText(text = AnnotatedString(
+                "text with which character clicked",
+                spanStyle = SpanStyle(color = MaterialTheme.colors.onSurface)
+            ), onClick = { offset ->
+                Toast.makeText(context, "$offset -th character is clicked.", Toast.LENGTH_SHORT)
+                    .show()
+            })
             DividerTextCompose()
             AnnotatedClickableTextWithURL()
             DividerTextCompose()
             TextWithUnderLine()
             DividerTextCompose()
             TextWithMiddleLine()
+            DividerTextCompose()
+            TypeWriterAnimation(
+                text = "Everything you need to ",
+                highlightedText = "Everything",
+                changingEndStrings = changingEndStrings
+            )
             DividerTextCompose()
         }
     }
@@ -308,7 +301,8 @@ fun DrawTextAPI(modifier: Modifier = Modifier) {
     val text = buildAnnotatedString {
         withStyle(
             style = SpanStyle(
-                fontSize = 22.sp, fontStyle = FontStyle.Italic,
+                fontSize = 22.sp,
+                fontStyle = FontStyle.Italic,
                 color = MaterialTheme.colors.onSurface
             )
         ) {
@@ -317,7 +311,8 @@ fun DrawTextAPI(modifier: Modifier = Modifier) {
         withStyle(
             style = SpanStyle(
                 brush = Brush.horizontalGradient(colors = RainbowColors),
-                fontSize = 28.sp, fontWeight = FontWeight.Bold
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold
             )
         ) {
             append("\nText using drawTextAPI compose 1.3.0")
@@ -328,40 +323,36 @@ fun DrawTextAPI(modifier: Modifier = Modifier) {
     Column {
         Canvas(modifier = modifier
             .fillMaxWidth()
-            .height(100.dp),
-            onDraw = {
-                drawText(
-                    textMeasurer = textMeasurer,
-                    text = text,
-                    topLeft = Offset(x = 40.dp.toPx(), y = 0.dp.toPx()),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-            })
+            .height(100.dp), onDraw = {
+            drawText(
+                textMeasurer = textMeasurer,
+                text = text,
+                topLeft = Offset(x = 40.dp.toPx(), y = 0.dp.toPx()),
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+        })
 
-        Canvas(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(80.dp)
-                .layout { measurable, constraints ->
-                    val placeable = measurable.measure(constraints)
+        Canvas(modifier = modifier
+            .fillMaxWidth()
+            .height(80.dp)
+            .layout { measurable, constraints ->
+                val placeable = measurable.measure(constraints)
 
-                    textLayoutResult = textMeasurer.measure(
-                        AnnotatedString(
-                            "Text on Canvas!",
-                            spanStyle = SpanStyle(
-                                color = Color.Yellow,
-                                fontSize = 28.sp,
-                                fontFamily = FontFamily.SansSerif,
-                            )
+                textLayoutResult = textMeasurer.measure(
+                    AnnotatedString(
+                        "Text on Canvas!", spanStyle = SpanStyle(
+                            color = Color.Yellow,
+                            fontSize = 28.sp,
+                            fontFamily = FontFamily.SansSerif,
                         )
                     )
+                )
 
-                    layout(placeable.width, placeable.height) {
-                        placeable.place(0, 0)
-                    }
+                layout(placeable.width, placeable.height) {
+                    placeable.place(0, 0)
                 }
-        ) {
+            }) {
             textLayoutResult?.let {
                 drawText(
                     textLayoutResult = it,
@@ -386,13 +377,11 @@ private fun TextColorGradientAnimation(text: String, repeatMode: RepeatMode = Re
         initialValue = 0f,
         targetValue = currentFontSizeDoublePx,
         animationSpec = infiniteRepeatable(
-            animation = tween(1000, easing = LinearEasing),
-            repeatMode = repeatMode
+            animation = tween(1000, easing = LinearEasing), repeatMode = repeatMode
         )
     )
     Text(
-        text = text.repeat(6),
-        style = TextStyle(
+        text = text.repeat(6), style = TextStyle(
             brush = Brush.linearGradient(
                 colors = RainbowColors,
                 start = Offset(offset, offset),
@@ -427,13 +416,11 @@ fun AnnotatedClickableTextWithURL() {
         // until `pop()` is called
         //means whatever text we want to use as link we put between pushStringAnnotation() & pop()
         pushStringAnnotation(
-            tag = "URL",
-            annotation = "https://developer.android.com"
+            tag = "URL", annotation = "https://developer.android.com"
         )
         withStyle(
             style = SpanStyle(
-                color = Color.Cyan.copy(alpha = .5f),
-                fontWeight = FontWeight.Bold
+                color = Color.Cyan.copy(alpha = .5f), fontWeight = FontWeight.Bold
             )
         ) {
             append("here")
@@ -443,38 +430,30 @@ fun AnnotatedClickableTextWithURL() {
     }
 
     ClickableText(
-        text = annotatedText,
-        onClick = { offset ->
+        text = annotatedText, onClick = { offset ->
             // We check if there is an *URL* annotation attached to the text
             // at the clicked position
             annotatedText.getStringAnnotations(
-                tag = "URL", start = offset,
-                end = offset
-            )
-                .firstOrNull()?.let { annotation ->
-                    // If yes, we log its value
-                    Toast
-                        .makeText(context, "${annotation.item} clicked.", Toast.LENGTH_SHORT)
-                        .show()
-                }
-        },
-        modifier = Modifier.padding(all = 8.dp)
+                tag = "URL", start = offset, end = offset
+            ).firstOrNull()?.let { annotation ->
+                // If yes, we log its value
+                Toast.makeText(context, "${annotation.item} clicked.", Toast.LENGTH_SHORT).show()
+            }
+        }, modifier = Modifier.padding(all = 8.dp)
     )
 }
 
 @Composable
 fun TextWithUnderLine() {
     Text(
-        text = "Text with underline",
-        textDecoration = TextDecoration.Underline
+        text = "Text with underline", textDecoration = TextDecoration.Underline
     )
 }
 
 @Composable
 fun TextWithMiddleLine() {
     Text(
-        text = "Text with middle line",
-        textDecoration = TextDecoration.LineThrough
+        text = "Text with middle line", textDecoration = TextDecoration.LineThrough
     )
 }
 
@@ -496,8 +475,7 @@ fun AnimatingUnderLineWithBackgroundColorText() {
             append("And life will always be ")
             withStyle(
                 SpanStyle(
-                    textDecoration = TextDecoration.Underline,
-                    color = attractions_gmap
+                    textDecoration = TextDecoration.Underline, color = attractions_gmap
                 )
             ) {
                 append("la vie en rose")
@@ -508,8 +486,7 @@ fun AnimatingUnderLineWithBackgroundColorText() {
 
 @Composable
 fun ExtendedSpansText(
-    text: AnnotatedString,
-    modifier: Modifier = Modifier
+    text: AnnotatedString, modifier: Modifier = Modifier
 ) {
     val underlineAnimator = rememberSquigglyUnderlineAnimator()
     val extendedSpans = remember {
@@ -522,8 +499,7 @@ fun ExtendedSpansText(
                 stroke = RoundedCornerSpanPainter.Stroke(
                     color = Color(0xFFBF97FF).copy(alpha = 0.6f)
                 ),
-            ),
-            SquigglyUnderlineSpanPainter(
+            ), SquigglyUnderlineSpanPainter(
                 width = 4.sp,
                 wavelength = 20.sp,
                 amplitude = 2.sp,
@@ -533,13 +509,90 @@ fun ExtendedSpansText(
         )
     }
 
+    Text(modifier = modifier.drawBehind(extendedSpans), text = remember(text) {
+        extendedSpans.extend(text)
+    }, onTextLayout = { result ->
+        extendedSpans.onTextLayout(result)
+    })
+}
+
+@Composable
+fun TypeWriterAnimation(text: String, highlightedText: String, changingEndStrings: List<String>) {
+    var endText by remember { mutableStateOf("") }
+    val textToDisplay = "$text$endText"
+    var index by remember { mutableStateOf(0) }
+    var selectedPartRects by remember { mutableStateOf(listOf<Rect>()) }
+    val highlightStart = text.indexOf(highlightedText)
+
+
+    LaunchedEffect(key1 = changingEndStrings, block = {
+        while (index <= changingEndStrings.size) {
+            val part = changingEndStrings[index]
+
+            part.forEachIndexed { index, _ ->
+                endText = part.substring(
+                    startIndex = 0, endIndex = index + 1
+                ) //get substring starting from 0 index & gradually increase index
+                delay(100)
+            }
+
+            delay(1000) //wait for 1 second & then reverse doing typeWriter animation
+
+            part.forEachIndexed { index, _ ->
+                endText = part.substring(
+                    startIndex = 0, endIndex = part.length - (index + 1)
+                ) //get substring from last index & gradually decrease index
+                delay(30)
+            }
+
+            delay(500)
+
+            index = (index + 1) % changingEndStrings.size
+        }
+    })
+
     Text(
-        modifier = modifier.drawBehind(extendedSpans),
-        text = remember(text) {
-            extendedSpans.extend(text)
+        text = textToDisplay, style = TextStyle(
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 40.sp,
+            letterSpacing = -(1.6).sp,
+            lineHeight = 52.sp
+        ),
+        modifier = Modifier.drawBehind {
+            val borderSize = 20.sp.toPx()
+
+            selectedPartRects.forEach { rect ->
+                val selectedRect = rect.translate(0f, -borderSize / 1.5f)
+                drawLine(  //85586F
+                    color = Color(0XFF85586F).copy(1f),
+                    start = Offset(selectedRect.left, selectedRect.bottom),
+                    end = selectedRect.bottomRight,
+                    strokeWidth = borderSize
+                )
+            }
         },
-        onTextLayout = { result ->
-            extendedSpans.onTextLayout(result)
+        //Callback that is executed when a new text layout is calculated
+        onTextLayout = { layoutResult ->
+            val start = text.length
+            val end = textToDisplay.count()
+            selectedPartRects = if (start < end) { //this calculates "changing end strings" bound
+                layoutResult
+                    .getBoundingBoxesForRange(
+                        start = start,
+                        end = end - 1
+                    )
+            } else {
+                emptyList() //return emptyList if no "chaning end strings" displayed
+            }
+
+            //this calculates "highlightedText" bound from text
+            if (highlightStart >= 0) {
+                selectedPartRects = selectedPartRects + layoutResult
+                    .getBoundingBoxesForRange(
+                        start = highlightStart,
+                        end = highlightStart + highlightedText.length
+                    )
+            }
         }
     )
 }
