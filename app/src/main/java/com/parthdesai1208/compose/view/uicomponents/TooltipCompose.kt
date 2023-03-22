@@ -27,7 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
-import com.parthdesai1208.compose.utils.ConditionalModifier
+import com.parthdesai1208.compose.utils.conditionalSingleModifier
 
 @Composable
 fun Tooltip(
@@ -206,7 +206,7 @@ fun TooltipOnLongClickExample() {
                         onClick = { },
                         onLongClick = { showTooltip.value = true },
                     )
-                    .ConditionalModifier(showTooltip.value) {
+                    .conditionalSingleModifier(showTooltip.value) {
                         border(
                             width = 2.dp,
                             shape = RoundedCornerShape(8.dp),
@@ -216,13 +216,13 @@ fun TooltipOnLongClickExample() {
                     .background(
                         color = MaterialTheme.colors.surface, shape = RoundedCornerShape(8.dp)
                     )
-                    .ConditionalModifier(!showTooltip.value) {
+                    .conditionalSingleModifier(!showTooltip.value) {
                         onGloballyPositioned {
                             boxWidth = it.size.width.toFloat() / density.density
                             boxHeight = it.size.height.toFloat() / density.density
                         }
                     }
-                    .ConditionalModifier(showTooltip.value) {
+                    .conditionalSingleModifier(showTooltip.value) {
                         size(
                             width = animateWidth.dp,
                             height = animateHeight.dp
