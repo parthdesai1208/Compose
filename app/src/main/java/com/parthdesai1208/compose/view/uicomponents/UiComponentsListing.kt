@@ -51,7 +51,9 @@ enum class UIComponentsListingEnumType(val buttonTitle: Int, val func: @Composab
     RadioCompose(R.string.radiobutton, { RadioButtonCompose() }),
     CheckBoxCompose(R.string.checkbox, { CheckBoxCompose() }),
     DropdownMenuCompose(R.string.dropdownmenu, { DropdownMenu() }),
-    SliderCompose(R.string.slider, { SliderCompose() }),
+    SliderCompose(
+        R.string.slider,
+        { SliderCompose(androidx.lifecycle.viewmodel.compose.viewModel()) }),
     BadgeCompose(R.string.badge, { BadgeCompose() }),
     DialogCompose(R.string.dialog1, { DialogCompose() }),
     ToolTipCompose(R.string.tooltip, { TooltipOnLongClickExample() }),
