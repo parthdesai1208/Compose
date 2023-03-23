@@ -29,6 +29,9 @@ fun SliderCompose(customSliderVM: CustomSliderVM) {
     var sliderPosition2 by remember { mutableStateOf(0f) }
     var sliderPosition3 by remember { mutableStateOf(0f) }
     val selectedValue: Int by customSliderVM.selected.observeAsState(initial = 0)
+    val weatherItem by remember(selectedValue, forecastMockState) {
+        derivedStateOf { forecastMockState[selectedValue] }
+    }
 
     Surface {
         Column(
@@ -77,9 +80,13 @@ fun SliderCompose(customSliderVM: CustomSliderVM) {
             )
             DividerTextCompose()
             Text(text = "Custom Slider")
-            WeatherCard(list = forecastMockState, selectedValue = selectedValue, onValueChange = {
-                customSliderVM.onValueChanged(it)
-            })
+            WeatherCard(
+                list = forecastMockState,
+                weatherItem = weatherItem,
+                selectedValue = selectedValue,
+                onValueChange = {
+                    customSliderVM.onValueChanged(it)
+                })
 
             DividerTextCompose()
         }
@@ -87,10 +94,12 @@ fun SliderCompose(customSliderVM: CustomSliderVM) {
 }
 
 @Composable
-fun WeatherCard(list: List<WeatherItem>, selectedValue: Int, onValueChange: (Int) -> Unit) {
-    val item by remember(selectedValue, list) {
-        derivedStateOf { list[selectedValue] }
-    }
+fun WeatherCard(
+    list: List<WeatherItem>,
+    weatherItem: WeatherItem,
+    selectedValue: Int,
+    onValueChange: (Int) -> Unit,
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -99,7 +108,7 @@ fun WeatherCard(list: List<WeatherItem>, selectedValue: Int, onValueChange: (Int
         shape = RoundedCornerShape(12.dp),
     ) {
         Column(modifier = Modifier.padding(12.dp)) {
-            MeasurementView(item)
+            MeasurementView(weatherItem)
             ForecastSlider(
                 list.map { it.date.split(",")[1] },
                 onValueChange = { onValueChange(it) },
