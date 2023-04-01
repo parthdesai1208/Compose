@@ -22,7 +22,13 @@ import androidx.navigation.navArgument
 
 
 enum class DrawListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
-    DrawLines("drawLine", { DrawLine() })
+    DrawLines("drawLine", { DrawLine() }), DrawRect(
+        "drawRect",
+        { DrawRect() }),
+    DrawLineFromTopRightToBottomLeft(
+        "DrawLine From TopRight To BottomLeft",
+        { DrawLineFromTopRightToBottomLeft() }),
+    DrawText("DrawText", { DrawText() }),
 }
 
 object DrawDestinations {
