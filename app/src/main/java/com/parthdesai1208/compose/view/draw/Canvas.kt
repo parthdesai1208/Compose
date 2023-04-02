@@ -3,6 +3,7 @@ package com.parthdesai1208.compose.view.draw
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
@@ -15,6 +16,7 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.PointMode
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.*
@@ -204,6 +206,77 @@ fun DrawRoundedRect() {
                 x = 16.dp.toPx(),
                 y = 16.dp.toPx()
             ) //give radius to both x & y axis
+        )
+    })
+}
+
+@Composable
+fun DrawOval() {
+    Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
+        drawOval(color = attractions_gmap)
+    })
+}
+
+@Composable
+fun DrawArc() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        Box(modifier = Modifier.weight(weight = 1f)) {
+            Canvas(modifier = Modifier
+                .fillMaxSize(), onDraw = {
+                drawArc(
+                    color = attractions_gmap,
+                    startAngle = 0f,
+                    sweepAngle = 250f,
+                    useCenter = false
+                )
+            })
+            Text(
+                text = "startAngle = 0f\nsweepAngle = 250f\nuseCenter = false",
+                modifier = Modifier.align(alignment = Alignment.Center)
+            )
+        }
+        Box(modifier = Modifier.weight(weight = 1f)) {
+            Canvas(modifier = Modifier
+                .fillMaxSize(), onDraw = {
+                drawArc(
+                    color = attractions_gmap,
+                    startAngle = 0f,
+                    sweepAngle = 250f,
+                    useCenter = true
+                )
+            })
+            Text(
+                text = "startAngle = 0f\nsweepAngle = 250f\nuseCenter = true",
+                modifier = Modifier
+                    .align(alignment = Alignment.BottomCenter)
+                    .padding(bottom = 32.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun DrawPoint() {
+    Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
+
+        val list = mutableListOf<Offset>()
+        repeat(5) {
+            list.add(
+                Offset(
+                    (0f.toInt()..size.width.toInt()).random().toFloat(),
+                    (0f.toInt()..size.height.toInt()).random().toFloat()
+                )
+            )
+        }
+
+        drawPoints(
+            points = list.toList(),
+            pointMode = PointMode.Points,
+            color = attractions_gmap,
+            strokeWidth = 5.dp.toPx()
         )
     })
 }
