@@ -10,14 +10,20 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.text.ExperimentalTextApi
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.drawText
-import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.*
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.view.theme.attractions_gmap
 
 
@@ -88,4 +94,116 @@ fun DrawText() {
                 topLeft = Offset(x = 100f, y = 100f)
             )
         })
+}
+
+@OptIn(ExperimentalTextApi::class)
+@Composable
+fun MeasureText() {
+    val textMeasurer = rememberTextMeasurer()
+    val longText = stringResource(id = R.string.lorem_ipsum)
+
+    Canvas(modifier = Modifier
+        .padding(16.dp)
+        .fillMaxSize()
+        .drawWithCache {
+            val measuredText = textMeasurer.measure(
+                text = AnnotatedString(text = longText),
+                constraints = Constraints.fixedWidth(width = (size.width * 2f / 3f).toInt()),
+                style = TextStyle(fontSize = 18.sp)
+            )
+            onDrawBehind {
+                val sizeWithExtraPadding = Size(
+                    16.dp.toPx() + measuredText.size.width,
+                    16.dp.toPx() + measuredText.size.height
+                ) //16.dp just for padding
+                drawRect(color = attractions_gmap, size = sizeWithExtraPadding)
+                drawText(
+                    textLayoutResult = measuredText,
+                    topLeft = Offset(x = 8.dp.toPx(), y = 8.dp.toPx())
+                ) //topLeft just for padding
+                //Note: here order of execution is important
+                //so what happen inside onDrawBehind{} block?
+                //first it draw rect of text size which we measure in `measuredText`
+                //second it will draw text on that `rect`
+            }
+        }, onDraw = {})
+}
+
+//Note: The above example uses Modifier.drawWithCache, since drawing text is an expensive operation.
+//Using drawWithCache helps cache the created objects until the size of the drawing area changes.
+// For more information, see the Modifier.drawWithCache documentation.
+// https://developer.android.com/jetpack/compose/graphics/draw/modifiers#drawwithcache
+
+@OptIn(ExperimentalTextApi::class)
+@Composable
+fun MeasureTextWithNarrowWidth() {
+    val textMeasurer = rememberTextMeasurer()
+    val longText = stringResource(id = R.string.lorem_ipsum)
+
+    Canvas(modifier = Modifier
+        .padding(16.dp)
+        .fillMaxSize()
+        .drawWithCache {
+            val measuredText = textMeasurer.measure(
+                text = AnnotatedString(text = longText),
+                constraints = Constraints.fixed(
+                    width = (size.width / 3f).toInt(),
+                    height = (size.height / 3f).toInt()
+                ),
+                overflow = TextOverflow.Ellipsis,
+                style = TextStyle(fontSize = 18.sp)
+            )
+            onDrawBehind {
+                val sizeWithExtraPadding = Size(
+                    16.dp.toPx() + measuredText.size.width,
+                    16.dp.toPx() + measuredText.size.height
+                ) //16.dp just for padding
+                drawRect(color = attractions_gmap, size = sizeWithExtraPadding)
+                drawText(
+                    textLayoutResult = measuredText,
+                    topLeft = Offset(x = 8.dp.toPx(), y = 8.dp.toPx())
+                ) //topLeft just for padding
+                //Note: here order of execution is important
+                //so what happen inside onDrawBehind{} block?
+                //first it draw rect of text size which we measure in `measuredText`
+                //second it will draw text on that `rect`
+            }
+        }, onDraw = {})
+}
+
+@Composable
+fun DrawImage() {
+    val image = ImageBitmap.imageResource(id = R.drawable.actual_bitmap_image)
+
+    Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
+        drawImage(image = image)
+    })
+}
+
+@Composable
+fun DrawCircle() {
+    Canvas(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        onDraw = {
+            drawCircle(color = attractions_gmap)
+        }
+    )
+
+}
+
+@Composable
+fun DrawRoundedRect() {
+    Canvas(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp), onDraw = {
+        drawRoundRect(
+            color = attractions_gmap,
+            cornerRadius = CornerRadius(
+                x = 16.dp.toPx(),
+                y = 16.dp.toPx()
+            ) //give radius to both x & y axis
+        )
+    })
 }

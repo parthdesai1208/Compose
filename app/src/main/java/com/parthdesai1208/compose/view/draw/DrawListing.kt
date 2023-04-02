@@ -19,16 +19,21 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.parthdesai1208.compose.utils.Phone
+import com.parthdesai1208.compose.view.theme.ComposeTheme
 
 
 enum class DrawListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
-    DrawLines("drawLine", { DrawLine() }), DrawRect(
-        "drawRect",
+    DrawLines("drawLine", { DrawLine() }), DrawRect("drawRect",
         { DrawRect() }),
-    DrawLineFromTopRightToBottomLeft(
-        "DrawLine From TopRight To BottomLeft",
+    DrawLineFromTopRightToBottomLeft("DrawLine From TopRight To BottomLeft",
         { DrawLineFromTopRightToBottomLeft() }),
     DrawText("DrawText", { DrawText() }),
+    MeasureText("Measure Text", { MeasureText() }),
+    MeasureTextWithNarrowWidth("Measure Text With Narrow Size", { MeasureTextWithNarrowWidth() }),
+    DrawImage("Draw Image", { DrawImage() }),
+    DrawCircle("Draw Circle", { DrawCircle() }),
+    DrawRoundedRect("Draw RoundedRect", { DrawRoundedRect() }),
 }
 
 object DrawDestinations {
@@ -100,4 +105,12 @@ fun DrawListingScreen(navController: NavHostController) {
 @Composable
 fun ChildDrawScreen(onClickButtonTitle: String?) {
     enumValues<DrawListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke()
+}
+
+@Phone
+@Composable
+fun PreviewDrawNavGraph() {
+    ComposeTheme {
+        DrawNavGraph()
+    }
 }
