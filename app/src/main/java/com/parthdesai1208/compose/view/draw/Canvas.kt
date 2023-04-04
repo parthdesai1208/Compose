@@ -366,6 +366,14 @@ fun IconsUsingCanvasDraw() {
             SpotifyIconUsingCanvasDrawing(iconSize)
             TrelloIconUsingCanvasDrawing(iconSize)
         }
+        Row(
+            modifier = rowModifier,
+            horizontalArrangement = horizontalArrangement
+        ) {
+            ZoomIconUsingCanvasDrawing(iconSize)
+            AndroidIconUsingCanvasDrawing(iconSize)
+            IosWeatherAppIconUsingCanvasDrawing(iconSize)
+        }
     }
 }
 
@@ -859,5 +867,172 @@ fun TrelloIconUsingCanvasDrawing(iconSize: Dp) {
             size = Size(width = size.width.times(.30f), size.height.times(.45f)),
             topLeft = Offset(size.width.times(.58f), size.height.times(.20f))
         )
+    }
+}
+
+@Composable
+fun ZoomIconUsingCanvasDrawing(iconSize: Dp) {
+    val zoomColors = listOf(zoomIconColor1, zoomIconColor2)
+
+    Canvas(
+        modifier = Modifier
+            .size(iconSize)
+    ) {
+        val width = size.width
+        val height = size.height
+
+        val pathHeart = Path().apply {
+            moveTo(width.times(.22f), height.times(.58f))
+            lineTo(width.times(.22f), height.times(.37f))
+            quadraticBezierTo(
+                width.times(.22f),
+                height.times(.34f),
+                width.times(.25f),
+                height.times(.34f)
+            )
+            lineTo(width.times(.54f), height.times(.34f))
+            quadraticBezierTo(
+                width.times(.62f),
+                height.times(.34f),
+                width.times(.62f),
+                height.times(.41f)
+            )
+            lineTo(width.times(.62f), height.times(.62f))
+            quadraticBezierTo(
+                width.times(.62f),
+                height.times(.65f),
+                width.times(.58f),
+                height.times(.65f)
+            )
+            lineTo(width.times(.30f), height.times(.65f))
+            quadraticBezierTo(
+                width.times(.22f),
+                height.times(.65f),
+                width.times(.22f),
+                height.times(.58f)
+            )
+            moveTo(width.times(.65f), height.times(.44f))
+            lineTo(width.times(.65f), height.times(.56f))
+            lineTo(width.times(.75f), height.times(.65f))
+            lineTo(width.times(.75f), height.times(.35f))
+            lineTo(width.times(.65f), height.times(.44f))
+            close()
+        }
+        //base blue rectangle
+        drawRoundRect(
+            brush = Brush.verticalGradient(zoomColors),
+            cornerRadius = CornerRadius(60f, 60f)
+        )
+        //draw middle video camera icon
+        drawPath(pathHeart, color = Color.White)
+    }
+}
+
+@Composable
+fun AndroidIconUsingCanvasDrawing(iconSize: Dp) {
+    Canvas(
+        modifier = Modifier
+            .size(iconSize)
+    ) {
+
+        val height = this.size.height
+        val width = this.size.width
+
+        //android head
+        drawArc(
+            color = androidIconColor,
+            startAngle = 0f,
+            useCenter = false,
+            sweepAngle = -180f,
+            size = Size(width = width.times(.60f), height = height.times(.55f)),
+            topLeft = Offset(width.times(.25f), height.times(.30f))
+        )
+        //left hand
+        drawLine(
+            color = androidIconColor,
+            start = Offset(width.times(.40f), height.times(.42f)),
+            strokeWidth = 15f,
+            cap = StrokeCap.Round,
+            end = Offset(width.times(.29f), height.times(.29f))
+        )
+        //right hand
+        drawLine(
+            color = androidIconColor,
+            start = Offset(width.times(.68f), height.times(.40f)),
+            strokeWidth = 15f,
+            cap = StrokeCap.Round,
+            end = Offset(width.times(.76f), height.times(.27f))
+        )
+        //left eye
+        drawCircle(
+            color = Color.White,
+            radius = width.times(.04f),
+            center = Offset(width.times(.45f), height.times(.45f))
+        )
+        //right eye
+        drawCircle(
+            color = Color.White, radius = width.times(.04f),
+            center = Offset(width.times(.64f), height.times(.45f)),
+        )
+    }
+}
+
+@Composable
+fun IosWeatherAppIconUsingCanvasDrawing(iconSize: Dp) {
+    val backgroundColor = listOf(weatherIconBgUpperColor, weatherIconBgBottomColor)
+    val sunColor = listOf(weatherIconSunColor, weatherIconSunOverlappingColor)
+
+    Canvas(
+        modifier = Modifier
+            .size(iconSize)
+    ) {
+        val width = size.width
+        val height = size.height
+
+        val path = Path().apply {
+            moveTo(width.times(.76f), height.times(.72f)) //starting point of cloud at left
+            //first curv from left
+            cubicTo(
+                width.times(.93f),
+                height.times(.72f),
+                width.times(.98f),
+                height.times(.41f),
+                width.times(.76f),
+                height.times(.40f)
+            )
+            //second curv from left
+            cubicTo(
+                width.times(.75f),
+                height.times(.21f),
+                width.times(.35f),
+                height.times(.21f),
+                width.times(.38f),
+                height.times(.50f)
+            )
+            //third curv from left & first curb from right
+            cubicTo(
+                width.times(.25f),
+                height.times(.50f),
+                width.times(.20f),
+                height.times(.69f),
+                width.times(.41f),
+                height.times(.72f)
+            )
+            close() //close the path to form cloud
+        }
+        //base blue rectangle
+        drawRoundRect(
+            brush = Brush.verticalGradient(backgroundColor),
+            cornerRadius = CornerRadius(50f, 50f),
+
+            )
+        //sun
+        drawCircle(
+            brush = Brush.verticalGradient(sunColor),
+            radius = width.times(.17f),
+            center = Offset(width.times(.35f), height.times(.35f))
+        )
+        //cloud
+        drawPath(path = path, color = Color.White.copy(alpha = .90f))
     }
 }

@@ -61,6 +61,13 @@ val stackoverflowBottomRectangleColor = Color(0xFFbcbbbb)
 val stackoverflowStackColor = Color(0xFFf48023)
 val spotifyGreenColor = Color(0xFF1ed760)
 val trelloBlueColor = Color(0xFF0269a9)
+val zoomIconColor1 = Color(0xFF56a2ff)
+val zoomIconColor2 = Color(0xFF3d83fc)
+val androidIconColor = Color(0xFF58bd46)
+val weatherIconBgUpperColor = Color(0xFF2078EE)
+val weatherIconBgBottomColor = Color(0xFF74E6FE)
+val weatherIconSunColor = Color(0xFFFFC200)
+val weatherIconSunOverlappingColor = Color(0xFFFFE100)
 
 val LightDarkGrey: Color
     @Composable
