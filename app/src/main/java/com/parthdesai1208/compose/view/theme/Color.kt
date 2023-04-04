@@ -50,6 +50,17 @@ val GreyLight = Color(0xFFB5B6BA)
 val GreyDark = Color(0xFF60626C)
 val CircleOffsetInitialColor = Color(0xff712B75)
 val CircleOffsetTargetColor = Color(0xFFE4AEC5)
+val facebookIconColor = Color(0xFF1776d1)
+val messengerColor1 = Color(0xFF02b8f9)
+val messengerColor2 = Color(0xFF0277fe)
+val googlePhotosRedColor = Color(0xFFf04231)
+val googlePhotosBlueColor = Color(0xFF4385f7)
+val googlePhotosGreenColor = Color(0xFF30a952)
+val googlePhotosYellowColor = Color(0xFFffbf00)
+val stackoverflowBottomRectangleColor = Color(0xFFbcbbbb)
+val stackoverflowStackColor = Color(0xFFf48023)
+val spotifyGreenColor = Color(0xFF1ed760)
+val trelloBlueColor = Color(0xFF0269a9)
 
 val LightDarkGrey: Color
     @Composable
