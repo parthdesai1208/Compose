@@ -38,6 +38,7 @@ enum class DrawListingEnumType(val buttonTitle: String, val func: @Composable ()
     DrawArc("DrawArc", { DrawArc() }),
     DrawPoint("DrawPoint", { DrawPoint() }),
     DrawPath("DrawPath", { DrawPath() }),
+    AccessingCanvasObject("Accessing Canvas Object", { AccessingCanvasObject() }),
 }
 
 object DrawDestinations {

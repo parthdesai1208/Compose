@@ -1,5 +1,7 @@
 package com.parthdesai1208.compose.view.draw
 
+import android.graphics.drawable.ShapeDrawable
+import android.graphics.drawable.shapes.OvalShape
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -12,13 +14,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.PointMode
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.*
@@ -303,6 +305,20 @@ fun DrawPath() {
                     color = attractions_gmap,
                     style = Stroke(width = 5.dp.toPx())
                 )
+            }
+        }, onDraw = {})
+}
+
+@Composable
+fun AccessingCanvasObject() {
+    val drawable = ShapeDrawable(OvalShape())
+    Canvas(modifier = Modifier
+        .fillMaxSize()
+        .background(color = Color.White)
+        .drawWithContent {
+            drawIntoCanvas { canvas ->
+                drawable.setBounds(0, 0, size.width.toInt(), size.height.toInt())
+                drawable.draw(canvas.nativeCanvas)
             }
         }, onDraw = {})
 }
