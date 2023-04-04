@@ -16,7 +16,9 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PointMode
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.*
@@ -279,4 +281,24 @@ fun DrawPoint() {
             strokeWidth = 5.dp.toPx()
         )
     })
+}
+
+@Composable
+fun DrawPath() {
+    Canvas(modifier = Modifier
+        .fillMaxSize()
+        .drawWithCache {
+            val path = Path()
+            path.moveTo(0f, 0f)
+            path.lineTo(size.width / 2f, size.height / 2f)
+            path.lineTo(size.width, 0f)
+            path.close()
+            onDrawBehind {
+                drawPath(
+                    path = path,
+                    color = attractions_gmap,
+                    style = Stroke(width = 5.dp.toPx())
+                )
+            }
+        }, onDraw = {})
 }

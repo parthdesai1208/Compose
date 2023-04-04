@@ -37,6 +37,7 @@ enum class DrawListingEnumType(val buttonTitle: String, val func: @Composable ()
     DrawOval("DrawOval", { DrawOval() }),
     DrawArc("DrawArc", { DrawArc() }),
     DrawPoint("DrawPoint", { DrawPoint() }),
+    DrawPath("DrawPath", { DrawPath() }),
 }
 
 object DrawDestinations {
@@ -70,7 +71,7 @@ fun DrawNavGraph(startDestination: String = DrawDestinations.DRAW_MAIN_SCREEN) {
 fun DrawListingScreen(navController: NavHostController) {
     @Composable
     fun MyButton(
-        title: DrawListingEnumType
+        title: DrawListingEnumType,
     ) {
         Button(
             onClick = { navController.navigate("${DrawDestinations.DRAW_SCREEN_ROUTE_PREFIX}/${title.buttonTitle}") },
