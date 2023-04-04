@@ -293,6 +293,10 @@ fun DrawPath() {
             path.lineTo(size.width / 2f, size.height / 2f)
             path.lineTo(size.width, 0f)
             path.close()
+            path.moveTo(size.width / 2f, size.height / 2f)
+            path.lineTo(0f, size.height)
+            path.lineTo(size.width, size.height)
+            path.close()
             onDrawBehind {
                 drawPath(
                     path = path,
