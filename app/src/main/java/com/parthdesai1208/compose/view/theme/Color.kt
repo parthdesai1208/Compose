@@ -68,6 +68,9 @@ val weatherIconBgUpperColor = Color(0xFF2078EE)
 val weatherIconBgBottomColor = Color(0xFF74E6FE)
 val weatherIconSunColor = Color(0xFFFFC200)
 val weatherIconSunOverlappingColor = Color(0xFFFFE100)
+val TruckArtCanvasBackground = Color(0xFF750839)
+val TruckArtPrimaryRectangleBackground = Color(0xFF1A237E)
+val TruckArtSecondaryRectangleBackground = Color(0xFFC51162)
 
 val LightDarkGrey: Color
     @Composable

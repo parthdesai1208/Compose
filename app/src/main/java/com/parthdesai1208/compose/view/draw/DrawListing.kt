@@ -56,6 +56,7 @@ enum class DrawListingEnumType(val buttonTitle: String, val func: @Composable ()
     RotateTransformation("Rotate Transformation", { RotateTransformation() }),
     InsetTransformation("Inset Transformation", { InsetTransformation() }),
     MultipleTransformation("Multiple Transformation", { MultipleTransformation() }),
+    TruckArtCompose("TruckArt pattern", { TruckArtCompose() }),
 }
 
 object DrawDestinations {
