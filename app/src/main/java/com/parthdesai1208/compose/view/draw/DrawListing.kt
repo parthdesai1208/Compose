@@ -28,6 +28,9 @@ enum class DrawListingEnumType(val buttonTitle: String, val func: @Composable ()
         { DrawRect() }),
     DrawLineFromTopRightToBottomLeft("DrawLine From TopRight To BottomLeft",
         { DrawLineFromTopRightToBottomLeft() }),
+    DrawDashLineFromTopRightToBottomLeft(
+        "Draw Dash Line From Top-Right To Bottom-Left",
+        { DrawDashLineFromTopRightToBottomLeft() }),
     DrawText("DrawText", { DrawText() }),
     MeasureText("Measure Text", { MeasureText() }),
     MeasureTextWithNarrowWidth("Measure Text With Narrow Size", { MeasureTextWithNarrowWidth() }),
@@ -40,6 +43,14 @@ enum class DrawListingEnumType(val buttonTitle: String, val func: @Composable ()
     DrawPath("DrawPath", { DrawPath() }),
     AccessingCanvasObject("Accessing Canvas Object", { AccessingCanvasObject() }),
     IconsUsingCanvasDraw("Icons Using Canvas Draw", { IconsUsingCanvasDraw() }),
+    DrawTriangleWithCornerPathEffects("Draw Triangle With CornerPathEffects",
+        { DrawTriangleWaterDropletWithCornerPathEffects() }),
+    ChainPathEffectSimpleExample("ChainPathEffect Simple Example",
+        { ChainPathEffectSimpleExample() }),
+    ChainPathEffectExample(
+        "Gooey effect using ChainPathEffect Example",
+        { GooeyEffectUsingChainPathEffect() }),
+    StampedPathEffectExample("StampedPathEffect Example", { StampedPathEffectExample() }),
 }
 
 object DrawDestinations {

@@ -1,24 +1,27 @@
 package com.parthdesai1208.compose.view.draw
 
+import android.graphics.CornerPathEffect
+import android.graphics.DiscretePathEffect
 import android.graphics.Typeface
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.OvalShape
 import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
@@ -77,6 +80,44 @@ fun DrawLineFromTopRightToBottomLeft() {
 
         Text(
             text = "drawLines from topRight \nto bottomLeft using \ncoordinate system",
+            textAlign = TextAlign.Start,
+            color = MaterialTheme.colors.onSurface,
+            modifier = Modifier
+                .align(alignment = Alignment.TopStart)
+                .padding(all = 8.dp)
+        )
+    }
+}
+
+@Composable
+fun DrawDashLineFromTopRightToBottomLeft() {
+    Box {
+        Canvas(modifier = Modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colors.surface),
+            onDraw = {
+                val canvasWidth = size.width
+                val canvasHeight = size.height
+                drawLine(
+                    color = attractions_gmap,
+                    start = Offset(x = canvasWidth, y = 0f),
+                    end = Offset(x = 0f, canvasHeight),
+                    strokeWidth = 5f,
+                    pathEffect = PathEffect.dashPathEffect(
+                        intervals = floatArrayOf(
+                            30f,
+                            10f,
+                            10f,
+                            10f
+                        ), phase = 0f
+                    )
+                    //The above path effect will draw a line beginning with a 30px dash and 10px space,
+                    //followed by 10px dash and a 10px space, repeating this sequence until the end of the line
+                )
+            })
+
+        Text(
+            text = "draw dash-Lines from topRight \nto bottomLeft using \ncoordinate system\ndraw a line beginning with a 30px dash and 10px space\nfollowed by 10px dash and a 10px space\nrepeating this sequence until the end of the line",
             textAlign = TextAlign.Start,
             color = MaterialTheme.colors.onSurface,
             modifier = Modifier
@@ -1035,4 +1076,174 @@ fun IosWeatherAppIconUsingCanvasDrawing(iconSize: Dp) {
         //cloud
         drawPath(path = path, color = Color.White.copy(alpha = .90f))
     }
+}
+
+@Composable
+fun DrawTriangleWaterDropletWithCornerPathEffects() {
+    val dropColor = MaterialTheme.colors.onSurface
+
+    Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
+        val rect = Rect(Offset.Zero, size)
+
+        val trianglePath = Path().apply {
+            moveTo(rect.topCenter.x, rect.topCenter.y)
+            lineTo(rect.bottomRight.x, rect.bottomRight.y)
+            lineTo(rect.bottomLeft.x, rect.bottomLeft.y)
+            close()
+        }
+
+        drawIntoCanvas {
+            it.drawOutline(outline = Outline.Generic(trianglePath), paint = Paint().apply {
+                color = dropColor
+                pathEffect = PathEffect.cornerPathEffect(rect.maxDimension / 2)
+            })
+        }
+    })
+}
+
+@OptIn(ExperimentalTextApi::class)
+@Composable
+fun ChainPathEffectSimpleExample() {
+
+    val dashPathEffect = remember {
+        PathEffect.dashPathEffect(intervals = floatArrayOf(20f, 10f), 0f)
+    }
+
+    val cornerPathEffect = remember {
+        PathEffect.cornerPathEffect(80f)
+    }
+
+    Text(
+        text = "This is chainPathEffect apply to text compose",
+        style = TextStyle(
+            color = stackoverflowStackColor,
+            fontSize = 80.sp,
+            drawStyle = Stroke(
+                width = 6f, join = StrokeJoin.Round,
+                pathEffect = PathEffect.chainPathEffect(
+                    outer = dashPathEffect,
+                    inner = cornerPathEffect
+                )
+            )
+        )
+
+    )
+}
+
+@Composable
+fun GooeyEffectUsingChainPathEffect() {
+    val pathDynamic = remember { Path() }
+    val pathStatic = remember { Path() }
+
+    var currentPosition by remember { mutableStateOf(Offset.Unspecified) }
+
+    val segmentCount = 20
+    val pathMeasure = remember { PathMeasure() }
+
+    val paint = remember { Paint() }
+
+    var isPaintSetUp by remember { mutableStateOf(false) }
+
+    Canvas(modifier = Modifier
+        .pointerInput(Unit) {
+            detectDragGestures { change, _ ->
+                currentPosition = change.position
+            }
+        }
+        .fillMaxSize(), onDraw = {
+        val center = size.center
+
+        val position = if (currentPosition == Offset.Unspecified) {
+            center
+        } else currentPosition
+
+        pathDynamic.reset() //clear path
+        pathDynamic.addOval( //add movable circle
+            Rect(
+                center = position,
+                radius = 150f
+            )
+        )
+
+        pathStatic.reset()  //clear path
+        pathStatic.addOval( //add fix circle in center of the screen
+            Rect(
+                center = Offset(center.x, center.y),
+                radius = 100f
+            )
+        )
+
+        pathMeasure.setPath(pathDynamic, true) //assign new path
+
+        //apply effect to big movable circle
+        //0f as deviation means pattern is regular and evenly spaced
+        val discretePathEffect = DiscretePathEffect(pathMeasure.length / segmentCount, 0f)
+        //add full circle effect to two circles
+        val cornerPathEffect = CornerPathEffect(50f)
+
+        //chainPathEffect will provide effect to inner path effect & then outer effect to all inner path effect
+        val chainPathEffect = PathEffect.chainPathEffect(
+            outer = cornerPathEffect.toComposePathEffect(), //toComposePathEffect() convert CornerPathEffect -> PathEffect
+            inner = discretePathEffect.toComposePathEffect() //toComposePathEffect() convert DiscretePathEffect -> PathEffect
+        )
+        if (!isPaintSetUp) { //this condition make sure only one time paint will apply
+
+            paint.shader = LinearGradientShader(
+                from = Offset.Zero,                     //start range when first color applied
+                to = Offset(size.width, size.height),   //end range when second color applied
+                colors = listOf(
+                    Color(0xffFFEB3B),   //color applied when you drag big circle to top
+                    Color(0xffE91E63)    //color applied when you drag big circle to bottom
+                ),
+                tileMode = TileMode.Clamp
+            )
+            isPaintSetUp = true
+            paint.pathEffect = chainPathEffect
+        }
+
+        //combine two paths since we want to draw path into canvas & want it only one
+        val newPath = Path.combine(PathOperation.Union, pathDynamic, pathStatic)
+
+        drawIntoCanvas {
+            it.drawPath(path = newPath, paint = paint)
+        }
+    })
+}
+
+@OptIn(ExperimentalTextApi::class)
+@Composable
+fun StampedPathEffectExample() {
+
+    val heartPath = remember {
+        Path().apply {
+            val width = 20f
+            val height = 20f
+            moveTo(width / 2, height / 4)
+            cubicTo(width / 4, 0f, 0f, height / 3, width / 4, height / 2)
+            lineTo(width / 2, height * 3 / 4)
+            lineTo(width * 3 / 4, height / 2)
+            cubicTo(width, height / 3, width * 3 / 4, 0f, width / 2, height / 4)
+        }
+    }
+
+    val stampEffect = remember {
+        PathEffect.stampedPathEffect(
+            shape = heartPath, advance = 20f, phase = 10f, style = StampedPathEffectStyle.Translate
+            //advance = Spacing between each heart shape
+            //phase = Amount to offset before the first shape is stamped
+        )
+    }
+    Text(
+        text = "This is stampedPathEffect apply to text compose",
+        style = LocalTextStyle.current.merge(
+            TextStyle(
+                color = stackoverflowStackColor,
+                fontSize = 80.sp,
+                drawStyle = Stroke(
+                    width = 6f, join = StrokeJoin.Round,
+                    pathEffect = stampEffect
+                )
+            )
+        )
+    )
 }
