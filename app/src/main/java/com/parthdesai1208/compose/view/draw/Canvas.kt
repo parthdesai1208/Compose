@@ -18,9 +18,7 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.drawscope.*
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
@@ -1246,4 +1244,89 @@ fun StampedPathEffectExample() {
             )
         )
     )
+}
+
+@Composable
+fun ScalingTransformation() {
+    Box {
+        Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
+            scale(scaleX = 10f, scaleY = 15f) {
+                drawCircle(color = attractions_gmap, radius = 12.dp.toPx())
+            }
+        })
+        Text(
+            text = "circle is scaling in x 10 times & in y 15 times",
+            color = MaterialTheme.colors.onSurface,
+            modifier = Modifier.align(alignment = Alignment.Center)
+        )
+    }
+}
+
+@Composable
+fun TranslateTransformation() {
+    Box {
+        Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
+            translate(left = 100f, top = -300f, block = {
+                drawCircle(color = attractions_gmap, radius = 200.dp.toPx())
+            })
+        })
+        Text(
+            text = "circle is moving 100px in right & 300px up",
+            color = MaterialTheme.colors.onSurface,
+            modifier = Modifier.align(alignment = Alignment.Center)
+        )
+    }
+}
+
+@Composable
+fun RotateTransformation() {
+    Box {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            rotate(degrees = 45F) {
+                drawRect(
+                    color = Color.Gray,
+                    topLeft = Offset(x = size.width / 3F, y = size.height / 3F),
+                    size = size / 3F
+                )
+            }
+        }
+        Text(
+            text = "rotates a rectangle 45 degrees",
+            color = MaterialTheme.colors.onSurface,
+            modifier = Modifier.align(alignment = Alignment.Center)
+        )
+    }
+}
+
+@Composable
+fun InsetTransformation() {
+    Box {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val canvasQuadrantSize = size / 2F
+            inset(horizontal = 50f, vertical = 30f) {
+                drawRect(color = Color.Green, size = canvasQuadrantSize)
+            }
+        }
+        Text(
+            text = "inset use to move to specific position\nrectangle move to 50f horizontally & 30f vertically",
+            color = MaterialTheme.colors.onSurface,
+            modifier = Modifier.align(alignment = Alignment.Center)
+        )
+    }
+}
+
+@Composable
+fun MultipleTransformation() {
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        withTransform({
+            translate(left = size.width / 5F)
+            rotate(degrees = 45F)
+        }) {
+            drawRect(
+                color = Color.Gray,
+                topLeft = Offset(x = size.width / 3F, y = size.height / 3F),
+                size = size / 3F
+            )
+        }
+    }
 }

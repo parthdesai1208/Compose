@@ -51,6 +51,11 @@ enum class DrawListingEnumType(val buttonTitle: String, val func: @Composable ()
         "Gooey effect using ChainPathEffect Example",
         { GooeyEffectUsingChainPathEffect() }),
     StampedPathEffectExample("StampedPathEffect Example", { StampedPathEffectExample() }),
+    ScalingTransformation("ScalingTransformation", { ScalingTransformation() }),
+    TranslateTransformation("Translate Transformation", { TranslateTransformation() }),
+    RotateTransformation("Rotate Transformation", { RotateTransformation() }),
+    InsetTransformation("Inset Transformation", { InsetTransformation() }),
+    MultipleTransformation("Multiple Transformation", { MultipleTransformation() }),
 }
 
 object DrawDestinations {
