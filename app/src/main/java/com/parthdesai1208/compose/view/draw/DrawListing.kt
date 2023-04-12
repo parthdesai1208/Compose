@@ -60,6 +60,7 @@ enum class DrawListingEnumType(val buttonTitle: String, val func: @Composable ()
     RightShadow3DLayout("3D layout right shadow", { RightShadow3DLayout() }),
     LeftShadow3DLayout("3D layout left shadow", { LeftShadow3DLayout() }),
     BottomShadow3DLayout("3D layout bottom shadow", { BottomShadow3DLayout() }),
+    Dialog3D("3D Dialog", { Dialog3D() }),
 }
 
 object DrawDestinations {
