@@ -1,13 +1,30 @@
 package com.parthdesai1208.compose.view.uicomponents
 
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.ContentTransform
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.with
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
@@ -17,10 +34,15 @@ import androidx.compose.ui.unit.dp
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
-import com.parthdesai1208.compose.utils.*
+import com.parthdesai1208.compose.utils.asTwoDigit
+import com.parthdesai1208.compose.utils.currentDateTime12HourFormat
+import com.parthdesai1208.compose.utils.currentDateTime24HourFormat
+import com.parthdesai1208.compose.utils.currentDateTimeWithTimeZone24HourFormat
+import com.parthdesai1208.compose.utils.currentTimeWithAnimationWith12Hour
+import com.parthdesai1208.compose.utils.dateFormatterDDMMYYYY
+import com.parthdesai1208.compose.utils.getTimeWithMeridiem
 import kotlinx.coroutines.delay
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun DateTimeCompose() {
     var selectedDateText by rememberSaveable { mutableStateOf("") }
@@ -209,8 +231,7 @@ fun DateTimeCompose() {
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
-fun AnimatedContentScope<Int>.currentTimeAnimation(): ContentTransform {
+fun AnimatedContentTransitionScope<Int>.currentTimeAnimation(): ContentTransform {
     return if (targetState > initialState) {
         // If the target number is larger than old value
         slideInVertically { height -> height } + fadeIn() with slideOutVertically { height -> -height } + fadeOut()
