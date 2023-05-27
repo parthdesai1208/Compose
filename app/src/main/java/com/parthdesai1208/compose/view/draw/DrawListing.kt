@@ -57,6 +57,10 @@ enum class DrawListingEnumType(val buttonTitle: String, val func: @Composable ()
     InsetTransformation("Inset Transformation", { InsetTransformation() }),
     MultipleTransformation("Multiple Transformation", { MultipleTransformation() }),
     TruckArtCompose("TruckArt pattern", { TruckArtCompose() }),
+    RightShadow3DLayout("3D layout right shadow", { RightShadow3DLayout() }),
+    LeftShadow3DLayout("3D layout left shadow", { LeftShadow3DLayout() }),
+    BottomShadow3DLayout("3D layout bottom shadow", { BottomShadow3DLayout() }),
+    Dialog3D("3D Dialog", { Dialog3D() }),
 }
 
 object DrawDestinations {

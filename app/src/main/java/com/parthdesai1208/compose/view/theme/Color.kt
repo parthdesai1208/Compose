@@ -35,6 +35,7 @@ val more_gmap = Color(0xFF24C1E0)
 
 val RainbowRed = Color(0xFFDA034E)
 val RainbowOrange = Color(0xFFFF9800)
+val RainbowOrangeDark = Color(0xFF834E00)
 val RainbowYellow = Color(0xFFFFEB3B)
 val RainbowGreen = Color(0xFF4CAF50)
 val RainbowBlue = Color(0xFF2196F3)
