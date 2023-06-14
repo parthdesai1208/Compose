@@ -9,7 +9,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.animation.with
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,6 +21,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -53,9 +54,9 @@ fun DateTimeCompose() {
     var varCurrentDateTime24HourFormat by remember { mutableStateOf("") }
     var varCurrentDateTime12HourFormat by remember { mutableStateOf("") }
     var varCurrentTime12HourFormat by remember { mutableStateOf("") }
-    var animatedHour by remember { mutableStateOf(0) }
-    var animatedMinute by remember { mutableStateOf(0) }
-    var animatedSecond by remember { mutableStateOf(0) }
+    var animatedHour by remember { mutableIntStateOf(0) }
+    var animatedMinute by remember { mutableIntStateOf(0) }
+    var animatedSecond by remember { mutableIntStateOf(0) }
     var animatedAMPM by remember { mutableStateOf("") }
 
     val activity = LocalContext.current as AppCompatActivity
@@ -234,10 +235,10 @@ fun DateTimeCompose() {
 fun AnimatedContentTransitionScope<Int>.currentTimeAnimation(): ContentTransform {
     return if (targetState > initialState) {
         // If the target number is larger than old value
-        slideInVertically { height -> height } + fadeIn() with slideOutVertically { height -> -height } + fadeOut()
+        (slideInVertically { height -> height } + fadeIn()).togetherWith(slideOutVertically { height -> -height } + fadeOut())
     } else {
         // If the target number is smaller than old value
-        slideInVertically { height -> -height } + fadeIn() with slideOutVertically { height -> height } + fadeOut()
+        (slideInVertically { height -> -height } + fadeIn()).togetherWith(slideOutVertically { height -> height } + fadeOut())
     }.using(
         //for adding effect on slide up-down animation
         SizeTransform(clip = false)
