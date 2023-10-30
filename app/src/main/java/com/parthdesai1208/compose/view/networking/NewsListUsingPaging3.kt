@@ -28,7 +28,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
+import androidx.paging.compose.itemKey
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.model.networking.paging3.Article
@@ -58,8 +58,9 @@ fun NewsListUsingPaging3(viewModel: NewsListViewModel) {
     Surface {
         Box {
             LazyColumn(state = listState) {
-                items(items = articles, key = { it.url }) {
-                    it?.let {
+                items(count = articles.itemCount, key = articles.itemKey { it.url }) { index ->
+                    val item = articles[index]
+                    item?.let {
                         ItemNews(it, onClick = {
                             isExpandedArticle = if (isExpandedArticle == it.url) null else it.url
                         }, isExpandedArticle = isExpandedArticle == it.url,
