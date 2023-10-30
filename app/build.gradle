@@ -2,10 +2,10 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     //https://search.maven.org/artifact/com.google.devtools.ksp/com.google.devtools.ksp.gradle.plugin
-    id 'com.google.devtools.ksp' version '1.8.20-1.0.11' //compose destination library
+//    id 'com.google.devtools.ksp' version '1.9.10-1.0.13' //compose destination library
     id 'kotlin-parcelize'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
+    id 'com.google.devtools.ksp'
 }
 
 def localPropertiesFile = rootProject.file("local.properties")
@@ -16,7 +16,7 @@ android {
     defaultConfig {
         applicationId "com.parthdesai1208.compose"
         minSdkVersion 21
-        compileSdk 33
+        compileSdk 34
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"
@@ -47,7 +47,7 @@ android {
     }
     composeOptions {
 //        https://developer.android.com/jetpack/androidx/releases/compose-compiler
-        kotlinCompilerExtensionVersion "1.4.5"
+        kotlinCompilerExtensionVersion "1.5.3"
     }
     namespace 'com.parthdesai1208.compose'
     buildFeatures {
@@ -66,7 +66,7 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 //    https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.20"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.10"
 //    https://androidx.tech/artifacts/core/core-ktx/
     implementation 'androidx.core:core-ktx:1.10.1'
 //    https://androidx.tech/artifacts/appcompat/appcompat/
@@ -125,10 +125,10 @@ dependencies {
 
     //room
     //https://androidx.tech/artifacts/room/room-ktx/
-    implementation 'androidx.room:room-ktx:2.5.1'
-    implementation "androidx.room:room-runtime:2.5.1"
-    kapt "androidx.room:room-compiler:2.5.1"
-    implementation "androidx.room:room-paging:2.5.1"
+    implementation 'androidx.room:room-ktx:2.6.0'
+    implementation "androidx.room:room-runtime:2.6.0"
+    ksp "androidx.room:room-compiler:2.6.0"
+    implementation "androidx.room:room-paging:2.6.0"
 
     //testing //https://mvnrepository.com/artifact/junit/junit
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'

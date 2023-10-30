@@ -17,9 +17,9 @@ fun GravitySensor(
 ) {
     val context = LocalContext.current
     DisposableEffect(Unit) {
-        val sensorManager = context.getSystemService<SensorManager>()!!
+        val sensorManager = context.getSystemService<SensorManager>()
 
-        val gravitySensor: Sensor = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY)
+        val gravitySensor: Sensor? = sensorManager?.getDefaultSensor(Sensor.TYPE_GRAVITY)
 
         val gravityListener = object : SensorEventListener {
             override fun onSensorChanged(event: SensorEvent) {
@@ -32,7 +32,7 @@ fun GravitySensor(
             }
         }
 
-        sensorManager.registerListener(
+        sensorManager?.registerListener(
             gravityListener,
             gravitySensor,
             SensorManager.SENSOR_DELAY_NORMAL,
@@ -40,7 +40,7 @@ fun GravitySensor(
         )
 
         onDispose { //when composition leave
-            sensorManager.unregisterListener(gravityListener)
+            sensorManager?.unregisterListener(gravityListener)
         }
     }
 }
