@@ -13,11 +13,10 @@ def localProperties = new Properties()
 localProperties.load(new FileInputStream(localPropertiesFile))
 
 android {
-    compileSdkVersion 33
-
     defaultConfig {
         applicationId "com.parthdesai1208.compose"
         minSdkVersion 21
+        compileSdk 33
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"
