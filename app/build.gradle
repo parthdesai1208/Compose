@@ -138,11 +138,11 @@ dependencies {
 
     //navigation
     //https://developer.android.com/jetpack/compose/navigation#setup
-    implementation "androidx.navigation:navigation-compose:2.7.4"
+    implementation "androidx.navigation:navigation-compose:2.7.6"
 
     //animation
     //https://developer.android.com/jetpack/androidx/releases/compose-animation#declaring_dependencies
-    implementation "androidx.compose.animation:animation:1.6.0-alpha08"
+    implementation "androidx.compose.animation:animation:1.6.0-beta03"
 
     //accompanist - for insets & system UI
     implementation "com.google.accompanist:accompanist-insets:0.23.1"
@@ -203,6 +203,6 @@ dependencies {
     implementation 'androidx.paging:paging-runtime:3.2.1'
     //https://developer.android.com/jetpack/androidx/releases/paging
     implementation "androidx.paging:paging-compose:3.3.0-alpha02"
-
-    implementation 'androidx.browser:browser:1.6.0'
+    //https://developer.android.com/jetpack/androidx/releases/browser
+    implementation 'androidx.browser:browser:1.7.0'
 }
