@@ -89,6 +89,19 @@ fun TextComponents(name: String) { //@PreviewParameter(FakeStringProvider::class
                             .show()
                     })
             DividerTextCompose()
+            Text(text = stringResource(R.string.delayedClickText),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .delayedClick(2000L) {
+                        Toast
+                            .makeText(
+                                context,
+                                context.getString(R.string.delayedClickText),
+                                Toast.LENGTH_SHORT
+                            )
+                            .show()
+                    })
+            DividerTextCompose()
             Text(text = "disable click text",
                 modifier = Modifier
                     .padding(16.dp)

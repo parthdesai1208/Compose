@@ -163,6 +163,7 @@
 
     <!--    region textCompose-->
     <string name="singleClickText">single click text</string>
+    <string name="delayedClickText">Delayed click text</string>
     <!--    endregion -->
 
     <!--    region networking-->
