@@ -1,8 +1,25 @@
 package com.parthdesai1208.compose.view.custom
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
@@ -31,6 +48,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.parthdesai1208.compose.utils.rotateOnClickComposable
+import com.parthdesai1208.compose.utils.rotateOnClickComposed
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 
 //region Custom Modifier listing screen
@@ -40,6 +59,7 @@ enum class CustomModifierListingEnumType(
 ) {
     CustomModifierScreen("baseLineToTop", { BaseLineToTopFun() }),
     RotateAnyComposeDemonstration("Rotate composable", { RotateAnyComposeDemonstration() }),
+    ComposableVersusComposed("Composable Versus composed", { ComposableVersusComposed() }),
 }
 
 object CustomModifierDestinations {
@@ -208,6 +228,54 @@ fun Modifier.rotating(duration: Int): Modifier = composed {
     )
 
     graphicsLayer(rotationZ = 360f * angelRatio)
+}
+//endregion
+
+//region @Composable v/s composed { }
+@Composable
+fun ComposableVersusComposed() {
+    Surface {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize(align = Alignment.Center)
+        ) {
+            Text(
+                modifier = Modifier.padding(all = 16.dp),
+                text = "@Composable resolves state only once at the call site. so if we click on any of the box, all of the box will rotated."
+            )
+            val modifier1 = Modifier
+                .rotateOnClickComposable()
+                .size(100.dp)
+            LazyRow {
+                items(10) {
+                    Box(
+                        modifier = modifier1,
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(text = "Composable")
+                    }
+                }
+            }
+            Text(
+                modifier = Modifier.padding(all = 16.dp),
+                text = "composed resolves state at the usage site for each Layout. so if we click on any of the box, other box won't get affected."
+            )
+            val modifier2 = Modifier
+                .rotateOnClickComposed()
+                .size(100.dp)
+            LazyRow {
+                items(10) {
+                    Box(
+                        modifier = modifier2,
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(text = "Composed")
+                    }
+                }
+            }
+        }
+    }
 }
 //endregion
 
