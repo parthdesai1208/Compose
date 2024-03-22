@@ -154,6 +154,7 @@
     <string name="pictureinpicture">Picture In Picture</string>
     <string name="tooltip">Tooltip</string>
     <string name="dateTimePicker">Date-time picker</string>
+    <string name="listItem">ListItem</string>
     <!--    end region-->
 
     <!--    region state listing screen-->
