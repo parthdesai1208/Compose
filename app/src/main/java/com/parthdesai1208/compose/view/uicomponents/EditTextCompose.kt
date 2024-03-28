@@ -7,7 +7,15 @@ import android.view.ViewTreeObserver
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
@@ -15,31 +23,73 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text2.BasicTextField2
+import androidx.compose.foundation.text2.input.TextFieldLineLimits
+import androidx.compose.foundation.text2.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Slider
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.ArrowLeft
+import androidx.compose.material.icons.filled.ArrowRight
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.autofill.AutofillType
-import androidx.compose.ui.focus.*
+import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.*
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.utils.RainbowColors
 import com.parthdesai1208.compose.utils.autofill
 import com.parthdesai1208.compose.view.theme.GreyDark
@@ -47,6 +97,13 @@ import com.parthdesai1208.compose.view.theme.GreyLight
 import com.parthdesai1208.compose.view.theme.red1000
 import com.parthdesai1208.compose.viewmodel.ManageStateOnTextChangeViewModel
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
+
+
+@Composable
+fun EditTextComposePreview() {
+    EditTextCompose(vm = androidx.lifecycle.viewmodel.compose.viewModel())
+}
 
 @Composable
 fun EditTextCompose(vm: ManageStateOnTextChangeViewModel) {
@@ -58,6 +115,8 @@ fun EditTextCompose(vm: ManageStateOnTextChangeViewModel) {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(modifier = Modifier.height(32.dp))
+            BasicTextField2Compose()
+            DividerTextCompose()
             SimpleFilledTextFieldSample()
             DividerTextCompose()
             SimpleOutlinedTextFieldSample()
@@ -205,10 +264,83 @@ fun GainFocusEditTextCompose() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
+@Composable
+fun BasicTextField2Compose() {
+    val textState = rememberTextFieldState()
+    val textState2 = rememberTextFieldState(initialText = stringResource(id = R.string.lorem_ipsum))
+    val scrollState = rememberScrollState()
+    val scope = rememberCoroutineScope()
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text(text = "New BasicTextField2")
+        Spacer(modifier = Modifier.height(8.dp))
+        BasicTextField2(
+            state = textState,
+            textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
+            cursorBrush = SolidColor(MaterialTheme.colors.onSurface),
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(text = "ScrollState using BasicTextField2")
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp)
+                .border(width = 1.dp, color = Color.DarkGray, shape = RoundedCornerShape(8.dp))
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            BasicTextField2(
+                state = textState2,
+                scrollState = scrollState,
+                lineLimits = TextFieldLineLimits.MultiLine(3, 7),
+                textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
+                cursorBrush = SolidColor(MaterialTheme.colors.onSurface),
+                modifier = Modifier.weight(0.95f),
+            )
+            Spacer(modifier = Modifier.width(5.dp))
+
+            val direction = LayoutDirection.Rtl
+            CompositionLocalProvider(LocalLayoutDirection provides direction) {
+                Slider(
+                    modifier = Modifier
+                        .graphicsLayer {
+                            rotationZ = 270f
+                            transformOrigin = TransformOrigin(0f, 0f)
+                        }
+                        .layout { measurable, constraints ->
+                            val placeable = measurable.measure(
+                                Constraints(
+                                    minWidth = constraints.minHeight,
+                                    maxWidth = constraints.maxHeight,
+                                    minHeight = constraints.minWidth,
+                                    maxHeight = constraints.maxHeight,
+                                )
+                            )
+                            layout(placeable.height, placeable.width) {
+                                placeable.place(-placeable.width, 0)
+                            }
+                        }
+                        .weight(0.05f),
+                    value = scrollState.value.toFloat(),
+                    onValueChange = {
+                        scope.launch { scrollState.scrollTo(it.roundToInt()) }
+                    },
+                    valueRange = 0f..scrollState.maxValue.toFloat()
+                )
+            }
+        }
+
+    }
+
+}
+
 @Composable
 fun SimpleFilledTextFieldSample() {
     var text by rememberSaveable { mutableStateOf("") }
-
     TextField(value = text, onValueChange = { text = it }, label = { Text("Filled EditText") })
 }
 
