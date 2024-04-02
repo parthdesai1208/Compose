@@ -353,14 +353,39 @@ fun SimpleOutlinedTextFieldSample() {
         label = { Text("Outlined EditText") })
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SingleLineTextField() {
-    var text by rememberSaveable { mutableStateOf("") }
-
-    TextField(value = text,
-        singleLine = true,
-        onValueChange = { text = it },
-        label = { Text("Single Line") })
+    val textState3 = rememberTextFieldState()
+    BasicTextField2(
+        modifier = Modifier
+            .padding(horizontal = 32.dp, vertical = 8.dp)
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colors.onSurface.copy(0.3f),
+                RoundedCornerShape(8.dp)
+            ),
+        state = textState3,
+        lineLimits = TextFieldLineLimits.SingleLine,
+        textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
+        cursorBrush = SolidColor(MaterialTheme.colors.onSurface),
+        decorator = { innerTextField ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            ) {
+                if (textState3.text.isEmpty()) {
+                    Text(
+                        text = "Single Line",
+                        color = MaterialTheme.colors.onSurface.copy(alpha = 0.5f)
+                    )
+                } else {
+                    innerTextField()
+                }
+            }
+        }
+    )
 }
 
 @Composable
