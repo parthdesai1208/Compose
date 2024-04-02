@@ -9,21 +9,71 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.updateTransition
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
-import androidx.compose.foundation.lazy.grid.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.paddingFromBaseline
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,8 +103,10 @@ import com.parthdesai1208.compose.model.DrawableStringPair
 import com.parthdesai1208.compose.model.HorizontalGridListData
 import com.parthdesai1208.compose.model.HorizontalListData
 import com.parthdesai1208.compose.model.StaggeredGridListDataClass
+import com.parthdesai1208.compose.utils.Phone
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.viewmodel.HorizontalListViewModel
+import com.parthdesai1208.compose.viewmodel.uicomponents.UpdateUsingMutableStateListOfViewModel
 import kotlin.math.max
 
 //region vertical recyclerview
@@ -96,7 +148,49 @@ enum class VerticalListListingEnumType(val buttonTitle: String, val func: @Compo
         { VerticalGridList(gridCells = DoubleSizedLeftRowGridCell) }),
     CustomGridCell2("First item take entire space", { FirstItemTakeWholeSpace() }),
     CustomGridCell3("Every third Item take entire Space", { EveryThirdItemTakeWholeSpace() }),
-    StaggeredGridList("Staggered Grid List", { VerticalStaggeredGridListFun() })
+    StaggeredGridList("Staggered Grid List", { VerticalStaggeredGridListFun() }),
+    UpdateUsingMutableStateListOfSample(
+        "Update UI using mutableStateListOf<>()",
+        { UpdateUsingMutableStateListOfSample(androidx.lifecycle.viewmodel.compose.viewModel()) }),
+
+}
+
+@Phone
+@Composable
+fun ListSamplePreview() {
+    UpdateUsingMutableStateListOfSample(androidx.lifecycle.viewmodel.compose.viewModel())
+}
+
+@Composable
+fun UpdateUsingMutableStateListOfSample(vm: UpdateUsingMutableStateListOfViewModel) {
+
+    val tintColor = if (isSystemInDarkTheme()) Color.White else Color.Black
+
+    LazyColumn {
+        itemsIndexed(items = vm.updateUsingMutableStateListOfModelList,
+            key = { _, item -> item.name },
+            itemContent = { index, item ->
+                Row(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(item.name, color = tintColor)
+                    IconButton(onClick = {
+                        vm.onClick(index, !item.isFavourite)
+                    }) {
+                        Icon(
+                            imageVector = if (item.isFavourite) Icons.Filled.Lightbulb else Icons.Filled.LightMode,
+                            contentDescription = null,
+                            tint = tintColor,
+                        )
+                    }
+                }
+            })
+    }
+
 }
 
 @Composable
