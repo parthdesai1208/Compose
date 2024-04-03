@@ -1,10 +1,25 @@
 package com.parthdesai1208.compose.view.uicomponents
 
 import android.os.Build.VERSION.SDK_INT
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -20,7 +35,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
@@ -38,6 +59,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.utils.fadingEdge
 import com.parthdesai1208.compose.view.animation.getScreenWidth
 import com.skydoves.landscapist.coil.CoilImage
 import com.skydoves.landscapist.glide.GlideImage
@@ -65,6 +87,7 @@ fun ImageComposeScreen() {
             ImageLoadingUsingCoil()
             ImageLoadingUsingLandscapistGlide()
             ImageLoadingUsingLandscapistCoil()
+            ImageWithFadingEdge()
         }
     }
 }
@@ -495,6 +518,71 @@ fun BitmapImage() {
             contentDescription = null
         )
     }
+}
+
+@Composable
+fun ImageWithFadingEdge() {
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Text("Fading Edge at Bottom")
+        Spacer(modifier = Modifier.height(8.dp))
+        CommonFadingEdgeImage(
+            Brush.verticalGradient(
+                colorStops = arrayOf(
+                    .5f to Color.Black,
+                    1f to Color.Transparent
+                )
+            )
+        )
+
+        DividerTextCompose()
+
+        Text("Fading Edge at Top")
+        Spacer(modifier = Modifier.height(8.dp))
+        CommonFadingEdgeImage(
+            Brush.verticalGradient(
+                colorStops = arrayOf(
+                    0f to Color.Transparent,
+                    .5f to Color.Black
+                )
+            )
+        )
+
+        DividerTextCompose()
+
+        Text("Fading Edge at left")
+        Spacer(modifier = Modifier.height(8.dp))
+        CommonFadingEdgeImage(
+            Brush.horizontalGradient(
+                colorStops = arrayOf(
+                    0f to Color.Transparent,
+                    .5f to Color.Black
+                )
+            )
+        )
+
+        DividerTextCompose()
+
+        Text("Fading Edge at right")
+        Spacer(modifier = Modifier.height(8.dp))
+        CommonFadingEdgeImage(
+            Brush.horizontalGradient(
+                colorStops = arrayOf(
+                    .5f to Color.Black,
+                    1f to Color.Transparent
+                )
+            )
+        )
+    }
+}
+
+@Composable
+fun CommonFadingEdgeImage(brush: Brush) {
+    Image(
+        bitmap = ImageBitmap.imageResource(id = R.drawable.actual_bitmap_image),
+        contentDescription = null,
+        modifier = Modifier.fadingEdge(brush)
+    )
 }
 
 @Composable
