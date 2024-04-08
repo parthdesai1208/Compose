@@ -3,6 +3,7 @@ package com.parthdesai1208.compose.view.uicomponents
 import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.magnifier
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,6 +29,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.outlined.AddAPhoto
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
@@ -42,11 +48,13 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import coil.ImageLoader
@@ -88,6 +96,7 @@ fun ImageComposeScreen() {
             ImageLoadingUsingLandscapistGlide()
             ImageLoadingUsingLandscapistCoil()
             ImageWithFadingEdge()
+            ImageWithMagnifier()
         }
     }
 }
@@ -583,6 +592,53 @@ fun CommonFadingEdgeImage(brush: Brush) {
         contentDescription = null,
         modifier = Modifier.fadingEdge(brush)
     )
+}
+
+@Composable
+fun ImageWithMagnifier() {
+    var offset by remember { mutableStateOf(Offset.Unspecified) }
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(text = "Image With magnifier(drag over image to see action)")
+        Spacer(modifier = Modifier.height(8.dp))
+        Box(
+            modifier = Modifier
+                .pointerInput(key1 = true,
+                    block = {
+                        detectDragGestures(
+                            onDrag = { change, dragAmount ->
+                                offset = offset.plus(dragAmount)
+                            },
+                            onDragStart = { offset = it },
+                            onDragEnd = {
+                                offset = Offset.Unspecified //for hiding magnifier view
+                            },
+                            onDragCancel = {
+                                offset = Offset.Unspecified //for hiding magnifier view
+                            }
+                        )
+                    })
+                .magnifier(
+                    sourceCenter = {
+                        offset
+                    },
+                    magnifierCenter = {
+                        offset - Offset(0f, 250f) //here we minus the specific offset
+                        //because we need to display magnifier glass
+                        //above the user's finger
+                    },
+                    size = DpSize(100.dp, 100.dp),
+                    cornerRadius = 100.dp,
+                )
+        ) {
+            Image(
+                bitmap = ImageBitmap.imageResource(id = R.drawable.actual_bitmap_image),
+                contentDescription = "Image with magnifier",
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+
+    }
 }
 
 @Composable
