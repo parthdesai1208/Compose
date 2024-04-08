@@ -3,19 +3,43 @@
 package com.parthdesai1208.compose.view.uicomponents
 
 import android.widget.Toast
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.basicMarquee
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -31,24 +55,40 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.*
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.ParagraphStyle
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.parthdesai1208.compose.R
-import com.parthdesai1208.compose.utils.*
+import com.parthdesai1208.compose.utils.AllDevices
+import com.parthdesai1208.compose.utils.RainbowColors
+import com.parthdesai1208.compose.utils.delayedClick
+import com.parthdesai1208.compose.utils.getBoundingBoxesForRange
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.view.theme.attractions_gmap
 import com.parthdesai1208.compose.view.theme.shopping_gmap
 import kotlinx.coroutines.delay
-import me.saket.extendedspans.*
+import me.saket.extendedspans.ExtendedSpans
+import me.saket.extendedspans.RoundedCornerSpanPainter
+import me.saket.extendedspans.SquigglyUnderlineSpanPainter
+import me.saket.extendedspans.drawBehind
+import me.saket.extendedspans.rememberSquigglyUnderlineAnimator
 
 
 /*all text related compose things is here in this file*/
@@ -302,6 +342,8 @@ fun TextComponents(name: String) { //@PreviewParameter(FakeStringProvider::class
                 highlightedText = "Everything",
                 changingEndStrings = changingEndStrings
             )
+            DividerTextCompose()
+            MultipleLineTextAutoMove()
             DividerTextCompose()
         }
     }
@@ -607,6 +649,16 @@ fun TypeWriterAnimation(text: String, highlightedText: String, changingEndString
                     )
             }
         }
+    )
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun MultipleLineTextAutoMove() {
+    Text(
+        text = stringResource(id = R.string.breaking_news_from_us),
+        modifier = Modifier.basicMarquee(iterations = Int.MAX_VALUE),
+        maxLines = 1,
     )
 }
 
