@@ -2,27 +2,54 @@ package com.parthdesai1208.compose.view.custom
 
 import androidx.annotation.FloatRange
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.ShoppingCart
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,13 +69,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
 import androidx.core.os.ConfigurationCompat
-import androidx.navigation.*
+import androidx.navigation.NavDestination
+import androidx.navigation.NavGraph
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import androidx.navigation.navigation
 import com.parthdesai1208.compose.R
-import java.util.*
+import java.util.Locale
 
 //region Custom Modifier listing screen
 enum class CustomLayoutListingEnumType(
@@ -57,6 +89,7 @@ enum class CustomLayoutListingEnumType(
 ) {
     BottomBarCustomCompose("Bottom Bar", { BottomBarCustomCompose() }),
     MyOwnColumnFun("Column", { MyOwnColumnFun() }),
+    BannerSample("banner", { BannerSampleScreen() }),
 }
 
 object CustomLayoutDestinations {
@@ -527,5 +560,67 @@ fun MyOwnColumnFun(modifier: Modifier = Modifier) {
             Text("We've done it by hand!")
         }
     }
+}
+//endregion
+
+//region banner
+@Composable
+fun BannerSampleScreen() {
+    var isVisibleBanner by rememberSaveable { mutableStateOf(false) }
+    Box(modifier = Modifier.fillMaxSize()) {
+        Banner(bannerText = "This is banner text.",
+            visibility = isVisibleBanner,
+            actionButton1Text = "Dismiss",
+            onClickActionButton1 = { isVisibleBanner = false })
+        Button(
+            enabled = !isVisibleBanner,
+            modifier = Modifier.align(Alignment.Center),
+            onClick = { isVisibleBanner = true }) {
+            Text(text = "Show banner")
+        }
+    }
+}
+
+@Composable
+fun Banner(
+    bannerText: String,
+    visibility: Boolean = true,
+    actionButton1Text: String? = null,
+    actionButton2Text: String? = null,
+    onClickActionButton1: () -> Unit = {},
+    onClickActionButton2: () -> Unit = {},
+) {
+    AnimatedVisibility(
+        visible = visibility,
+        enter = slideInVertically(),
+        exit = slideOutVertically(),
+    ) {
+        Surface {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            ) {
+                Text(text = bannerText)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
+                ) {
+                    actionButton1Text?.let {
+                        TextButton(onClick = onClickActionButton1) {
+                            Text(text = actionButton1Text)
+                        }
+                    }
+                    actionButton2Text?.let {
+                        TextButton(onClick = onClickActionButton2) {
+                            Text(text = actionButton2Text)
+                        }
+                    }
+                }
+                Divider()
+            }
+        }
+    }
+
 }
 //endregion
