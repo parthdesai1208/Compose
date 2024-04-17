@@ -173,6 +173,10 @@
     <string name="moviesList">Retrofit + flow</string>
     <string name="newListUsingPaging3">Retrofit + Paging3 + flow</string>
     <string name="Paging3Room">Retrofit + Room + Paging3 + flow</string>
+    <string name="internetConnectivityDemo">Observe Internet Connectivity</string>
+    <string name="backOnline">Back Online!</string>
+    <string name="noInternet">No Internet Connection!</string>
+    <string name="observeInternetConnectivityDemo">Stay calm &amp; observe the internet connectivity</string>
     <!--    end region-->
 
     <!--  region gesture-->

@@ -1,6 +1,12 @@
 package com.parthdesai1208.compose.view.networking
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
@@ -22,6 +28,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.view.networking.internetConnectivity.InternetConnectivityDemo
 
 enum class NetworkingListingEnumType(
     val buttonTitle: Int,
@@ -30,6 +37,7 @@ enum class NetworkingListingEnumType(
     MoviesList(R.string.moviesList, { MoviesListScreen(viewModel(), navHostController = it) }),
     NewsList(R.string.newListUsingPaging3, { NewsListUsingPaging3(viewModel = viewModel()) }),
     Paging3Room(R.string.Paging3Room, { Paging3Room() }),
+    InternetConnectivity(R.string.internetConnectivityDemo, { InternetConnectivityDemo() }),
 }
 
 object NetworkingListingDestinations {
