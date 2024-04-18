@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.utils.Phone
+import com.parthdesai1208.compose.view.theme.LightDarkContentColor
 import com.parthdesai1208.compose.view.theme.googlePhotosRedColor
 import com.parthdesai1208.compose.view.theme.spotifyGreenColor
 
@@ -56,7 +56,6 @@ private fun NoInternetConnectivitySample() {
 fun InternetConnectivityUI(
     visibility: Boolean, text: String, icon: ImageVector, bgColor: Color
 ) {
-    val color = if (isSystemInDarkTheme()) Color.Black else Color.White
     AnimatedVisibility(
         visible = visibility,
         enter = slideInVertically(),
@@ -73,11 +72,11 @@ fun InternetConnectivityUI(
         ) {
             Icon(
                 imageVector = icon, contentDescription = null,
-                tint = color
+                tint = LightDarkContentColor
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                color = color,
+                color = LightDarkContentColor,
                 text = text,
                 maxLines = 1
             )

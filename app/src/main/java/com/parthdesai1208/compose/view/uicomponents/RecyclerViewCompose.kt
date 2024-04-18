@@ -14,7 +14,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -105,6 +104,7 @@ import com.parthdesai1208.compose.model.HorizontalListData
 import com.parthdesai1208.compose.model.StaggeredGridListDataClass
 import com.parthdesai1208.compose.utils.Phone
 import com.parthdesai1208.compose.view.theme.ComposeTheme
+import com.parthdesai1208.compose.view.theme.LightDarkContentColor
 import com.parthdesai1208.compose.viewmodel.HorizontalListViewModel
 import com.parthdesai1208.compose.viewmodel.uicomponents.UpdateUsingMutableStateListOfViewModel
 import kotlin.math.max
@@ -164,8 +164,6 @@ fun ListSamplePreview() {
 @Composable
 fun UpdateUsingMutableStateListOfSample(vm: UpdateUsingMutableStateListOfViewModel) {
 
-    val tintColor = if (isSystemInDarkTheme()) Color.White else Color.Black
-
     LazyColumn {
         itemsIndexed(items = vm.updateUsingMutableStateListOfModelList,
             key = { _, item -> item.name },
@@ -177,14 +175,14 @@ fun UpdateUsingMutableStateListOfSample(vm: UpdateUsingMutableStateListOfViewMod
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(item.name, color = tintColor)
+                    Text(item.name, color = LightDarkContentColor)
                     IconButton(onClick = {
                         vm.onClick(index, !item.isFavourite)
                     }) {
                         Icon(
                             imageVector = if (item.isFavourite) Icons.Filled.Lightbulb else Icons.Filled.LightMode,
                             contentDescription = null,
-                            tint = tintColor,
+                            tint = LightDarkContentColor,
                         )
                     }
                 }

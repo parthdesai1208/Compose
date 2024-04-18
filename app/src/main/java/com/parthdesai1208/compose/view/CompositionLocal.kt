@@ -2,7 +2,6 @@ package com.parthdesai1208.compose.view
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -18,10 +17,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.parthdesai1208.compose.view.theme.LightDarkContentColor
 import com.parthdesai1208.compose.view.theme.LocalAppGaps
 
 interface Analytics {
@@ -59,12 +58,12 @@ fun CompositionLocalFun() {
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             textAlign = TextAlign.Center,
-            color = if (isSystemInDarkTheme()) Color.White else Color.Black,
+            color = LightDarkContentColor,
             text = "Gap between icon & text is implemented using compositionLocalOf{}"
         )
         Spacer(modifier = Modifier.height(8.dp))
         Button(
-            onClick = { analytics.logEvent("Basic Setup of CompositionLocal", context) }) {
+            onClick = { }) {
             Icon(imageVector = Icons.Filled.CloudCircle, contentDescription = null)
             Spacer(modifier = Modifier.width(LocalAppGaps.current.medium))
             Text("using compositionLocalOf")
