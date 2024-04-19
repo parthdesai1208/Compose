@@ -53,10 +53,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
@@ -67,36 +70,50 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.utils.Phone
+import com.parthdesai1208.compose.utils.ToolBarWithIconAndTitle
 import com.parthdesai1208.compose.utils.fadingEdge
 import com.parthdesai1208.compose.view.animation.getScreenWidth
 import com.skydoves.landscapist.coil.CoilImage
 import com.skydoves.landscapist.glide.GlideImage
 import com.skydoves.landscapist.palette.BitmapPalette
 
+@Phone
 @Composable
-fun ImageComposeScreen() {
+private fun ImageComposeScreenPreview() {
+    ImageComposeScreen(rememberNavController())
+}
+
+@Composable
+fun ImageComposeScreen(navHostController: NavHostController) {
     Surface {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(state = rememberScrollState())
-        ) {
-            ResourceImage()
-            ImageVectorImage()
-            BitmapImage()
-            Row(modifier = Modifier.horizontalScroll(state = rememberScrollState())) {
-                CircularImage()
-                RoundedCornerImage()
-                ImageWithBorder()
+        Column {
+            ToolBarWithIconAndTitle(
+                screenTitle = stringResource(id = R.string.image),
+                onBackArrowClick = { navHostController.popBackStack() }
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(state = rememberScrollState())
+            ) {
+                ResourceImage()
+                ImageVectorImage()
+                BitmapImage()
+                Row(modifier = Modifier.horizontalScroll(state = rememberScrollState())) {
+                    CircularImage()
+                    RoundedCornerImage()
+                    ImageWithBorder()
+                }
+                ContentScaleImage()
+                MirrorImage()
+                ImageLoadingUsingGlide()
+                ImageLoadingUsingCoil()
+                ImageLoadingUsingLandscapistGlide()
+                ImageLoadingUsingLandscapistCoil()
+                ImageWithFadingEdge()
+                ImageWithMagnifier()
             }
-            ContentScaleImage()
-            MirrorImage()
-            ImageLoadingUsingGlide()
-            ImageLoadingUsingCoil()
-            ImageLoadingUsingLandscapistGlide()
-            ImageLoadingUsingLandscapistCoil()
-            ImageWithFadingEdge()
-            ImageWithMagnifier()
         }
     }
 }

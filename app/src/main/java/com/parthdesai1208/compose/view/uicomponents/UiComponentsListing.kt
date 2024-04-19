@@ -1,17 +1,23 @@
 package com.parthdesai1208.compose.view.uicomponents
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,27 +27,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.view.uicomponents.bottomsheet.BottomSheetNavGraph
 
 
-enum class UIComponentsListingEnumType(val buttonTitle: Int, val func: @Composable () -> Unit) {
-    TextComponents(R.string.text, { TextComponents("World") }),
+enum class UIComponentsListingEnumType(
+    val buttonTitle: Int,
+    val func: @Composable (NavHostController) -> Unit
+) {
+    TextComponents(R.string.text, { TextComponents("World", it) }),
     EditTextCompose(
         R.string.edittext,
-        { EditTextCompose(androidx.lifecycle.viewmodel.compose.viewModel()) }),
-    ButtonComponents(R.string.button, { ButtonCompose() }),
-    ImageCompose(R.string.image, { ImageComposeScreen() }),
-    IconCompose(R.string.icon, { IconComposeScreen() }),
+        { EditTextCompose(it, androidx.lifecycle.viewmodel.compose.viewModel()) }),
+    ButtonComponents(R.string.button, { ButtonCompose(it) }),
+    ImageCompose(R.string.image, { ImageComposeScreen(it) }),
+    IconCompose(R.string.icon, { IconComposeScreen(it) }),
     SearchBarComponents(
         R.string.searchbar,
-        { SearchBar(androidx.lifecycle.viewmodel.compose.viewModel()) }),
-    SnackBarComponents(R.string.snackbar, { SnackBarCompose() }),
+        { SearchBar(it, androidx.lifecycle.viewmodel.compose.viewModel()) }),
+    SnackBarComponents(R.string.snackbar, { SnackBarCompose(it) }),
     ScaffoldCompose(R.string.scaffold, { ScaffoldCompose() }),
     ColumnCompose(R.string.column, { ColumnNavGraph() }),
     RowCompose(R.string.row, { RowNavGraph() }),
@@ -68,30 +72,9 @@ enum class UIComponentsListingEnumType(val buttonTitle: Int, val func: @Composab
 }
 
 object UIComponentsDestinations {
-    const val DRAW_MAIN_SCREEN = "DRAW_MAIN_SCREEN"
-    const val DRAW_SCREEN_ROUTE_PREFIX = "DRAW_SCREEN_ROUTE_PREFIX"
-    const val DRAW_SCREEN_ROUTE_POSTFIX = "DRAW_SCREEN_ROUTE_POSTFIX"
-}
-
-@Composable
-fun UIComponentsNavGraph(startDestination: String = UIComponentsDestinations.DRAW_MAIN_SCREEN) {
-    val navController = rememberNavController()
-
-    NavHost(navController = navController, startDestination = startDestination) {
-        composable(route = UIComponentsDestinations.DRAW_MAIN_SCREEN) {
-            UIComponentsListingScreen(navController = navController)
-        }
-
-        composable(
-            route = "${UIComponentsDestinations.DRAW_SCREEN_ROUTE_PREFIX}/{${UIComponentsDestinations.DRAW_SCREEN_ROUTE_POSTFIX}}",
-            arguments = listOf(navArgument(UIComponentsDestinations.DRAW_SCREEN_ROUTE_POSTFIX) {
-                type = NavType.StringType
-            })
-        ) { backStackEntry ->
-            val arguments = requireNotNull(backStackEntry.arguments)
-            ChildUIComponentsScreen(arguments.getString(UIComponentsDestinations.DRAW_SCREEN_ROUTE_POSTFIX))
-        }
-    }
+    const val UI_COMPONENTS_MAIN_SCREEN = "UI_COMPONENTS_MAIN_SCREEN"
+    const val UI_COMPONENTS_SCREEN_ROUTE_PREFIX = "UI_COMPONENTS_SCREEN_ROUTE_PREFIX"
+    const val UI_COMPONENTS_SCREEN_ROUTE_POSTFIX = "UI_COMPONENTS_SCREEN_ROUTE_POSTFIX"
 }
 
 @Composable
@@ -103,7 +86,7 @@ fun UIComponentsListingScreen(navController: NavHostController) {
         val context = LocalContext.current
 
         Button(
-            onClick = { navController.navigate("${UIComponentsDestinations.DRAW_SCREEN_ROUTE_PREFIX}/${title.buttonTitle}") },
+            onClick = { navController.navigate("${UIComponentsDestinations.UI_COMPONENTS_SCREEN_ROUTE_PREFIX}/${title.buttonTitle}") },
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
@@ -114,12 +97,23 @@ fun UIComponentsListingScreen(navController: NavHostController) {
     }
     Surface {
         Column {
-            Text(
-                text = "UI Components Samples",
-                modifier = Modifier.padding(16.dp),
-                fontSize = 18.sp,
-                fontFamily = FontFamily.SansSerif
-            )
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    modifier = Modifier.clickable {
+                        navController.popBackStack()
+                    }, imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "UI Components Samples",
+                    modifier = Modifier.padding(16.dp),
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily.SansSerif
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Column(
                 modifier = Modifier
@@ -136,6 +130,8 @@ fun UIComponentsListingScreen(navController: NavHostController) {
 }
 
 @Composable
-fun ChildUIComponentsScreen(onClickButtonTitle: String?) {
-    enumValues<UIComponentsListingEnumType>().first { it.buttonTitle.toString() == onClickButtonTitle }.func.invoke()
+fun ChildUIComponentsScreen(onClickButtonTitle: String?, navHostController: NavHostController) {
+    enumValues<UIComponentsListingEnumType>().first { it.buttonTitle.toString() == onClickButtonTitle }.func.invoke(
+        navHostController
+    )
 }

@@ -31,6 +31,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
@@ -61,15 +62,18 @@ import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.utils.ToolBarWithIconAndTitle
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun ButtonCompose() {
+fun ButtonCompose(navHostController: NavHostController) {
     val context = LocalContext.current
     val colorList = listOf(
         Color.Cyan,
@@ -83,224 +87,249 @@ fun ButtonCompose() {
         delay(5000L)
         enableClick = true
     })
-    Column(
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxSize()
-            .verticalScroll(state = rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(space = 8.dp) //space between child
-    ) {
-        //button for primary action-use
-        Button(onClick = { Toast.makeText(context, "Button Click", Toast.LENGTH_SHORT).show() }) {
-            Text("Button")
-        }
-        Button(onClick = {
-            if (enableClick) {
-                enableClick = false
-                //onClick business logic should start from here
-                Toast.makeText(context, "Button Click", Toast.LENGTH_SHORT).show()
-            }
-        }) {
-            Text("Button with delayed click")
-        }
-        Button(
-            onClick = {}, colors = ButtonDefaults.buttonColors(
-                //contentColor for text
-                //backgroundColor for rest of the button area
-                contentColor = colorResource(id = R.color.colorPrimaryDark),
-                backgroundColor = colorResource(id = R.color.colorAccent)
+    Surface {
+        Column {
+            ToolBarWithIconAndTitle(
+                screenTitle = stringResource(id = R.string.button),
+                onBackArrowClick = { navHostController.popBackStack() }
             )
-        ) {
-            Text("with color Button")
-        }
-        Button(enabled = false, onClick = {}) {
-            Text("Disable Button")
-        }
-        Button(
-            onClick = {},
-            elevation = ButtonDefaults.elevation(defaultElevation = 8.dp, pressedElevation = 16.dp)
-        ) {
-            Text("Elevated Button")
-        }
-        Button(onClick = {}, shape = MaterialTheme.shapes.small) {
-            Text("Small Shape Button")
-        }
-        Button(onClick = {}, shape = MaterialTheme.shapes.medium) {
-            Text("Medium Shape Button")
-        }
-        Button(onClick = {}, shape = MaterialTheme.shapes.large) {
-            Text("Large Shape Button")
-        }
-        Button(
-            onClick = {},
-            border = BorderStroke(width = 3.dp, color = colorResource(id = R.color.colorAccent)),
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = colorResource(id = R.color.pink_700)
-            )
-        ) {
-            Text("Button with custom border color")
-        }
+            Column(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .fillMaxSize()
+                    .verticalScroll(state = rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(space = 8.dp) //space between child
+            ) {
+                //button for primary action-use
+                Button(onClick = {
+                    Toast.makeText(context, "Button Click", Toast.LENGTH_SHORT).show()
+                }) {
+                    Text("Button")
+                }
+                Button(onClick = {
+                    if (enableClick) {
+                        enableClick = false
+                        //onClick business logic should start from here
+                        Toast.makeText(context, "Button Click", Toast.LENGTH_SHORT).show()
+                    }
+                }) {
+                    Text("Button with delayed click")
+                }
+                Button(
+                    onClick = {}, colors = ButtonDefaults.buttonColors(
+                        //contentColor for text
+                        //backgroundColor for rest of the button area
+                        contentColor = colorResource(id = R.color.colorPrimaryDark),
+                        backgroundColor = colorResource(id = R.color.colorAccent)
+                    )
+                ) {
+                    Text("with color Button")
+                }
+                Button(enabled = false, onClick = {}) {
+                    Text("Disable Button")
+                }
+                Button(
+                    onClick = {},
+                    elevation = ButtonDefaults.elevation(
+                        defaultElevation = 8.dp,
+                        pressedElevation = 16.dp
+                    )
+                ) {
+                    Text("Elevated Button")
+                }
+                Button(onClick = {}, shape = MaterialTheme.shapes.small) {
+                    Text("Small Shape Button")
+                }
+                Button(onClick = {}, shape = MaterialTheme.shapes.medium) {
+                    Text("Medium Shape Button")
+                }
+                Button(onClick = {}, shape = MaterialTheme.shapes.large) {
+                    Text("Large Shape Button")
+                }
+                Button(
+                    onClick = {},
+                    border = BorderStroke(
+                        width = 3.dp,
+                        color = colorResource(id = R.color.colorAccent)
+                    ),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = colorResource(id = R.color.pink_700)
+                    )
+                ) {
+                    Text("Button with custom border color")
+                }
 
-        ButtonWithGradientBorder()
+                ButtonWithGradientBorder()
 
-        Button(onClick = {}, contentPadding = PaddingValues(all = 16.dp)) {
-            Text("With ContentPadding Button")
-        }
-        Button(onClick = {}) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(imageVector = Icons.Default.Save, contentDescription = null)
-                Text("Button with icon/text", modifier = Modifier.padding(horizontal = 5.dp))
-                Icon(imageVector = Icons.Default.Satellite, contentDescription = null)
-            }
-        }
-        //OutlinedButton for not primary action, for secondary button
-        OutlinedButton(onClick = {
-            Toast.makeText(
-                context,
-                "Outlined Button Click",
-                Toast.LENGTH_SHORT
-            ).show()
-        }) {
-            Text(text = "Outlined Button")
-        }
-        OutlinedButton(onClick = { }) {
-            Text(
-                text = "Outlined Button with text color",
-                color = colorResource(id = R.color.pink_700)
-            )
-        }
-        OutlinedButton(onClick = { }, enabled = false) {
-            Text(text = "Disable Outlined Button")
-        }
-        OutlinedButton(onClick = {}) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(imageVector = Icons.Default.Save, contentDescription = null)
-                Text(
-                    "OutlinedButton with icon/text",
-                    modifier = Modifier.padding(horizontal = 5.dp)
+                Button(onClick = {}, contentPadding = PaddingValues(all = 16.dp)) {
+                    Text("With ContentPadding Button")
+                }
+                Button(onClick = {}) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(imageVector = Icons.Default.Save, contentDescription = null)
+                        Text(
+                            "Button with icon/text",
+                            modifier = Modifier.padding(horizontal = 5.dp)
+                        )
+                        Icon(imageVector = Icons.Default.Satellite, contentDescription = null)
+                    }
+                }
+                //OutlinedButton for not primary action, for secondary button
+                OutlinedButton(onClick = {
+                    Toast.makeText(
+                        context,
+                        "Outlined Button Click",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }) {
+                    Text(text = "Outlined Button")
+                }
+                OutlinedButton(onClick = { }) {
+                    Text(
+                        text = "Outlined Button with text color",
+                        color = colorResource(id = R.color.pink_700)
+                    )
+                }
+                OutlinedButton(onClick = { }, enabled = false) {
+                    Text(text = "Disable Outlined Button")
+                }
+                OutlinedButton(onClick = {}) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(imageVector = Icons.Default.Save, contentDescription = null)
+                        Text(
+                            "OutlinedButton with icon/text",
+                            modifier = Modifier.padding(horizontal = 5.dp)
+                        )
+                        Icon(imageVector = Icons.Default.Satellite, contentDescription = null)
+                    }
+                }
+                //TextButton for provide action in Dialog,Cards,Surface,etc.
+                TextButton(onClick = {
+                    Toast.makeText(context, "Text Button Click", Toast.LENGTH_SHORT).show()
+                }) {
+                    Text(text = "Text Button", color = MaterialTheme.colors.error)
+                }
+                TextButton(onClick = {}) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(imageVector = Icons.Default.Save, contentDescription = null)
+                        Text(
+                            text = "TextButton with icon",
+                            color = MaterialTheme.colors.error,
+                            modifier = Modifier.padding(horizontal = 5.dp)
+                        )
+                        Icon(imageVector = Icons.Default.Satellite, contentDescription = null)
+                    }
+                }
+                //IconButton for provide action in Toolbar,navBar,etc.
+                IconButton(onClick = {
+                    Toast.makeText(context, "Icon Button Click", Toast.LENGTH_SHORT).show()
+                }, modifier = Modifier.padding(all = 8.dp)) {
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.onSurface
+                    )
+                }
+
+                NoRippleEffect()
+
+                CornerShapeButton()
+
+                GradientButton(
+                    text = "Linear Gradient with Clamp",
+                    brush = Brush.linearGradient(colors = colorList, tileMode = TileMode.Clamp)
                 )
-                Icon(imageVector = Icons.Default.Satellite, contentDescription = null)
-            }
-        }
-        //TextButton for provide action in Dialog,Cards,Surface,etc.
-        TextButton(onClick = {
-            Toast.makeText(context, "Text Button Click", Toast.LENGTH_SHORT).show()
-        }) {
-            Text(text = "Text Button", color = MaterialTheme.colors.error)
-        }
-        TextButton(onClick = {}) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(imageVector = Icons.Default.Save, contentDescription = null)
-                Text(
-                    text = "TextButton with icon",
-                    color = MaterialTheme.colors.error,
-                    modifier = Modifier.padding(horizontal = 5.dp)
+                GradientButton(
+                    text = "Linear Gradient with repeat",
+                    brush = Brush.linearGradient(colors = colorList, tileMode = TileMode.Repeated)
                 )
-                Icon(imageVector = Icons.Default.Satellite, contentDescription = null)
+                GradientButton(
+                    text = "Linear Gradient with Mirror",
+                    brush = Brush.linearGradient(colors = colorList, tileMode = TileMode.Mirror)
+                )
+                GradientButton(
+                    text = "Linear Gradient with Decal",
+                    brush = Brush.linearGradient(colors = colorList, tileMode = TileMode.Decal)
+                )
+
+                GradientButton(
+                    text = "radial Gradient with Clamp",
+                    brush = Brush.radialGradient(colors = colorList, tileMode = TileMode.Clamp)
+                )
+                GradientButton(
+                    text = "radial Gradient with Repeated",
+                    brush = Brush.radialGradient(colors = colorList, tileMode = TileMode.Repeated)
+                )
+                GradientButton(
+                    text = "radial Gradient with Mirror",
+                    brush = Brush.radialGradient(colors = colorList, tileMode = TileMode.Mirror)
+                )
+                GradientButton(
+                    text = "radial Gradient with Decal",
+                    brush = Brush.radialGradient(colors = colorList, tileMode = TileMode.Decal)
+                )
+
+                GradientButton(
+                    text = "horizontal Gradient with Clamp",
+                    brush = Brush.horizontalGradient(colors = colorList, tileMode = TileMode.Clamp)
+                )
+                GradientButton(
+                    text = "horizontal Gradient with Repeated",
+                    brush = Brush.horizontalGradient(
+                        colors = colorList,
+                        tileMode = TileMode.Repeated
+                    )
+                )
+                GradientButton(
+                    text = "horizontal Gradient with Mirror",
+                    brush = Brush.horizontalGradient(colors = colorList, tileMode = TileMode.Mirror)
+                )
+                GradientButton(
+                    text = "horizontal Gradient with Decal",
+                    brush = Brush.horizontalGradient(colors = colorList, tileMode = TileMode.Decal)
+                )
+
+                GradientButton(
+                    text = "vertical Gradient with Clamp",
+                    brush = Brush.verticalGradient(colors = colorList, tileMode = TileMode.Clamp)
+                )
+                GradientButton(
+                    text = "vertical Gradient with Repeated",
+                    brush = Brush.verticalGradient(colors = colorList, tileMode = TileMode.Repeated)
+                )
+                GradientButton(
+                    text = "vertical Gradient with Mirror",
+                    brush = Brush.verticalGradient(colors = colorList, tileMode = TileMode.Mirror)
+                )
+                GradientButton(
+                    text = "vertical Gradient with Decal",
+                    brush = Brush.verticalGradient(colors = colorList, tileMode = TileMode.Decal)
+                )
+
+                GradientButton(
+                    text = "sweep Gradient",
+                    brush = Brush.sweepGradient(colors = colorList)
+                )
+
+                Row(modifier = Modifier.padding(vertical = 10.dp)) {
+                    CircularIconButton(icon = Icons.Filled.PlayArrow)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    CircularIconButton(icon = Icons.Filled.Pause)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    CircularIconButton(icon = Icons.Filled.AttachEmail)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    CircularIconButton(icon = Icons.Filled.Settings)
+                }
+
+                Row(modifier = Modifier.padding(vertical = 10.dp)) {
+                    ButtonWithClickAnimation()
+                    Spacer(modifier = Modifier.width(8.dp))
+                    HeartAnimation()
+                }
+                PressedButton()
             }
         }
-        //IconButton for provide action in Toolbar,navBar,etc.
-        IconButton(onClick = {
-            Toast.makeText(context, "Icon Button Click", Toast.LENGTH_SHORT).show()
-        }, modifier = Modifier.padding(all = 8.dp)) {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = null,
-                tint = MaterialTheme.colors.onSurface
-            )
-        }
-
-        NoRippleEffect()
-
-        CornerShapeButton()
-
-        GradientButton(
-            text = "Linear Gradient with Clamp",
-            brush = Brush.linearGradient(colors = colorList, tileMode = TileMode.Clamp)
-        )
-        GradientButton(
-            text = "Linear Gradient with repeat",
-            brush = Brush.linearGradient(colors = colorList, tileMode = TileMode.Repeated)
-        )
-        GradientButton(
-            text = "Linear Gradient with Mirror",
-            brush = Brush.linearGradient(colors = colorList, tileMode = TileMode.Mirror)
-        )
-        GradientButton(
-            text = "Linear Gradient with Decal",
-            brush = Brush.linearGradient(colors = colorList, tileMode = TileMode.Decal)
-        )
-
-        GradientButton(
-            text = "radial Gradient with Clamp",
-            brush = Brush.radialGradient(colors = colorList, tileMode = TileMode.Clamp)
-        )
-        GradientButton(
-            text = "radial Gradient with Repeated",
-            brush = Brush.radialGradient(colors = colorList, tileMode = TileMode.Repeated)
-        )
-        GradientButton(
-            text = "radial Gradient with Mirror",
-            brush = Brush.radialGradient(colors = colorList, tileMode = TileMode.Mirror)
-        )
-        GradientButton(
-            text = "radial Gradient with Decal",
-            brush = Brush.radialGradient(colors = colorList, tileMode = TileMode.Decal)
-        )
-
-        GradientButton(
-            text = "horizontal Gradient with Clamp",
-            brush = Brush.horizontalGradient(colors = colorList, tileMode = TileMode.Clamp)
-        )
-        GradientButton(
-            text = "horizontal Gradient with Repeated",
-            brush = Brush.horizontalGradient(colors = colorList, tileMode = TileMode.Repeated)
-        )
-        GradientButton(
-            text = "horizontal Gradient with Mirror",
-            brush = Brush.horizontalGradient(colors = colorList, tileMode = TileMode.Mirror)
-        )
-        GradientButton(
-            text = "horizontal Gradient with Decal",
-            brush = Brush.horizontalGradient(colors = colorList, tileMode = TileMode.Decal)
-        )
-
-        GradientButton(
-            text = "vertical Gradient with Clamp",
-            brush = Brush.verticalGradient(colors = colorList, tileMode = TileMode.Clamp)
-        )
-        GradientButton(
-            text = "vertical Gradient with Repeated",
-            brush = Brush.verticalGradient(colors = colorList, tileMode = TileMode.Repeated)
-        )
-        GradientButton(
-            text = "vertical Gradient with Mirror",
-            brush = Brush.verticalGradient(colors = colorList, tileMode = TileMode.Mirror)
-        )
-        GradientButton(
-            text = "vertical Gradient with Decal",
-            brush = Brush.verticalGradient(colors = colorList, tileMode = TileMode.Decal)
-        )
-
-        GradientButton(text = "sweep Gradient", brush = Brush.sweepGradient(colors = colorList))
-
-        Row(modifier = Modifier.padding(vertical = 10.dp)) {
-            CircularIconButton(icon = Icons.Filled.PlayArrow)
-            Spacer(modifier = Modifier.width(8.dp))
-            CircularIconButton(icon = Icons.Filled.Pause)
-            Spacer(modifier = Modifier.width(8.dp))
-            CircularIconButton(icon = Icons.Filled.AttachEmail)
-            Spacer(modifier = Modifier.width(8.dp))
-            CircularIconButton(icon = Icons.Filled.Settings)
-        }
-
-        Row(modifier = Modifier.padding(vertical = 10.dp)) {
-            ButtonWithClickAnimation()
-            Spacer(modifier = Modifier.width(8.dp))
-            HeartAnimation()
-        }
-        PressedButton()
     }
 }
 

@@ -89,8 +89,12 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.utils.Phone
 import com.parthdesai1208.compose.utils.RainbowColors
+import com.parthdesai1208.compose.utils.ToolBarWithIconAndTitle
 import com.parthdesai1208.compose.utils.autofill
 import com.parthdesai1208.compose.view.theme.GreyDark
 import com.parthdesai1208.compose.view.theme.GreyLight
@@ -99,80 +103,89 @@ import com.parthdesai1208.compose.viewmodel.ManageStateOnTextChangeViewModel
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-
+@Phone
 @Composable
 fun EditTextComposePreview() {
-    EditTextCompose(vm = androidx.lifecycle.viewmodel.compose.viewModel())
+    EditTextCompose(rememberNavController(), vm = androidx.lifecycle.viewmodel.compose.viewModel())
 }
 
 @Composable
-fun EditTextCompose(vm: ManageStateOnTextChangeViewModel) {
+fun EditTextCompose(navHostController: NavHostController, vm: ManageStateOnTextChangeViewModel) {
     Surface {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(state = rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Spacer(modifier = Modifier.height(32.dp))
-            BasicTextField2Compose()
-            DividerTextCompose()
-            SimpleFilledTextFieldSample()
-            DividerTextCompose()
-            SimpleOutlinedTextFieldSample()
-            DividerTextCompose()
-            SingleLineTextField()
-            DividerTextCompose()
-            MaxLineTextField()
-            DividerTextCompose()
-            TextStyleTextField()
-            DividerTextCompose()
-            CapitalizeAllCharTextField()
-            DividerTextCompose()
-            CapitalizeFirstCharOfWordTextField()
-            DividerTextCompose()
-            CapitalizeFirstCharOfSentenceTextField()
-            DividerTextCompose()
-            AutoCorrectTextField()
-            DividerTextCompose()
-            KeyBoardTypeTextFieldPass(keyboardType = KeyboardType.Password, "Password")
-            DividerTextCompose()
-            KeyBoardTypeTextFieldPass(keyboardType = KeyboardType.NumberPassword, "Number Password")
-            DividerTextCompose()
-            KeyBoardTypeTextField(keyboardType = KeyboardType.Number, "Number")
-            DividerTextCompose()
-            KeyBoardTypeTextField(keyboardType = KeyboardType.Phone, "Phone")
-            DividerTextCompose()
-            KeyBoardTypeTextField(keyboardType = KeyboardType.Email, "Email")
-            DividerTextCompose()
-            GainFocusEditTextCompose()
-            DividerTextCompose()
-            ImeOptionTextField(imeAction = ImeAction.Go, "Go ImeAction")
-            DividerTextCompose()
-            ImeOptionTextField(imeAction = ImeAction.Search, "Search ImeAction")
-            DividerTextCompose()
-            ImeOptionTextField(imeAction = ImeAction.Send, "Send ImeAction")
-            DividerTextCompose()
-            ImeOptionTextField(imeAction = ImeAction.Next, "Next ImeAction")
-            DividerTextCompose()
-            ImeOptionTextField(imeAction = ImeAction.Previous, "Previous ImeAction")
-            DividerTextCompose()
-            ImeOptionTextField(imeAction = ImeAction.Done, "Done ImeAction")
-            DividerTextCompose()
-            FocusOrderTextField()
-            DividerTextCompose()
-            GradientTextField()
-            DividerTextCompose()
-            NoLeadingZeroes()
-            DividerTextCompose()
-            PhoneNumberWithDash()
-            DividerTextCompose()
-            ErrorTextField()
-            DividerTextCompose()
-            ManageStateOnTextChange(vm)
-            DividerTextCompose()
-            OTPInputField()
-            DividerTextCompose()
+        Column {
+            ToolBarWithIconAndTitle(
+                screenTitle = stringResource(id = R.string.edittext),
+                onBackArrowClick = { navHostController.popBackStack() }
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(state = rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Spacer(modifier = Modifier.height(32.dp))
+                BasicTextField2Compose()
+                DividerTextCompose()
+                SimpleFilledTextFieldSample()
+                DividerTextCompose()
+                SimpleOutlinedTextFieldSample()
+                DividerTextCompose()
+                SingleLineTextField()
+                DividerTextCompose()
+                MaxLineTextField()
+                DividerTextCompose()
+                TextStyleTextField()
+                DividerTextCompose()
+                CapitalizeAllCharTextField()
+                DividerTextCompose()
+                CapitalizeFirstCharOfWordTextField()
+                DividerTextCompose()
+                CapitalizeFirstCharOfSentenceTextField()
+                DividerTextCompose()
+                AutoCorrectTextField()
+                DividerTextCompose()
+                KeyBoardTypeTextFieldPass(keyboardType = KeyboardType.Password, "Password")
+                DividerTextCompose()
+                KeyBoardTypeTextFieldPass(
+                    keyboardType = KeyboardType.NumberPassword,
+                    "Number Password"
+                )
+                DividerTextCompose()
+                KeyBoardTypeTextField(keyboardType = KeyboardType.Number, "Number")
+                DividerTextCompose()
+                KeyBoardTypeTextField(keyboardType = KeyboardType.Phone, "Phone")
+                DividerTextCompose()
+                KeyBoardTypeTextField(keyboardType = KeyboardType.Email, "Email")
+                DividerTextCompose()
+                GainFocusEditTextCompose()
+                DividerTextCompose()
+                ImeOptionTextField(imeAction = ImeAction.Go, "Go ImeAction")
+                DividerTextCompose()
+                ImeOptionTextField(imeAction = ImeAction.Search, "Search ImeAction")
+                DividerTextCompose()
+                ImeOptionTextField(imeAction = ImeAction.Send, "Send ImeAction")
+                DividerTextCompose()
+                ImeOptionTextField(imeAction = ImeAction.Next, "Next ImeAction")
+                DividerTextCompose()
+                ImeOptionTextField(imeAction = ImeAction.Previous, "Previous ImeAction")
+                DividerTextCompose()
+                ImeOptionTextField(imeAction = ImeAction.Done, "Done ImeAction")
+                DividerTextCompose()
+                FocusOrderTextField()
+                DividerTextCompose()
+                GradientTextField()
+                DividerTextCompose()
+                NoLeadingZeroes()
+                DividerTextCompose()
+                PhoneNumberWithDash()
+                DividerTextCompose()
+                ErrorTextField()
+                DividerTextCompose()
+                ManageStateOnTextChange(vm)
+                DividerTextCompose()
+                OTPInputField()
+                DividerTextCompose()
+            }
         }
     }
 }

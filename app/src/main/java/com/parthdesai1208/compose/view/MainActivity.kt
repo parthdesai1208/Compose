@@ -56,6 +56,9 @@ import com.parthdesai1208.compose.view.state.ChildScreenState
 import com.parthdesai1208.compose.view.state.MainScreenState
 import com.parthdesai1208.compose.view.state.StateDestinations
 import com.parthdesai1208.compose.view.theme.ComposeTheme
+import com.parthdesai1208.compose.view.uicomponents.ChildUIComponentsScreen
+import com.parthdesai1208.compose.view.uicomponents.UIComponentsDestinations
+import com.parthdesai1208.compose.view.uicomponents.UIComponentsListingScreen
 
 class MainActivity : AppCompatActivity() {
 
@@ -96,8 +99,7 @@ enum class MainScreenEnumType(
     val buttonTitleForAccessibility: Int = buttonTitle,
 ) {
     TextComponents(
-        R.string.uicomponents,
-        { com.parthdesai1208.compose.view.uicomponents.UIComponentsNavGraph(prevNavController = it) }),
+        R.string.uicomponents, { UIComponentsListingScreen(navController = it) }),
     StateListingScreen(R.string.state, {
         MainScreenState(navController = it)
     }, buttonTitleForAccessibility = R.string.learnstatewithviewmodel),
@@ -165,6 +167,26 @@ fun MainActivityNavGraph(
         }
         //endregion
 
+        //region UI Components
+        composable(route = UIComponentsDestinations.UI_COMPONENTS_MAIN_SCREEN) {
+            UIComponentsListingScreen(navController = navController)
+        }
+
+        composable(
+            route = "${UIComponentsDestinations.UI_COMPONENTS_SCREEN_ROUTE_PREFIX}/{${UIComponentsDestinations.UI_COMPONENTS_SCREEN_ROUTE_POSTFIX}}",
+            arguments = listOf(navArgument(UIComponentsDestinations.UI_COMPONENTS_SCREEN_ROUTE_POSTFIX) {
+                type = NavType.StringType
+            })
+        ) { backStackEntry ->
+            val arguments = requireNotNull(backStackEntry.arguments)
+            ChildUIComponentsScreen(
+                arguments.getString(UIComponentsDestinations.UI_COMPONENTS_SCREEN_ROUTE_POSTFIX),
+                navHostController = navController
+            )
+        }
+        //endregion
+
+        //region state
         composable(route = StateDestinations.STATE_LISTING_MAIN_SCREEN) {
             MainScreenState(navController = navController)
         }
@@ -181,6 +203,8 @@ fun MainActivityNavGraph(
                 navController
             )
         }
+        //endregion
+
     }
 }
 
