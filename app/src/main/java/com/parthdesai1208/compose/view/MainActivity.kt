@@ -6,7 +6,13 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
@@ -46,7 +52,9 @@ import com.parthdesai1208.compose.view.navigation.NavigationEx1
 import com.parthdesai1208.compose.view.navigation.RallyScreen
 import com.parthdesai1208.compose.view.navigation.composeDestination.StartForComposeDestination
 import com.parthdesai1208.compose.view.networking.NetworkingListNavGraph
-import com.parthdesai1208.compose.view.state.StateListingNavGraph
+import com.parthdesai1208.compose.view.state.ChildScreenState
+import com.parthdesai1208.compose.view.state.MainScreenState
+import com.parthdesai1208.compose.view.state.StateDestinations
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 
 class MainActivity : AppCompatActivity() {
@@ -84,14 +92,14 @@ object MainDestinations {
 
 enum class MainScreenEnumType(
     val buttonTitle: Int,
-    val func: @Composable () -> Unit,
+    val func: @Composable (NavHostController) -> Unit,
     val buttonTitleForAccessibility: Int = buttonTitle,
 ) {
     TextComponents(
         R.string.uicomponents,
-        { com.parthdesai1208.compose.view.uicomponents.UIComponentsNavGraph() }),
+        { com.parthdesai1208.compose.view.uicomponents.UIComponentsNavGraph(prevNavController = it) }),
     StateListingScreen(R.string.state, {
-        StateListingNavGraph()
+        MainScreenState(navController = it)
     }, buttonTitleForAccessibility = R.string.learnstatewithviewmodel),
     CompositionLocal(R.string.learncompositionlocal, { CompositionLocalFun() }),
     CustomModifierScreen(R.string.custommodifier, { CustomModifierNavGraph() }),
@@ -139,7 +147,7 @@ fun MainActivityNavGraph(
                 val container = (application as ComposeApp).container
                 AccessibilityScreen(appContainer = container)
             } else {
-                ChildScreen(arguments.getString(MAIN_SCREEN_ROUTE_POSTFIX))
+                ChildScreen(arguments.getString(MAIN_SCREEN_ROUTE_POSTFIX), navController)
             }
         }
 
@@ -152,16 +160,35 @@ fun MainActivityNavGraph(
             val accountName = entry.arguments?.getString("name")
             val account = UserData.getAccount(accountName)
             if (account.name.isNotEmpty()) {
-                MainScreenEnumType.NavigationEx1.func.invoke()
+                MainScreenEnumType.NavigationEx1.func.invoke(navController)
             }
         }
         //endregion
+
+        composable(route = StateDestinations.STATE_LISTING_MAIN_SCREEN) {
+            MainScreenState(navController = navController)
+        }
+
+        composable(
+            route = "${StateDestinations.STATE_LISTING_MAIN_SCREEN_ROUTE_PREFIX}/{${StateDestinations.STATE_LISTING_MAIN_SCREEN_ROUTE_POSTFIX}}",
+            arguments = listOf(navArgument(StateDestinations.STATE_LISTING_MAIN_SCREEN_ROUTE_POSTFIX) {
+                type = NavType.StringType
+            })
+        ) { backStackEntry ->
+            val arguments = requireNotNull(backStackEntry.arguments)
+            ChildScreenState(
+                arguments.getString(StateDestinations.STATE_LISTING_MAIN_SCREEN_ROUTE_POSTFIX),
+                navController
+            )
+        }
     }
 }
 
 @Composable
-fun ChildScreen(onClickButtonTitle: String?) {
-    enumValues<MainScreenEnumType>().first { it.buttonTitle.toString() == onClickButtonTitle }.func.invoke()
+fun ChildScreen(onClickButtonTitle: String?, navController: NavHostController) {
+    enumValues<MainScreenEnumType>().first { it.buttonTitle.toString() == onClickButtonTitle }.func.invoke(
+        navController
+    )
 }
 
 @Composable

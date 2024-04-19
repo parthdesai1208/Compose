@@ -3,22 +3,58 @@
 package com.parthdesai1208.compose.view.state
 
 import androidx.annotation.StringRes
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Button
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -29,9 +65,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.model.state.TodoIcon
 import com.parthdesai1208.compose.model.state.TodoItem
 import com.parthdesai1208.compose.viewmodel.state.TodoViewModel
@@ -39,8 +79,9 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 @Composable
-fun TodoActivityScreen(todoViewModel: TodoViewModel) {
+fun TodoActivityScreen(navHostController: NavHostController, todoViewModel: TodoViewModel) {
     TodoScreen(
+        navHostController,
         items = todoViewModel.todoItems,
         currentlyEditing = todoViewModel.currentEditItem,
         onAddItem = todoViewModel::addItem,
@@ -54,6 +95,7 @@ fun TodoActivityScreen(todoViewModel: TodoViewModel) {
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun TodoScreen(
+    navHostController: NavHostController,
     items: List<TodoItem>,
     currentlyEditing: TodoItem?,
     onAddItem: (TodoItem) -> Unit,
@@ -69,101 +111,121 @@ fun TodoScreen(
     val coroutineScope = rememberCoroutineScope()
     Surface {
         Column {
-            val enableTopSection = currentlyEditing == null
-            TopViewContainer(elevate = enableTopSection) {
-                if (enableTopSection) {
-                    EditTextWithAdd(onAddItem)
-                } else {
-                    Text(
-                        text = "Editing item",
-                        style = MaterialTheme.typography.h6,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                            .padding(16.dp)
-                            .fillMaxWidth()
-                    )
-                }
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    modifier = Modifier.clickable {
+                        navHostController.popBackStack()
+                    }, imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(id = R.string.learnstate),
+                    modifier = Modifier.padding(16.dp),
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily.SansSerif
+                )
             }
-
-            Box(modifier = Modifier.weight(1f)) {
-                //recyclerview
-                LazyColumn(contentPadding = PaddingValues(top = 8.dp), state = listState) {
-                    items(items = items) { todo ->
-                        if (currentlyEditing?.id == todo.id) {
-                            InlineEditorFun(
-                                item = currentlyEditing,
-                                onEditItemChange = onEditItemChange,
-                                onEditDone = onEditDone,
-                                onRemoveItem = { onRemoveItem(todo) }
-                            )
-                        } else {
-                            TodoRow(
-                                todo = todo,
-                                onItemClicked = { onStartEdit(it) },
-                                modifier = Modifier.fillParentMaxWidth()
-                            )
-                        }
-                    }
-                }
-
-                //region floating action button
-                val visi by remember {
-                    derivedStateOf {
-                        if (!enableTopSection)
-                            false
-                        else
-                            listState.firstVisibleItemIndex > 2
-                    }
-                }
-
-                androidx.compose.animation.AnimatedVisibility(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(horizontal = 44.dp, vertical = 10.dp),
-                    visible = visi,
-                    enter = scaleIn(), exit = scaleOut()
-                ) {
-                    /*ExtendedFloatingActionButton(
-                        icon = {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_baseline_arrow_upward_24),
-                                contentDescription = "Go Up"
-                            )
-                        },
-                        text = { Text(text = "Go Up") }, onClick = {}
-                    )*/
-                    FloatingActionButton(onClick = {
-                        coroutineScope.launch {
-                            listState.animateScrollToItem(index = 0)
-                        }
-                    }, backgroundColor = MaterialTheme.colors.secondary) {
-                        Icon(
-                            painter = painterResource(id = com.parthdesai1208.compose.R.drawable.ic_arrow_up),
-                            contentDescription = "Go Up"
+            Spacer(modifier = Modifier.height(8.dp))
+            Column {
+                val enableTopSection = currentlyEditing == null
+                TopViewContainer(elevate = enableTopSection) {
+                    if (enableTopSection) {
+                        EditTextWithAdd(onAddItem)
+                    } else {
+                        Text(
+                            text = "Editing item",
+                            style = MaterialTheme.typography.h6,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                                .padding(16.dp)
+                                .fillMaxWidth()
                         )
                     }
                 }
+
+                Box(modifier = Modifier.weight(1f)) {
+                    //recyclerview
+                    LazyColumn(contentPadding = PaddingValues(top = 8.dp), state = listState) {
+                        items(items = items) { todo ->
+                            if (currentlyEditing?.id == todo.id) {
+                                InlineEditorFun(
+                                    item = currentlyEditing,
+                                    onEditItemChange = onEditItemChange,
+                                    onEditDone = onEditDone,
+                                    onRemoveItem = { onRemoveItem(todo) }
+                                )
+                            } else {
+                                TodoRow(
+                                    todo = todo,
+                                    onItemClicked = { onStartEdit(it) },
+                                    modifier = Modifier.fillParentMaxWidth()
+                                )
+                            }
+                        }
+                    }
+
+                    //region floating action button
+                    val visi by remember {
+                        derivedStateOf {
+                            if (!enableTopSection)
+                                false
+                            else
+                                listState.firstVisibleItemIndex > 2
+                        }
+                    }
+
+                    androidx.compose.animation.AnimatedVisibility(
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(horizontal = 44.dp, vertical = 10.dp),
+                        visible = visi,
+                        enter = scaleIn(), exit = scaleOut()
+                    ) {
+                        /*ExtendedFloatingActionButton(
+                            icon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_baseline_arrow_upward_24),
+                                    contentDescription = "Go Up"
+                                )
+                            },
+                            text = { Text(text = "Go Up") }, onClick = {}
+                        )*/
+                        FloatingActionButton(onClick = {
+                            coroutineScope.launch {
+                                listState.animateScrollToItem(index = 0)
+                            }
+                        }, backgroundColor = MaterialTheme.colors.secondary) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_arrow_up),
+                                contentDescription = "Go Up"
+                            )
+                        }
+                    }
+                    //endregion
+                }
+
+                // For quick testing, a random item generator button
+                //region button for random to-do
+                Button(
+                    onClick = {
+                        onAddItem(generateRandomTodoItem())
+                        coroutineScope.launch {
+                            listState.animateScrollToItem(index = items.size)
+                        }
+                    },
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .wrapContentWidth()
+                        .align(alignment = Alignment.CenterHorizontally),
+                ) {
+                    Text("Add random item")
+                }
                 //endregion
             }
-
-            // For quick testing, a random item generator button
-            //region button for random to-do
-            Button(
-                onClick = {
-                    onAddItem(generateRandomTodoItem())
-                    coroutineScope.launch {
-                        listState.animateScrollToItem(index = items.size)
-                    }
-                },
-                modifier = Modifier
-                    .padding(16.dp)
-                    .wrapContentWidth()
-                    .align(alignment = Alignment.CenterHorizontally),
-            ) {
-                Text("Add random item")
-            }
-            //endregion
         }
     }
 }
