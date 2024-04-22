@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
@@ -56,17 +58,17 @@ fun SnackBarCompose(navHostController: NavHostController) {
             )
             Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier
                 .padding(8.dp)
-                .fillMaxSize()
-                .wrapContentSize()
                 .constrainAs(column) {
                     linkTo(start = parent.start, end = parent.end)
                     linkTo(
                         top = toolbar.bottom,
                         bottom = parent.bottom,
                         bias = 0f,
-                        bottomMargin = 8.dp
+                        topMargin = 8.dp,
+                        bottomMargin = 32.dp
                     )
-                }) {
+                }
+                .verticalScroll(rememberScrollState())) {
                 Button(onClick = {
                     scope.launch {
                         snackBarHostState.showSnackbar(

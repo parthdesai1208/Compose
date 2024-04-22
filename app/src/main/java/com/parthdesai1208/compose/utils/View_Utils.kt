@@ -3,10 +3,12 @@ package com.parthdesai1208.compose.utils
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Icon
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -45,23 +47,25 @@ fun ToolBarWithIconAndTitle(
     onBackArrowClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            modifier = Modifier.clickable(onClick = { onBackArrowClick() }),
-            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = null
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        screenTitle?.let {
-            Text(
-                text = screenTitle,
-                modifier = Modifier.padding(16.dp),
-                fontSize = 18.sp,
-                fontFamily = FontFamily.SansSerif
+    Surface(modifier = modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                modifier = Modifier.clickable(onClick = { onBackArrowClick() }),
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = null
             )
+            Spacer(modifier = Modifier.width(8.dp))
+            screenTitle?.let {
+                Text(
+                    text = screenTitle,
+                    modifier = Modifier.padding(16.dp),
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily.SansSerif
+                )
+            }
         }
     }
     Spacer(modifier = Modifier.height(8.dp))
