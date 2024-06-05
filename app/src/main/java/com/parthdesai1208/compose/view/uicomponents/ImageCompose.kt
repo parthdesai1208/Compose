@@ -4,9 +4,12 @@ import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -30,6 +33,7 @@ import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material.icons.outlined.AddAPhoto
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -113,6 +117,7 @@ fun ImageComposeScreen(navHostController: NavHostController) {
                 ImageLoadingUsingLandscapistCoil()
                 ImageWithFadingEdge()
                 ImageWithMagnifier()
+                PinchToZoomImage()
             }
         }
     }
@@ -747,3 +752,51 @@ fun ContentScaleImage() {
     }
 }
 
+@Composable
+fun PinchToZoomImage(modifier: Modifier = Modifier) {
+    var scale by remember { mutableFloatStateOf(1f) }
+    var offset by remember { mutableStateOf(Offset.Zero) }
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Spacer(modifier = Modifier.height(32.dp))
+        Text("Pinch to zoom Image")
+        Spacer(modifier = Modifier.height(32.dp))
+        BoxWithConstraints(
+            modifier = modifier
+                .fillMaxWidth()
+                .height(400.dp)
+        ) {
+            val transformableState =
+                rememberTransformableState { zoomChange, panChange, rotationChange ->
+                    scale = (scale * zoomChange).coerceIn(1f, 5f)
+                    val extraWidth = (scale - 1) * constraints.maxWidth
+                    val extraHeight = (scale - 1) * constraints.maxHeight
+
+                    val maxX = extraWidth / 2
+                    val maxY = extraHeight / 2
+
+                    //calculates the offset
+                    offset = Offset(
+                        x = (offset.x + scale * panChange.x).coerceIn(-maxX, maxX),
+                        y = (offset.y + scale * panChange.y).coerceIn(-maxY, maxY)
+                    )
+                }
+
+            Image(
+                painterResource(id = R.drawable.paris_1),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .graphicsLayer {
+                        scaleX = scale
+                        scaleY = scale
+                        translationX = offset.x
+                        translationY = offset.y
+                    }
+                    .transformable(transformableState) //add transformable state
+            )
+        }
+        Spacer(modifier = Modifier.height(32.dp))
+    }
+}
