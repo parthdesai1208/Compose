@@ -68,31 +68,31 @@ dependencies {
 //    https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.10"
 //    https://androidx.tech/artifacts/core/core-ktx/
-    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.core:core-ktx:1.13.1'
 //    https://androidx.tech/artifacts/appcompat/appcompat/
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
     //https://developer.android.com/jetpack/androidx/releases/activity
-    implementation "androidx.activity:activity-ktx:1.8.2"
+    implementation "androidx.activity:activity-ktx:1.9.0"
 //    https://androidx.tech/artifacts/constraintlayout/constraintlayout/
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 //    https://mvnrepository.com/artifact/com.google.android.material/material
-    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'com.google.android.material:material:1.12.0'
 
     //compose core //https://androidx.tech/artifacts/compose.ui/ui/index
-    implementation 'androidx.compose.ui:ui:1.6.4'
+    implementation 'androidx.compose.ui:ui:1.6.8'
     //compose util //https://androidx.tech/artifacts/compose.ui/ui-util/
-    implementation "androidx.compose.ui:ui-util:1.6.4"
+    implementation "androidx.compose.ui:ui-util:1.6.8"
     //activity compose //https://androidx.tech/artifacts/activity/activity-compose/
-    implementation 'androidx.activity:activity-compose:1.8.2'
+    implementation 'androidx.activity:activity-compose:1.9.0'
     //compose foundation
     //https://androidx.tech/artifacts/compose.foundation/foundation/
-    implementation 'androidx.compose.foundation:foundation:1.6.4'
+    implementation 'androidx.compose.foundation:foundation:1.6.8'
 //    https://androidx.tech/artifacts/compose.foundation/foundation-layout/
-    implementation "androidx.compose.foundation:foundation-layout:1.6.4"
+    implementation "androidx.compose.foundation:foundation-layout:1.6.8"
     //lifecycle compose (use for state with lifecycle) //https://androidx.tech/artifacts/lifecycle/lifecycle-runtime-compose/
-    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.7.0"
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.8.2"
     //material compose //https://androidx.tech/artifacts/compose.material/material/
-    implementation "androidx.compose.material:material:1.6.4"
+    implementation "androidx.compose.material:material:1.6.8"
     //for calculating window width/height using material3 lib
 //    https://developer.android.com/jetpack/androidx/releases/compose-material3
     implementation "androidx.compose.material3:material3-window-size-class:1.2.1"
@@ -101,27 +101,27 @@ dependencies {
     implementation 'androidx.compose.material3:material3:1.2.1'
     //for device postures
 //    https://developer.android.com/jetpack/androidx/releases/window
-    implementation "androidx.window:window:1.2.0"
+    implementation "androidx.window:window:1.3.0"
     /*// Tooling support (Previews, etc.) //
     implementation 'androidx.ui:ui-tooling:1.0.0-alpha07'*/
     //for preview
     //https://androidx.tech/artifacts/compose.ui/ui-tooling/
-    implementation 'androidx.compose.ui:ui-tooling:1.6.4'
+    implementation 'androidx.compose.ui:ui-tooling:1.6.8'
 //    https://androidx.tech/artifacts/compose.ui/ui-tooling-preview/index
-    implementation "androidx.compose.ui:ui-tooling-preview:1.6.4"
+    implementation "androidx.compose.ui:ui-tooling-preview:1.6.8"
     //icon //https://mvnrepository.com/artifact/androidx.compose.material/material-icons-extended?repo=google
     //source = https://developer.android.com/jetpack/androidx/releases/compose-material
-    implementation "androidx.compose.material:material-icons-extended:1.6.4"
+    implementation "androidx.compose.material:material-icons-extended:1.6.8"
     //compose constraint layout //https://androidx.tech/artifacts/constraintlayout/constraintlayout-compose/
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
     //for fragment //https://androidx.tech/artifacts/legacy/legacy-support-v4/
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     //https://androidx.tech/artifacts/core/core-ktx/
-    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.core:core-ktx:1.13.1'
     //https://androidx.tech/artifacts/lifecycle/lifecycle-runtime-ktx/
-    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.8.2'
     //livedata to state = https://androidx.tech/artifacts/compose.runtime/runtime-livedata/
-    implementation "androidx.compose.runtime:runtime-livedata:1.6.4"
+    implementation "androidx.compose.runtime:runtime-livedata:1.6.8"
 
     //room
     //https://androidx.tech/artifacts/room/room-ktx/
@@ -142,7 +142,7 @@ dependencies {
 
     //animation
     //https://developer.android.com/jetpack/androidx/releases/compose-animation#declaring_dependencies
-    implementation "androidx.compose.animation:animation:1.6.4"
+    implementation "androidx.compose.animation:animation:1.6.8"
 
     //accompanist - for insets & system UI
     implementation "com.google.accompanist:accompanist-insets:0.23.1"
@@ -185,9 +185,9 @@ dependencies {
     implementation 'org.dyn4j:dyn4j:4.2.2'
 
     //https://androidx.tech/artifacts/compose.ui/ui-test-junit4/
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.6.4")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.6.8")
     //https://androidx.tech/artifacts/compose.ui/ui-test-manifest/
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.4")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.8")
 
     //networking library
     //https://mvnrepository.com/artifact/com.squareup.retrofit2/retrofit
@@ -200,9 +200,9 @@ dependencies {
     //paging3
     //https://mvnrepository.com/artifact/androidx.paging/paging-runtime
     //noinspection KtxExtensionAvailable
-    implementation 'androidx.paging:paging-runtime:3.2.1'
+    implementation 'androidx.paging:paging-runtime:3.3.0'
     //https://developer.android.com/jetpack/androidx/releases/paging
-    implementation "androidx.paging:paging-compose:3.3.0-alpha05"
+    implementation "androidx.paging:paging-compose:3.3.0"
     //https://developer.android.com/jetpack/androidx/releases/browser
     implementation 'androidx.browser:browser:1.8.0'
 }
