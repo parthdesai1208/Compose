@@ -66,7 +66,7 @@ android {
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
 //    https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.10"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.20"
 //    https://androidx.tech/artifacts/core/core-ktx/
     implementation 'androidx.core:core-ktx:1.13.1'
 //    https://androidx.tech/artifacts/appcompat/appcompat/
@@ -134,7 +134,7 @@ dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.13.2'
 
     //https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-reflect
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.9.0"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.9.20"
 
     //navigation
     //https://developer.android.com/jetpack/compose/navigation#setup
