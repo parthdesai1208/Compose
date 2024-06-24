@@ -37,17 +37,18 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import androidx.navigation.toRoute
 import com.parthdesai1208.compose.ComposeApp
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.model.UserData
-import com.parthdesai1208.compose.view.MainDestinations.MAIN_SCREEN_ROUTE_POSTFIX
-import com.parthdesai1208.compose.view.MainDestinations.MAIN_SCREEN_ROUTE_PREFIX
 import com.parthdesai1208.compose.view.accessibility.AccessibilityScreen
 import com.parthdesai1208.compose.view.animation.AnimationNavGraph
 import com.parthdesai1208.compose.view.anyscreen.AnyScreenListingNavGraph
 import com.parthdesai1208.compose.view.custom.CustomLayoutNavGraph
 import com.parthdesai1208.compose.view.custom.CustomModifierNavGraph
 import com.parthdesai1208.compose.view.migration.MigrationActivity
+import com.parthdesai1208.compose.view.navigation.ComposeSampleChildrenScreen
+import com.parthdesai1208.compose.view.navigation.ComposeSamplesScreen
 import com.parthdesai1208.compose.view.navigation.NavigationEx1
 import com.parthdesai1208.compose.view.navigation.RallyScreen
 import com.parthdesai1208.compose.view.navigation.composeDestination.StartForComposeDestination
@@ -87,12 +88,6 @@ class MainActivity : AppCompatActivity() {
 }
 
 //region for navigation
-object MainDestinations {
-    const val MAIN_SCREEN = "mainScreen"
-    const val MAIN_SCREEN_ROUTE_PREFIX = "MAIN_SCREEN_ROUTE_PREFIX"
-    const val MAIN_SCREEN_ROUTE_POSTFIX = "MAIN_SCREEN_ROUTE_POSTFIX"
-}
-
 enum class MainScreenEnumType(
     val buttonTitle: Int,
     val func: @Composable (NavHostController) -> Unit,
@@ -125,31 +120,21 @@ enum class MainScreenEnumType(
 
 @Composable
 fun MainActivityNavGraph(
-    startDestination: String = MainDestinations.MAIN_SCREEN,
     application: Application,
 ) {
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = startDestination) {
-        composable(route = MainDestinations.MAIN_SCREEN) {
+    NavHost(navController = navController, startDestination = ComposeSamplesScreen) {
+        composable<ComposeSamplesScreen> {
             MainScreen(navController = navController)
         }
-        composable(
-            route = "$MAIN_SCREEN_ROUTE_PREFIX/{$MAIN_SCREEN_ROUTE_POSTFIX}",
-            arguments = listOf(navArgument(MAIN_SCREEN_ROUTE_POSTFIX) {
-                type = NavType.StringType
-                /*type: NavType<Any?>, <-- type of the arguments
-                isNullable: Boolean,   <-- type of the arguments is nullable or not
-                defaultValue: Any?,    <-- default value if you want to provide
-                defaultValuePresent: Boolean*/ //<-- default value is present or not
-            })
-        ) { backStackEntry ->
-            val arguments = requireNotNull(backStackEntry.arguments)
-            if (arguments.getString(MAIN_SCREEN_ROUTE_POSTFIX) == R.string.accessibility.toString()) {
+        composable<ComposeSampleChildrenScreen> { backStackEntry ->
+            val arguments = backStackEntry.toRoute<ComposeSampleChildrenScreen>()
+            if (arguments.pathPostFix == R.string.accessibility) {
                 val container = (application as ComposeApp).container
                 AccessibilityScreen(appContainer = container)
             } else {
-                ChildScreen(arguments.getString(MAIN_SCREEN_ROUTE_POSTFIX), navController)
+                ChildScreen(arguments.pathPostFix, navController)
             }
         }
 
@@ -209,8 +194,8 @@ fun MainActivityNavGraph(
 }
 
 @Composable
-fun ChildScreen(onClickButtonTitle: String?, navController: NavHostController) {
-    enumValues<MainScreenEnumType>().first { it.buttonTitle.toString() == onClickButtonTitle }.func.invoke(
+fun ChildScreen(onClickButtonTitle: Int?, navController: NavHostController) {
+    enumValues<MainScreenEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke(
         navController
     )
 }
@@ -233,7 +218,7 @@ fun MainScreen(navController: NavHostController) {
                     context.startActivity(Intent(context, PIPActivity::class.java))
                     return@Button
                 }
-                navController.navigate("$MAIN_SCREEN_ROUTE_PREFIX/${title.buttonTitle}")
+                navController.navigate(ComposeSampleChildrenScreen(pathPostFix = title.buttonTitle))
             },
             modifier = Modifier
                 .fillMaxWidth()

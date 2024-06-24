@@ -23,9 +23,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.text2.BasicTextField2
-import androidx.compose.foundation.text2.input.TextFieldLineLimits
-import androidx.compose.foundation.text2.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
@@ -38,8 +37,8 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.icons.filled.ArrowLeft
-import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -242,7 +241,7 @@ fun FocusOrderTextField() {
         }
         Column {
             Button(onClick = { focusManager.moveFocus(FocusDirection.Next) }) {
-                Icon(imageVector = Icons.Default.ArrowRight, contentDescription = null)
+                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowRight, contentDescription = null)
             }
             Button(onClick = { focusManager.moveFocus(FocusDirection.Previous) }) {
                 Icon(imageVector = Icons.Default.ArrowLeft, contentDescription = null)
@@ -288,7 +287,7 @@ fun BasicTextField2Compose() {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(text = "New BasicTextField2")
         Spacer(modifier = Modifier.height(8.dp))
-        BasicTextField2(
+        BasicTextField(
             state = textState,
             textStyle = TextStyle(color = MaterialTheme.colors.onSurface),
             cursorBrush = SolidColor(MaterialTheme.colors.onSurface),
@@ -306,7 +305,7 @@ fun BasicTextField2Compose() {
                 .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            BasicTextField2(
+            BasicTextField(
                 state = textState2,
                 scrollState = scrollState,
                 lineLimits = TextFieldLineLimits.MultiLine(3, 7),
@@ -370,7 +369,7 @@ fun SimpleOutlinedTextFieldSample() {
 @Composable
 fun SingleLineTextField() {
     val textState3 = rememberTextFieldState()
-    BasicTextField2(
+    BasicTextField(
         modifier = Modifier
             .padding(horizontal = 32.dp, vertical = 8.dp)
             .border(

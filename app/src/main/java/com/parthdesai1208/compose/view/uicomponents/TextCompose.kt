@@ -83,7 +83,6 @@ import com.parthdesai1208.compose.utils.RainbowColors
 import com.parthdesai1208.compose.utils.ToolBarWithIconAndTitle
 import com.parthdesai1208.compose.utils.delayedClick
 import com.parthdesai1208.compose.utils.getBoundingBoxesForRange
-import com.parthdesai1208.compose.view.MainDestinations
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.view.theme.attractions_gmap
 import com.parthdesai1208.compose.view.theme.shopping_gmap
@@ -136,12 +135,9 @@ fun TextComponents(
                     modifier = Modifier
                         .padding(16.dp) //to make clickable area bigger
                         .clickable {
-                            navHostController.navigate(route = MainDestinations.MAIN_SCREEN) {
-                                popUpTo(route = MainDestinations.MAIN_SCREEN)
-                            }
-                            /*Toast
+                            Toast
                                 .makeText(context, "Single Click", Toast.LENGTH_SHORT)
-                                .show()*/
+                                .show()
                         })
                 DividerTextCompose()
                 Text(text = stringResource(R.string.delayedClickText),
