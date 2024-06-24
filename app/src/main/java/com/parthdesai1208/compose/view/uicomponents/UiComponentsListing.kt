@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.view.navigation.ComposeSampleChildrenScreen
 import com.parthdesai1208.compose.view.uicomponents.bottomsheet.BottomSheetNavGraph
 
 
@@ -71,12 +72,6 @@ enum class UIComponentsListingEnumType(
     ListItemCompose(R.string.listItem, { ListItemCompose() }),
 }
 
-object UIComponentsDestinations {
-    const val UI_COMPONENTS_MAIN_SCREEN = "UI_COMPONENTS_MAIN_SCREEN"
-    const val UI_COMPONENTS_SCREEN_ROUTE_PREFIX = "UI_COMPONENTS_SCREEN_ROUTE_PREFIX"
-    const val UI_COMPONENTS_SCREEN_ROUTE_POSTFIX = "UI_COMPONENTS_SCREEN_ROUTE_POSTFIX"
-}
-
 @Composable
 fun UIComponentsListingScreen(navController: NavHostController) {
     @Composable
@@ -86,7 +81,7 @@ fun UIComponentsListingScreen(navController: NavHostController) {
         val context = LocalContext.current
 
         Button(
-            onClick = { navController.navigate("${UIComponentsDestinations.UI_COMPONENTS_SCREEN_ROUTE_PREFIX}/${title.buttonTitle}") },
+            onClick = { navController.navigate(ComposeSampleChildrenScreen(pathPostFix = title.buttonTitle)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
@@ -127,11 +122,4 @@ fun UIComponentsListingScreen(navController: NavHostController) {
             }
         }
     }
-}
-
-@Composable
-fun ChildUIComponentsScreen(onClickButtonTitle: String?, navHostController: NavHostController) {
-    enumValues<UIComponentsListingEnumType>().first { it.buttonTitle.toString() == onClickButtonTitle }.func.invoke(
-        navHostController
-    )
 }

@@ -7,3 +7,4 @@ object ComposeSamplesScreen
 
 @Serializable
 data class ComposeSampleChildrenScreen(val pathPostFix: Int)
+

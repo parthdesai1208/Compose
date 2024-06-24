@@ -57,8 +57,6 @@ import com.parthdesai1208.compose.view.state.ChildScreenState
 import com.parthdesai1208.compose.view.state.MainScreenState
 import com.parthdesai1208.compose.view.state.StateDestinations
 import com.parthdesai1208.compose.view.theme.ComposeTheme
-import com.parthdesai1208.compose.view.uicomponents.ChildUIComponentsScreen
-import com.parthdesai1208.compose.view.uicomponents.UIComponentsDestinations
 import com.parthdesai1208.compose.view.uicomponents.UIComponentsListingScreen
 
 class MainActivity : AppCompatActivity() {
@@ -116,6 +114,104 @@ enum class MainScreenEnumType(
     GestureScreen(R.string.gesture, { GestureScreen() }),
     PermissionScreen(R.string.permission, { PermissionListNavGraph() }),
     PictureInPicture(R.string.pictureinpicture, {}),
+
+    //region UIComponentsListing
+    TextCompose(R.string.text, {
+        com.parthdesai1208.compose.view.uicomponents.TextComponents(
+            "World",
+            it
+        )
+    }),
+    EditTextCompose(
+        R.string.edittext,
+        {
+            com.parthdesai1208.compose.view.uicomponents.EditTextCompose(
+                it,
+                androidx.lifecycle.viewmodel.compose.viewModel()
+            )
+        }),
+    ButtonComponents(R.string.button, {
+        com.parthdesai1208.compose.view.uicomponents.ButtonCompose(
+            it
+        )
+    }),
+    ImageCompose(R.string.image, {
+        com.parthdesai1208.compose.view.uicomponents.ImageComposeScreen(
+            it
+        )
+    }),
+    IconCompose(
+        R.string.icon,
+        { com.parthdesai1208.compose.view.uicomponents.IconComposeScreen(it) }),
+    SearchBarComponents(
+        R.string.searchbar,
+        {
+            com.parthdesai1208.compose.view.uicomponents.SearchBar(
+                it,
+                androidx.lifecycle.viewmodel.compose.viewModel()
+            )
+        }),
+    SnackBarComponents(R.string.snackbar, {
+        com.parthdesai1208.compose.view.uicomponents.SnackBarCompose(
+            it
+        )
+    }),
+    ScaffoldCompose(
+        R.string.scaffold,
+        { com.parthdesai1208.compose.view.uicomponents.ScaffoldCompose() }),
+    ColumnCompose(
+        R.string.column,
+        { com.parthdesai1208.compose.view.uicomponents.ColumnNavGraph() }),
+    RowCompose(R.string.row, { com.parthdesai1208.compose.view.uicomponents.RowNavGraph() }),
+    BoxCompose(R.string.box, { com.parthdesai1208.compose.view.uicomponents.BoxNavGraph() }),
+    CardCompose(R.string.card, { com.parthdesai1208.compose.view.uicomponents.CardCompose() }),
+    CollapsableRecyclerviewScreen(
+        R.string.verticallist,
+        { com.parthdesai1208.compose.view.uicomponents.VerticalListNavGraph() }),
+    HorizontalListScreen(
+        R.string.horizontallist,
+        { com.parthdesai1208.compose.view.uicomponents.HorizontalListNavGraph() }),
+    ConstraintLayoutContent(
+        R.string.constraintlayoutcontent,
+        { com.parthdesai1208.compose.view.uicomponents.ConstraintLayoutContent() }),
+    ConstraintLayoutScreen(
+        R.string.runtimeconstraintlayout,
+        { com.parthdesai1208.compose.view.uicomponents.DecoupledConstraintLayout() }),
+    ConstraintLayoutClock(
+        R.string.clockusingconstraintlayout,
+        { com.parthdesai1208.compose.view.uicomponents.ClockByConstraintLayout() }),
+    BottomSheetScreen(
+        R.string.bottomsheet,
+        { com.parthdesai1208.compose.view.uicomponents.bottomsheet.BottomSheetNavGraph() }),
+    SwitchCompose(
+        R.string.switch1,
+        { com.parthdesai1208.compose.view.uicomponents.SwitchCompose() }),
+    RadioCompose(
+        R.string.radiobutton,
+        { com.parthdesai1208.compose.view.uicomponents.RadioButtonCompose() }),
+    CheckBoxCompose(
+        R.string.checkbox,
+        { com.parthdesai1208.compose.view.uicomponents.CheckBoxCompose() }),
+    DropdownMenuCompose(
+        R.string.dropdownmenu,
+        { com.parthdesai1208.compose.view.uicomponents.DropdownMenu() }),
+    SliderCompose(
+        R.string.slider,
+        { com.parthdesai1208.compose.view.uicomponents.SliderCompose(androidx.lifecycle.viewmodel.compose.viewModel()) }),
+    BadgeCompose(R.string.badge, { com.parthdesai1208.compose.view.uicomponents.BadgeCompose() }),
+    DialogCompose(
+        R.string.dialog1,
+        { com.parthdesai1208.compose.view.uicomponents.DialogCompose() }),
+    ToolTipCompose(
+        R.string.tooltip,
+        { com.parthdesai1208.compose.view.uicomponents.TooltipOnLongClickExample() }),
+    DateTimeCompose(
+        R.string.dateTimePicker,
+        { com.parthdesai1208.compose.view.uicomponents.DateTimeCompose() }),
+    ListItemCompose(
+        R.string.listItem,
+        { com.parthdesai1208.compose.view.uicomponents.ListItemCompose() }),
+    //endregion
 }
 
 @Composable
@@ -149,25 +245,6 @@ fun MainActivityNavGraph(
             if (account.name.isNotEmpty()) {
                 MainScreenEnumType.NavigationEx1.func.invoke(navController)
             }
-        }
-        //endregion
-
-        //region UI Components
-        composable(route = UIComponentsDestinations.UI_COMPONENTS_MAIN_SCREEN) {
-            UIComponentsListingScreen(navController = navController)
-        }
-
-        composable(
-            route = "${UIComponentsDestinations.UI_COMPONENTS_SCREEN_ROUTE_PREFIX}/{${UIComponentsDestinations.UI_COMPONENTS_SCREEN_ROUTE_POSTFIX}}",
-            arguments = listOf(navArgument(UIComponentsDestinations.UI_COMPONENTS_SCREEN_ROUTE_POSTFIX) {
-                type = NavType.StringType
-            })
-        ) { backStackEntry ->
-            val arguments = requireNotNull(backStackEntry.arguments)
-            ChildUIComponentsScreen(
-                arguments.getString(UIComponentsDestinations.UI_COMPONENTS_SCREEN_ROUTE_POSTFIX),
-                navHostController = navController
-            )
         }
         //endregion
 
