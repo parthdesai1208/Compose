@@ -214,4 +214,48 @@
     <string name="banner">banner</string>
     <!--    end region-->
 
+    <!--    region animation sample-->
+    <string name="animatedvisibility_without_params">AnimatedVisibility - without params</string>
+    <string name="animatedvisibility_with_params">AnimatedVisibility - with params</string>
+    <string name="animatedvisibility_with_state">AnimatedVisibility - with state</string>
+    <string name="enter_exit_visibility_animation">enter exit visibility animation</string>
+    <string name="crossfade">CrossFade</string>
+    <string name="animatableonly">AnimatableOnly</string>
+    <string name="animatedcontentsimple">AnimatedContentSimple</string>
+    <string name="animatedcontent_with_targetstate_transitionspec_ex_1">AnimatedContent - with targetState, transitionSpec ex-1</string>
+    <string name="animatedcontent_with_targetstate_transitionspec_ex_2">AnimatedContent - with targetState, transitionSpec ex-2</string>
+    <string name="animatedcontent_with_targetstate_transitionspec_ex_3">AnimatedContent - with targetState, transitionSpec ex-3</string>
+    <string name="animatedcontentsize">AnimatedContentSize</string>
+    <string name="animatedcontentsizetransform">AnimatedContentSizeTransform</string>
+    <string name="animatefloatasstate">AnimateFloatAsState</string>
+    <string name="animatecolorasstate">AnimateColorAsState</string>
+    <string name="animatedpasstate">animateDpAsState</string>
+    <string name="animatesizeasstate">AnimateSizeAsState</string>
+    <string name="updatetransition_1">updateTransition-1</string>
+    <string name="updatetransition_2">updateTransition-2</string>
+    <string name="updatetransitionchild">UpdateTransitionChild</string>
+    <string name="multiple_anim_updatetransition">multiple anim updateTransition</string>
+    <string name="multiple_anim_coroutine_animateto_rotate_color_change"><![CDATA[multiple anim Coroutine animateTo()\n(Rotate & color change)]]></string>
+    <string name="infiniteanimation_color">InfiniteAnimation color</string>
+    <string name="infiniteanimation_float">InfiniteAnimation float</string>
+    <string name="infiniteanimation_offset">InfiniteAnimation offset</string>
+    <string name="infinite_rotation">Infinite Rotation</string>
+    <string name="targetbasedanimation">TargetBasedAnimation</string>
+    <string name="spring">spring</string>
+    <string name="tween">tween</string>
+    <string name="keyframes">keyframes</string>
+    <string name="repeatable">repeatable</string>
+    <string name="infiniterepeatable">InfiniteRepeatable</string>
+    <string name="snap">snap</string>
+    <string name="animationvector_typeconverter_coroutine">AnimationVector - TypeConverter,Coroutine</string>
+    <string name="animationex1">AnimationEx1</string>
+    <string name="icon_up_down_animation">Icon Up-down animation</string>
+    <string name="duolingo_bird_animation">Duolingo Bird Animation</string>
+    <string name="_3d_card_moving">3D card moving</string>
+    <string name="instagram_like_particles">Instagram Like Particles</string>
+    <string name="rotating_borders">Rotating Borders</string>
+    <string name="physics_based_animation">Physics Based Animation</string>
+    <string name="progressanimation">ProgressAnimation</string>
+    <!--    end region-->
+
 </resources>

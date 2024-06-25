@@ -4,19 +4,105 @@ package com.parthdesai1208.compose.view.animation
 
 import android.animation.TimeInterpolator
 import android.util.DisplayMetrics
-import androidx.compose.animation.*
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.*
+import androidx.compose.animation.Animatable
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.EnterExitState
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.VectorConverter
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.Easing
+import androidx.compose.animation.core.ExperimentalTransitionApi
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.TargetBasedAnimation
+import androidx.compose.animation.core.Transition
+import androidx.compose.animation.core.VectorConverter
+import androidx.compose.animation.core.animate
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateRect
+import androidx.compose.animation.core.animateSizeAsState
+import androidx.compose.animation.core.createChildTransition
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.repeatable
+import androidx.compose.animation.core.snap
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.with
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.absoluteOffset
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ExtendedFloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Phone
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -44,120 +130,109 @@ import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.*
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.graphics.ColorUtils
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.view.navigation.ComposeSampleChildrenScreen
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 //region default screen & Navigation
-enum class AnimationScreenEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
-    AnimatedVisibilityWithoutParams("AnimatedVisibility - without params",
+enum class AnimationScreenEnumType(val buttonTitle: Int, val func: @Composable () -> Unit) {
+    AnimatedVisibilityWithoutParams(
+        R.string.animatedvisibility_without_params,
         { AnimatedVisibilityWithoutParams() }),
-    AnimatedVisibilityWithParams("AnimatedVisibility - with params",
+    AnimatedVisibilityWithParams(
+        R.string.animatedvisibility_with_params,
         { AnimatedVisibilityWithParams() }),
-    AnimateVisibilityState(
-        "AnimatedVisibility - with state",
-        { AnimateVisibilityState() }),
-    AnimateEnterExitChild(
-        "enter exit visibility animation",
-        { AnimateEnterExitChild() }),
-    CrossFade("CrossFade", { CrossFade() }), AnimatableOnly(
-        "AnimatableOnly",
-        { AnimatableOnly() }),
-    AnimatedContentSimple(
-        "AnimatedContentSimple",
-        { AnimatedContentSimple() }),
-    AnimatedContentWithTransitionSpec1("AnimatedContent - with targetState, transitionSpec ex-1",
+    AnimateVisibilityState(R.string.animatedvisibility_with_state, { AnimateVisibilityState() }),
+    AnimateEnterExitChild(R.string.enter_exit_visibility_animation, { AnimateEnterExitChild() }),
+    CrossFade(R.string.crossfade, { CrossFade() }),
+    AnimatableOnly(R.string.animatableonly, { AnimatableOnly() }),
+    AnimatedContentSimple(R.string.animatedcontentsimple, { AnimatedContentSimple() }),
+    AnimatedContentWithTransitionSpec1(
+        R.string.animatedcontent_with_targetstate_transitionspec_ex_1,
         { AnimatedContentWithTransitionSpec1() }),
-    AnimatedContentWithTransitionSpec2("AnimatedContent - with targetState, transitionSpec ex-2",
+    AnimatedContentWithTransitionSpec2(
+        R.string.animatedcontent_with_targetstate_transitionspec_ex_2,
         { AnimatedContentWithTransitionSpec2() }),
-    AnimatedContentWithTransitionSpec3("AnimatedContent - with targetState, transitionSpec ex-3",
+    AnimatedContentWithTransitionSpec3(
+        R.string.animatedcontent_with_targetstate_transitionspec_ex_3,
         { AnimatedContentWithTransitionSpec3() }),
-    AnimatedContentSize(
-        "AnimatedContentSize",
-        { AnimatedContentSize() }),
-    AnimatedContentSizeTransform("AnimatedContentSizeTransform",
+    AnimatedContentSize(R.string.animatedcontentsize, { AnimatedContentSize() }),
+    AnimatedContentSizeTransform(
+        R.string.animatedcontentsizetransform,
         { AnimatedContentSizeTransform() }),
     AnimateFloatAsState(
-        "AnimateFloatAsState",
+        R.string.animatefloatasstate,
         { AnimateFloatAsState() }),
     AnimateColorAsState(
-        "AnimateColorAsState",
-        { AnimateColorAsState() }),
-    AnimateDpAsState(
-        "animateDpAsState",
-        { AnimateDpAsState() }),
-    AnimateSizeAsState(
-        "AnimateSizeAsState",
-        { AnimateSizeAsState() }),
-    UpdateTransition1(
-        "updateTransition-1",
-        { UpdateTransitionBasic1() }),
+        R.string.animatecolorasstate, { AnimateColorAsState() }),
+    AnimateDpAsState(R.string.animatedpasstate, { AnimateDpAsState() }),
+    AnimateSizeAsState(R.string.animatesizeasstate, { AnimateSizeAsState() }),
+    UpdateTransition1(R.string.updatetransition_1, { UpdateTransitionBasic1() }),
     UpdateTransition2(
-        "updateTransition-2",
+        R.string.updatetransition_2,
         { UpdateTransitionBasic2() }),
     UpdateTransitionChild(
-        "UpdateTransitionChild",
+        R.string.updatetransitionchild,
         { UpdateTransitionChild() }),
     UpdateTransitionExtension(
-        "multiple anim updateTransition",
+        R.string.multiple_anim_updatetransition,
         { UpdateTransitionExtension() }),
-    MultipleAnimCoroutineAnimateTo("multiple anim Coroutine animateTo()\n(Rotate & color change)",
+    MultipleAnimCoroutineAnimateTo(
+        R.string.multiple_anim_coroutine_animateto_rotate_color_change,
         { MultipleAnimCoroutineAnimateTo() }),
     InfiniteColorAnimation(
-        "InfiniteAnimation color",
+        R.string.infiniteanimation_color,
         { InfiniteColorAnimation() }),
     InfiniteFloatAnimation(
-        "InfiniteAnimation float",
+        R.string.infiniteanimation_float,
         { InfiniteFloatAnimation() }),
     InfiniteOffsetAnimation(
-        "InfiniteAnimation offset",
+        R.string.infiniteanimation_offset,
         { InfiniteOffsetAnimation() }),
-    InfiniteRotation("Infinite Rotation", { InfiniteRotation() }),
-    TargetBasedAnimation("TargetBasedAnimation", { TargetBasedAnimationFun() }), Spring(
-        "spring",
+    InfiniteRotation(R.string.infinite_rotation, { InfiniteRotation() }),
+    TargetBasedAnimation(R.string.targetbasedanimation, { TargetBasedAnimationFun() }), Spring(
+        R.string.spring,
         { SpringFun() }),
-    Tween("tween", { TweenFun() }), Keyframes(
-        "keyframes",
+    Tween(R.string.tween, { TweenFun() }), Keyframes(
+        R.string.keyframes,
         { KeyFramesFun() }),
-    Repeatable("repeatable", { RepeatableFun() }), InfiniteRepeatable(
-        "InfiniteRepeatable",
+    Repeatable(R.string.repeatable, { RepeatableFun() }), InfiniteRepeatable(
+        R.string.infiniterepeatable,
         { InfiniteRepeatableFun() }),
-    Snap("snap", { SnapFun() }), AnimationVector(
-        "AnimationVector - TypeConverter,Coroutine",
+    Snap(R.string.snap, { SnapFun() }),
+    AnimationVector(
+        R.string.animationvector_typeconverter_coroutine,
         { AnimationVectorFun() }),
     AnimationEx1(
-        "AnimationEx1",
+        R.string.animationex1,
         { AnimationEx1() }),
     BoxWithIconUpDownAnimation(
-        "Icon Up-down animation",
+        R.string.icon_up_down_animation,
         { BoxWithIconUpDownAnimation() }),
-    DuolingoBirdAnimation("Duolingo Bird Animation",
+    DuolingoBirdAnimation(
+        R.string.duolingo_bird_animation,
         { Surface(Modifier.fillMaxSize()) { DuolingoBird() } }),
-    ThreeDCardMoving("3D card moving", { ThreeDCardMoving() }), InstagramLikeParticles(
-        "Instagram Like Particles",
+    ThreeDCardMoving(R.string._3d_card_moving, { ThreeDCardMoving() }),
+    InstagramLikeParticles(
+        R.string.instagram_like_particles,
         { InstagramLikeParticles() }),
     RotatingBorders(
-        "Rotating Borders",
+        R.string.rotating_borders,
         { RotatingBorders() }),
-    PhysicsBasedAnimation("Physics Based Animation",
+    PhysicsBasedAnimation(
+        R.string.physics_based_animation,
         { com.parthdesai1208.compose.view.animation.physicsbasedanimation.PhysicsBasedAnimationFun() }),
-    ProgressAnimation("ProgressAnimation", { ProgressAnimation() }),
-}
-
-object AnimationDestinations {
-    const val ANIMATION_MAIN_SCREEN = "animationMainScreen"
-    const val ANIMATION_SCREEN_ROUTE_PREFIX = "ANIMATION_SCREEN_ROUTE_PREFIX"
-    const val ANIMATION_SCREEN_ROUTE_POSTFIX = "ANIMATION_SCREEN_ROUTE_POSTFIX"
+    ProgressAnimation(R.string.progressanimation, { ProgressAnimation() }),
 }
 
 @Composable
@@ -166,25 +241,37 @@ fun AnimationScreen(navController: NavHostController) {
     fun MyButton(
         title: AnimationScreenEnumType
     ) {
+        val context = LocalContext.current
         Button(
-            onClick = { navController.navigate("${AnimationDestinations.ANIMATION_SCREEN_ROUTE_PREFIX}/${title.buttonTitle}") },
+            onClick = { navController.navigate(ComposeSampleChildrenScreen(pathPostFix = title.buttonTitle)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
                 .padding(8.dp)
         ) {
-            Text(title.buttonTitle, textAlign = TextAlign.Center)
+            Text(context.getString(title.buttonTitle), textAlign = TextAlign.Center)
         }
     }
 
     Surface {
         Column {
-            Text(
-                text = "Animation Samples",
-                modifier = Modifier.padding(16.dp),
-                fontSize = 18.sp,
-                fontFamily = FontFamily.SansSerif
-            )
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    modifier = Modifier.clickable {
+                        navController.popBackStack()
+                    }, imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Animation Samples",
+                    modifier = Modifier.padding(16.dp),
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily.SansSerif
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Column(
                 modifier = Modifier
@@ -198,32 +285,6 @@ fun AnimationScreen(navController: NavHostController) {
             }
         }
     }
-}
-
-@Composable
-fun AnimationNavGraph(startDestination: String = AnimationDestinations.ANIMATION_MAIN_SCREEN) {
-    val navController = rememberNavController()
-
-    NavHost(navController = navController, startDestination = startDestination) {
-        composable(route = AnimationDestinations.ANIMATION_MAIN_SCREEN) {
-            AnimationScreen(navController = navController)
-        }
-
-        composable(
-            route = "${AnimationDestinations.ANIMATION_SCREEN_ROUTE_PREFIX}/{${AnimationDestinations.ANIMATION_SCREEN_ROUTE_POSTFIX}}",
-            arguments = listOf(navArgument(AnimationDestinations.ANIMATION_SCREEN_ROUTE_POSTFIX) {
-                type = NavType.StringType
-            })
-        ) { backStackEntry ->
-            val arguments = requireNotNull(backStackEntry.arguments)
-            ChildAnimationScreen(arguments.getString(AnimationDestinations.ANIMATION_SCREEN_ROUTE_POSTFIX))
-        }
-    }
-}
-
-@Composable
-fun ChildAnimationScreen(onClickButtonTitle: String?) {
-    enumValues<AnimationScreenEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke()
 }
 //endregion
 

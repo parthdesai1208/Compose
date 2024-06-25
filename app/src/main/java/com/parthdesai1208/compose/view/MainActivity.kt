@@ -42,7 +42,7 @@ import com.parthdesai1208.compose.ComposeApp
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.model.UserData
 import com.parthdesai1208.compose.view.accessibility.AccessibilityScreen
-import com.parthdesai1208.compose.view.animation.AnimationNavGraph
+import com.parthdesai1208.compose.view.animation.AnimationScreen
 import com.parthdesai1208.compose.view.anyscreen.AnyScreenListingNavGraph
 import com.parthdesai1208.compose.view.custom.BaseLineToTopFun
 import com.parthdesai1208.compose.view.custom.ComposableVersusComposed
@@ -103,7 +103,7 @@ enum class MainScreenEnumType(
         R.string.custommodifier,
         { CustomModifierListingScreen(navController = it) }),
     CustomLayout(R.string.customlayout, { CustomLayoutListingScreen(it) }),
-    AnimationScreen(R.string.animationsamples, { AnimationNavGraph() }),
+    AnimationScreen(R.string.animationsamples, { AnimationScreen(it) }),
     NavigationEx1(
         R.string.navigationex1, { NavigationEx1() },
         buttonTitleForAccessibility = R.string.navigationexample
@@ -248,6 +248,125 @@ enum class MainScreenEnumType(
         { com.parthdesai1208.compose.view.custom.BottomBarCustomCompose() }),
     MyOwnColumnFun(R.string.column, { com.parthdesai1208.compose.view.custom.MyOwnColumnFun() }),
     BannerSample(R.string.banner, { com.parthdesai1208.compose.view.custom.BannerSampleScreen() }),
+    //endregion
+
+    //region animationSample
+    AnimatedVisibilityWithoutParams(
+        R.string.animatedvisibility_without_params,
+        { com.parthdesai1208.compose.view.animation.AnimatedVisibilityWithoutParams() }),
+    AnimatedVisibilityWithParams(
+        R.string.animatedvisibility_with_params,
+        { com.parthdesai1208.compose.view.animation.AnimatedVisibilityWithParams() }),
+    AnimateVisibilityState(
+        R.string.animatedvisibility_with_state,
+        { com.parthdesai1208.compose.view.animation.AnimateVisibilityState() }),
+    AnimateEnterExitChild(
+        R.string.enter_exit_visibility_animation,
+        { com.parthdesai1208.compose.view.animation.AnimateEnterExitChild() }),
+    CrossFade(R.string.crossfade, { com.parthdesai1208.compose.view.animation.CrossFade() }),
+    AnimatableOnly(
+        R.string.animatableonly,
+        { com.parthdesai1208.compose.view.animation.AnimatableOnly() }),
+    AnimatedContentSimple(
+        R.string.animatedcontentsimple,
+        { com.parthdesai1208.compose.view.animation.AnimatedContentSimple() }),
+    AnimatedContentWithTransitionSpec1(
+        R.string.animatedcontent_with_targetstate_transitionspec_ex_1,
+        { com.parthdesai1208.compose.view.animation.AnimatedContentWithTransitionSpec1() }),
+    AnimatedContentWithTransitionSpec2(
+        R.string.animatedcontent_with_targetstate_transitionspec_ex_2,
+        { com.parthdesai1208.compose.view.animation.AnimatedContentWithTransitionSpec2() }),
+    AnimatedContentWithTransitionSpec3(
+        R.string.animatedcontent_with_targetstate_transitionspec_ex_3,
+        { com.parthdesai1208.compose.view.animation.AnimatedContentWithTransitionSpec3() }),
+    AnimatedContentSize(
+        R.string.animatedcontentsize,
+        { com.parthdesai1208.compose.view.animation.AnimatedContentSize() }),
+    AnimatedContentSizeTransform(
+        R.string.animatedcontentsizetransform,
+        { com.parthdesai1208.compose.view.animation.AnimatedContentSizeTransform() }),
+    AnimateFloatAsState(
+        R.string.animatefloatasstate,
+        { com.parthdesai1208.compose.view.animation.AnimateFloatAsState() }),
+    AnimateColorAsState(
+        R.string.animatecolorasstate,
+        { com.parthdesai1208.compose.view.animation.AnimateColorAsState() }),
+    AnimateDpAsState(
+        R.string.animatedpasstate,
+        { com.parthdesai1208.compose.view.animation.AnimateDpAsState() }),
+    AnimateSizeAsState(
+        R.string.animatesizeasstate,
+        { com.parthdesai1208.compose.view.animation.AnimateSizeAsState() }),
+    UpdateTransition1(
+        R.string.updatetransition_1,
+        { com.parthdesai1208.compose.view.animation.UpdateTransitionBasic1() }),
+    UpdateTransition2(
+        R.string.updatetransition_2,
+        { com.parthdesai1208.compose.view.animation.UpdateTransitionBasic2() }),
+    UpdateTransitionChild(
+        R.string.updatetransitionchild,
+        { com.parthdesai1208.compose.view.animation.UpdateTransitionChild() }),
+    UpdateTransitionExtension(
+        R.string.multiple_anim_updatetransition,
+        { com.parthdesai1208.compose.view.animation.UpdateTransitionExtension() }),
+    MultipleAnimCoroutineAnimateTo(
+        R.string.multiple_anim_coroutine_animateto_rotate_color_change,
+        { com.parthdesai1208.compose.view.animation.MultipleAnimCoroutineAnimateTo() }),
+    InfiniteColorAnimation(
+        R.string.infiniteanimation_color,
+        { com.parthdesai1208.compose.view.animation.InfiniteColorAnimation() }),
+    InfiniteFloatAnimation(
+        R.string.infiniteanimation_float,
+        { com.parthdesai1208.compose.view.animation.InfiniteFloatAnimation() }),
+    InfiniteOffsetAnimation(
+        R.string.infiniteanimation_offset,
+        { com.parthdesai1208.compose.view.animation.InfiniteOffsetAnimation() }),
+    InfiniteRotation(
+        R.string.infinite_rotation,
+        { com.parthdesai1208.compose.view.animation.InfiniteRotation() }),
+    TargetBasedAnimation(
+        R.string.targetbasedanimation,
+        { com.parthdesai1208.compose.view.animation.TargetBasedAnimationFun() }),
+    Spring(
+        R.string.spring,
+        { com.parthdesai1208.compose.view.animation.SpringFun() }),
+    Tween(R.string.tween, { com.parthdesai1208.compose.view.animation.TweenFun() }), Keyframes(
+        R.string.keyframes,
+        { com.parthdesai1208.compose.view.animation.KeyFramesFun() }),
+    Repeatable(
+        R.string.repeatable,
+        { com.parthdesai1208.compose.view.animation.RepeatableFun() }),
+    InfiniteRepeatable(
+        R.string.infiniterepeatable,
+        { com.parthdesai1208.compose.view.animation.InfiniteRepeatableFun() }),
+    Snap(R.string.snap, { com.parthdesai1208.compose.view.animation.SnapFun() }),
+    AnimationVector(
+        R.string.animationvector_typeconverter_coroutine,
+        { com.parthdesai1208.compose.view.animation.AnimationVectorFun() }),
+    AnimationEx1(
+        R.string.animationex1,
+        { com.parthdesai1208.compose.view.animation.AnimationEx1() }),
+    BoxWithIconUpDownAnimation(
+        R.string.icon_up_down_animation,
+        { com.parthdesai1208.compose.view.animation.BoxWithIconUpDownAnimation() }),
+    DuolingoBirdAnimation(
+        R.string.duolingo_bird_animation,
+        { Surface(Modifier.fillMaxSize()) { com.parthdesai1208.compose.view.animation.DuolingoBird() } }),
+    ThreeDCardMoving(
+        R.string._3d_card_moving,
+        { com.parthdesai1208.compose.view.animation.ThreeDCardMoving() }),
+    InstagramLikeParticles(
+        R.string.instagram_like_particles,
+        { com.parthdesai1208.compose.view.animation.InstagramLikeParticles() }),
+    RotatingBorders(
+        R.string.rotating_borders,
+        { com.parthdesai1208.compose.view.animation.RotatingBorders() }),
+    PhysicsBasedAnimation(
+        R.string.physics_based_animation,
+        { com.parthdesai1208.compose.view.animation.physicsbasedanimation.PhysicsBasedAnimationFun() }),
+    ProgressAnimation(
+        R.string.progressanimation,
+        { com.parthdesai1208.compose.view.animation.ProgressAnimation() }),
     //endregion
 }
 
