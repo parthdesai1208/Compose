@@ -44,8 +44,11 @@ import com.parthdesai1208.compose.model.UserData
 import com.parthdesai1208.compose.view.accessibility.AccessibilityScreen
 import com.parthdesai1208.compose.view.animation.AnimationNavGraph
 import com.parthdesai1208.compose.view.anyscreen.AnyScreenListingNavGraph
+import com.parthdesai1208.compose.view.custom.BaseLineToTopFun
+import com.parthdesai1208.compose.view.custom.ComposableVersusComposed
 import com.parthdesai1208.compose.view.custom.CustomLayoutNavGraph
-import com.parthdesai1208.compose.view.custom.CustomModifierNavGraph
+import com.parthdesai1208.compose.view.custom.CustomModifierListingScreen
+import com.parthdesai1208.compose.view.custom.RotateAnyComposeDemonstration
 import com.parthdesai1208.compose.view.migration.MigrationActivity
 import com.parthdesai1208.compose.view.navigation.ComposeSampleChildrenScreen
 import com.parthdesai1208.compose.view.navigation.ComposeSamplesScreen
@@ -95,7 +98,9 @@ enum class MainScreenEnumType(
         MainScreenState(navController = it)
     }, buttonTitleForAccessibility = R.string.learnstatewithviewmodel),
     CompositionLocal(R.string.learncompositionlocal, { CompositionLocalFun() }),
-    CustomModifierScreen(R.string.custommodifier, { CustomModifierNavGraph() }),
+    CustomModifierListingScreen(
+        R.string.custommodifier,
+        { CustomModifierListingScreen(navController = it) }),
     CustomLayout(R.string.customlayout, { CustomLayoutNavGraph() }),
     AnimationScreen(R.string.animationsamples, { AnimationNavGraph() }),
     NavigationEx1(
@@ -225,7 +230,14 @@ enum class MainScreenEnumType(
                 it,
                 androidx.lifecycle.viewmodel.compose.viewModel()
             )
-        })
+        }),
+    //endregion
+
+    //region customModifierListing
+    BaseLineToTopFun(
+        R.string.baseLineToTop, { BaseLineToTopFun() }),
+    RotateAnyComposeDemonstration(R.string.rotateComposable, { RotateAnyComposeDemonstration() }),
+    ComposableVersusComposed(R.string.composableVersusComposed, { ComposableVersusComposed() }),
     //endregion
 }
 

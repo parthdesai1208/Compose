@@ -157,6 +157,12 @@
     <string name="listItem">ListItem</string>
     <!--    end region-->
 
+    <!--    region custom modifier listing screen-->
+    <string name="baseLineToTop">baseLineToTop</string>
+    <string name="rotateComposable">Rotate composable</string>
+    <string name="composableVersusComposed">Composable Versus composed</string>
+    <!--    end region-->
+
     <!--    region state listing screen-->
     <string name="learnstate">Learn state (VM)</string>
     <string name="dependentVariableState">Dependent variable state</string>

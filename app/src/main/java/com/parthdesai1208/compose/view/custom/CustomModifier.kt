@@ -6,6 +6,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -23,8 +25,11 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -37,37 +42,37 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.AlignmentLine
 import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.utils.rotateOnClickComposable
 import com.parthdesai1208.compose.utils.rotateOnClickComposed
+import com.parthdesai1208.compose.view.navigation.ComposeSampleChildrenScreen
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 
 //region Custom Modifier listing screen
 enum class CustomModifierListingEnumType(
-    val buttonTitle: String,
+    val buttonTitle: Int,
     val func: @Composable () -> Unit
 ) {
-    CustomModifierScreen("baseLineToTop", { BaseLineToTopFun() }),
-    RotateAnyComposeDemonstration("Rotate composable", { RotateAnyComposeDemonstration() }),
-    ComposableVersusComposed("Composable Versus composed", { ComposableVersusComposed() }),
+    CustomModifierScreen(
+        R.string.baseLineToTop, { BaseLineToTopFun() }),
+    RotateAnyComposeDemonstration(R.string.rotateComposable, { RotateAnyComposeDemonstration() }),
+    ComposableVersusComposed(R.string.composableVersusComposed, { ComposableVersusComposed() }),
 }
 
-object CustomModifierDestinations {
+/*object CustomModifierDestinations {
     const val CUSTOM_MODIFIER_MAIN_SCREEN = "CUSTOM_MODIFIER_MAIN_SCREEN"
     const val CUSTOM_MODIFIER_ROUTE_PREFIX = "CUSTOM_MODIFIER_ROUTE_PREFIX"
     const val CUSTOM_MODIFIER_ROUTE_POSTFIX = "CUSTOM_MODIFIER_ROUTE_POSTFIX"
-}
+}*/
 
+/*
 @Composable
 fun CustomModifierNavGraph(startDestination: String = CustomModifierDestinations.CUSTOM_MODIFIER_MAIN_SCREEN) {
     val navController = rememberNavController()
@@ -88,6 +93,7 @@ fun CustomModifierNavGraph(startDestination: String = CustomModifierDestinations
         }
     }
 }
+*/
 
 @Composable
 fun CustomModifierListingScreen(navController: NavHostController) {
@@ -95,24 +101,36 @@ fun CustomModifierListingScreen(navController: NavHostController) {
     fun MyButton(
         title: CustomModifierListingEnumType
     ) {
+        val context = LocalContext.current
         Button(
-            onClick = { navController.navigate("${CustomModifierDestinations.CUSTOM_MODIFIER_ROUTE_PREFIX}/${title.buttonTitle}") },
+            onClick = { navController.navigate(ComposeSampleChildrenScreen(pathPostFix = title.buttonTitle)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
                 .padding(8.dp)
         ) {
-            Text(title.buttonTitle, textAlign = TextAlign.Center)
+            Text(context.getString(title.buttonTitle), textAlign = TextAlign.Center)
         }
     }
     Surface {
         Column {
-            Text(
-                text = "Custom Modifier Samples",
-                modifier = Modifier.padding(16.dp),
-                fontSize = 18.sp,
-                fontFamily = FontFamily.SansSerif
-            )
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    modifier = Modifier.clickable {
+                        navController.popBackStack()
+                    }, imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Custom Modifier Samples",
+                    modifier = Modifier.padding(16.dp),
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily.SansSerif
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Column(
                 modifier = Modifier
@@ -128,10 +146,10 @@ fun CustomModifierListingScreen(navController: NavHostController) {
     }
 }
 
-@Composable
+/*@Composable
 fun ChildUIComponentsScreen(onClickButtonTitle: String?) {
     enumValues<CustomModifierListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke()
-}
+}*/
 //endregion
 
 //region baseLineToTop
