@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.view.navigation.ComposeSampleChildrenScreen
 
 enum class StateListingEnumType(
     val buttonTitle: Int,
@@ -39,12 +40,6 @@ enum class StateListingEnumType(
     DependentVariableState(
         R.string.dependentVariableState,
         { DependentVariableState(it, androidx.lifecycle.viewmodel.compose.viewModel()) })
-}
-
-object StateDestinations {
-    const val STATE_LISTING_MAIN_SCREEN = "STATE_LISTING_MAIN_SCREEN"
-    const val STATE_LISTING_MAIN_SCREEN_ROUTE_PREFIX = "STATE_LISTING_MAIN_SCREEN_ROUTE_PREFIX"
-    const val STATE_LISTING_MAIN_SCREEN_ROUTE_POSTFIX = "STATE_LISTING_MAIN_SCREEN_ROUTE_POSTFIX"
 }
 
 @Composable
@@ -65,7 +60,7 @@ fun MainScreenState(navController: NavHostController) {
 
         Button(
             onClick = {
-                navController.navigate("${StateDestinations.STATE_LISTING_MAIN_SCREEN_ROUTE_PREFIX}/${title.buttonTitle}")
+                navController.navigate(ComposeSampleChildrenScreen(pathPostFix = title.buttonTitle))
             },
             modifier = Modifier
                 .fillMaxWidth()

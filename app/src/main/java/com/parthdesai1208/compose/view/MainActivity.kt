@@ -53,9 +53,7 @@ import com.parthdesai1208.compose.view.navigation.NavigationEx1
 import com.parthdesai1208.compose.view.navigation.RallyScreen
 import com.parthdesai1208.compose.view.navigation.composeDestination.StartForComposeDestination
 import com.parthdesai1208.compose.view.networking.NetworkingListNavGraph
-import com.parthdesai1208.compose.view.state.ChildScreenState
 import com.parthdesai1208.compose.view.state.MainScreenState
-import com.parthdesai1208.compose.view.state.StateDestinations
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.view.uicomponents.UIComponentsListingScreen
 
@@ -212,6 +210,23 @@ enum class MainScreenEnumType(
         R.string.listItem,
         { com.parthdesai1208.compose.view.uicomponents.ListItemCompose() }),
     //endregion
+
+    //region stateListing
+    LearnState(R.string.learnstate, {
+        com.parthdesai1208.compose.view.state.TodoActivityScreen(
+            it,
+            androidx.lifecycle.viewmodel.compose.viewModel()
+        )
+    }),
+    DependentVariableState(
+        R.string.dependentVariableState,
+        {
+            com.parthdesai1208.compose.view.state.DependentVariableState(
+                it,
+                androidx.lifecycle.viewmodel.compose.viewModel()
+            )
+        })
+    //endregion
 }
 
 @Composable
@@ -247,26 +262,6 @@ fun MainActivityNavGraph(
             }
         }
         //endregion
-
-        //region state
-        composable(route = StateDestinations.STATE_LISTING_MAIN_SCREEN) {
-            MainScreenState(navController = navController)
-        }
-
-        composable(
-            route = "${StateDestinations.STATE_LISTING_MAIN_SCREEN_ROUTE_PREFIX}/{${StateDestinations.STATE_LISTING_MAIN_SCREEN_ROUTE_POSTFIX}}",
-            arguments = listOf(navArgument(StateDestinations.STATE_LISTING_MAIN_SCREEN_ROUTE_POSTFIX) {
-                type = NavType.StringType
-            })
-        ) { backStackEntry ->
-            val arguments = requireNotNull(backStackEntry.arguments)
-            ChildScreenState(
-                arguments.getString(StateDestinations.STATE_LISTING_MAIN_SCREEN_ROUTE_POSTFIX),
-                navController
-            )
-        }
-        //endregion
-
     }
 }
 
