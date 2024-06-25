@@ -11,6 +11,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -22,6 +23,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
@@ -38,6 +40,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Search
@@ -61,6 +64,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -72,51 +76,23 @@ import androidx.core.os.ConfigurationCompat
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.view.navigation.ComposeSampleChildrenScreen
 import java.util.Locale
 
 //region Custom Modifier listing screen
 enum class CustomLayoutListingEnumType(
-    val buttonTitle: String,
+    val buttonTitle: Int,
     val func: @Composable () -> Unit
 ) {
-    BottomBarCustomCompose("Bottom Bar", { BottomBarCustomCompose() }),
-    MyOwnColumnFun("Column", { MyOwnColumnFun() }),
-    BannerSample("banner", { BannerSampleScreen() }),
-}
-
-object CustomLayoutDestinations {
-    const val CUSTOM_LAYOUT_MAIN_SCREEN = "CUSTOM_LAYOUT_MAIN_SCREEN"
-    const val CUSTOM_LAYOUT_ROUTE_PREFIX = "CUSTOM_LAYOUT_ROUTE_PREFIX"
-    const val CUSTOM_LAYOUT_ROUTE_POSTFIX = "CUSTOM_LAYOUT_ROUTE_POSTFIX"
-}
-
-@Composable
-fun CustomLayoutNavGraph(startDestination: String = CustomLayoutDestinations.CUSTOM_LAYOUT_MAIN_SCREEN) {
-    val navController = rememberNavController()
-
-    NavHost(navController = navController, startDestination = startDestination) {
-        composable(route = CustomLayoutDestinations.CUSTOM_LAYOUT_MAIN_SCREEN) {
-            CustomLayoutListingScreen(navController = navController)
-        }
-
-        composable(
-            route = "${CustomLayoutDestinations.CUSTOM_LAYOUT_ROUTE_PREFIX}/{${CustomLayoutDestinations.CUSTOM_LAYOUT_ROUTE_POSTFIX}}",
-            arguments = listOf(navArgument(CustomLayoutDestinations.CUSTOM_LAYOUT_ROUTE_POSTFIX) {
-                type = NavType.StringType
-            })
-        ) { backStackEntry ->
-            val arguments = requireNotNull(backStackEntry.arguments)
-            ChildCustomLayoutScreen(arguments.getString(CustomLayoutDestinations.CUSTOM_LAYOUT_ROUTE_POSTFIX))
-        }
-    }
+    BottomBarCustomCompose(R.string.bottom_bar, { BottomBarCustomCompose() }),
+    MyOwnColumnFun(R.string.column, { MyOwnColumnFun() }),
+    BannerSample(R.string.banner, { BannerSampleScreen() }),
 }
 
 @Composable
@@ -125,24 +101,36 @@ fun CustomLayoutListingScreen(navController: NavHostController) {
     fun MyButton(
         title: CustomLayoutListingEnumType
     ) {
+        val context = LocalContext.current
         Button(
-            onClick = { navController.navigate("${CustomLayoutDestinations.CUSTOM_LAYOUT_ROUTE_PREFIX}/${title.buttonTitle}") },
+            onClick = { navController.navigate(ComposeSampleChildrenScreen(pathPostFix = title.buttonTitle)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
                 .padding(8.dp)
         ) {
-            Text(title.buttonTitle, textAlign = TextAlign.Center)
+            Text(context.getString(title.buttonTitle), textAlign = TextAlign.Center)
         }
     }
     Surface {
         Column {
-            Text(
-                text = "Custom Layout Samples",
-                modifier = Modifier.padding(16.dp),
-                fontSize = 18.sp,
-                fontFamily = FontFamily.SansSerif
-            )
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    modifier = Modifier.clickable {
+                        navController.popBackStack()
+                    }, imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Custom Layout Samples",
+                    modifier = Modifier.padding(16.dp),
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily.SansSerif
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Column(
                 modifier = Modifier
@@ -156,11 +144,6 @@ fun CustomLayoutListingScreen(navController: NavHostController) {
             }
         }
     }
-}
-
-@Composable
-fun ChildCustomLayoutScreen(onClickButtonTitle: String?) {
-    enumValues<CustomLayoutListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke()
 }
 //endregion
 

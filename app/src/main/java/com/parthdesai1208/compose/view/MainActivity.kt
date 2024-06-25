@@ -46,7 +46,7 @@ import com.parthdesai1208.compose.view.animation.AnimationNavGraph
 import com.parthdesai1208.compose.view.anyscreen.AnyScreenListingNavGraph
 import com.parthdesai1208.compose.view.custom.BaseLineToTopFun
 import com.parthdesai1208.compose.view.custom.ComposableVersusComposed
-import com.parthdesai1208.compose.view.custom.CustomLayoutNavGraph
+import com.parthdesai1208.compose.view.custom.CustomLayoutListingScreen
 import com.parthdesai1208.compose.view.custom.CustomModifierListingScreen
 import com.parthdesai1208.compose.view.custom.RotateAnyComposeDemonstration
 import com.parthdesai1208.compose.view.migration.MigrationActivity
@@ -92,6 +92,7 @@ enum class MainScreenEnumType(
     val func: @Composable (NavHostController) -> Unit,
     val buttonTitleForAccessibility: Int = buttonTitle,
 ) {
+    //region home screen
     TextComponents(
         R.string.uicomponents, { UIComponentsListingScreen(navController = it) }),
     StateListingScreen(R.string.state, {
@@ -101,7 +102,7 @@ enum class MainScreenEnumType(
     CustomModifierListingScreen(
         R.string.custommodifier,
         { CustomModifierListingScreen(navController = it) }),
-    CustomLayout(R.string.customlayout, { CustomLayoutNavGraph() }),
+    CustomLayout(R.string.customlayout, { CustomLayoutListingScreen(it) }),
     AnimationScreen(R.string.animationsamples, { AnimationNavGraph() }),
     NavigationEx1(
         R.string.navigationex1, { NavigationEx1() },
@@ -117,6 +118,7 @@ enum class MainScreenEnumType(
     GestureScreen(R.string.gesture, { GestureScreen() }),
     PermissionScreen(R.string.permission, { PermissionListNavGraph() }),
     PictureInPicture(R.string.pictureinpicture, {}),
+    //endregion
 
     //region UIComponentsListing
     TextCompose(R.string.text, {
@@ -238,6 +240,14 @@ enum class MainScreenEnumType(
         R.string.baseLineToTop, { BaseLineToTopFun() }),
     RotateAnyComposeDemonstration(R.string.rotateComposable, { RotateAnyComposeDemonstration() }),
     ComposableVersusComposed(R.string.composableVersusComposed, { ComposableVersusComposed() }),
+    //endregion
+
+    //region custom layout listing
+    BottomBarCustomCompose(
+        R.string.bottom_bar,
+        { com.parthdesai1208.compose.view.custom.BottomBarCustomCompose() }),
+    MyOwnColumnFun(R.string.column, { com.parthdesai1208.compose.view.custom.MyOwnColumnFun() }),
+    BannerSample(R.string.banner, { com.parthdesai1208.compose.view.custom.BannerSampleScreen() }),
     //endregion
 }
 

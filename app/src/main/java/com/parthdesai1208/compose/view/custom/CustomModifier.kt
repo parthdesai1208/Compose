@@ -66,35 +66,6 @@ enum class CustomModifierListingEnumType(
     ComposableVersusComposed(R.string.composableVersusComposed, { ComposableVersusComposed() }),
 }
 
-/*object CustomModifierDestinations {
-    const val CUSTOM_MODIFIER_MAIN_SCREEN = "CUSTOM_MODIFIER_MAIN_SCREEN"
-    const val CUSTOM_MODIFIER_ROUTE_PREFIX = "CUSTOM_MODIFIER_ROUTE_PREFIX"
-    const val CUSTOM_MODIFIER_ROUTE_POSTFIX = "CUSTOM_MODIFIER_ROUTE_POSTFIX"
-}*/
-
-/*
-@Composable
-fun CustomModifierNavGraph(startDestination: String = CustomModifierDestinations.CUSTOM_MODIFIER_MAIN_SCREEN) {
-    val navController = rememberNavController()
-
-    NavHost(navController = navController, startDestination = startDestination) {
-        composable(route = CustomModifierDestinations.CUSTOM_MODIFIER_MAIN_SCREEN) {
-            CustomModifierListingScreen(navController = navController)
-        }
-
-        composable(
-            route = "${CustomModifierDestinations.CUSTOM_MODIFIER_ROUTE_PREFIX}/{${CustomModifierDestinations.CUSTOM_MODIFIER_ROUTE_POSTFIX}}",
-            arguments = listOf(navArgument(CustomModifierDestinations.CUSTOM_MODIFIER_ROUTE_POSTFIX) {
-                type = NavType.StringType
-            })
-        ) { backStackEntry ->
-            val arguments = requireNotNull(backStackEntry.arguments)
-            ChildUIComponentsScreen(arguments.getString(CustomModifierDestinations.CUSTOM_MODIFIER_ROUTE_POSTFIX))
-        }
-    }
-}
-*/
-
 @Composable
 fun CustomModifierListingScreen(navController: NavHostController) {
     @Composable
@@ -296,4 +267,3 @@ fun ComposableVersusComposed() {
     }
 }
 //endregion
-

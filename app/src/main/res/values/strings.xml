@@ -208,4 +208,10 @@
     <string name="multiplePermission">Multiple permission</string>
     <string name="title_activity_pipactivity">PIPActivity</string>
     <!--    endregion-->
+
+    <!--    region custom layout listing -->
+    <string name="bottom_bar">Bottom Bar</string>
+    <string name="banner">banner</string>
+    <!--    end region-->
+
 </resources>
