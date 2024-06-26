@@ -52,7 +52,7 @@ import androidx.navigation.NavHostController
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.utils.rotateOnClickComposable
 import com.parthdesai1208.compose.utils.rotateOnClickComposed
-import com.parthdesai1208.compose.view.navigation.ComposeSampleChildrenScreen
+import com.parthdesai1208.compose.view.navigation.CustomModifierScreen
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 
 //region Custom Modifier listing screen
@@ -74,7 +74,7 @@ fun CustomModifierListingScreen(navController: NavHostController) {
     ) {
         val context = LocalContext.current
         Button(
-            onClick = { navController.navigate(ComposeSampleChildrenScreen(pathPostFix = title.buttonTitle)) },
+            onClick = { navController.navigate(CustomModifierScreen(pathPostFix = title.buttonTitle)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
@@ -117,10 +117,10 @@ fun CustomModifierListingScreen(navController: NavHostController) {
     }
 }
 
-/*@Composable
-fun ChildUIComponentsScreen(onClickButtonTitle: String?) {
+@Composable
+fun CustomModifierListingScreen1(onClickButtonTitle: Int?) {
     enumValues<CustomModifierListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke()
-}*/
+}
 //endregion
 
 //region baseLineToTop

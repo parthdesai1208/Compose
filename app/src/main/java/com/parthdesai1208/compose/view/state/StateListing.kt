@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.parthdesai1208.compose.R
-import com.parthdesai1208.compose.view.navigation.ComposeSampleChildrenScreen
+import com.parthdesai1208.compose.view.navigation.StateListingScreen
 
 enum class StateListingEnumType(
     val buttonTitle: Int,
@@ -43,8 +43,8 @@ enum class StateListingEnumType(
 }
 
 @Composable
-fun ChildScreenState(onClickButtonTitle: String?, navController: NavHostController) {
-    enumValues<StateListingEnumType>().first { it.buttonTitle.toString() == onClickButtonTitle }.func.invoke(
+fun ChildScreenState(onClickButtonTitle: Int?, navController: NavHostController) {
+    enumValues<StateListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke(
         navController
     )
 }
@@ -60,7 +60,7 @@ fun MainScreenState(navController: NavHostController) {
 
         Button(
             onClick = {
-                navController.navigate(ComposeSampleChildrenScreen(pathPostFix = title.buttonTitle))
+                navController.navigate(StateListingScreen(pathPostFix = title.buttonTitle))
             },
             modifier = Modifier
                 .fillMaxWidth()

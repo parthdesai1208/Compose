@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.parthdesai1208.compose.R
-import com.parthdesai1208.compose.view.navigation.ComposeSampleChildrenScreen
+import com.parthdesai1208.compose.view.navigation.UIComponentsListingScreen
 import com.parthdesai1208.compose.view.uicomponents.bottomsheet.BottomSheetNavGraph
 
 
@@ -73,6 +73,13 @@ enum class UIComponentsListingEnumType(
 }
 
 @Composable
+fun ChildUIComponentsScreen(onClickButtonTitle: Int?, navHostController: NavHostController) {
+    enumValues<UIComponentsListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke(
+        navHostController
+    )
+}
+
+@Composable
 fun UIComponentsListingScreen(navController: NavHostController) {
     @Composable
     fun MyButton(
@@ -81,7 +88,7 @@ fun UIComponentsListingScreen(navController: NavHostController) {
         val context = LocalContext.current
 
         Button(
-            onClick = { navController.navigate(ComposeSampleChildrenScreen(pathPostFix = title.buttonTitle)) },
+            onClick = { navController.navigate(UIComponentsListingScreen(pathPostFix = title.buttonTitle)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentWidth(align = Alignment.CenterHorizontally)

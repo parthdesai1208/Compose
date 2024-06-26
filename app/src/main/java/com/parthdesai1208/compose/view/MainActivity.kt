@@ -43,21 +43,28 @@ import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.model.UserData
 import com.parthdesai1208.compose.view.accessibility.AccessibilityScreen
 import com.parthdesai1208.compose.view.animation.AnimationScreen
+import com.parthdesai1208.compose.view.animation.ChildAnimationScreen
 import com.parthdesai1208.compose.view.anyscreen.AnyScreenListingNavGraph
-import com.parthdesai1208.compose.view.custom.BaseLineToTopFun
-import com.parthdesai1208.compose.view.custom.ComposableVersusComposed
+import com.parthdesai1208.compose.view.custom.ChildCustomLayoutScreen
 import com.parthdesai1208.compose.view.custom.CustomLayoutListingScreen
 import com.parthdesai1208.compose.view.custom.CustomModifierListingScreen
-import com.parthdesai1208.compose.view.custom.RotateAnyComposeDemonstration
+import com.parthdesai1208.compose.view.custom.CustomModifierListingScreen1
 import com.parthdesai1208.compose.view.migration.MigrationActivity
+import com.parthdesai1208.compose.view.navigation.AnimationListingScreen
 import com.parthdesai1208.compose.view.navigation.ComposeSampleChildrenScreen
 import com.parthdesai1208.compose.view.navigation.ComposeSamplesScreen
+import com.parthdesai1208.compose.view.navigation.CustomLayoutScreen
+import com.parthdesai1208.compose.view.navigation.CustomModifierScreen
 import com.parthdesai1208.compose.view.navigation.NavigationEx1
 import com.parthdesai1208.compose.view.navigation.RallyScreen
+import com.parthdesai1208.compose.view.navigation.StateListingScreen
+import com.parthdesai1208.compose.view.navigation.UIComponentsListingScreen
 import com.parthdesai1208.compose.view.navigation.composeDestination.StartForComposeDestination
 import com.parthdesai1208.compose.view.networking.NetworkingListNavGraph
+import com.parthdesai1208.compose.view.state.ChildScreenState
 import com.parthdesai1208.compose.view.state.MainScreenState
 import com.parthdesai1208.compose.view.theme.ComposeTheme
+import com.parthdesai1208.compose.view.uicomponents.ChildUIComponentsScreen
 import com.parthdesai1208.compose.view.uicomponents.UIComponentsListingScreen
 
 class MainActivity : AppCompatActivity() {
@@ -92,7 +99,6 @@ enum class MainScreenEnumType(
     val func: @Composable (NavHostController) -> Unit,
     val buttonTitleForAccessibility: Int = buttonTitle,
 ) {
-    //region home screen
     TextComponents(
         R.string.uicomponents, { UIComponentsListingScreen(navController = it) }),
     StateListingScreen(R.string.state, {
@@ -118,256 +124,6 @@ enum class MainScreenEnumType(
     GestureScreen(R.string.gesture, { GestureScreen() }),
     PermissionScreen(R.string.permission, { PermissionListNavGraph() }),
     PictureInPicture(R.string.pictureinpicture, {}),
-    //endregion
-
-    //region UIComponentsListing
-    TextCompose(R.string.text, {
-        com.parthdesai1208.compose.view.uicomponents.TextComponents(
-            "World",
-            it
-        )
-    }),
-    EditTextCompose(
-        R.string.edittext,
-        {
-            com.parthdesai1208.compose.view.uicomponents.EditTextCompose(
-                it,
-                androidx.lifecycle.viewmodel.compose.viewModel()
-            )
-        }),
-    ButtonComponents(R.string.button, {
-        com.parthdesai1208.compose.view.uicomponents.ButtonCompose(
-            it
-        )
-    }),
-    ImageCompose(R.string.image, {
-        com.parthdesai1208.compose.view.uicomponents.ImageComposeScreen(
-            it
-        )
-    }),
-    IconCompose(
-        R.string.icon,
-        { com.parthdesai1208.compose.view.uicomponents.IconComposeScreen(it) }),
-    SearchBarComponents(
-        R.string.searchbar,
-        {
-            com.parthdesai1208.compose.view.uicomponents.SearchBar(
-                it,
-                androidx.lifecycle.viewmodel.compose.viewModel()
-            )
-        }),
-    SnackBarComponents(R.string.snackbar, {
-        com.parthdesai1208.compose.view.uicomponents.SnackBarCompose(
-            it
-        )
-    }),
-    ScaffoldCompose(
-        R.string.scaffold,
-        { com.parthdesai1208.compose.view.uicomponents.ScaffoldCompose() }),
-    ColumnCompose(
-        R.string.column,
-        { com.parthdesai1208.compose.view.uicomponents.ColumnNavGraph() }),
-    RowCompose(R.string.row, { com.parthdesai1208.compose.view.uicomponents.RowNavGraph() }),
-    BoxCompose(R.string.box, { com.parthdesai1208.compose.view.uicomponents.BoxNavGraph() }),
-    CardCompose(R.string.card, { com.parthdesai1208.compose.view.uicomponents.CardCompose() }),
-    CollapsableRecyclerviewScreen(
-        R.string.verticallist,
-        { com.parthdesai1208.compose.view.uicomponents.VerticalListNavGraph() }),
-    HorizontalListScreen(
-        R.string.horizontallist,
-        { com.parthdesai1208.compose.view.uicomponents.HorizontalListNavGraph() }),
-    ConstraintLayoutContent(
-        R.string.constraintlayoutcontent,
-        { com.parthdesai1208.compose.view.uicomponents.ConstraintLayoutContent() }),
-    ConstraintLayoutScreen(
-        R.string.runtimeconstraintlayout,
-        { com.parthdesai1208.compose.view.uicomponents.DecoupledConstraintLayout() }),
-    ConstraintLayoutClock(
-        R.string.clockusingconstraintlayout,
-        { com.parthdesai1208.compose.view.uicomponents.ClockByConstraintLayout() }),
-    BottomSheetScreen(
-        R.string.bottomsheet,
-        { com.parthdesai1208.compose.view.uicomponents.bottomsheet.BottomSheetNavGraph() }),
-    SwitchCompose(
-        R.string.switch1,
-        { com.parthdesai1208.compose.view.uicomponents.SwitchCompose() }),
-    RadioCompose(
-        R.string.radiobutton,
-        { com.parthdesai1208.compose.view.uicomponents.RadioButtonCompose() }),
-    CheckBoxCompose(
-        R.string.checkbox,
-        { com.parthdesai1208.compose.view.uicomponents.CheckBoxCompose() }),
-    DropdownMenuCompose(
-        R.string.dropdownmenu,
-        { com.parthdesai1208.compose.view.uicomponents.DropdownMenu() }),
-    SliderCompose(
-        R.string.slider,
-        { com.parthdesai1208.compose.view.uicomponents.SliderCompose(androidx.lifecycle.viewmodel.compose.viewModel()) }),
-    BadgeCompose(R.string.badge, { com.parthdesai1208.compose.view.uicomponents.BadgeCompose() }),
-    DialogCompose(
-        R.string.dialog1,
-        { com.parthdesai1208.compose.view.uicomponents.DialogCompose() }),
-    ToolTipCompose(
-        R.string.tooltip,
-        { com.parthdesai1208.compose.view.uicomponents.TooltipOnLongClickExample() }),
-    DateTimeCompose(
-        R.string.dateTimePicker,
-        { com.parthdesai1208.compose.view.uicomponents.DateTimeCompose() }),
-    ListItemCompose(
-        R.string.listItem,
-        { com.parthdesai1208.compose.view.uicomponents.ListItemCompose() }),
-    //endregion
-
-    //region stateListing
-    LearnState(R.string.learnstate, {
-        com.parthdesai1208.compose.view.state.TodoActivityScreen(
-            it,
-            androidx.lifecycle.viewmodel.compose.viewModel()
-        )
-    }),
-    DependentVariableState(
-        R.string.dependentVariableState,
-        {
-            com.parthdesai1208.compose.view.state.DependentVariableState(
-                it,
-                androidx.lifecycle.viewmodel.compose.viewModel()
-            )
-        }),
-    //endregion
-
-    //region customModifierListing
-    BaseLineToTopFun(
-        R.string.baseLineToTop, { BaseLineToTopFun() }),
-    RotateAnyComposeDemonstration(R.string.rotateComposable, { RotateAnyComposeDemonstration() }),
-    ComposableVersusComposed(R.string.composableVersusComposed, { ComposableVersusComposed() }),
-    //endregion
-
-    //region custom layout listing
-    BottomBarCustomCompose(
-        R.string.bottom_bar,
-        { com.parthdesai1208.compose.view.custom.BottomBarCustomCompose() }),
-    MyOwnColumnFun(R.string.column, { com.parthdesai1208.compose.view.custom.MyOwnColumnFun() }),
-    BannerSample(R.string.banner, { com.parthdesai1208.compose.view.custom.BannerSampleScreen() }),
-    //endregion
-
-    //region animationSample
-    AnimatedVisibilityWithoutParams(
-        R.string.animatedvisibility_without_params,
-        { com.parthdesai1208.compose.view.animation.AnimatedVisibilityWithoutParams() }),
-    AnimatedVisibilityWithParams(
-        R.string.animatedvisibility_with_params,
-        { com.parthdesai1208.compose.view.animation.AnimatedVisibilityWithParams() }),
-    AnimateVisibilityState(
-        R.string.animatedvisibility_with_state,
-        { com.parthdesai1208.compose.view.animation.AnimateVisibilityState() }),
-    AnimateEnterExitChild(
-        R.string.enter_exit_visibility_animation,
-        { com.parthdesai1208.compose.view.animation.AnimateEnterExitChild() }),
-    CrossFade(R.string.crossfade, { com.parthdesai1208.compose.view.animation.CrossFade() }),
-    AnimatableOnly(
-        R.string.animatableonly,
-        { com.parthdesai1208.compose.view.animation.AnimatableOnly() }),
-    AnimatedContentSimple(
-        R.string.animatedcontentsimple,
-        { com.parthdesai1208.compose.view.animation.AnimatedContentSimple() }),
-    AnimatedContentWithTransitionSpec1(
-        R.string.animatedcontent_with_targetstate_transitionspec_ex_1,
-        { com.parthdesai1208.compose.view.animation.AnimatedContentWithTransitionSpec1() }),
-    AnimatedContentWithTransitionSpec2(
-        R.string.animatedcontent_with_targetstate_transitionspec_ex_2,
-        { com.parthdesai1208.compose.view.animation.AnimatedContentWithTransitionSpec2() }),
-    AnimatedContentWithTransitionSpec3(
-        R.string.animatedcontent_with_targetstate_transitionspec_ex_3,
-        { com.parthdesai1208.compose.view.animation.AnimatedContentWithTransitionSpec3() }),
-    AnimatedContentSize(
-        R.string.animatedcontentsize,
-        { com.parthdesai1208.compose.view.animation.AnimatedContentSize() }),
-    AnimatedContentSizeTransform(
-        R.string.animatedcontentsizetransform,
-        { com.parthdesai1208.compose.view.animation.AnimatedContentSizeTransform() }),
-    AnimateFloatAsState(
-        R.string.animatefloatasstate,
-        { com.parthdesai1208.compose.view.animation.AnimateFloatAsState() }),
-    AnimateColorAsState(
-        R.string.animatecolorasstate,
-        { com.parthdesai1208.compose.view.animation.AnimateColorAsState() }),
-    AnimateDpAsState(
-        R.string.animatedpasstate,
-        { com.parthdesai1208.compose.view.animation.AnimateDpAsState() }),
-    AnimateSizeAsState(
-        R.string.animatesizeasstate,
-        { com.parthdesai1208.compose.view.animation.AnimateSizeAsState() }),
-    UpdateTransition1(
-        R.string.updatetransition_1,
-        { com.parthdesai1208.compose.view.animation.UpdateTransitionBasic1() }),
-    UpdateTransition2(
-        R.string.updatetransition_2,
-        { com.parthdesai1208.compose.view.animation.UpdateTransitionBasic2() }),
-    UpdateTransitionChild(
-        R.string.updatetransitionchild,
-        { com.parthdesai1208.compose.view.animation.UpdateTransitionChild() }),
-    UpdateTransitionExtension(
-        R.string.multiple_anim_updatetransition,
-        { com.parthdesai1208.compose.view.animation.UpdateTransitionExtension() }),
-    MultipleAnimCoroutineAnimateTo(
-        R.string.multiple_anim_coroutine_animateto_rotate_color_change,
-        { com.parthdesai1208.compose.view.animation.MultipleAnimCoroutineAnimateTo() }),
-    InfiniteColorAnimation(
-        R.string.infiniteanimation_color,
-        { com.parthdesai1208.compose.view.animation.InfiniteColorAnimation() }),
-    InfiniteFloatAnimation(
-        R.string.infiniteanimation_float,
-        { com.parthdesai1208.compose.view.animation.InfiniteFloatAnimation() }),
-    InfiniteOffsetAnimation(
-        R.string.infiniteanimation_offset,
-        { com.parthdesai1208.compose.view.animation.InfiniteOffsetAnimation() }),
-    InfiniteRotation(
-        R.string.infinite_rotation,
-        { com.parthdesai1208.compose.view.animation.InfiniteRotation() }),
-    TargetBasedAnimation(
-        R.string.targetbasedanimation,
-        { com.parthdesai1208.compose.view.animation.TargetBasedAnimationFun() }),
-    Spring(
-        R.string.spring,
-        { com.parthdesai1208.compose.view.animation.SpringFun() }),
-    Tween(R.string.tween, { com.parthdesai1208.compose.view.animation.TweenFun() }), Keyframes(
-        R.string.keyframes,
-        { com.parthdesai1208.compose.view.animation.KeyFramesFun() }),
-    Repeatable(
-        R.string.repeatable,
-        { com.parthdesai1208.compose.view.animation.RepeatableFun() }),
-    InfiniteRepeatable(
-        R.string.infiniterepeatable,
-        { com.parthdesai1208.compose.view.animation.InfiniteRepeatableFun() }),
-    Snap(R.string.snap, { com.parthdesai1208.compose.view.animation.SnapFun() }),
-    AnimationVector(
-        R.string.animationvector_typeconverter_coroutine,
-        { com.parthdesai1208.compose.view.animation.AnimationVectorFun() }),
-    AnimationEx1(
-        R.string.animationex1,
-        { com.parthdesai1208.compose.view.animation.AnimationEx1() }),
-    BoxWithIconUpDownAnimation(
-        R.string.icon_up_down_animation,
-        { com.parthdesai1208.compose.view.animation.BoxWithIconUpDownAnimation() }),
-    DuolingoBirdAnimation(
-        R.string.duolingo_bird_animation,
-        { Surface(Modifier.fillMaxSize()) { com.parthdesai1208.compose.view.animation.DuolingoBird() } }),
-    ThreeDCardMoving(
-        R.string._3d_card_moving,
-        { com.parthdesai1208.compose.view.animation.ThreeDCardMoving() }),
-    InstagramLikeParticles(
-        R.string.instagram_like_particles,
-        { com.parthdesai1208.compose.view.animation.InstagramLikeParticles() }),
-    RotatingBorders(
-        R.string.rotating_borders,
-        { com.parthdesai1208.compose.view.animation.RotatingBorders() }),
-    PhysicsBasedAnimation(
-        R.string.physics_based_animation,
-        { com.parthdesai1208.compose.view.animation.physicsbasedanimation.PhysicsBasedAnimationFun() }),
-    ProgressAnimation(
-        R.string.progressanimation,
-        { com.parthdesai1208.compose.view.animation.ProgressAnimation() }),
-    //endregion
 }
 
 @Composable
@@ -389,7 +145,32 @@ fun MainActivityNavGraph(
                 ChildScreen(arguments.pathPostFix, navController)
             }
         }
-
+        composable<UIComponentsListingScreen> { backStackEntry ->
+            val arguments = backStackEntry.toRoute<UIComponentsListingScreen>()
+            ChildUIComponentsScreen(
+                onClickButtonTitle = arguments.pathPostFix,
+                navHostController = navController
+            )
+        }
+        composable<StateListingScreen> { backStackEntry ->
+            val arguments = backStackEntry.toRoute<StateListingScreen>()
+            ChildScreenState(
+                onClickButtonTitle = arguments.pathPostFix,
+                navController = navController
+            )
+        }
+        composable<CustomModifierScreen> { backStackEntry ->
+            val arguments = backStackEntry.toRoute<CustomModifierScreen>()
+            CustomModifierListingScreen1(onClickButtonTitle = arguments.pathPostFix)
+        }
+        composable<CustomLayoutScreen> { backStackEntry ->
+            val arguments = backStackEntry.toRoute<CustomLayoutScreen>()
+            ChildCustomLayoutScreen(onClickButtonTitle = arguments.pathPostFix)
+        }
+        composable<AnimationListingScreen> { backStackEntry ->
+            val arguments = backStackEntry.toRoute<AnimationListingScreen>()
+            ChildAnimationScreen(onClickButtonTitle = arguments.pathPostFix)
+        }
         //region for deep link = https://example.com/task_id=Checking
         composable(
             route = "${RallyScreen.Accounts.name}/{name}",

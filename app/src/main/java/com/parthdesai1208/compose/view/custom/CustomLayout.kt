@@ -82,7 +82,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.parthdesai1208.compose.R
-import com.parthdesai1208.compose.view.navigation.ComposeSampleChildrenScreen
+import com.parthdesai1208.compose.view.navigation.CustomLayoutScreen
 import java.util.Locale
 
 //region Custom Modifier listing screen
@@ -103,7 +103,7 @@ fun CustomLayoutListingScreen(navController: NavHostController) {
     ) {
         val context = LocalContext.current
         Button(
-            onClick = { navController.navigate(ComposeSampleChildrenScreen(pathPostFix = title.buttonTitle)) },
+            onClick = { navController.navigate(CustomLayoutScreen(pathPostFix = title.buttonTitle)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
@@ -146,6 +146,11 @@ fun CustomLayoutListingScreen(navController: NavHostController) {
     }
 }
 //endregion
+
+@Composable
+fun ChildCustomLayoutScreen(onClickButtonTitle: Int?) {
+    enumValues<CustomLayoutListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke()
+}
 
 //region custom compose bottom bar
 object BottomBarCustomComposeDestinations {

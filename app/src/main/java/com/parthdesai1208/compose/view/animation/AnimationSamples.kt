@@ -138,7 +138,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.ColorUtils
 import androidx.navigation.NavHostController
 import com.parthdesai1208.compose.R
-import com.parthdesai1208.compose.view.navigation.ComposeSampleChildrenScreen
+import com.parthdesai1208.compose.view.navigation.AnimationListingScreen
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -243,7 +243,7 @@ fun AnimationScreen(navController: NavHostController) {
     ) {
         val context = LocalContext.current
         Button(
-            onClick = { navController.navigate(ComposeSampleChildrenScreen(pathPostFix = title.buttonTitle)) },
+            onClick = { navController.navigate(AnimationListingScreen(pathPostFix = title.buttonTitle)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
@@ -287,6 +287,11 @@ fun AnimationScreen(navController: NavHostController) {
     }
 }
 //endregion
+
+@Composable
+fun ChildAnimationScreen(onClickButtonTitle: Int?) {
+    enumValues<AnimationScreenEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke()
+}
 
 /*
 *********************************************************************************************************************************
