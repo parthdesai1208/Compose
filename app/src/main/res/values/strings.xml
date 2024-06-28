@@ -257,5 +257,34 @@
     <string name="physics_based_animation">Physics Based Animation</string>
     <string name="progressanimation">ProgressAnimation</string>
     <!--    end region-->
+
     <string name="back">Back</string>
+
+    <!--    region column listing-->
+    <string name="wrapcolumntopstart">WrapColumnTopStart</string>
+    <string name="wrapcolumntop">WrapColumnTop</string>
+    <string name="wrapcolumntopend">WrapColumnTopEnd</string>
+    <string name="wrapcolumncenterstart">WrapColumnCenterStart</string>
+    <string name="wrapcolumncenter">WrapColumnCenter</string>
+    <string name="wrapcolumncenterend">WrapColumnCenterEnd</string>
+    <string name="wrapcolumnbottomstart">WrapColumnBottomStart</string>
+    <string name="wrapcolumnbottom">WrapColumnBottom</string>
+    <string name="wrapcolumnbottomend">WrapColumnBottomEnd</string>
+    <string name="fill_max_size_column">Fill max size column</string>
+    <string name="fillmaxsizechildtop">FillMaxSizeChildTop</string>
+    <string name="fillmaxsizechildtopend">FillMaxSizeChildTopEnd</string>
+    <string name="fillmaxsizechildcenterstart">FillMaxSizeChildCenterStart</string>
+    <string name="fillmaxsizechildcenter">FillMaxSizeChildCenter</string>
+    <string name="fillmaxsizechildcenterend">FillMaxSizeChildCenterEnd</string>
+    <string name="fillmaxsizechildbottomstart">FillMaxSizeChildBottomStart</string>
+    <string name="fillmaxsizechildbottomcenter">FillMaxSizeChildBottomCenter</string>
+    <string name="fillmaxsizechildbottomend">FillMaxSizeChildBottomEnd</string>
+    <string name="fillmaxsizechildspaceevenly">FillMaxSizeChildSpaceEvenly</string>
+    <string name="fillmaxsizechildspacearound">FillMaxSizeChildSpaceAround</string>
+    <string name="fillmaxsizechildspacebetween">FillMaxSizeChildSpaceBetween</string>
+    <string name="individual_child_alignment">Individual Child Alignment</string>
+    <string name="child_weight">child Weight</string>
+    <string name="scrollable_column">Scrollable Column</string>
+    <string name="apply_same_space_between_all_child">Apply same space between All Child</string>
+    <!--    end region-->
 </resources>

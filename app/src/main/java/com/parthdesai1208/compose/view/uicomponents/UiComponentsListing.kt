@@ -48,7 +48,7 @@ enum class UIComponentsListingEnumType(
         { SearchBar(it, androidx.lifecycle.viewmodel.compose.viewModel()) }),
     SnackBarComponents(R.string.snackbar, { SnackBarCompose(it) }),
     ScaffoldCompose(R.string.scaffold, { ScaffoldCompose(it) }),
-    ColumnCompose(R.string.column, { ColumnNavGraph() }),
+    ColumnCompose(R.string.column, { ColumnListingScreen(it) }),
     RowCompose(R.string.row, { RowNavGraph() }),
     BoxCompose(R.string.box, { BoxNavGraph() }),
     CardCompose(R.string.card, { CardCompose() }),

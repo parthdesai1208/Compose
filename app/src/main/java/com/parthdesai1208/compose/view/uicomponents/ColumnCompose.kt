@@ -2,16 +2,34 @@ package com.parthdesai1208.compose.view.uicomponents
 
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -19,80 +37,65 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import androidx.navigation.NavHostController
+import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.view.navigation.ColumnListingScreenPath
 import com.parthdesai1208.compose.view.theme.Amber600
 import com.parthdesai1208.compose.view.theme.Green800
 import com.parthdesai1208.compose.view.theme.red1000
 
 //region Column Listing Screen
-enum class ColumnListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
-    SimpleColumn("WrapColumnTopStart", { WrapColumnTopStart() }),
-    WrapColumnTop("WrapColumnTop", { WrapColumnTop() }),
-    WrapColumnTopEnd("WrapColumnTopEnd", { WrapColumnTopEnd() }),
-    WrapColumnCenterStart("WrapColumnCenterStart", { WrapColumnCenterStart() }),
-    WrapColumnCenter("WrapColumnCenter", { WrapColumnCenter() }),
-    WrapColumnCenterEnd("WrapColumnCenterEnd", { WrapColumnCenterEnd() }),
-    WrapColumnBottomStart("WrapColumnBottomStart", { WrapColumnBottomStart() }),
-    WrapColumnBottom("WrapColumnBottom", { WrapColumnBottom() }),
-    WrapColumnBottomEnd("WrapColumnBottomEnd", { WrapColumnBottomEnd() }),
-
-    FillMaxSizeColumn("Fill max size column", { FillMaxSizeColumn() }),
-    FillMaxSizeChildTop("FillMaxSizeChildTop", { FillMaxSizeChildTop() }),
-    FillMaxSizeChildTopEnd("FillMaxSizeChildTopEnd", { FillMaxSizeChildTopEnd() }),
-    FillMaxSizeChildCenterStart("FillMaxSizeChildCenterStart", { FillMaxSizeChildCenterStart() }),
-    FillMaxSizeChildCenter("FillMaxSizeChildCenter", { FillMaxSizeChildCenter() }),
-    FillMaxSizeChildCenterEnd("FillMaxSizeChildCenterEnd", { FillMaxSizeChildCenterEnd() }),
-    FillMaxSizeChildBottomStart("FillMaxSizeChildBottomStart", { FillMaxSizeChildBottomStart() }),
-    FillMaxSizeChildBottomCenter("FillMaxSizeChildBottomCenter",
+enum class ColumnListingEnumType(
+    val buttonTitle: Int,
+    val func: @Composable (NavHostController) -> Unit
+) {
+    SimpleColumn(R.string.wrapcolumntopstart, { WrapColumnTopStart(it) }),
+    WrapColumnTop(R.string.wrapcolumntop, { WrapColumnTop(it) }),
+    WrapColumnTopEnd(R.string.wrapcolumntopend, { WrapColumnTopEnd(it) }),
+    WrapColumnCenterStart(R.string.wrapcolumncenterstart, { WrapColumnCenterStart(it) }),
+    WrapColumnCenter(R.string.wrapcolumncenter, { WrapColumnCenter(it) }),
+    WrapColumnCenterEnd(R.string.wrapcolumncenterend, { WrapColumnCenterEnd(it) }),
+    WrapColumnBottomStart(R.string.wrapcolumnbottomstart, { WrapColumnBottomStart(it) }),
+    WrapColumnBottom(R.string.wrapcolumnbottom, { WrapColumnBottom(it) }),
+    WrapColumnBottomEnd(R.string.wrapcolumnbottomend, { WrapColumnBottomEnd(it) }),
+    FillMaxSizeColumn(R.string.fill_max_size_column, { FillMaxSizeColumn() }),
+    FillMaxSizeChildTop(R.string.fillmaxsizechildtop, { FillMaxSizeChildTop() }),
+    FillMaxSizeChildTopEnd(R.string.fillmaxsizechildtopend, { FillMaxSizeChildTopEnd() }),
+    FillMaxSizeChildCenterStart(
+        R.string.fillmaxsizechildcenterstart,
+        { FillMaxSizeChildCenterStart() }),
+    FillMaxSizeChildCenter(R.string.fillmaxsizechildcenter, { FillMaxSizeChildCenter() }),
+    FillMaxSizeChildCenterEnd(R.string.fillmaxsizechildcenterend, { FillMaxSizeChildCenterEnd() }),
+    FillMaxSizeChildBottomStart(
+        R.string.fillmaxsizechildbottomstart,
+        { FillMaxSizeChildBottomStart() }),
+    FillMaxSizeChildBottomCenter(
+        R.string.fillmaxsizechildbottomcenter,
         { FillMaxSizeChildBottomCenter() }),
-    FillMaxSizeChildBottomEnd("FillMaxSizeChildBottomEnd", { FillMaxSizeChildBottomEnd() }),
-    FillMaxSizeChildSpaceEvenly("FillMaxSizeChildSpaceEvenly", { FillMaxSizeChildSpaceEvenly() }),
-    FillMaxSizeChildSpaceAround("FillMaxSizeChildSpaceAround", { FillMaxSizeChildSpaceAround() }),
-    FillMaxSizeChildSpaceBetween("FillMaxSizeChildSpaceBetween",
+    FillMaxSizeChildBottomEnd(R.string.fillmaxsizechildbottomend, { FillMaxSizeChildBottomEnd() }),
+    FillMaxSizeChildSpaceEvenly(
+        R.string.fillmaxsizechildspaceevenly,
+        { FillMaxSizeChildSpaceEvenly() }),
+    FillMaxSizeChildSpaceAround(
+        R.string.fillmaxsizechildspacearound,
+        { FillMaxSizeChildSpaceAround() }),
+    FillMaxSizeChildSpaceBetween(
+        R.string.fillmaxsizechildspacebetween,
         { FillMaxSizeChildSpaceBetween() }),
 
-    IndividualChildAlignment("Individual Child Alignment", { IndividualChildAlignment() }),
-    ChildWeight("child Weight", { ChildWeight() }),
+    IndividualChildAlignment(R.string.individual_child_alignment, { IndividualChildAlignment() }),
+    ChildWeight(R.string.child_weight, { ChildWeight() }),
 
-    ScrollableColumn("Scrollable Column", { ScrollableColumn() }),
+    ScrollableColumn(R.string.scrollable_column, { ScrollableColumn() }),
 
-    AlignAllChild("Apply same space between All Child", { AlignAllChild() }),
-}
-
-object ColumnDestinations {
-    const val COLUMN_MAIN_SCREEN = "COLUMN_MAIN_SCREEN"
-    const val COLUMN_SCREEN_ROUTE_PREFIX = "COLUMN_SCREEN_ROUTE_PREFIX"
-    const val COLUMN_SCREEN_ROUTE_POSTFIX = "COLUMN_SCREEN_ROUTE_POSTFIX"
+    AlignAllChild(R.string.apply_same_space_between_all_child, { AlignAllChild() }),
 }
 
 @Composable
-fun ColumnNavGraph(startDestination: String = ColumnDestinations.COLUMN_MAIN_SCREEN) {
-    val navController = rememberNavController()
-
-    NavHost(navController = navController, startDestination = startDestination) {
-        composable(route = ColumnDestinations.COLUMN_MAIN_SCREEN) {
-            ColumnListingScreen(navController = navController)
-        }
-
-        composable(
-            route = "${ColumnDestinations.COLUMN_SCREEN_ROUTE_PREFIX}/{${ColumnDestinations.COLUMN_SCREEN_ROUTE_POSTFIX}}",
-            arguments = listOf(navArgument(ColumnDestinations.COLUMN_SCREEN_ROUTE_POSTFIX) {
-                type = NavType.StringType
-            })
-        ) { backStackEntry ->
-            val arguments = requireNotNull(backStackEntry.arguments)
-            ChildColumnScreen(arguments.getString(ColumnDestinations.COLUMN_SCREEN_ROUTE_POSTFIX))
-        }
-    }
-}
-
-@Composable
-fun ChildColumnScreen(onClickButtonTitle: String?) {
-    enumValues<ColumnListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke()
+fun ChildColumnScreen(onClickButtonTitle: Int?, navController: NavHostController) {
+    enumValues<ColumnListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke(
+        navController
+    )
 }
 
 @Composable
@@ -101,24 +104,36 @@ fun ColumnListingScreen(navController: NavController) {
     fun MyButton(
         title: ColumnListingEnumType
     ) {
+        val context = LocalContext.current
         Button(
-            onClick = { navController.navigate("${ColumnDestinations.COLUMN_SCREEN_ROUTE_PREFIX}/${title.buttonTitle}") },
+            onClick = { navController.navigate(ColumnListingScreenPath(title.buttonTitle)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
                 .padding(8.dp)
         ) {
-            Text(title.buttonTitle, textAlign = TextAlign.Center)
+            Text(context.getString(title.buttonTitle), textAlign = TextAlign.Center)
         }
     }
     Surface {
         Column {
-            Text(
-                text = "Column Samples",
-                modifier = Modifier.padding(16.dp),
-                fontSize = 18.sp,
-                fontFamily = FontFamily.SansSerif
-            )
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    modifier = Modifier.clickable {
+                        navController.popBackStack()
+                    }, imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Column Samples",
+                    modifier = Modifier.padding(16.dp),
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily.SansSerif
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Column(
                 modifier = Modifier
@@ -140,18 +155,26 @@ fun Modifier.commonBorder(width: Dp = 10.dp, color: Color = Green800): Modifier 
 }
 
 @Composable
-fun WrapColumnTopStart(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier.commonBorder()
-    ) {
-        CommonBoxForColumn1()
-        CommonBoxForColumn2()
+fun WrapColumnTopStart(navHostController: NavHostController, modifier: Modifier = Modifier) {
+    Box(modifier = modifier.fillMaxSize()) {
+        Column(
+            modifier = modifier.commonBorder()
+        ) {
+            CommonBoxForColumn1()
+            CommonBoxForColumn2()
+        }
+        androidx.compose.material.FloatingActionButton(
+            modifier = Modifier.align(Alignment.BottomEnd),
+            onClick = { navHostController.popBackStack() }) {
+            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+        }
     }
 }
 
 @Composable
-fun WrapColumnTop() {
+fun WrapColumnTop(navHostController: NavHostController) {
     WrapColumnTopStart(
+        navHostController,
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentWidth(align = Alignment.CenterHorizontally)
@@ -161,8 +184,9 @@ fun WrapColumnTop() {
 }
 
 @Composable
-fun WrapColumnTopEnd() {
+fun WrapColumnTopEnd(navHostController: NavHostController) {
     WrapColumnTopStart(
+        navHostController,
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentWidth(align = Alignment.End)
@@ -172,8 +196,9 @@ fun WrapColumnTopEnd() {
 }
 
 @Composable
-fun WrapColumnCenterStart() {
+fun WrapColumnCenterStart(navHostController: NavHostController) {
     WrapColumnTopStart(
+        navHostController,
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentWidth(align = Alignment.Start)
@@ -183,8 +208,9 @@ fun WrapColumnCenterStart() {
 }
 
 @Composable
-fun WrapColumnCenter() {
+fun WrapColumnCenter(navHostController: NavHostController) {
     WrapColumnTopStart(
+        navHostController,
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentWidth(align = Alignment.CenterHorizontally)
@@ -194,8 +220,9 @@ fun WrapColumnCenter() {
 }
 
 @Composable
-fun WrapColumnCenterEnd() {
+fun WrapColumnCenterEnd(navHostController: NavHostController) {
     WrapColumnTopStart(
+        navHostController,
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentWidth(align = Alignment.End)
@@ -205,8 +232,9 @@ fun WrapColumnCenterEnd() {
 }
 
 @Composable
-fun WrapColumnBottomStart() {
+fun WrapColumnBottomStart(navHostController: NavHostController) {
     WrapColumnTopStart(
+        navHostController,
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentWidth(align = Alignment.Start)
@@ -216,8 +244,9 @@ fun WrapColumnBottomStart() {
 }
 
 @Composable
-fun WrapColumnBottom() {
+fun WrapColumnBottom(navHostController: NavHostController) {
     WrapColumnTopStart(
+        navHostController,
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentWidth(align = Alignment.CenterHorizontally)
@@ -227,8 +256,9 @@ fun WrapColumnBottom() {
 }
 
 @Composable
-fun WrapColumnBottomEnd() {
+fun WrapColumnBottomEnd(navHostController: NavHostController) {
     WrapColumnTopStart(
+        navHostController,
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentWidth(align = Alignment.End)

@@ -51,6 +51,7 @@ import com.parthdesai1208.compose.view.custom.CustomModifierListingScreen
 import com.parthdesai1208.compose.view.custom.CustomModifierListingScreen1
 import com.parthdesai1208.compose.view.migration.MigrationActivity
 import com.parthdesai1208.compose.view.navigation.AnimationListingScreen
+import com.parthdesai1208.compose.view.navigation.ColumnListingScreenPath
 import com.parthdesai1208.compose.view.navigation.ComposeSampleChildrenScreen
 import com.parthdesai1208.compose.view.navigation.ComposeSamplesScreen
 import com.parthdesai1208.compose.view.navigation.CustomLayoutScreen
@@ -64,6 +65,7 @@ import com.parthdesai1208.compose.view.networking.NetworkingListNavGraph
 import com.parthdesai1208.compose.view.state.ChildScreenState
 import com.parthdesai1208.compose.view.state.MainScreenState
 import com.parthdesai1208.compose.view.theme.ComposeTheme
+import com.parthdesai1208.compose.view.uicomponents.ChildColumnScreen
 import com.parthdesai1208.compose.view.uicomponents.ChildUIComponentsScreen
 import com.parthdesai1208.compose.view.uicomponents.UIComponentsListingScreen
 
@@ -170,6 +172,10 @@ fun MainActivityNavGraph(
         composable<AnimationListingScreen> { backStackEntry ->
             val arguments = backStackEntry.toRoute<AnimationListingScreen>()
             ChildAnimationScreen(onClickButtonTitle = arguments.pathPostFix)
+        }
+        composable<ColumnListingScreenPath> { backStackEntry ->
+            val arguments = backStackEntry.toRoute<ColumnListingScreenPath>()
+            ChildColumnScreen(onClickButtonTitle = arguments.pathPostFix, navController)
         }
         //region for deep link = https://example.com/task_id=Checking
         composable(
