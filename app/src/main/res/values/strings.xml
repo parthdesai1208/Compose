@@ -257,5 +257,5 @@
     <string name="physics_based_animation">Physics Based Animation</string>
     <string name="progressanimation">ProgressAnimation</string>
     <!--    end region-->
-
+    <string name="back">Back</string>
 </resources>

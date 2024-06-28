@@ -5,19 +5,45 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material.BottomAppBar
+import androidx.compose.material.Button
+import androidx.compose.material.FabPosition
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.runtime.*
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.parthdesai1208.compose.R
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ScaffoldCompose() {
+fun ScaffoldCompose(navHostController: NavHostController) {
     val scaffoldState = rememberScaffoldState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -41,7 +67,7 @@ fun ScaffoldCompose() {
                 }
             })
         }, topBar = {
-            TopBar(state = topBarState) {
+            TopBar(state = topBarState, navHostController = navHostController) {
                 coroutineScope.launch {
                     scaffoldState.drawerState.open()
                 }
@@ -109,8 +135,8 @@ fun ContentForScaffold(
 }
 
 @Composable
-fun TopBar(state: Boolean, iconClick: () -> Unit) {
-
+fun TopBar(state: Boolean, navHostController: NavHostController, iconClick: () -> Unit) {
+    val context = LocalContext.current
     AnimatedVisibility(visible = state,
         enter = slideInVertically(initialOffsetY = { -it }),
         exit = slideOutVertically(targetOffsetY = { -it }),
@@ -123,6 +149,12 @@ fun TopBar(state: Boolean, iconClick: () -> Unit) {
                         Icons.Filled.Menu, contentDescription = "Localized description"
                     )
                 }
+            }, actions = {
+                Text(text = context.getString(R.string.back), modifier = Modifier
+                    .clickable {
+                        navHostController.popBackStack()
+                    }
+                    .padding(all = 8.dp))
             })
         })
 }
