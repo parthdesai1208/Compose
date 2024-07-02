@@ -1,6 +1,11 @@
 package com.parthdesai1208.compose.utils
 
 import android.graphics.Rect
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.dp
 import androidx.window.layout.FoldingFeature
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
@@ -39,4 +44,15 @@ enum class ReplyNavigationType {
 
 enum class ReplyContentType {
     LIST_ONLY, LIST_AND_DETAIL
+}
+
+@Composable
+fun Modifier.setSizeByScreenPercentage(
+    widthPercentage: Float,
+    heightPercentage: Float,
+): Modifier {
+    val configuration = LocalConfiguration.current
+    val width = configuration.screenWidthDp.dp * (widthPercentage / 100)
+    val height = configuration.screenHeightDp.dp * (heightPercentage / 100)
+    return then(this.size(width, height))
 }

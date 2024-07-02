@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.utils.setSizeByScreenPercentage
 import com.parthdesai1208.compose.view.navigation.ColumnListingScreenPath
 import com.parthdesai1208.compose.view.theme.Amber600
 import com.parthdesai1208.compose.view.theme.Green800
@@ -164,7 +165,10 @@ fun WrapColumnTopStart(navHostController: NavHostController, modifier: Modifier 
             CommonBoxForColumn2()
         }
         androidx.compose.material.FloatingActionButton(
-            modifier = Modifier.align(Alignment.BottomEnd),
+            modifier = Modifier
+                .padding(12.dp)
+                .align(Alignment.TopStart)
+                .size(36.dp),
             onClick = { navHostController.popBackStack() }) {
             Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
         }
@@ -271,8 +275,8 @@ fun WrapColumnBottomEnd(navHostController: NavHostController) {
 private fun CommonBoxForColumn2(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
+            .setSizeByScreenPercentage(70f, 20f)
             .border(width = 20.dp, color = red1000)
-            .size(width = 300.dp, height = 200.dp)
     )
 }
 
@@ -280,8 +284,8 @@ private fun CommonBoxForColumn2(modifier: Modifier = Modifier) {
 private fun CommonBoxForColumn1(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
+            .setSizeByScreenPercentage(70f, 20f)
             .border(width = 20.dp, color = Amber600)
-            .size(width = 300.dp, height = 200.dp)
     )
 }
 
