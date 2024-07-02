@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -39,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.utils.AddBackIconToScreen
 import com.parthdesai1208.compose.utils.setSizeByScreenPercentage
 import com.parthdesai1208.compose.view.navigation.ColumnListingScreenPath
 import com.parthdesai1208.compose.view.theme.Amber600
@@ -59,32 +59,36 @@ enum class ColumnListingEnumType(
     WrapColumnBottomStart(R.string.wrapcolumnbottomstart, { WrapColumnBottomStart(it) }),
     WrapColumnBottom(R.string.wrapcolumnbottom, { WrapColumnBottom(it) }),
     WrapColumnBottomEnd(R.string.wrapcolumnbottomend, { WrapColumnBottomEnd(it) }),
-    FillMaxSizeColumn(R.string.fill_max_size_column, { FillMaxSizeColumn() }),
-    FillMaxSizeChildTop(R.string.fillmaxsizechildtop, { FillMaxSizeChildTop() }),
-    FillMaxSizeChildTopEnd(R.string.fillmaxsizechildtopend, { FillMaxSizeChildTopEnd() }),
+    FillMaxSizeColumn(R.string.fill_max_size_column, { FillMaxSizeColumn(it) }),
+    FillMaxSizeChildTop(R.string.fillmaxsizechildtop, { FillMaxSizeChildTop(it) }),
+    FillMaxSizeChildTopEnd(R.string.fillmaxsizechildtopend, { FillMaxSizeChildTopEnd(it) }),
     FillMaxSizeChildCenterStart(
         R.string.fillmaxsizechildcenterstart,
-        { FillMaxSizeChildCenterStart() }),
-    FillMaxSizeChildCenter(R.string.fillmaxsizechildcenter, { FillMaxSizeChildCenter() }),
-    FillMaxSizeChildCenterEnd(R.string.fillmaxsizechildcenterend, { FillMaxSizeChildCenterEnd() }),
+        { FillMaxSizeChildCenterStart(it) }),
+    FillMaxSizeChildCenter(R.string.fillmaxsizechildcenter, { FillMaxSizeChildCenter(it) }),
+    FillMaxSizeChildCenterEnd(
+        R.string.fillmaxsizechildcenterend,
+        { FillMaxSizeChildCenterEnd(it) }),
     FillMaxSizeChildBottomStart(
         R.string.fillmaxsizechildbottomstart,
-        { FillMaxSizeChildBottomStart() }),
+        { FillMaxSizeChildBottomStart(it) }),
     FillMaxSizeChildBottomCenter(
         R.string.fillmaxsizechildbottomcenter,
-        { FillMaxSizeChildBottomCenter() }),
-    FillMaxSizeChildBottomEnd(R.string.fillmaxsizechildbottomend, { FillMaxSizeChildBottomEnd() }),
+        { FillMaxSizeChildBottomCenter(it) }),
+    FillMaxSizeChildBottomEnd(
+        R.string.fillmaxsizechildbottomend,
+        { FillMaxSizeChildBottomEnd(it) }),
     FillMaxSizeChildSpaceEvenly(
         R.string.fillmaxsizechildspaceevenly,
-        { FillMaxSizeChildSpaceEvenly() }),
+        { FillMaxSizeChildSpaceEvenly(it) }),
     FillMaxSizeChildSpaceAround(
         R.string.fillmaxsizechildspacearound,
-        { FillMaxSizeChildSpaceAround() }),
+        { FillMaxSizeChildSpaceAround(it) }),
     FillMaxSizeChildSpaceBetween(
         R.string.fillmaxsizechildspacebetween,
-        { FillMaxSizeChildSpaceBetween() }),
+        { FillMaxSizeChildSpaceBetween(it) }),
 
-    IndividualChildAlignment(R.string.individual_child_alignment, { IndividualChildAlignment() }),
+    IndividualChildAlignment(R.string.individual_child_alignment, { IndividualChildAlignment(it) }),
     ChildWeight(R.string.child_weight, { ChildWeight() }),
 
     ScrollableColumn(R.string.scrollable_column, { ScrollableColumn() }),
@@ -157,22 +161,16 @@ fun Modifier.commonBorder(width: Dp = 10.dp, color: Color = Green800): Modifier 
 
 @Composable
 fun WrapColumnTopStart(navHostController: NavHostController, modifier: Modifier = Modifier) {
-    Box(modifier = modifier.fillMaxSize()) {
+    AddBackIconToScreen(screen = {
         Column(
             modifier = modifier.commonBorder()
         ) {
             CommonBoxForColumn1()
             CommonBoxForColumn2()
         }
-        androidx.compose.material.FloatingActionButton(
-            modifier = Modifier
-                .padding(12.dp)
-                .align(Alignment.TopStart)
-                .size(36.dp),
-            onClick = { navHostController.popBackStack() }) {
-            Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-        }
-    }
+    }, onBackIconClick = {
+        navHostController.popBackStack()
+    })
 }
 
 @Composable
@@ -292,102 +290,131 @@ private fun CommonBoxForColumn1(modifier: Modifier = Modifier) {
 
 @Composable
 fun FillMaxSizeColumn(
+    navHostController: NavHostController,
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .commonBorder(),
-        verticalArrangement = verticalArrangement,
-        horizontalAlignment = horizontalAlignment
-    ) {
-        CommonBoxForColumn1()
-        CommonBoxForColumn2()
-    }
+    AddBackIconToScreen(screen = {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .commonBorder(),
+            verticalArrangement = verticalArrangement,
+            horizontalAlignment = horizontalAlignment
+        ) {
+            CommonBoxForColumn1()
+            CommonBoxForColumn2()
+        }
+    }, onBackIconClick = {
+        navHostController.popBackStack()
+    })
 }
 
 @Composable
-fun FillMaxSizeChildTop() {
-    FillMaxSizeColumn(horizontalAlignment = Alignment.CenterHorizontally)
-}
-
-@Composable
-fun FillMaxSizeChildTopEnd() {
-    FillMaxSizeColumn(horizontalAlignment = Alignment.End)
-}
-
-@Composable
-fun FillMaxSizeChildCenterStart() {
-    FillMaxSizeColumn(verticalArrangement = Arrangement.Center)
-}
-
-@Composable
-fun FillMaxSizeChildCenter() {
+fun FillMaxSizeChildTop(navHostController: NavHostController) {
     FillMaxSizeColumn(
+        navHostController = navHostController,
+        horizontalAlignment = Alignment.CenterHorizontally
+    )
+}
+
+@Composable
+fun FillMaxSizeChildTopEnd(navHostController: NavHostController) {
+    FillMaxSizeColumn(navHostController = navHostController, horizontalAlignment = Alignment.End)
+}
+
+@Composable
+fun FillMaxSizeChildCenterStart(navHostController: NavHostController) {
+    FillMaxSizeColumn(
+        navHostController = navHostController,
+        verticalArrangement = Arrangement.Center
+    )
+}
+
+@Composable
+fun FillMaxSizeChildCenter(navHostController: NavHostController) {
+    FillMaxSizeColumn(
+        navHostController = navHostController,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     )
 }
 
 @Composable
-fun FillMaxSizeChildCenterEnd() {
-    FillMaxSizeColumn(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.End)
-}
-
-@Composable
-fun FillMaxSizeChildBottomStart() {
-    FillMaxSizeColumn(verticalArrangement = Arrangement.Bottom)
-}
-
-@Composable
-fun FillMaxSizeChildBottomCenter() {
+fun FillMaxSizeChildCenterEnd(navHostController: NavHostController) {
     FillMaxSizeColumn(
+        navHostController = navHostController,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.End
+    )
+}
+
+@Composable
+fun FillMaxSizeChildBottomStart(navHostController: NavHostController) {
+    FillMaxSizeColumn(
+        navHostController = navHostController,
+        verticalArrangement = Arrangement.Bottom
+    )
+}
+
+@Composable
+fun FillMaxSizeChildBottomCenter(navHostController: NavHostController) {
+    FillMaxSizeColumn(
+        navHostController = navHostController,
         verticalArrangement = Arrangement.Bottom,
         horizontalAlignment = Alignment.CenterHorizontally
     )
 }
 
 @Composable
-fun FillMaxSizeChildBottomEnd() {
-    FillMaxSizeColumn(verticalArrangement = Arrangement.Bottom, horizontalAlignment = Alignment.End)
+fun FillMaxSizeChildBottomEnd(navHostController: NavHostController) {
+    FillMaxSizeColumn(
+        navHostController = navHostController,
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.End
+    )
 }
 
 @Composable
-fun FillMaxSizeChildSpaceEvenly() {
+fun FillMaxSizeChildSpaceEvenly(navHostController: NavHostController) {
     FillMaxSizeColumn(
+        navHostController = navHostController,
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     )
 }
 
 @Composable
-fun FillMaxSizeChildSpaceAround() {
+fun FillMaxSizeChildSpaceAround(navHostController: NavHostController) {
     FillMaxSizeColumn(
+        navHostController = navHostController,
         verticalArrangement = Arrangement.SpaceAround,
         horizontalAlignment = Alignment.CenterHorizontally
     )
 }
 
 @Composable
-fun FillMaxSizeChildSpaceBetween() {
+fun FillMaxSizeChildSpaceBetween(navHostController: NavHostController) {
     FillMaxSizeColumn(
+        navHostController = navHostController,
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     )
 }
 
 @Composable
-fun IndividualChildAlignment() {
-    Column(
-        modifier = Modifier
-            .commonBorder()
-            .fillMaxSize()
-    ) {
-        CommonBoxForColumn1(modifier = Modifier.align(alignment = Alignment.Start))
-        CommonBoxForColumn2(modifier = Modifier.align(alignment = Alignment.CenterHorizontally))
-        CommonBoxForColumn1(modifier = Modifier.align(alignment = Alignment.End))
-    }
+fun IndividualChildAlignment(navHostController: NavHostController) {
+    AddBackIconToScreen(screen = {
+        Column(
+            modifier = Modifier
+                .commonBorder()
+                .fillMaxSize()
+        ) {
+            CommonBoxForColumn1(modifier = Modifier.align(alignment = Alignment.Start))
+            CommonBoxForColumn2(modifier = Modifier.align(alignment = Alignment.CenterHorizontally))
+            CommonBoxForColumn1(modifier = Modifier.align(alignment = Alignment.End))
+        }
+    }, onBackIconClick = { navHostController.popBackStack() })
 }
 
 @Composable
