@@ -25,3 +25,6 @@ data class AnimationListingScreen(val pathPostFix: Int)
 
 @Serializable
 data class ColumnListingScreenPath(val pathPostFix: Int)
+
+@Serializable
+data class RowListingScreenPath(val pathPostFix: Int)

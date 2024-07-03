@@ -49,7 +49,7 @@ enum class UIComponentsListingEnumType(
     SnackBarComponents(R.string.snackbar, { SnackBarCompose(it) }),
     ScaffoldCompose(R.string.scaffold, { ScaffoldCompose(it) }),
     ColumnCompose(R.string.column, { ColumnListingScreen(it) }),
-    RowCompose(R.string.row, { RowNavGraph() }),
+    RowCompose(R.string.row, { RowListingScreen(it) }),
     BoxCompose(R.string.box, { BoxNavGraph() }),
     CardCompose(R.string.card, { CardCompose() }),
     CollapsableRecyclerviewScreen(R.string.verticallist, { VerticalListNavGraph() }),

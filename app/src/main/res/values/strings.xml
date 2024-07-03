@@ -287,4 +287,32 @@
     <string name="scrollable_column">Scrollable Column</string>
     <string name="apply_same_space_between_all_child">Apply same space between All Child</string>
     <!--    end region-->
+
+    <!--    region row listing-->
+    <string name="wraprowtopstart">WrapRowTopStart</string>
+    <string name="wraprowtop">WrapRowTop</string>
+    <string name="wraprowtopend">WrapRowTopEnd</string>
+    <string name="wraprowcenterstart">WrapRowCenterStart</string>
+    <string name="wraprowcenter">WrapRowCenter</string>
+    <string name="wraprowcenterend">WrapRowCenterEnd</string>
+    <string name="wraprowbottomstart">WrapRowBottomStart</string>
+    <string name="wraprowbottom">WrapRowBottom</string>
+    <string name="wraprowbottomend">WrapRowBottomEnd</string>
+    <string name="fillmaxrowtopstart">FillMaxRowTopStart</string>
+    <string name="fillmaxrowtop">FillMaxRowTop</string>
+    <string name="fillmaxrowtopend">FillMaxRowTopEnd</string>
+    <string name="fillmaxrowcenterstart">FillMaxRowCenterStart</string>
+    <string name="fillmaxrowcenter">FillMaxRowCenter</string>
+    <string name="fillmaxrowcenterend">FillMaxRowCenterEnd</string>
+    <string name="fillmaxrowbottomstart">FillMaxRowBottomStart</string>
+    <string name="fillmaxrowbottom">FillMaxRowBottom</string>
+    <string name="fillmaxrowbottomend">FillMaxRowBottomEnd</string>
+    <string name="fillmaxsizerowchildspaceevenly">FillMaxSizeRowChildSpaceEvenly</string>
+    <string name="fillmaxsizerowchildspacearound">FillMaxSizeRowChildSpaceAround</string>
+    <string name="fillmaxsizerowchildspacebetween">FillMaxSizeRowChildSpaceBetween</string>
+    <string name="individualchildalignment">IndividualChildAlignment</string>
+    <string name="childweight_25f_for_all">ChildWeight (.25f for all)</string>
+    <string name="scrollablerow">ScrollableRow</string>
+    <string name="apply_same_space_between_all_child_1">Apply same space between All Child</string>
+    <!--    end region-->
 </resources>
