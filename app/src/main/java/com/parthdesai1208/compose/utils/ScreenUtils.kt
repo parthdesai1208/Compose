@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -12,6 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import com.parthdesai1208.compose.view.theme.DarkLightContentColor
+import com.parthdesai1208.compose.view.theme.LightDarkContentColor
 
 @Composable
 fun Modifier.setSizeByScreenPercentage(
@@ -31,12 +34,14 @@ fun AddBackIconToScreen(
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         screen()
-        androidx.compose.material.FloatingActionButton(
+        FloatingActionButton(
             modifier = Modifier
                 .padding(12.dp)
                 .align(Alignment.TopStart)
                 .size(36.dp),
-            onClick = onBackIconClick
+            onClick = onBackIconClick,
+            backgroundColor = LightDarkContentColor,
+            contentColor = DarkLightContentColor,
         ) {
             Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
         }

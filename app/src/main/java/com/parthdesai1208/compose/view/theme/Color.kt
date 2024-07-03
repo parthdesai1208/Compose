@@ -84,3 +84,7 @@ val LightDarkRed: Color
 val LightDarkContentColor: Color
     @Composable
     get() = if (isSystemInDarkTheme()) Color.White else Color.Black
+
+val DarkLightContentColor: Color
+    @Composable
+    get() = if (isSystemInDarkTheme()) Color.Black else Color.White
