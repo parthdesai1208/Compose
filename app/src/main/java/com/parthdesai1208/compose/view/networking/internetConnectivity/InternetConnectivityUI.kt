@@ -25,7 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.utils.Phone
-import com.parthdesai1208.compose.view.theme.LightDarkContentColor
+import com.parthdesai1208.compose.view.theme.LightDarkColor
 import com.parthdesai1208.compose.view.theme.googlePhotosRedColor
 import com.parthdesai1208.compose.view.theme.spotifyGreenColor
 
@@ -72,11 +72,11 @@ fun InternetConnectivityUI(
         ) {
             Icon(
                 imageVector = icon, contentDescription = null,
-                tint = LightDarkContentColor
+                tint = LightDarkColor
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                color = LightDarkContentColor,
+                color = LightDarkColor,
                 text = text,
                 maxLines = 1
             )

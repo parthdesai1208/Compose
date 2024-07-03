@@ -21,7 +21,7 @@ import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.model.networking.ConnectionState
 import com.parthdesai1208.compose.utils.Phone
 import com.parthdesai1208.compose.utils.connectivityState
-import com.parthdesai1208.compose.view.theme.LightDarkContentColor
+import com.parthdesai1208.compose.view.theme.LightDarkColor
 import com.parthdesai1208.compose.view.theme.googlePhotosRedColor
 import com.parthdesai1208.compose.view.theme.spotifyGreenColor
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -75,7 +75,7 @@ fun InternetConnectivityDemo() {
         Text(
             modifier = Modifier.align(Alignment.Center),
             text = stringResource(id = R.string.observeInternetConnectivityDemo),
-            color = LightDarkContentColor
+            color = LightDarkColor
         )
     }
 

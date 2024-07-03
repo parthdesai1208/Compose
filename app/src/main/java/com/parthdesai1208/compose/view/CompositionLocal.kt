@@ -20,7 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.parthdesai1208.compose.view.theme.LightDarkContentColor
+import com.parthdesai1208.compose.view.theme.LightDarkColor
 import com.parthdesai1208.compose.view.theme.LocalAppGaps
 
 interface Analytics {
@@ -58,7 +58,7 @@ fun CompositionLocalFun() {
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             textAlign = TextAlign.Center,
-            color = LightDarkContentColor,
+            color = LightDarkColor,
             text = "Gap between icon & text is implemented using compositionLocalOf{}"
         )
         Spacer(modifier = Modifier.height(8.dp))

@@ -13,8 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import com.parthdesai1208.compose.view.theme.DarkLightContentColor
-import com.parthdesai1208.compose.view.theme.LightDarkContentColor
+import com.parthdesai1208.compose.view.theme.DarkLightColor
+import com.parthdesai1208.compose.view.theme.LightDarkColor
 
 @Composable
 fun Modifier.setSizeByScreenPercentage(
@@ -40,8 +40,8 @@ fun AddBackIconToScreen(
                 .align(Alignment.TopStart)
                 .size(36.dp),
             onClick = onBackIconClick,
-            backgroundColor = LightDarkContentColor,
-            contentColor = DarkLightContentColor,
+            backgroundColor = LightDarkColor,
+            contentColor = DarkLightColor,
         ) {
             Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
         }

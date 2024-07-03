@@ -104,7 +104,7 @@ import com.parthdesai1208.compose.model.HorizontalListData
 import com.parthdesai1208.compose.model.StaggeredGridListDataClass
 import com.parthdesai1208.compose.utils.Phone
 import com.parthdesai1208.compose.view.theme.ComposeTheme
-import com.parthdesai1208.compose.view.theme.LightDarkContentColor
+import com.parthdesai1208.compose.view.theme.LightDarkColor
 import com.parthdesai1208.compose.viewmodel.HorizontalListViewModel
 import com.parthdesai1208.compose.viewmodel.uicomponents.UpdateUsingMutableStateListOfViewModel
 import kotlin.math.max
@@ -175,14 +175,14 @@ fun UpdateUsingMutableStateListOfSample(vm: UpdateUsingMutableStateListOfViewMod
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(item.name, color = LightDarkContentColor)
+                    Text(item.name, color = LightDarkColor)
                     IconButton(onClick = {
                         vm.onClick(index, !item.isFavourite)
                     }) {
                         Icon(
                             imageVector = if (item.isFavourite) Icons.Filled.Lightbulb else Icons.Filled.LightMode,
                             contentDescription = null,
-                            tint = LightDarkContentColor,
+                            tint = LightDarkColor,
                         )
                     }
                 }
