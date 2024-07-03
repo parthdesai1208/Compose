@@ -89,11 +89,11 @@ enum class ColumnListingEnumType(
         { FillMaxSizeChildSpaceBetween(it) }),
 
     IndividualChildAlignment(R.string.individual_child_alignment, { IndividualChildAlignment(it) }),
-    ChildWeight(R.string.child_weight, { ChildWeight() }),
+    ChildWeight(R.string.child_weight, { ChildWeight(it) }),
 
-    ScrollableColumn(R.string.scrollable_column, { ScrollableColumn() }),
+    ScrollableColumn(R.string.scrollable_column, { ScrollableColumn(it) }),
 
-    AlignAllChild(R.string.apply_same_space_between_all_child, { AlignAllChild() }),
+    AlignAllChild(R.string.apply_same_space_between_all_child, { AlignAllChild(it) }),
 }
 
 @Composable
@@ -418,63 +418,75 @@ fun IndividualChildAlignment(navHostController: NavHostController) {
 }
 
 @Composable
-fun ChildWeight() {
-    Column(
-        modifier = Modifier
-            .commonBorder()
-            .fillMaxSize()
-    ) {
-        CommonBoxForColumn1(modifier = Modifier.weight(weight = .5f))
-        CommonBoxForColumn2(modifier = Modifier.weight(weight = .5f))
-    }
-}
-
-@Composable
-fun ScrollableColumn() {
-    Column(
-        modifier = Modifier
-            .commonBorder()
-            .fillMaxSize()
-            .verticalScroll(state = rememberScrollState())
-    ) {
-        CommonBoxForColumn1()
-        CommonBoxForColumn2()
-        CommonBoxForColumn1()
-        CommonBoxForColumn2()
-        CommonBoxForColumn1()
-        CommonBoxForColumn2()
-        CommonBoxForColumn1()
-        CommonBoxForColumn2()
-        CommonBoxForColumn1()
-        CommonBoxForColumn2()
-        CommonBoxForColumn1()
-        CommonBoxForColumn2()
-        CommonBoxForColumn1()
-        CommonBoxForColumn2()
-        CommonBoxForColumn1()
-        CommonBoxForColumn2()
-        CommonBoxForColumn1()
-        CommonBoxForColumn2()
-    }
-}
-
-@Composable
-fun AlignAllChild() {
-    Surface {
+fun ChildWeight(navHostController: NavHostController) {
+    AddBackIconToScreen(screen = {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentWidth()
-                .fillMaxHeight()
-                .wrapContentHeight(), verticalArrangement = Arrangement.spacedBy(space = 16.dp)
+                .commonBorder()
+                .fillMaxSize()
         ) {
-            AlignAllChildText("1st child")
-            AlignAllChildText("2nd child")
-            AlignAllChildText("3rd child")
-            AlignAllChildText("4th child")
-            AlignAllChildText("16dp space applied to all child vertically")
+            CommonBoxForColumn1(modifier = Modifier.weight(weight = .5f))
+            CommonBoxForColumn2(modifier = Modifier.weight(weight = .5f))
         }
-    }
+    }, onBackIconClick = {
+        navHostController.popBackStack()
+    })
+}
+
+@Composable
+fun ScrollableColumn(navHostController: NavHostController) {
+    AddBackIconToScreen(screen = {
+        Column(
+            modifier = Modifier
+                .commonBorder()
+                .fillMaxSize()
+                .verticalScroll(state = rememberScrollState())
+        ) {
+            CommonBoxForColumn1()
+            CommonBoxForColumn2()
+            CommonBoxForColumn1()
+            CommonBoxForColumn2()
+            CommonBoxForColumn1()
+            CommonBoxForColumn2()
+            CommonBoxForColumn1()
+            CommonBoxForColumn2()
+            CommonBoxForColumn1()
+            CommonBoxForColumn2()
+            CommonBoxForColumn1()
+            CommonBoxForColumn2()
+            CommonBoxForColumn1()
+            CommonBoxForColumn2()
+            CommonBoxForColumn1()
+            CommonBoxForColumn2()
+            CommonBoxForColumn1()
+            CommonBoxForColumn2()
+        }
+    }, onBackIconClick = {
+        navHostController.popBackStack()
+    })
+}
+
+@Composable
+fun AlignAllChild(navHostController: NavHostController) {
+    AddBackIconToScreen(screen = {
+        Surface {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth()
+                    .fillMaxHeight()
+                    .wrapContentHeight(), verticalArrangement = Arrangement.spacedBy(space = 16.dp)
+            ) {
+                AlignAllChildText("1st child")
+                AlignAllChildText("2nd child")
+                AlignAllChildText("3rd child")
+                AlignAllChildText("4th child")
+                AlignAllChildText("16dp space applied to all child vertically")
+            }
+        }
+    }, onBackIconClick = {
+        navHostController.popBackStack()
+    })
 }
 
 @Composable
