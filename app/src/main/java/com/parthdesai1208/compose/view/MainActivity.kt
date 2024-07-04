@@ -51,6 +51,7 @@ import com.parthdesai1208.compose.view.custom.CustomModifierListingScreen
 import com.parthdesai1208.compose.view.custom.CustomModifierListingScreen1
 import com.parthdesai1208.compose.view.migration.MigrationActivity
 import com.parthdesai1208.compose.view.navigation.AnimationListingScreen
+import com.parthdesai1208.compose.view.navigation.BoxListingScreenPath
 import com.parthdesai1208.compose.view.navigation.ColumnListingScreenPath
 import com.parthdesai1208.compose.view.navigation.ComposeSampleChildrenScreen
 import com.parthdesai1208.compose.view.navigation.ComposeSamplesScreen
@@ -66,6 +67,7 @@ import com.parthdesai1208.compose.view.networking.NetworkingListNavGraph
 import com.parthdesai1208.compose.view.state.ChildScreenState
 import com.parthdesai1208.compose.view.state.MainScreenState
 import com.parthdesai1208.compose.view.theme.ComposeTheme
+import com.parthdesai1208.compose.view.uicomponents.ChildBoxScreen
 import com.parthdesai1208.compose.view.uicomponents.ChildColumnScreen
 import com.parthdesai1208.compose.view.uicomponents.ChildRowScreen
 import com.parthdesai1208.compose.view.uicomponents.ChildUIComponentsScreen
@@ -182,6 +184,10 @@ fun MainActivityNavGraph(
         composable<RowListingScreenPath> { backStackEntry ->
             val arguments = backStackEntry.toRoute<RowListingScreenPath>()
             ChildRowScreen(onClickButtonTitle = arguments.pathPostFix, navController)
+        }
+        composable<BoxListingScreenPath> { backStackEntry ->
+            val arguments = backStackEntry.toRoute<BoxListingScreenPath>()
+            ChildBoxScreen(onClickButtonTitle = arguments.pathPostFix, navController)
         }
         //region for deep link = https://example.com/task_id=Checking
         composable(

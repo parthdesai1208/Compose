@@ -315,4 +315,9 @@
     <string name="scrollablerow">ScrollableRow</string>
     <string name="apply_same_space_between_all_child_1">Apply same space between All Child</string>
     <!--    end region-->
+    <!--    region box listing-->
+    <string name="what_is_box">What Is Box</string>
+    <string name="box_alignment">Box Alignment</string>
+    <string name="edit_profile_image">Edit Profile Image</string>
+    <!--    end region-->
 </resources>

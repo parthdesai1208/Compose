@@ -50,7 +50,7 @@ enum class UIComponentsListingEnumType(
     ScaffoldCompose(R.string.scaffold, { ScaffoldCompose(it) }),
     ColumnCompose(R.string.column, { ColumnListingScreen(it) }),
     RowCompose(R.string.row, { RowListingScreen(it) }),
-    BoxCompose(R.string.box, { BoxNavGraph() }),
+    BoxCompose(R.string.box, { BoxListingScreen(it) }),
     CardCompose(R.string.card, { CardCompose() }),
     CollapsableRecyclerviewScreen(R.string.verticallist, { VerticalListNavGraph() }),
     HorizontalListScreen(R.string.horizontallist, { HorizontalListNavGraph() }),
