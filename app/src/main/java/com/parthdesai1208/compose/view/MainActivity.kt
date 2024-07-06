@@ -62,6 +62,7 @@ import com.parthdesai1208.compose.view.navigation.RallyScreen
 import com.parthdesai1208.compose.view.navigation.RowListingScreenPath
 import com.parthdesai1208.compose.view.navigation.StateListingScreen
 import com.parthdesai1208.compose.view.navigation.UIComponentsListingScreen
+import com.parthdesai1208.compose.view.navigation.VerticalListingScreenPath
 import com.parthdesai1208.compose.view.navigation.composeDestination.StartForComposeDestination
 import com.parthdesai1208.compose.view.networking.NetworkingListNavGraph
 import com.parthdesai1208.compose.view.state.ChildScreenState
@@ -71,6 +72,7 @@ import com.parthdesai1208.compose.view.uicomponents.ChildBoxScreen
 import com.parthdesai1208.compose.view.uicomponents.ChildColumnScreen
 import com.parthdesai1208.compose.view.uicomponents.ChildRowScreen
 import com.parthdesai1208.compose.view.uicomponents.ChildUIComponentsScreen
+import com.parthdesai1208.compose.view.uicomponents.ChildVerticalListScreen
 import com.parthdesai1208.compose.view.uicomponents.UIComponentsListingScreen
 
 class MainActivity : AppCompatActivity() {
@@ -188,6 +190,10 @@ fun MainActivityNavGraph(
         composable<BoxListingScreenPath> { backStackEntry ->
             val arguments = backStackEntry.toRoute<BoxListingScreenPath>()
             ChildBoxScreen(onClickButtonTitle = arguments.pathPostFix, navController)
+        }
+        composable<VerticalListingScreenPath> { backStackEntry ->
+            val arguments = backStackEntry.toRoute<VerticalListingScreenPath>()
+            ChildVerticalListScreen(onClickButtonTitle = arguments.pathPostFix, navController)
         }
         //region for deep link = https://example.com/task_id=Checking
         composable(

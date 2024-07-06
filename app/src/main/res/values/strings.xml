@@ -320,4 +320,14 @@
     <string name="box_alignment">Box Alignment</string>
     <string name="edit_profile_image">Edit Profile Image</string>
     <!--    end region-->
+    <!--    region vertical list-->
+    <string name="collapsable_expandable_recyclerview_vertical">Collapsable Expandable Recyclerview(vertical)</string>
+    <string name="grid_list_fixed">Grid List (fixed)</string>
+    <string name="adaptive_grid_list">Adaptive Grid List</string>
+    <string name="double_sized_first_row">Double sized first row</string>
+    <string name="first_item_take_entire_space">First item take entire space</string>
+    <string name="every_third_item_take_entire_space">Every third Item take entire Space</string>
+    <string name="staggered_grid_list">Staggered Grid List</string>
+    <string name="update_ui_using_mutablestatelistof"><![CDATA[Update UI using mutableStateListOf<>()]]></string>
+    <!--    end region-->
 </resources>

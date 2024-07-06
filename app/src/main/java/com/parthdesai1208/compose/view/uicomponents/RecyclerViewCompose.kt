@@ -58,6 +58,7 @@ import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.ExpandLess
@@ -92,17 +93,17 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.model.DrawableStringPair
 import com.parthdesai1208.compose.model.HorizontalGridListData
 import com.parthdesai1208.compose.model.HorizontalListData
 import com.parthdesai1208.compose.model.StaggeredGridListDataClass
+import com.parthdesai1208.compose.utils.AddBackIconToScreen
 import com.parthdesai1208.compose.utils.Phone
+import com.parthdesai1208.compose.view.navigation.VerticalListingScreenPath
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.view.theme.LightDarkColor
 import com.parthdesai1208.compose.viewmodel.HorizontalListViewModel
@@ -110,90 +111,86 @@ import com.parthdesai1208.compose.viewmodel.uicomponents.UpdateUsingMutableState
 import kotlin.math.max
 
 //region vertical recyclerview
-
-object VerticalListDestinations {
-    const val VERTICAL_LIST_MAIN_SCREEN = "VERTICAL_LIST_MAIN_SCREEN"
-    const val VERTICAL_LIST_SCREEN_ROUTE_PREFIX = "VERTICAL_LIST_SCREEN_ROUTE_PREFIX"
-    const val VERTICAL_LIST_SCREEN_ROUTE_POSTFIX = "VERTICAL_LIST_SCREEN_ROUTE_POSTFIX"
-}
-
-@Composable
-fun VerticalListNavGraph(startDestination: String = VerticalListDestinations.VERTICAL_LIST_MAIN_SCREEN) {
-    val navController = rememberNavController()
-
-    NavHost(navController = navController, startDestination = startDestination) {
-        composable(route = VerticalListDestinations.VERTICAL_LIST_MAIN_SCREEN) {
-            VerticalListListing(navController = navController)
-        }
-
-        composable(
-            route = "${VerticalListDestinations.VERTICAL_LIST_SCREEN_ROUTE_PREFIX}/{${VerticalListDestinations.VERTICAL_LIST_SCREEN_ROUTE_POSTFIX}}",
-            arguments = listOf(navArgument(VerticalListDestinations.VERTICAL_LIST_SCREEN_ROUTE_POSTFIX) {
-                type = NavType.StringType
-            })
-        ) { backStackEntry ->
-            val arguments = requireNotNull(backStackEntry.arguments)
-            ChildVerticalListScreen(arguments.getString(VerticalListDestinations.VERTICAL_LIST_SCREEN_ROUTE_POSTFIX))
-        }
-
-    }
-}
-
-enum class VerticalListListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
-    CollapsableList("Collapsable Expandable Recyclerview(vertical)", { CollapsableRecyclerView() }),
-    VerticalGridList("Grid List (fixed)", { VerticalGridList() }),
-    AdaptiveVerticalGridList("Adaptive Grid List",
-        { VerticalGridList(GridCells.Adaptive(150.dp)) }),
-    CustomGridCell1("Double sized first row",
-        { VerticalGridList(gridCells = DoubleSizedLeftRowGridCell) }),
-    CustomGridCell2("First item take entire space", { FirstItemTakeWholeSpace() }),
-    CustomGridCell3("Every third Item take entire Space", { EveryThirdItemTakeWholeSpace() }),
-    StaggeredGridList("Staggered Grid List", { VerticalStaggeredGridListFun() }),
-    UpdateUsingMutableStateListOfSample(
-        "Update UI using mutableStateListOf<>()",
-        { UpdateUsingMutableStateListOfSample(androidx.lifecycle.viewmodel.compose.viewModel()) }),
+enum class VerticalListListingEnumType(
+    val buttonTitle: Int, val func: @Composable (NavHostController) -> Unit
+) {
+    CollapsableList(R.string.collapsable_expandable_recyclerview_vertical,
+        { CollapsableRecyclerView(it) }),
+    VerticalGridList(
+        R.string.grid_list_fixed,
+        { VerticalGridList(it) }),
+    AdaptiveVerticalGridList(
+        R.string.adaptive_grid_list,
+        { VerticalGridList(navHostController = it, GridCells.Adaptive(150.dp)) }),
+    CustomGridCell1(R.string.double_sized_first_row,
+        { VerticalGridList(navHostController = it, gridCells = DoubleSizedLeftRowGridCell) }),
+    CustomGridCell2(
+        R.string.first_item_take_entire_space,
+        { FirstItemTakeWholeSpace(it) }),
+    CustomGridCell3(R.string.every_third_item_take_entire_space,
+        { EveryThirdItemTakeWholeSpace(it) }),
+    StaggeredGridList(
+        R.string.staggered_grid_list,
+        { VerticalStaggeredGridListFun(it) }),
+    UpdateUsingMutableStateListOfSample(R.string.update_ui_using_mutablestatelistof,
+        {
+            UpdateUsingMutableStateListOfSample(
+                vm = androidx.lifecycle.viewmodel.compose.viewModel(),
+                navHostController = it
+            )
+        }),
 
 }
 
 @Phone
 @Composable
 fun ListSamplePreview() {
-    UpdateUsingMutableStateListOfSample(androidx.lifecycle.viewmodel.compose.viewModel())
+    UpdateUsingMutableStateListOfSample(
+        androidx.lifecycle.viewmodel.compose.viewModel(),
+        rememberNavController()
+    )
 }
 
 @Composable
-fun UpdateUsingMutableStateListOfSample(vm: UpdateUsingMutableStateListOfViewModel) {
-
-    LazyColumn {
-        itemsIndexed(items = vm.updateUsingMutableStateListOfModelList,
-            key = { _, item -> item.name },
-            itemContent = { index, item ->
-                Row(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(item.name, color = LightDarkColor)
-                    IconButton(onClick = {
-                        vm.onClick(index, !item.isFavourite)
-                    }) {
-                        Icon(
-                            imageVector = if (item.isFavourite) Icons.Filled.Lightbulb else Icons.Filled.LightMode,
-                            contentDescription = null,
-                            tint = LightDarkColor,
-                        )
+fun UpdateUsingMutableStateListOfSample(
+    vm: UpdateUsingMutableStateListOfViewModel,
+    navHostController: NavHostController
+) {
+    AddBackIconToScreen(screen = {
+        LazyColumn {
+            itemsIndexed(items = vm.updateUsingMutableStateListOfModelList,
+                key = { _, item -> item.name },
+                itemContent = { index, item ->
+                    Row(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(item.name, color = LightDarkColor)
+                        IconButton(onClick = {
+                            vm.onClick(index, !item.isFavourite)
+                        }) {
+                            Icon(
+                                imageVector = if (item.isFavourite) Icons.Filled.Lightbulb else Icons.Filled.LightMode,
+                                contentDescription = null,
+                                tint = LightDarkColor,
+                            )
+                        }
                     }
-                }
-            })
+                })
+        }
+    }) {
+        navHostController.popBackStack()
     }
-
 }
 
 @Composable
-fun ChildVerticalListScreen(onClickButtonTitle: String?) {
-    enumValues<VerticalListListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke()
+fun ChildVerticalListScreen(onClickButtonTitle: Int?, navHostController: NavHostController) {
+    enumValues<VerticalListListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke(
+        navHostController
+    )
 }
 
 @Composable
@@ -202,24 +199,36 @@ fun VerticalListListing(navController: NavHostController) {
     fun MyButton(
         title: VerticalListListingEnumType
     ) {
+        val context = LocalContext.current
         Button(
-            onClick = { navController.navigate("${VerticalListDestinations.VERTICAL_LIST_SCREEN_ROUTE_PREFIX}/${title.buttonTitle}") },
+            onClick = { navController.navigate(VerticalListingScreenPath(title.buttonTitle)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
                 .padding(8.dp)
         ) {
-            Text(title.buttonTitle, textAlign = TextAlign.Center)
+            Text(context.getString(title.buttonTitle), textAlign = TextAlign.Center)
         }
     }
     Surface {
         Column {
-            Text(
-                text = "Vertical List Samples",
-                modifier = Modifier.padding(16.dp),
-                fontSize = 18.sp,
-                fontFamily = FontFamily.SansSerif
-            )
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    modifier = Modifier.clickable {
+                        navController.popBackStack()
+                    }, imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Vertical List Samples",
+                    modifier = Modifier.padding(16.dp),
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily.SansSerif
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Column(
                 modifier = Modifier
@@ -237,11 +246,18 @@ fun VerticalListListing(navController: NavHostController) {
 
 //region Collapsable Recyclerview
 @Composable
-fun CollapsableRecyclerView(names: List<String> = List(1000) { "$it" }) {
-    LazyColumn(modifier = Modifier.padding(vertical = 8.dp, horizontal = 10.dp)) {
-        items(names) { name ->
-            ItemCollapsableRecyclerView(name = name)
+fun CollapsableRecyclerView(
+    navHostController: NavHostController,
+    names: List<String> = List(1000) { "$it" }
+) {
+    AddBackIconToScreen(screen = {
+        LazyColumn(modifier = Modifier.padding(vertical = 8.dp, horizontal = 10.dp)) {
+            items(names) { name ->
+                ItemCollapsableRecyclerView(name = name)
+            }
         }
+    }) {
+        navHostController.popBackStack()
     }
 }
 
@@ -264,8 +280,7 @@ private fun CardItemCollapsableRecyclerView(name: String) {
             .padding(12.dp)
             .animateContentSize(
                 animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                    stiffness = Spring.StiffnessLow
+                    dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow
                 )
             )
     ) {
@@ -276,15 +291,15 @@ private fun CardItemCollapsableRecyclerView(name: String) {
         ) {
             Text(text = "Hello, ")
             Text(
-                text = name,
-                style = MaterialTheme.typography.h4.copy(
+                text = name, style = MaterialTheme.typography.h4.copy(
                     fontWeight = FontWeight.ExtraBold
                 )
             )
             if (expanded) {
                 Text(
-                    text = ("Composem ipsum color sit lazy, " +
-                            "padding theme elit, sed do bouncy. ").repeat(4),
+                    text = ("Composem ipsum color sit lazy, " + "padding theme elit, sed do bouncy. ").repeat(
+                        4
+                    ),
                 )
             }
         }
@@ -305,35 +320,42 @@ private fun CardItemCollapsableRecyclerView(name: String) {
 //endregion
 //region vertical grid list
 @Composable
-fun VerticalGridList(gridCells: GridCells = GridCells.Fixed(2)) {
-    LazyVerticalGrid(
-        columns = gridCells,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        content = {
-            items(items = HorizontalGridListData) { item ->
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Image(
-                        painter = painterResource(id = item.drawable),
-                        contentDescription = stringResource(id = item.text),
-                        modifier = Modifier
-                            .sizeIn(maxHeight = 150.dp)
-                            .align(Alignment.Center),
-                        contentScale = ContentScale.Crop
-                    )
-                    Text(
-                        text = stringResource(id = item.text),
-                        textAlign = TextAlign.Center, modifier = Modifier
-                            .align(Alignment.Center)
-                            .background(
-                                color = Color.LightGray.copy(alpha = .5f),
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            .padding(horizontal = 3.dp)
-                    )
+fun VerticalGridList(
+    navHostController: NavHostController,
+    gridCells: GridCells = GridCells.Fixed(2)
+) {
+    AddBackIconToScreen(screen = {
+        LazyVerticalGrid(columns = gridCells,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            content = {
+                items(items = HorizontalGridListData) { item ->
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Image(
+                            painter = painterResource(id = item.drawable),
+                            contentDescription = stringResource(id = item.text),
+                            modifier = Modifier
+                                .sizeIn(maxHeight = 150.dp)
+                                .align(Alignment.Center),
+                            contentScale = ContentScale.Crop
+                        )
+                        Text(
+                            text = stringResource(id = item.text),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .background(
+                                    color = Color.LightGray.copy(alpha = .5f),
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .padding(horizontal = 3.dp)
+                        )
+                    }
                 }
-            }
-        })
+            })
+    }) {
+        navHostController.popBackStack()
+    }
 }
 
 val DoubleSizedLeftRowGridCell = object : GridCells {
@@ -345,24 +367,27 @@ val DoubleSizedLeftRowGridCell = object : GridCells {
 }
 
 @Composable
-fun FirstItemTakeWholeSpace() {
-    LazyVerticalGrid(
-        columns = DoubleSizedLeftRowGridCell,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        content = {
-            HorizontalGridListData.forEachIndexed { index, drawableStringPair ->
-                if (index == 0) {  //for very first item
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        ItemViewFirstItemTakeWholeSpace(drawableStringPair)
-                    }
-                } else { //for remaining items in list
-                    item(span = { GridItemSpan(1) }) {
-                        ItemViewFirstItemTakeWholeSpace(drawableStringPair)
+fun FirstItemTakeWholeSpace(navHostController: NavHostController) {
+    AddBackIconToScreen(screen = {
+        LazyVerticalGrid(columns = DoubleSizedLeftRowGridCell,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            content = {
+                HorizontalGridListData.forEachIndexed { index, drawableStringPair ->
+                    if (index == 0) {  //for very first item
+                        item(span = { GridItemSpan(maxLineSpan) }) {
+                            ItemViewFirstItemTakeWholeSpace(drawableStringPair)
+                        }
+                    } else { //for remaining items in list
+                        item(span = { GridItemSpan(1) }) {
+                            ItemViewFirstItemTakeWholeSpace(drawableStringPair)
+                        }
                     }
                 }
-            }
-        })
+            })
+    }) {
+        navHostController.popBackStack()
+    }
 }
 
 @Composable
@@ -378,11 +403,11 @@ fun ItemViewFirstItemTakeWholeSpace(item: DrawableStringPair) {
         )
         Text(
             text = stringResource(id = item.text),
-            textAlign = TextAlign.Center, modifier = Modifier
+            textAlign = TextAlign.Center,
+            modifier = Modifier
                 .align(Alignment.Center)
                 .background(
-                    color = Color.LightGray.copy(alpha = .5f),
-                    shape = RoundedCornerShape(8.dp)
+                    color = Color.LightGray.copy(alpha = .5f), shape = RoundedCornerShape(8.dp)
                 )
                 .padding(horizontal = 3.dp)
         )
@@ -390,71 +415,75 @@ fun ItemViewFirstItemTakeWholeSpace(item: DrawableStringPair) {
 }
 
 @Composable
-fun EveryThirdItemTakeWholeSpace() {
-    LazyVerticalGrid(
-        columns = DoubleSizedLeftRowGridCell,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        content = {
-            HorizontalGridListData.forEachIndexed { index, drawableStringPair ->
-                if (index % 3 == 0) {  //for every third items
-                    item(span = { GridItemSpan(maxLineSpan) }) {
-                        ItemViewFirstItemTakeWholeSpace(drawableStringPair)
-                    }
-                } else { //for remaining items in list
-                    item(span = { GridItemSpan(1) }) {
-                        ItemViewFirstItemTakeWholeSpace(drawableStringPair)
+fun EveryThirdItemTakeWholeSpace(navHostController: NavHostController) {
+    AddBackIconToScreen(screen = {
+        LazyVerticalGrid(columns = DoubleSizedLeftRowGridCell,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            content = {
+                HorizontalGridListData.forEachIndexed { index, drawableStringPair ->
+                    if (index % 3 == 0) {  //for every third items
+                        item(span = { GridItemSpan(maxLineSpan) }) {
+                            ItemViewFirstItemTakeWholeSpace(drawableStringPair)
+                        }
+                    } else { //for remaining items in list
+                        item(span = { GridItemSpan(1) }) {
+                            ItemViewFirstItemTakeWholeSpace(drawableStringPair)
+                        }
                     }
                 }
-            }
-        })
+            })
+    }) {
+        navHostController.popBackStack()
+    }
 }
 
 
 @Composable
-fun VerticalStaggeredGridListFun() {
-    LazyColumn(contentPadding = PaddingValues(8.dp)) {
-        item {
-            VerticalStaggeredGridList(totalColumn = 3) {
-                HorizontalGridListData.forEachIndexed { _, item ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(8.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(id = item.drawable),
-                            contentDescription = stringResource(id = item.text),
+fun VerticalStaggeredGridListFun(navHostController: NavHostController) {
+    AddBackIconToScreen(screen = {
+        LazyColumn(contentPadding = PaddingValues(8.dp)) {
+            item {
+                VerticalStaggeredGridList(totalColumn = 3) {
+                    HorizontalGridListData.forEachIndexed { _, item ->
+                        Box(
                             modifier = Modifier
-                                .align(Alignment.Center),
-                            contentScale = ContentScale.FillBounds
-                        )
-                        Text(
-                            text = stringResource(id = item.text),
-                            textAlign = TextAlign.Center, modifier = Modifier
-                                .align(Alignment.Center)
-                                .background(
-                                    color = Color.LightGray.copy(alpha = .5f),
-                                    shape = RoundedCornerShape(8.dp)
-                                )
-                                .padding(horizontal = 3.dp)
-                        )
+                                .fillMaxSize()
+                                .padding(8.dp)
+                        ) {
+                            Image(
+                                painter = painterResource(id = item.drawable),
+                                contentDescription = stringResource(id = item.text),
+                                modifier = Modifier.align(Alignment.Center),
+                                contentScale = ContentScale.FillBounds
+                            )
+                            Text(
+                                text = stringResource(id = item.text),
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .background(
+                                        color = Color.LightGray.copy(alpha = .5f),
+                                        shape = RoundedCornerShape(8.dp)
+                                    )
+                                    .padding(horizontal = 3.dp)
+                            )
+                        }
                     }
                 }
             }
         }
+    }) {
+        navHostController.popBackStack()
     }
 }
 
 @Composable
 fun VerticalStaggeredGridList(
-    modifier: Modifier = Modifier,
-    totalColumn: Int = 0,
-    content: @Composable () -> Unit
+    modifier: Modifier = Modifier, totalColumn: Int = 0, content: @Composable () -> Unit
 ) {
     Layout(
-        content = content,
-        modifier = modifier
+        content = content, modifier = modifier
     ) { measurables, constraints ->
         val placeableXY: MutableMap<Placeable, Pair<Int, Int>> = mutableMapOf()
 
@@ -473,12 +502,10 @@ fun VerticalStaggeredGridList(
             placeable
         }
 
-        val height = colHeights.maxOrNull()
-            ?.coerceIn(constraints.minHeight, constraints.maxHeight)
+        val height = colHeights.maxOrNull()?.coerceIn(constraints.minHeight, constraints.maxHeight)
             ?: constraints.minHeight
         layout(
-            width = constraints.maxWidth,
-            height = height
+            width = constraints.maxWidth, height = height
         ) {
             placeables.forEach { placeable ->
                 placeable.place(
@@ -558,9 +585,7 @@ fun HorizontalList(
                 itemsIndexed(HorizontalListData) { position, item ->
                     HorizontalListItem(item.drawable, item.text, onItemClick = {
                         Toast.makeText(
-                            context,
-                            "$it is clicked at $position position",
-                            Toast.LENGTH_SHORT
+                            context, "$it is clicked at $position position", Toast.LENGTH_SHORT
                         ).show()
                     })
                 }
@@ -636,7 +661,9 @@ fun HorizontalList(
                 modifier = modifier.height(120.dp)
             ) {
                 itemsIndexed(HorizontalGridListData) { position, item ->
-                    HorizontalGridListItem(item.drawable, item.text,
+                    HorizontalGridListItem(
+                        item.drawable,
+                        item.text,
                         Modifier
                             .height(56.dp)
                             .clickable {
@@ -694,8 +721,7 @@ fun HorizontalListItem(
     Column(
         modifier = modifier.clickable {
             onItemClick(context.getString(text))
-        },
-        horizontalAlignment = Alignment.CenterHorizontally
+        }, horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
             painter = painterResource(drawable),
@@ -723,17 +749,13 @@ fun LazyListState.isScrolledToTheEnd() =
 //region grid list
 @Composable
 fun HorizontalGridListItem(
-    @DrawableRes drawable: Int,
-    @StringRes text: Int,
-    modifier: Modifier = Modifier
+    @DrawableRes drawable: Int, @StringRes text: Int, modifier: Modifier = Modifier
 ) {
     Surface(
-        shape = MaterialTheme.shapes.small,
-        modifier = modifier
+        shape = MaterialTheme.shapes.small, modifier = modifier
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.width(192.dp)
+            verticalAlignment = Alignment.CenterVertically, modifier = Modifier.width(192.dp)
         ) {
             Image(
                 painter = painterResource(drawable),
@@ -753,8 +775,10 @@ fun HorizontalGridListItem(
 @Composable
 fun HorizontalAdaptiveGridListFun(modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxSize()) {
-        LazyHorizontalGrid(rows = GridCells.Adaptive(150.dp),
-            contentPadding = PaddingValues(8.dp), content = {
+        LazyHorizontalGrid(
+            rows = GridCells.Adaptive(150.dp),
+            contentPadding = PaddingValues(8.dp),
+            content = {
                 //150.dp is the height of one cell
                 items(items = HorizontalGridListData) {
                     Image(
@@ -772,7 +796,8 @@ fun HorizontalAdaptiveGridListFun(modifier: Modifier = Modifier) {
 //region Staggered Grid List
 @Composable
 fun StaggeredGridFun(
-    list: List<StaggeredGridListDataClass>, modifier: Modifier = Modifier,
+    list: List<StaggeredGridListDataClass>,
+    modifier: Modifier = Modifier,
     onChipClick: (Int, Boolean) -> Unit
 ) {
     Row(
@@ -817,13 +842,10 @@ private fun staggeredGridItemTransitionFun(rowSelected: Boolean): StaggeredGridI
 
 @Composable
 fun HorizontalStaggeredGrid(
-    modifier: Modifier = Modifier,
-    totalRow: Int = 3,
-    content: @Composable () -> Unit
+    modifier: Modifier = Modifier, totalRow: Int = 3, content: @Composable () -> Unit
 ) {
     Layout(
-        modifier = modifier,
-        content = content
+        modifier = modifier, content = content
     ) { measurables, constraints ->
         // Keep track of the width of each row
         val eachRowWidth = IntArray(totalRow) { 0 }
@@ -846,8 +868,9 @@ fun HorizontalStaggeredGrid(
         }
 
         // here we calculate total width of the horizontal recyclerview
-        val totalWidthOfRecyclerView = eachRowWidth.maxOrNull()
-            ?.coerceIn(constraints.minWidth.rangeTo(constraints.maxWidth)) ?: constraints.minWidth
+        val totalWidthOfRecyclerView =
+            eachRowWidth.maxOrNull()?.coerceIn(constraints.minWidth.rangeTo(constraints.maxWidth))
+                ?: constraints.minWidth
 
         // here we calculate total height of the horizontal recyclerview
         val totalHeightOfRecyclerView = eachRowHeight.sumOf { it }
@@ -867,8 +890,7 @@ fun HorizontalStaggeredGrid(
             placeables.forEachIndexed { index, placeable ->
                 val row = index % totalRow
                 placeable.placeRelative(
-                    x = eachRowXPosition[row],
-                    y = eachRowYPosition[row]
+                    x = eachRowXPosition[row], y = eachRowYPosition[row]
                 )
                 //here we add width after each item place in horizontal direction
                 eachRowXPosition[row] += placeable.width
@@ -898,8 +920,7 @@ fun Chip(modifier: Modifier = Modifier, text: String, onChipClick: (Boolean) -> 
                 .toggleable(value = selected, onValueChange = onSelected)
                 .padding(start = 8.dp, top = 4.dp, end = 8.dp, bottom = 4.dp)
                 .wrapContentWidth()
-                .wrapContentHeight(),
-            verticalAlignment = Alignment.CenterVertically
+                .wrapContentHeight(), verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 imageVector = if (staggeredGridItemTransitionState.selectedAlpha > 0f) Icons.Default.Check else Icons.Default.Add,
@@ -907,8 +928,7 @@ fun Chip(modifier: Modifier = Modifier, text: String, onChipClick: (Boolean) -> 
                 tint = if (staggeredGridItemTransitionState.selectedAlpha > 0f) Color.White else LocalContentColor.current.copy(
                     alpha = LocalContentAlpha.current
                 )
-            )
-            /*Box(
+            )/*Box(
                 modifier = Modifier
                     .size(16.dp, 16.dp)
                     .background(color = MaterialTheme.colors.secondary)

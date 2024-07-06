@@ -52,7 +52,7 @@ enum class UIComponentsListingEnumType(
     RowCompose(R.string.row, { RowListingScreen(it) }),
     BoxCompose(R.string.box, { BoxListingScreen(it) }),
     CardCompose(R.string.card, { CardCompose(it) }),
-    CollapsableRecyclerviewScreen(R.string.verticallist, { VerticalListNavGraph() }),
+    CollapsableRecyclerviewScreen(R.string.verticallist, { VerticalListListing(it) }),
     HorizontalListScreen(R.string.horizontallist, { HorizontalListNavGraph() }),
     ConstraintLayoutContent(R.string.constraintlayoutcontent, { ConstraintLayoutContent() }),
     ConstraintLayoutScreen(R.string.runtimeconstraintlayout, { DecoupledConstraintLayout() }),

@@ -31,3 +31,6 @@ data class RowListingScreenPath(val pathPostFix: Int)
 
 @Serializable
 data class BoxListingScreenPath(val pathPostFix: Int)
+
+@Serializable
+data class VerticalListingScreenPath(val pathPostFix: Int)
