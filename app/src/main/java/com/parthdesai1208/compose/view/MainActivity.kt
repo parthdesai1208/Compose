@@ -57,6 +57,7 @@ import com.parthdesai1208.compose.view.navigation.ComposeSampleChildrenScreen
 import com.parthdesai1208.compose.view.navigation.ComposeSamplesScreen
 import com.parthdesai1208.compose.view.navigation.CustomLayoutScreen
 import com.parthdesai1208.compose.view.navigation.CustomModifierScreen
+import com.parthdesai1208.compose.view.navigation.HorizontalAdaptiveListScreen
 import com.parthdesai1208.compose.view.navigation.NavigationEx1
 import com.parthdesai1208.compose.view.navigation.RallyScreen
 import com.parthdesai1208.compose.view.navigation.RowListingScreenPath
@@ -73,6 +74,7 @@ import com.parthdesai1208.compose.view.uicomponents.ChildColumnScreen
 import com.parthdesai1208.compose.view.uicomponents.ChildRowScreen
 import com.parthdesai1208.compose.view.uicomponents.ChildUIComponentsScreen
 import com.parthdesai1208.compose.view.uicomponents.ChildVerticalListScreen
+import com.parthdesai1208.compose.view.uicomponents.HorizontalAdaptiveGridListFun
 import com.parthdesai1208.compose.view.uicomponents.UIComponentsListingScreen
 
 class MainActivity : AppCompatActivity() {
@@ -194,6 +196,9 @@ fun MainActivityNavGraph(
         composable<VerticalListingScreenPath> { backStackEntry ->
             val arguments = backStackEntry.toRoute<VerticalListingScreenPath>()
             ChildVerticalListScreen(onClickButtonTitle = arguments.pathPostFix, navController)
+        }
+        composable<HorizontalAdaptiveListScreen> { _ ->
+            HorizontalAdaptiveGridListFun(navHostController = navController)
         }
         //region for deep link = https://example.com/task_id=Checking
         composable(
