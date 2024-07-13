@@ -165,26 +165,31 @@ fun MapsLikeContent() {
 
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = commonPadding.padding(top = 8.dp)
+            modifier = commonPadding
+                .padding(top = 8.dp)
+                .fillMaxWidth(),
         ) {
             ChipDirection(
                 image = Icons.Default.Directions, text = "Directions",
                 bgColor = blueDirectionColor, contentColor = MaterialTheme.colors.surface,
-                borderColor = blueDirectionColor
+                borderColor = blueDirectionColor,
+                modifier = Modifier.weight(0.4f),
             )
             ChipDirection(
                 image = Icons.Default.BookmarkBorder,
                 text = "Save",
                 bgColor = MaterialTheme.colors.surface,
                 contentColor = blueDirectionColor,
-                borderColor = Color.Gray
+                borderColor = Color.Gray,
+                modifier = Modifier.weight(0.3f),
             )
             ChipDirection(
                 image = Icons.Default.Share,
                 text = "Share",
                 bgColor = MaterialTheme.colors.surface,
                 contentColor = blueDirectionColor,
-                borderColor = Color.Gray
+                borderColor = Color.Gray,
+                modifier = Modifier.weight(0.3f),
             )
         }
 
@@ -238,20 +243,23 @@ fun ChipDirection(
     text: String,
     bgColor: Color,
     contentColor: Color,
-    borderColor: Color
+    borderColor: Color,
+    modifier: Modifier = Modifier,
 ) {
 
     Card(
         border = BorderStroke(color = borderColor, width = Dp.Hairline),
         shape = if (text.isNotBlank()) RoundedCornerShape(32.dp) else CircleShape,
-        backgroundColor = bgColor
+        backgroundColor = bgColor,
+        modifier = modifier
     ) {
         Row(
-            modifier = Modifier.padding(start = 14.dp, end = 14.dp, top = 8.dp, bottom = 8.dp),
+            modifier = Modifier.padding(all = 8.dp),
             horizontalArrangement = Arrangement.spacedBy(
                 8.dp,
                 alignment = Alignment.CenterHorizontally
-            )
+            ),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 imageVector = image,
