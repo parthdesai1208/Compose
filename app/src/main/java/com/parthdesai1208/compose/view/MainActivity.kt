@@ -51,6 +51,7 @@ import com.parthdesai1208.compose.view.custom.CustomModifierListingScreen
 import com.parthdesai1208.compose.view.custom.CustomModifierListingScreen1
 import com.parthdesai1208.compose.view.migration.MigrationActivity
 import com.parthdesai1208.compose.view.navigation.AnimationListingScreen
+import com.parthdesai1208.compose.view.navigation.BottomsheetListingScreenPath
 import com.parthdesai1208.compose.view.navigation.BoxListingScreenPath
 import com.parthdesai1208.compose.view.navigation.ColumnListingScreenPath
 import com.parthdesai1208.compose.view.navigation.ComposeSampleChildrenScreen
@@ -76,6 +77,7 @@ import com.parthdesai1208.compose.view.uicomponents.ChildUIComponentsScreen
 import com.parthdesai1208.compose.view.uicomponents.ChildVerticalListScreen
 import com.parthdesai1208.compose.view.uicomponents.HorizontalAdaptiveGridListFun
 import com.parthdesai1208.compose.view.uicomponents.UIComponentsListingScreen
+import com.parthdesai1208.compose.view.uicomponents.bottomsheet.ChildBottomSheetScreen
 
 class MainActivity : AppCompatActivity() {
 
@@ -199,6 +201,13 @@ fun MainActivityNavGraph(
         }
         composable<HorizontalAdaptiveListScreen> { _ ->
             HorizontalAdaptiveGridListFun(navHostController = navController)
+        }
+        composable<BottomsheetListingScreenPath> { backStackEntry ->
+            val arguments = backStackEntry.toRoute<BottomsheetListingScreenPath>()
+            ChildBottomSheetScreen(
+                onClickButtonTitle = arguments.pathPostFix,
+                navHostController = navController
+            )
         }
         //region for deep link = https://example.com/task_id=Checking
         composable(

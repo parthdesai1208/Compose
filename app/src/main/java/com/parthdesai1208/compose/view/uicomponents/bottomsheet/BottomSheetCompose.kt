@@ -10,13 +10,50 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.BottomSheetValue
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.material.rememberBottomSheetState
+import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,54 +68,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import androidx.navigation.NavHostController
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.utils.AddBackIconToScreen
+import com.parthdesai1208.compose.view.navigation.BottomsheetListingScreenPath
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 //region BottomSheet Listing Screen
-enum class BottomSheetListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
-    SimpleBottomSheet("simple BS using Scaffold", { SimpleBottomSheet() }),
-    BottomSheetWithPeekHeight("BS scaffold with peek height", { BottomSheetWithPeekHeight() }),
-    BottomSheetWithAnimation("BS scaffold with animation", { BottomSheetWithAnimation() }),
-    BottomSheetUsingExtension("BS using extension", { BottomSheetUsingExtension() }),
-    GoogleMapsLikeBottomSheet("Google maps BS", { GoogleMapsLikeBottomSheet() }),
-}
+enum class BottomSheetListingEnumType(
+    val buttonTitle: Int,
+    val func: @Composable (NavHostController) -> Unit
+) {
+    SimpleBottomSheet(R.string.simple_bs_using_scaffold, { SimpleBottomSheet(it) }),
+    BottomSheetWithPeekHeight(
+        R.string.bs_scaffold_with_peek_height,
+        { BottomSheetWithPeekHeight(it) }),
+    BottomSheetWithAnimation(R.string.bs_scaffold_with_animation, { BottomSheetWithAnimation(it) }),
 
-object BottomSheetDestinations {
-    const val BOTTOM_SHEET_MAIN_SCREEN = "BOTTOM_SHEET_MAIN_SCREEN"
-    const val BOTTOM_SHEET_SCREEN_ROUTE_PREFIX = "BOTTOM_SHEET_SCREEN_ROUTE_PREFIX"
-    const val BOTTOM_SHEET_SCREEN_ROUTE_POSTFIX = "BOTTOM_SHEET_SCREEN_ROUTE_POSTFIX"
-}
-
-@Composable
-fun BottomSheetNavGraph(startDestination: String = BottomSheetDestinations.BOTTOM_SHEET_MAIN_SCREEN) {
-    val navController = rememberNavController()
-
-    NavHost(navController = navController, startDestination = startDestination) {
-        composable(route = BottomSheetDestinations.BOTTOM_SHEET_MAIN_SCREEN) {
-            BottomSheetListingScreen(navController = navController)
-        }
-
-        composable(
-            route = "${BottomSheetDestinations.BOTTOM_SHEET_SCREEN_ROUTE_PREFIX}/{${BottomSheetDestinations.BOTTOM_SHEET_SCREEN_ROUTE_POSTFIX}}",
-            arguments = listOf(navArgument(BottomSheetDestinations.BOTTOM_SHEET_SCREEN_ROUTE_POSTFIX) {
-                type = NavType.StringType
-            })
-        ) { backStackEntry ->
-            val arguments = requireNotNull(backStackEntry.arguments)
-            ChildBottomSheetScreen(arguments.getString(BottomSheetDestinations.BOTTOM_SHEET_SCREEN_ROUTE_POSTFIX))
-        }
-    }
+    //    BottomSheetUsingExtension(R.string.bs_using_extension, { BottomSheetUsingExtension(it) }),
+    GoogleMapsLikeBottomSheet(R.string.google_maps_bs, { GoogleMapsLikeBottomSheet(it) }),
 }
 
 @Composable
-fun ChildBottomSheetScreen(onClickButtonTitle: String?) {
-    enumValues<BottomSheetListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke()
+fun ChildBottomSheetScreen(onClickButtonTitle: Int?, navHostController: NavHostController) {
+    enumValues<BottomSheetListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke(
+        navHostController
+    )
 }
 
 @Composable
@@ -87,24 +103,36 @@ fun BottomSheetListingScreen(navController: NavController) {
     fun MyButton(
         title: BottomSheetListingEnumType
     ) {
+        val context = LocalContext.current
         Button(
-            onClick = { navController.navigate("${BottomSheetDestinations.BOTTOM_SHEET_SCREEN_ROUTE_PREFIX}/${title.buttonTitle}") },
+            onClick = { navController.navigate(BottomsheetListingScreenPath(pathPostFix = title.buttonTitle)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
                 .padding(8.dp)
         ) {
-            Text(title.buttonTitle, textAlign = TextAlign.Center)
+            Text(context.getString(title.buttonTitle), textAlign = TextAlign.Center)
         }
     }
     Surface {
         Column {
-            Text(
-                text = "Bottom Sheet Samples",
-                modifier = Modifier.padding(16.dp),
-                fontSize = 18.sp,
-                fontFamily = FontFamily.SansSerif
-            )
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    modifier = Modifier.clickable {
+                        navController.popBackStack()
+                    }, imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Bottom Sheet Samples",
+                    modifier = Modifier.padding(16.dp),
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily.SansSerif
+                )
+            }
             Spacer(modifier = Modifier.height(8.dp))
             Column(
                 modifier = Modifier
@@ -124,7 +152,7 @@ fun BottomSheetListingScreen(navController: NavController) {
 @Suppress("OPT_IN_IS_NOT_ENABLED")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SimpleBottomSheet() {
+fun SimpleBottomSheet(navHostController: NavHostController) {
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = sheetState
@@ -137,24 +165,28 @@ fun SimpleBottomSheet() {
         }, sheetBackgroundColor = Color.Green,
         sheetPeekHeight = 0.dp
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentWidth(align = Alignment.CenterHorizontally)
-                .fillMaxHeight()
-                .wrapContentHeight(align = Alignment.CenterVertically)
-        ) {
-            Button(onClick = {
-                scope.launch {
-                    if (sheetState.isCollapsed) {
-                        sheetState.expand()
-                    } else {
-                        sheetState.collapse()
+        AddBackIconToScreen(screen = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth(align = Alignment.CenterHorizontally)
+                    .fillMaxHeight()
+                    .wrapContentHeight(align = Alignment.CenterVertically)
+            ) {
+                Button(onClick = {
+                    scope.launch {
+                        if (sheetState.isCollapsed) {
+                            sheetState.expand()
+                        } else {
+                            sheetState.collapse()
+                        }
                     }
+                }) {
+                    Text(text = "BS using Scaffold", color = MaterialTheme.colors.onPrimary)
                 }
-            }) {
-                Text(text = "BS using Scaffold", color = MaterialTheme.colors.onPrimary)
             }
+        }) {
+            navHostController.popBackStack()
         }
     }
 
@@ -178,7 +210,7 @@ fun SimpleBottomSheetContent() {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun BottomSheetWithPeekHeight() {
+fun BottomSheetWithPeekHeight(navHostController: NavHostController) {
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(
         bottomSheetState = sheetState
@@ -210,24 +242,31 @@ fun BottomSheetWithPeekHeight() {
             }
         }, sheetBackgroundColor = Color.Green
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentWidth(align = Alignment.CenterHorizontally)
-                .fillMaxHeight()
-                .wrapContentHeight(align = Alignment.CenterVertically)
-        ) {
-            Button(onClick = {
-                scope.launch {
-                    if (sheetState.isCollapsed) {
-                        sheetState.expand()
-                    } else {
-                        sheetState.collapse()
+        AddBackIconToScreen(screen = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth(align = Alignment.CenterHorizontally)
+                    .fillMaxHeight()
+                    .wrapContentHeight(align = Alignment.CenterVertically)
+            ) {
+                Button(onClick = {
+                    scope.launch {
+                        if (sheetState.isCollapsed) {
+                            sheetState.expand()
+                        } else {
+                            sheetState.collapse()
+                        }
                     }
+                }) {
+                    Text(
+                        text = "BS with peek height(56.dp)",
+                        color = MaterialTheme.colors.onPrimary
+                    )
                 }
-            }) {
-                Text(text = "BS with peek height(56.dp)", color = MaterialTheme.colors.onPrimary)
             }
+        }) {
+            navHostController.popBackStack()
         }
     }
 
@@ -235,7 +274,7 @@ fun BottomSheetWithPeekHeight() {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun BottomSheetWithAnimation() {
+fun BottomSheetWithAnimation(navHostController: NavHostController) {
     val sheetState = rememberBottomSheetState(
         initialValue = BottomSheetValue.Collapsed,
         animationSpec = spring(dampingRatio = Spring.DampingRatioHighBouncy)
@@ -251,24 +290,31 @@ fun BottomSheetWithAnimation() {
         },
         sheetBackgroundColor = Color.Green,
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentWidth(align = Alignment.CenterHorizontally)
-                .fillMaxHeight()
-                .wrapContentHeight(align = Alignment.CenterVertically)
-        ) {
-            Button(onClick = {
-                scope.launch {
-                    if (sheetState.isCollapsed) {
-                        sheetState.expand()
-                    } else {
-                        sheetState.collapse()
+        AddBackIconToScreen(screen = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth(align = Alignment.CenterHorizontally)
+                    .fillMaxHeight()
+                    .wrapContentHeight(align = Alignment.CenterVertically)
+            ) {
+                Button(onClick = {
+                    scope.launch {
+                        if (sheetState.isCollapsed) {
+                            sheetState.expand()
+                        } else {
+                            sheetState.collapse()
+                        }
                     }
+                }) {
+                    Text(
+                        text = "BS Scaffold with animation",
+                        color = MaterialTheme.colors.onPrimary
+                    )
                 }
-            }) {
-                Text(text = "BS Scaffold with animation", color = MaterialTheme.colors.onPrimary)
             }
+        }) {
+            navHostController.popBackStack()
         }
     }
 
@@ -336,6 +382,7 @@ private fun BottomSheetWrapper(
                         }
                     }
                 }
+
                 else -> content {
                     animateHideBottomSheet(coroutineScope, modalBottomSheetState)
                 }
@@ -360,6 +407,7 @@ private fun BottomSheetWrapper(
                     }
                 }
             }
+
             else -> {
                 Log.i(tag, "Bottom sheet ${modalBottomSheetState.currentValue} state")
             }
@@ -449,7 +497,25 @@ fun CloseButton(
 //endregion
 
 @Composable
-fun BottomSheetUsingExtension() {
+fun BottomSheetUsingExtension(navHostController: NavHostController) {
     val context = LocalContext.current
     context.startActivity(Intent(context, BottomSheetActivity::class.java))
+    /* val activity = context.getActivityOrNull()
+     AddBackIconToScreen(screen = {
+         Column(
+             modifier = Modifier.fillMaxSize(),
+             horizontalAlignment = Alignment.CenterHorizontally,
+             verticalArrangement = Arrangement.Center,
+         ) {
+             Button(onClick = {
+                 activity?.showAsBottomSheet {
+                     SimpleBottomSheetContent()
+                 }
+             }) {
+                 Text(text = "BS using Extension", color = MaterialTheme.colors.onPrimary)
+             }
+         }
+     }) {
+         navHostController.popBackStack()
+     }*/
 }

@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.view.navigation.UIComponentsListingScreen
-import com.parthdesai1208.compose.view.uicomponents.bottomsheet.BottomSheetNavGraph
+import com.parthdesai1208.compose.view.uicomponents.bottomsheet.BottomSheetListingScreen
 
 
 enum class UIComponentsListingEnumType(
@@ -57,7 +57,7 @@ enum class UIComponentsListingEnumType(
     ConstraintLayoutContent(R.string.constraintlayoutcontent, { ConstraintLayoutContent(it) }),
     ConstraintLayoutScreen(R.string.runtimeconstraintlayout, { DecoupledConstraintLayout(it) }),
     ConstraintLayoutClock(R.string.clockusingconstraintlayout, { ClockByConstraintLayout(it) }),
-    BottomSheetScreen(R.string.bottomsheet, { BottomSheetNavGraph() }),
+    BottomSheetScreen(R.string.bottomsheet, { BottomSheetListingScreen(it) }),
     SwitchCompose(R.string.switch1, { SwitchCompose() }),
     RadioCompose(R.string.radiobutton, { RadioButtonCompose() }),
     CheckBoxCompose(R.string.checkbox, { CheckBoxCompose() }),

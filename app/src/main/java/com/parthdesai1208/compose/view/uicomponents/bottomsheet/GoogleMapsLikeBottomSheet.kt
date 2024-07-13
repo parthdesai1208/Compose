@@ -2,16 +2,51 @@
 
 package com.parthdesai1208.compose.view.uicomponents.bottomsheet
 
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.BottomSheetValue
+import androidx.compose.material.Button
+import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material.icons.filled.Calculate
+import androidx.compose.material.icons.filled.Directions
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.Map
+import androidx.compose.material.icons.filled.Place
+import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.rememberBottomSheetScaffoldState
+import androidx.compose.material.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,10 +71,12 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.navigation.NavHostController
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.model.GoogleMapsImageList
 import com.parthdesai1208.compose.model.GoogleMapsImageModel
 import com.parthdesai1208.compose.model.categoryList
+import com.parthdesai1208.compose.utils.AddBackIconToScreen
 import com.parthdesai1208.compose.view.animation.getScreenWidth
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.view.theme.blueDirectionColor
@@ -49,42 +86,46 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 //@Preview(showSystemUi = true)
 @Composable
-fun GoogleMapsLikeBottomSheet() {
+fun GoogleMapsLikeBottomSheet(navHostController: NavHostController) {
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
     val scope = rememberCoroutineScope()
-    Surface {
-        BottomSheetScaffold(
-            sheetContent = {
-                ComposeTheme {
-                    MapsLikeContent()
-                }
-            }, scaffoldState = scaffoldState,
-            sheetPeekHeight = 200.dp
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentWidth(align = Alignment.CenterHorizontally)
-                    .fillMaxHeight()
-                    .wrapContentHeight(align = Alignment.CenterVertically)
-            ) {
-                Button(onClick = {
-                    scope.launch {
-                        if (sheetState.isCollapsed) {
-                            sheetState.expand()
-                        } else {
-                            sheetState.collapse()
-                        }
+    AddBackIconToScreen(screen = {
+        Surface {
+            BottomSheetScaffold(
+                sheetContent = {
+                    ComposeTheme {
+                        MapsLikeContent()
                     }
-                }) {
-                    Text(
-                        text = "Google maps like BottomSheet",
-                        color = MaterialTheme.colors.onPrimary
-                    )
+                }, scaffoldState = scaffoldState,
+                sheetPeekHeight = 200.dp
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(align = Alignment.CenterHorizontally)
+                        .fillMaxHeight()
+                        .wrapContentHeight(align = Alignment.CenterVertically)
+                ) {
+                    Button(onClick = {
+                        scope.launch {
+                            if (sheetState.isCollapsed) {
+                                sheetState.expand()
+                            } else {
+                                sheetState.collapse()
+                            }
+                        }
+                    }) {
+                        Text(
+                            text = "Google maps like BottomSheet",
+                            color = MaterialTheme.colors.onPrimary
+                        )
+                    }
                 }
             }
         }
+    }) {
+        navHostController.popBackStack()
     }
 }
 

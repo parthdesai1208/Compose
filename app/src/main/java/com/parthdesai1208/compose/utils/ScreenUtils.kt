@@ -1,5 +1,8 @@
 package com.parthdesai1208.compose.utils
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -46,4 +49,14 @@ fun AddBackIconToScreen(
             Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
         }
     }
+}
+
+fun Context.getActivityOrNull(): Activity? {
+    var context = this
+    while (context is ContextWrapper) {
+        if (context is Activity) return context
+        context = context.baseContext
+    }
+
+    return null
 }
