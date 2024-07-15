@@ -1,5 +1,3 @@
-@file:Suppress("OPT_IN_IS_NOT_ENABLED") @file:OptIn(ExperimentalTextApi::class)
-
 package com.parthdesai1208.compose.view.uicomponents
 
 import android.graphics.Rect
@@ -9,6 +7,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,7 +26,6 @@ import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -37,8 +35,8 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowLeft
 import androidx.compose.material.icons.automirrored.filled.ArrowRight
-import androidx.compose.material.icons.filled.ArrowLeft
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -73,7 +71,6 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -189,7 +186,6 @@ fun EditTextCompose(navHostController: NavHostController, vm: ManageStateOnTextC
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FocusOrderTextField() {
     val focusManager = LocalFocusManager.current
@@ -202,7 +198,7 @@ fun FocusOrderTextField() {
         ),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column {
+        Column(modifier = Modifier.weight(0.90f)) {
             TextField(
                 label = { Text(text = "focus:a, next:c") },
                 value = "",
@@ -239,12 +235,16 @@ fun FocusOrderTextField() {
                 keyboardActions = KeyboardActions(onNext = { focusManager.moveFocus(FocusDirection.Next) })
             )
         }
-        Column {
-            Button(onClick = { focusManager.moveFocus(FocusDirection.Next) }) {
+        Column(modifier = Modifier.weight(0.10f)) {
+            Button(
+                contentPadding = PaddingValues(0.dp),
+                onClick = { focusManager.moveFocus(FocusDirection.Next) }) {
                 Icon(imageVector = Icons.AutoMirrored.Filled.ArrowRight, contentDescription = null)
             }
-            Button(onClick = { focusManager.moveFocus(FocusDirection.Previous) }) {
-                Icon(imageVector = Icons.Default.ArrowLeft, contentDescription = null)
+            Button(
+                contentPadding = PaddingValues(0.dp),
+                onClick = { focusManager.moveFocus(FocusDirection.Previous) }) {
+                Icon(imageVector = Icons.AutoMirrored.Filled.ArrowLeft, contentDescription = null)
             }
         }
     }
@@ -276,7 +276,6 @@ fun GainFocusEditTextCompose() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun BasicTextField2Compose() {
     val textState = rememberTextFieldState()
@@ -365,7 +364,6 @@ fun SimpleOutlinedTextFieldSample() {
         label = { Text("Outlined EditText") })
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SingleLineTextField() {
     val textState3 = rememberTextFieldState()
@@ -466,7 +464,7 @@ fun AutoCorrectTextField() {
         singleLine = true,
         onValueChange = { text = it },
         label = { Text("AutoCorrect true by default") },
-        keyboardOptions = KeyboardOptions(autoCorrect = true)
+        keyboardOptions = KeyboardOptions(autoCorrectEnabled = true)
     )
 }
 
@@ -504,7 +502,6 @@ fun KeyBoardTypeTextField(keyboardType: KeyboardType, text: String) {
     )
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ImeOptionTextField(imeAction: ImeAction, text: String) {
     var text1 by rememberSaveable { mutableStateOf("") }
@@ -544,7 +541,6 @@ fun ImeOptionTextField(imeAction: ImeAction, text: String) {
     )
 }
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
 fun GradientTextField() {
 
@@ -574,7 +570,6 @@ fun NoLeadingZeroes() {
         })
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun PhoneNumberWithDash() {
     var input by rememberSaveable { mutableStateOf("") }
