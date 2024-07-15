@@ -8,6 +8,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -378,41 +380,45 @@ fun ItemHorizontalStaggeredImageList(item: GoogleMapsImageModel) {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CategoryList() {
-    LazyHorizontalGrid(rows = GridCells.Fixed(2),
+    //here we use FlowRow because we want item to take space equally
+    FlowRow(
+        maxItemsInEachRow = 4,
         modifier = Modifier
             .padding(start = 16.dp, top = 18.dp, end = 16.dp)
             .fillMaxWidth()
             .height(200.dp),
-        horizontalArrangement = Arrangement.spacedBy(20.dp),
-//        verticalArrangement = Arrangement.SpaceBetween,
-        content = {
-            categoryList.forEachIndexed { _, categoryData ->
-                item {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Box(
-                            modifier = Modifier
-                                .clip(shape = CircleShape)
-                                .background(color = categoryData.tintColor)
-                                .size(50.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                imageVector = categoryData.icon,
-                                contentDescription = null,
-                                tint = MaterialTheme.colors.surface
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Text(
-                            text = categoryData.categoryName
-                        )
-
-                    }
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        categoryList.forEachIndexed { _, categoryData ->
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
+                    modifier = Modifier
+                        .clip(shape = CircleShape)
+                        .background(color = categoryData.tintColor)
+                        .size(50.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = categoryData.icon,
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.surface
+                    )
                 }
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    text = categoryData.categoryName
+                )
+
             }
-        })
+        }
+    }
 }
 
 @Composable
