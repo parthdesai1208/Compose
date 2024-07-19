@@ -342,4 +342,7 @@
     <!--    region switch sample-->
     <string name="switchsample">Switch sample</string>
     <!--    end region-->
+    <!--    region radio button sample-->
+    <string name="radioButtonSample">Radio Button Sample</string>
+    <!--    end region-->
 </resources>
