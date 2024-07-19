@@ -67,9 +67,9 @@ enum class UIComponentsListingEnumType(
         { SliderCompose(androidx.lifecycle.viewmodel.compose.viewModel(), it) }),
     BadgeCompose(R.string.badge, { BadgeCompose(it) }),
     DialogCompose(R.string.dialog1, { DialogCompose(it) }),
-    ToolTipCompose(R.string.tooltip, { TooltipOnLongClickExample() }),
-    DateTimeCompose(R.string.dateTimePicker, { DateTimeCompose() }),
-    ListItemCompose(R.string.listItem, { ListItemCompose() }),
+    ToolTipCompose(R.string.tooltip, { TooltipOnLongClickExample(it) }),
+    DateTimeCompose(R.string.dateTimePicker, { DateTimeCompose(it) }),
+    ListItemCompose(R.string.listItem, { ListItemCompose(it) }),
 }
 
 @Composable

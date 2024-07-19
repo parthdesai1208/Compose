@@ -3,17 +3,55 @@
 package com.parthdesai1208.compose.view.uicomponents
 
 
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.*
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.VectorConverter
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateValue
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.contentColorFor
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -22,11 +60,16 @@ import androidx.compose.ui.graphics.takeOrElse
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import androidx.navigation.NavHostController
+import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.utils.conditionalSingleModifier
 
 @Composable
@@ -154,7 +197,7 @@ fun Color.calculateContrastFor(foreground: Color): Double {
 
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
-fun TooltipOnLongClickExample() {
+fun TooltipOnLongClickExample(navHostController: NavHostController) {
     // Commonly a Tooltip can be placed in a Box with a sibling
     // that will be used as the 'anchor' for positioning.
     val showTooltip = rememberSaveable { mutableStateOf(false) }
@@ -187,60 +230,80 @@ fun TooltipOnLongClickExample() {
             alpha = 0.20f
         ) else MaterialTheme.colors.surface
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .wrapContentWidth(align = Alignment.CenterHorizontally)
-                .wrapContentHeight(align = Alignment.CenterVertically)
-        ) {
-
-            // Buttons and Surfaces don't support onLongClick out of the box,
-            // so use a simple Box with combinedClickable
-            Box(
-                modifier = Modifier
-                    .combinedClickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple(),
-                        onClickLabel = "Button action description",
-                        role = Role.Button,
-                        onClick = { },
-                        onLongClick = { showTooltip.value = true },
-                    )
-                    .conditionalSingleModifier(showTooltip.value) {
-                        border(
-                            width = 2.dp,
-                            shape = RoundedCornerShape(8.dp),
-                            color = MaterialTheme.colors.onSurface
-                        )
-                    }
-                    .background(
-                        color = MaterialTheme.colors.surface, shape = RoundedCornerShape(8.dp)
-                    )
-                    .conditionalSingleModifier(!showTooltip.value) {
-                        onGloballyPositioned {
-                            boxWidth = it.size.width.toFloat() / density.density
-                            boxHeight = it.size.height.toFloat() / density.density
-                        }
-                    }
-                    .conditionalSingleModifier(showTooltip.value) {
-                        size(
-                            width = animateWidth.dp,
-                            height = animateHeight.dp
-                        )
-                    }
+        Column {
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
+                Icon(
+                    modifier = Modifier.clickable {
+                        navHostController.popBackStack()
+                    }, imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    "Click Me (will show tooltip on long click)",
-                    modifier = Modifier.padding(all = 10.dp),
-                    color = MaterialTheme.colors.onSurface
+                    text = stringResource(R.string.tooltipSample),
+                    modifier = Modifier.padding(16.dp),
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily.SansSerif
                 )
             }
-
-            Tooltip(
-                expanded = showTooltip
+            Spacer(modifier = Modifier.height(8.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentWidth(align = Alignment.CenterHorizontally)
+                    .wrapContentHeight(align = Alignment.CenterVertically)
             ) {
-                // Tooltip content goes here.
-                Text("Tooltip Text!!", textAlign = TextAlign.Center)
+
+                // Buttons and Surfaces don't support onLongClick out of the box,
+                // so use a simple Box with combinedClickable
+                Box(
+                    modifier = Modifier
+                        .combinedClickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = rememberRipple(),
+                            onClickLabel = "Button action description",
+                            role = Role.Button,
+                            onClick = { },
+                            onLongClick = { showTooltip.value = true },
+                        )
+                        .conditionalSingleModifier(showTooltip.value) {
+                            border(
+                                width = 2.dp,
+                                shape = RoundedCornerShape(8.dp),
+                                color = MaterialTheme.colors.onSurface
+                            )
+                        }
+                        .background(
+                            color = MaterialTheme.colors.surface, shape = RoundedCornerShape(8.dp)
+                        )
+                        .conditionalSingleModifier(!showTooltip.value) {
+                            onGloballyPositioned {
+                                boxWidth = it.size.width.toFloat() / density.density
+                                boxHeight = it.size.height.toFloat() / density.density
+                            }
+                        }
+                        .conditionalSingleModifier(showTooltip.value) {
+                            size(
+                                width = animateWidth.dp,
+                                height = animateHeight.dp
+                            )
+                        }
+                ) {
+                    Text(
+                        "Click Me (will show tooltip on long click)",
+                        modifier = Modifier.padding(all = 10.dp),
+                        color = MaterialTheme.colors.onSurface
+                    )
+                }
+
+                Tooltip(
+                    expanded = showTooltip
+                ) {
+                    // Tooltip content goes here.
+                    Text("Tooltip Text!!", textAlign = TextAlign.Center)
+                }
             }
         }
     }

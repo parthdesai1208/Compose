@@ -345,6 +345,9 @@
     <!--    region radio button sample-->
     <string name="radioButtonSample">Radio Button Sample</string>
     <!--    end region-->
+    <!--    region radio button sample-->
+    <string name="listItemSample">ListItem Sample</string>
+    <!--    end region-->
     <!--    region checkbox sample-->
     <string name="checkboxSample">Checkbox Sample</string>
     <!--    end region-->
@@ -354,8 +357,11 @@
     <!--    region slider sample-->
     <string name="sliderSample">Slider Sample</string>
     <!--    end region-->
-    <!--    region slider sample-->
+    <!--    region Badge sample-->
     <string name="badgeSample">Badge Sample</string>
+    <!--    end region-->
+    <!--    region tooltip sample-->
+    <string name="tooltipSample">Tooltip Sample</string>
     <!--    end region-->
     <!--    region dialog sample-->
     <string name="dialogSample">Dialog Sample</string>
@@ -377,5 +383,8 @@
     <string name="popup_content_text">hello I am PopUp\nUsed for small things like\nCut/Copy/Paste banner</string>
     <string name="common_alert_dialog_title">⚠️ Deletion!!!</string>
     <string name="common_alert_dialog_body_text">Are you sure you want to delete your account?</string>
+    <!--    end region-->
+    <!--    region datetime sample-->
+    <string name="dateTimeSample">DateTime Sample</string>
     <!--    end region-->
 </resources>

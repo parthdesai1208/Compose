@@ -10,14 +10,21 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,11 +37,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.utils.asTwoDigit
 import com.parthdesai1208.compose.utils.currentDateTime12HourFormat
 import com.parthdesai1208.compose.utils.currentDateTime24HourFormat
@@ -45,7 +57,7 @@ import com.parthdesai1208.compose.utils.getTimeWithMeridiem
 import kotlinx.coroutines.delay
 
 @Composable
-fun DateTimeCompose() {
+fun DateTimeCompose(navHostController: NavHostController) {
     var selectedDateText by rememberSaveable { mutableStateOf("") }
     var selectedTimeText12H by rememberSaveable { mutableStateOf("") }
     var selectedTimeText24H by rememberSaveable { mutableStateOf("") }
@@ -99,135 +111,155 @@ fun DateTimeCompose() {
     })
 
     Surface {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-
-            Text(
-                text = "Current Date & time with timezone 24 hour:\n $varCurrentDateTimeWithTimeZone24HourFormat",
-                textAlign = TextAlign.Center
-            )
-
-            Text(
-                text = "Current Date & time 24 hour:\n $varCurrentDateTime24HourFormat",
-                textAlign = TextAlign.Center
-            )
-
-            Text(
-                text = "Current Date & time 12 hour:\n $varCurrentDateTime12HourFormat",
-                textAlign = TextAlign.Center
-            )
-
-            Row(horizontalArrangement = Arrangement.Center) {
-                AnimatedContent(
-                    targetState = animatedHour,
-                    transitionSpec = { currentTimeAnimation() }) {
-                    Text(
-                        text = it.asTwoDigit() + ":",
-                        textAlign = TextAlign.Center
-                    )
-                }
-                AnimatedContent(targetState = animatedMinute,
-                    transitionSpec = { currentTimeAnimation() }) {
-                    Text(
-                        text = it.asTwoDigit() + ":",
-                        textAlign = TextAlign.Center
-                    )
-                }
-                AnimatedContent(targetState = animatedSecond,
-                    transitionSpec = { currentTimeAnimation() }) {
-                    Text(
-                        text = it.asTwoDigit(),
-                        textAlign = TextAlign.Center
-                    )
-                }
-                AnimatedContent(targetState = animatedAMPM) {
-                    Text(
-                        text = " $it",
-                        textAlign = TextAlign.Center
-                    )
-                }
+        Column {
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    modifier = Modifier.clickable {
+                        navHostController.popBackStack()
+                    }, imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = stringResource(R.string.dateTimeSample),
+                    modifier = Modifier.padding(16.dp),
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily.SansSerif
+                )
             }
-
-
-            Text(
-                text = if (selectedDateText.isNotEmpty()) {
-                    "Select any Date: $selectedDateText"
-                } else {
-                    "you can pick any date"
-                },
+            Spacer(modifier = Modifier.height(8.dp))
+            Column(
                 modifier = Modifier
-                    .pointerInput(Unit) {
-                        detectTapGestures(onPress = {
-                            showDatePicker(
-                                activity,
-                                updateDate = {
-                                    selectedDateText = it.dateFormatterDDMMYYYY() ?: ""
-                                })
-                        })
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+
+                Text(
+                    text = "Current Date & time with timezone 24 hour:\n $varCurrentDateTimeWithTimeZone24HourFormat",
+                    textAlign = TextAlign.Center
+                )
+
+                Text(
+                    text = "Current Date & time 24 hour:\n $varCurrentDateTime24HourFormat",
+                    textAlign = TextAlign.Center
+                )
+
+                Text(
+                    text = "Current Date & time 12 hour:\n $varCurrentDateTime12HourFormat",
+                    textAlign = TextAlign.Center
+                )
+
+                Row(horizontalArrangement = Arrangement.Center) {
+                    AnimatedContent(
+                        targetState = animatedHour,
+                        transitionSpec = { currentTimeAnimation() }) {
+                        Text(
+                            text = it.asTwoDigit() + ":",
+                            textAlign = TextAlign.Center
+                        )
                     }
-            )
+                    AnimatedContent(targetState = animatedMinute,
+                        transitionSpec = { currentTimeAnimation() }) {
+                        Text(
+                            text = it.asTwoDigit() + ":",
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                    AnimatedContent(targetState = animatedSecond,
+                        transitionSpec = { currentTimeAnimation() }) {
+                        Text(
+                            text = it.asTwoDigit(),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                    AnimatedContent(targetState = animatedAMPM) {
+                        Text(
+                            text = " $it",
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
 
-            Text(
-                text = if (selectedDateRangeText.isNotEmpty()) {
-                    "Select any DateRange: $selectedDateRangeText"
-                } else {
-                    "you can pick any date range"
-                },
-                modifier = Modifier
-                    .pointerInput(Unit) {
-                        detectTapGestures(onPress = {
-                            showDateRangePicker(
-                                activity,
-                                updateDate = { it1, it2 ->
-                                    selectedDateRangeText =
-                                        it1.dateFormatterDDMMYYYY() + " to " + it2.dateFormatterDDMMYYYY()
-                                })
-                        })
-                    }, textAlign = TextAlign.Center
-            )
 
-            Text(
-                text = if (selectedTimeText12H.isNotEmpty()) {
-                    "Select any time(12H): $selectedTimeText12H"
-                } else {
-                    "you can pick any time(12H)"
-                },
-                modifier = Modifier
-                    .pointerInput(Unit) {
-                        detectTapGestures(onPress = {
-                            showTimePicker12H(activity, updateTime = { it1, it2 ->
-                                it1.getTimeWithMeridiem { hour, meridiem ->
-                                    selectedTimeText12H =
-                                        "${hour.asTwoDigit()}:${it2.asTwoDigit()} $meridiem"
-                                }
+                Text(
+                    text = if (selectedDateText.isNotEmpty()) {
+                        "Select any Date: $selectedDateText"
+                    } else {
+                        "you can pick any date"
+                    },
+                    modifier = Modifier
+                        .pointerInput(Unit) {
+                            detectTapGestures(onPress = {
+                                showDatePicker(
+                                    activity,
+                                    updateDate = {
+                                        selectedDateText = it.dateFormatterDDMMYYYY() ?: ""
+                                    })
                             })
-                        })
-                    }
-            )
+                        }
+                )
 
-            Text(
-                text = if (selectedTimeText24H.isNotEmpty()) {
-                    "Select any time(24H): $selectedTimeText24H"
-                } else {
-                    "you can pick any time(24H)"
-                },
-                modifier = Modifier
-                    .pointerInput(Unit) {
-                        detectTapGestures(onPress = {
-                            showTimePicker24H(activity, updateTime = { it1, it2 ->
-                                it1.getTimeWithMeridiem { hour, meridiem ->
-                                    selectedTimeText24H =
-                                        "${hour.asTwoDigit()}:${it2.asTwoDigit()} $meridiem"
-                                }
+                Text(
+                    text = if (selectedDateRangeText.isNotEmpty()) {
+                        "Select any DateRange: $selectedDateRangeText"
+                    } else {
+                        "you can pick any date range"
+                    },
+                    modifier = Modifier
+                        .pointerInput(Unit) {
+                            detectTapGestures(onPress = {
+                                showDateRangePicker(
+                                    activity,
+                                    updateDate = { it1, it2 ->
+                                        selectedDateRangeText =
+                                            it1.dateFormatterDDMMYYYY() + " to " + it2.dateFormatterDDMMYYYY()
+                                    })
                             })
-                        })
-                    }
-            )
+                        }, textAlign = TextAlign.Center
+                )
+
+                Text(
+                    text = if (selectedTimeText12H.isNotEmpty()) {
+                        "Select any time(12H): $selectedTimeText12H"
+                    } else {
+                        "you can pick any time(12H)"
+                    },
+                    modifier = Modifier
+                        .pointerInput(Unit) {
+                            detectTapGestures(onPress = {
+                                showTimePicker12H(activity, updateTime = { it1, it2 ->
+                                    it1.getTimeWithMeridiem { hour, meridiem ->
+                                        selectedTimeText12H =
+                                            "${hour.asTwoDigit()}:${it2.asTwoDigit()} $meridiem"
+                                    }
+                                })
+                            })
+                        }
+                )
+
+                Text(
+                    text = if (selectedTimeText24H.isNotEmpty()) {
+                        "Select any time(24H): $selectedTimeText24H"
+                    } else {
+                        "you can pick any time(24H)"
+                    },
+                    modifier = Modifier
+                        .pointerInput(Unit) {
+                            detectTapGestures(onPress = {
+                                showTimePicker24H(activity, updateTime = { it1, it2 ->
+                                    it1.getTimeWithMeridiem { hour, meridiem ->
+                                        selectedTimeText24H =
+                                            "${hour.asTwoDigit()}:${it2.asTwoDigit()} $meridiem"
+                                    }
+                                })
+                            })
+                        }
+                )
+            }
         }
     }
 }
