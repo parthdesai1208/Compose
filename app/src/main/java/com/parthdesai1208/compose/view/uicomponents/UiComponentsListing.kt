@@ -58,7 +58,7 @@ enum class UIComponentsListingEnumType(
     ConstraintLayoutScreen(R.string.runtimeconstraintlayout, { DecoupledConstraintLayout(it) }),
     ConstraintLayoutClock(R.string.clockusingconstraintlayout, { ClockByConstraintLayout(it) }),
     BottomSheetScreen(R.string.bottomsheet, { BottomSheetListingScreen(it) }),
-    SwitchCompose(R.string.switch1, { SwitchCompose() }),
+    SwitchCompose(R.string.switch1, { SwitchCompose(it) }),
     RadioCompose(R.string.radiobutton, { RadioButtonCompose() }),
     CheckBoxCompose(R.string.checkbox, { CheckBoxCompose() }),
     DropdownMenuCompose(R.string.dropdownmenu, { DropdownMenu() }),

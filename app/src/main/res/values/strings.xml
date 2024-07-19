@@ -338,4 +338,8 @@
     <string name="bs_using_extension">BS using extension</string>
     <string name="google_maps_bs">Google maps BS</string>
     <!--    end region-->
+
+    <!--    region switch sample-->
+    <string name="switchsample">Switch sample</string>
+    <!--    end region-->
 </resources>
