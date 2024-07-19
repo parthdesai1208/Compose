@@ -64,8 +64,8 @@ enum class UIComponentsListingEnumType(
     DropdownMenuCompose(R.string.dropdownmenu, { DropdownMenu(it) }),
     SliderCompose(
         R.string.slider,
-        { SliderCompose(androidx.lifecycle.viewmodel.compose.viewModel()) }),
-    BadgeCompose(R.string.badge, { BadgeCompose() }),
+        { SliderCompose(androidx.lifecycle.viewmodel.compose.viewModel(), it) }),
+    BadgeCompose(R.string.badge, { BadgeCompose(it) }),
     DialogCompose(R.string.dialog1, { DialogCompose() }),
     ToolTipCompose(R.string.tooltip, { TooltipOnLongClickExample() }),
     DateTimeCompose(R.string.dateTimePicker, { DateTimeCompose() }),

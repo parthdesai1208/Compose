@@ -351,4 +351,10 @@
     <!--    region dropdown sample-->
     <string name="dropdownSample">Dropdown Sample</string>
     <!--    end region-->
+    <!--    region slider sample-->
+    <string name="sliderSample">Slider Sample</string>
+    <!--    end region-->
+    <!--    region slider sample-->
+    <string name="badgeSample">Badge Sample</string>
+    <!--    end region-->
 </resources>

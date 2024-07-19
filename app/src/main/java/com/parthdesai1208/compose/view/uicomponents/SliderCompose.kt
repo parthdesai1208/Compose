@@ -1,29 +1,66 @@
 package com.parthdesai1208.compose.view.uicomponents
 
-import androidx.compose.foundation.*
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Slider
+import androidx.compose.material.SliderColors
+import androidx.compose.material.SliderDefaults
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Air
 import androidx.compose.material.icons.filled.Water
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.model.uicomponents.WeatherItem
 import com.parthdesai1208.compose.model.uicomponents.forecastMockState
-import com.parthdesai1208.compose.view.theme.*
+import com.parthdesai1208.compose.view.theme.attractions_gmap
+import com.parthdesai1208.compose.view.theme.coffee_gmap
+import com.parthdesai1208.compose.view.theme.hotel_gmap
+import com.parthdesai1208.compose.view.theme.more_gmap
+import com.parthdesai1208.compose.view.theme.red1000
 import com.parthdesai1208.compose.viewmodel.uicomponents.CustomSliderVM
 
 @Composable
-fun SliderCompose(customSliderVM: CustomSliderVM) {
+fun SliderCompose(customSliderVM: CustomSliderVM, navHostController: NavHostController) {
     var sliderPosition by remember { mutableStateOf(0f) }
     var sliderPosition1 by remember { mutableStateOf(0f) }
     var sliderPosition2 by remember { mutableStateOf(0f) }
@@ -32,63 +69,83 @@ fun SliderCompose(customSliderVM: CustomSliderVM) {
     val weatherItem by remember(selectedValue, forecastMockState) {
         derivedStateOf { forecastMockState[selectedValue] }
     }
-
+    val context = LocalContext.current
     Surface {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentWidth(align = Alignment.CenterHorizontally)
-                .padding(horizontal = 32.dp)
-                .verticalScroll(state = rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = sliderPosition.toString())
-            Slider(value = sliderPosition, onValueChange = { sliderPosition = it })
-            DividerTextCompose()
-            Text(text = "Disabled slider")
-            Slider(value = 0f, onValueChange = { }, enabled = false)
-            DividerTextCompose()
-            Text(text = "custom Value range(0-15): $sliderPosition1")
-            Slider(
-                value = sliderPosition1,
-                onValueChange = { sliderPosition1 = it },
-                valueRange = 0f..15f
-            )
-            DividerTextCompose()
-            Text(text = "Value range(0-15) with step 2(2+1=3)(0to15 every parts divided equally)\npart1:0to5\npart2:5to10\npart3:10to15")
-            Text(text = "$sliderPosition2")
-            Slider(
-                value = sliderPosition2,
-                onValueChange = { sliderPosition2 = it },
-                valueRange = 0f..15f,
-                steps = 2
-            )
-            DividerTextCompose()
-            Text(text = "custom color")
-            Slider(
-                value = sliderPosition3,
-                onValueChange = { sliderPosition3 = it },
-                valueRange = 0f..20f,
-                steps = 3,
-                colors = SliderDefaults.colors(
-                    thumbColor = red1000,
-                    activeTrackColor = hotel_gmap,
-                    inactiveTrackColor = more_gmap,
-                    activeTickColor = coffee_gmap,
-                    inactiveTickColor = attractions_gmap
+        Column {
+            Row(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    modifier = Modifier.clickable {
+                        navHostController.popBackStack()
+                    }, imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null
                 )
-            )
-            DividerTextCompose()
-            Text(text = "Custom Slider")
-            WeatherCard(
-                list = forecastMockState,
-                weatherItem = weatherItem,
-                selectedValue = selectedValue,
-                onValueChange = {
-                    customSliderVM.onValueChanged(it)
-                })
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = context.getString(R.string.sliderSample),
+                    modifier = Modifier.padding(16.dp),
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily.SansSerif
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth(align = Alignment.CenterHorizontally)
+                    .padding(horizontal = 32.dp)
+                    .verticalScroll(state = rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = sliderPosition.toString())
+                Slider(value = sliderPosition, onValueChange = { sliderPosition = it })
+                DividerTextCompose()
+                Text(text = "Disabled slider")
+                Slider(value = 0f, onValueChange = { }, enabled = false)
+                DividerTextCompose()
+                Text(text = "custom Value range(0-15): $sliderPosition1")
+                Slider(
+                    value = sliderPosition1,
+                    onValueChange = { sliderPosition1 = it },
+                    valueRange = 0f..15f
+                )
+                DividerTextCompose()
+                Text(text = "Value range(0-15) with step 2(2+1=3)(0to15 every parts divided equally)\npart1:0to5\npart2:5to10\npart3:10to15")
+                Text(text = "$sliderPosition2")
+                Slider(
+                    value = sliderPosition2,
+                    onValueChange = { sliderPosition2 = it },
+                    valueRange = 0f..15f,
+                    steps = 2
+                )
+                DividerTextCompose()
+                Text(text = "custom color")
+                Slider(
+                    value = sliderPosition3,
+                    onValueChange = { sliderPosition3 = it },
+                    valueRange = 0f..20f,
+                    steps = 3,
+                    colors = SliderDefaults.colors(
+                        thumbColor = red1000,
+                        activeTrackColor = hotel_gmap,
+                        inactiveTrackColor = more_gmap,
+                        activeTickColor = coffee_gmap,
+                        inactiveTickColor = attractions_gmap
+                    )
+                )
+                DividerTextCompose()
+                Text(text = "Custom Slider")
+                WeatherCard(
+                    list = forecastMockState,
+                    weatherItem = weatherItem,
+                    selectedValue = selectedValue,
+                    onValueChange = {
+                        customSliderVM.onValueChanged(it)
+                    })
 
-            DividerTextCompose()
+                DividerTextCompose()
+            }
         }
     }
 }
