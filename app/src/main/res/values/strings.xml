@@ -357,4 +357,7 @@
     <!--    region slider sample-->
     <string name="badgeSample">Badge Sample</string>
     <!--    end region-->
+    <!--    region dialog sample-->
+    <string name="dialogSample">Dialog Sample</string>
+    <!--    end region-->
 </resources>
