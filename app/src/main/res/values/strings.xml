@@ -359,5 +359,23 @@
     <!--    end region-->
     <!--    region dialog sample-->
     <string name="dialogSample">Dialog Sample</string>
+    <string name="alert_dialog">Alert Dialog</string>
+    <string name="ondismissrequest_called">onDismissRequest called</string>
+    <string name="you_choose_no">you choose \'no\'</string>
+    <string name="you_choose_yes">you choose \'yes\'</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="alert_dialog_with_custom_color">Alert Dialog with custom color</string>
+    <string name="alert_dialog_dismissonbackpress_off">Alert Dialog dismissOnBackPress off</string>
+    <string name="alert_dialog_dismissonclickoutside_off">Alert Dialog dismissOnClickOutside off</string>
+    <string name="alert_dialog_securepolicy_off">Alert Dialog securePolicy off</string>
+    <string name="ok">OK</string>
+    <string name="you_can_take_screenshot_of_this_alertdialog">you can take screenshot of this alertDialog</string>
+    <string name="alert_dialog_securepolicy_on">Alert Dialog securePolicy on</string>
+    <string name="you_can_not_take_screenshot_of_this_alertdialog">you can not take screenshot of this alertDialog</string>
+    <string name="popup">PopUp</string>
+    <string name="popup_content_text">hello I am PopUp\nUsed for small things like\nCut/Copy/Paste banner</string>
+    <string name="common_alert_dialog_title">⚠️ Deletion!!!</string>
+    <string name="common_alert_dialog_body_text">Are you sure you want to delete your account?</string>
     <!--    end region-->
 </resources>
