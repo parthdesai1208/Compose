@@ -348,4 +348,7 @@
     <!--    region checkbox sample-->
     <string name="checkboxSample">Checkbox Sample</string>
     <!--    end region-->
+    <!--    region dropdown sample-->
+    <string name="dropdownSample">Dropdown Sample</string>
+    <!--    end region-->
 </resources>

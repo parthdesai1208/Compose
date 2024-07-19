@@ -61,7 +61,7 @@ enum class UIComponentsListingEnumType(
     SwitchCompose(R.string.switch1, { SwitchCompose(it) }),
     RadioCompose(R.string.radiobutton, { RadioButtonCompose(it) }),
     CheckBoxCompose(R.string.checkbox, { CheckBoxCompose(it) }),
-    DropdownMenuCompose(R.string.dropdownmenu, { DropdownMenu() }),
+    DropdownMenuCompose(R.string.dropdownmenu, { DropdownMenu(it) }),
     SliderCompose(
         R.string.slider,
         { SliderCompose(androidx.lifecycle.viewmodel.compose.viewModel()) }),
