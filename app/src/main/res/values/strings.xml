@@ -345,4 +345,7 @@
     <!--    region radio button sample-->
     <string name="radioButtonSample">Radio Button Sample</string>
     <!--    end region-->
+    <!--    region checkbox sample-->
+    <string name="checkboxSample">Checkbox Sample</string>
+    <!--    end region-->
 </resources>

@@ -60,7 +60,7 @@ enum class UIComponentsListingEnumType(
     BottomSheetScreen(R.string.bottomsheet, { BottomSheetListingScreen(it) }),
     SwitchCompose(R.string.switch1, { SwitchCompose(it) }),
     RadioCompose(R.string.radiobutton, { RadioButtonCompose(it) }),
-    CheckBoxCompose(R.string.checkbox, { CheckBoxCompose() }),
+    CheckBoxCompose(R.string.checkbox, { CheckBoxCompose(it) }),
     DropdownMenuCompose(R.string.dropdownmenu, { DropdownMenu() }),
     SliderCompose(
         R.string.slider,
