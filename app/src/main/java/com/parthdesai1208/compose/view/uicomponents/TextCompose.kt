@@ -103,7 +103,7 @@ class FakeStringProvider : PreviewParameterProvider<String> {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TextComponents(
-    name: String,
+    name: Int,
     navHostController: NavHostController
 ) {
     val changingEndStrings = remember {
@@ -207,7 +207,7 @@ fun TextComponents(
                 )
                 DividerTextCompose()
                 Text(
-                    text = "Hello $name, this text is in center"
+                    text = "Hello ${context.getString(R.string.world)}, this text is in center"
                 )
                 DividerTextCompose()
                 Text(
@@ -679,7 +679,7 @@ fun MultipleLineTextAutoMove() {
 @Composable
 fun TextComposePreview() {
     ComposeTheme {
-        TextComponents("World", rememberNavController())
+        TextComponents(R.string.world, rememberNavController())
     }
 }
 

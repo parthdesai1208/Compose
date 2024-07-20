@@ -27,7 +27,7 @@ enum class UIComponentsListingEnumType(
     val buttonTitle: Int,
     val func: @Composable (NavHostController) -> Unit
 ) {
-    TextComponents(R.string.text, { TextComponents("World", it) }),
+    TextComponents(R.string.text, { TextComponents(R.string.world, it) }),
     EditTextCompose(
         R.string.edittext,
         { EditTextCompose(it, androidx.lifecycle.viewmodel.compose.viewModel()) }),
