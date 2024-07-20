@@ -345,6 +345,9 @@
     <!--    region radio button sample-->
     <string name="radioButtonSample">Radio Button Sample</string>
     <!--    end region-->
+    <!--    region compositionLocal()  sample-->
+    <string name="compositionLocalSample">compositionLocal Sample</string>
+    <!--    end region-->
     <!--    region radio button sample-->
     <string name="listItemSample">ListItem Sample</string>
     <!--    end region-->

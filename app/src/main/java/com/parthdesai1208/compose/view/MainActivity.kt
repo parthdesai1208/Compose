@@ -116,7 +116,7 @@ enum class MainScreenEnumType(
     StateListingScreen(R.string.state, {
         MainScreenState(navController = it)
     }, buttonTitleForAccessibility = R.string.learnstatewithviewmodel),
-    CompositionLocal(R.string.learncompositionlocal, { CompositionLocalFun() }),
+    CompositionLocal(R.string.learncompositionlocal, { CompositionLocalFun(it) }),
     CustomModifierListingScreen(
         R.string.custommodifier,
         { CustomModifierListingScreen(navController = it) }),
