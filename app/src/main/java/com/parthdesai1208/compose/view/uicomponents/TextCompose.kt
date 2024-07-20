@@ -32,7 +32,6 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -79,8 +78,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.utils.AllDevices
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
 import com.parthdesai1208.compose.utils.RainbowColors
-import com.parthdesai1208.compose.utils.ToolBarWithIconAndTitle
 import com.parthdesai1208.compose.utils.delayedClick
 import com.parthdesai1208.compose.utils.getBoundingBoxesForRange
 import com.parthdesai1208.compose.view.theme.ComposeTheme
@@ -101,12 +100,12 @@ class FakeStringProvider : PreviewParameterProvider<String> {
         get() = sequenceOf("Parth")
 }
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalTextApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TextComponents(
     name: String,
     navHostController: NavHostController
-) { //@PreviewParameter(FakeStringProvider::class)
+) {
     val changingEndStrings = remember {
         listOf(
             "reach your goals.",
@@ -117,12 +116,8 @@ fun TextComponents(
         )
     }
 
-    Surface {
-        Column {
-            ToolBarWithIconAndTitle(
-                screenTitle = stringResource(id = R.string.text),
-                onBackArrowClick = { navHostController.popBackStack() }
-            )
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.text), screen = {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -362,8 +357,9 @@ fun TextComponents(
                 MultipleLineTextAutoMove()
                 DividerTextCompose()
             }
-        }
-    }
+        }, onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 @OptIn(ExperimentalTextApi::class)

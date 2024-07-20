@@ -124,37 +124,6 @@
     <string name="drawsamples">Draw Samples</string>
     <string name="anyscreen">Any Screen</string>
     <string name="slotapi">Slot API</string>
-    <string name="text">Text</string>
-    <string name="edittext">EditText</string>
-    <string name="button">Button</string>
-    <string name="image">Image</string>
-    <string name="icon">Icon</string>
-    <string name="searchbar">SearchBar</string>
-    <string name="snackbar">SnackBar</string>
-    <string name="scaffold">Scaffold</string>
-    <string name="column">Column</string>
-    <string name="row">Row</string>
-    <string name="box">Box</string>
-    <string name="card">Card</string>
-    <string name="verticallist">Vertical List</string>
-    <string name="horizontallist">Horizontal List</string>
-    <string name="constraintlayoutcontent">Constraint Layout Content</string>
-    <string name="runtimeconstraintlayout">runtime Constraint Layout</string>
-    <string name="clockusingconstraintlayout">Clock using constraint layout</string>
-    <string name="bottomsheet">Bottom Sheet</string>
-    <string name="switch1">Switch</string>
-    <string name="radiobutton">Radio Button</string>
-    <string name="checkbox">CheckBox</string>
-    <string name="dropdownmenu">Drop-down Menu</string>
-    <string name="slider">Slider</string>
-    <string name="badge">Badge</string>
-    <string name="dialog1">Dialog</string>
-    <string name="gesture">Gesture</string>
-    <string name="permission">Permission</string>
-    <string name="pictureinpicture">Picture In Picture</string>
-    <string name="tooltip">Tooltip</string>
-    <string name="dateTimePicker">Date-time picker</string>
-    <string name="listItem">ListItem</string>
     <!--    end region-->
 
     <!--    region custom modifier listing screen-->
@@ -399,5 +368,39 @@
     <string name="composable">Composable</string>
     <string name="composed_resolves_state_at_the_usage_site_for_each_layout_so_if_we_click_on_any_of_the_box_other_box_won_t_get_affected">composed resolves state at the usage site for each Layout. so if we click on any of the box, other box won\'t get affected.</string>
     <string name="composed">Composed</string>
+    <!--    end region-->
+    <!--    region UI components sample-->
+    <string name="ui_components_samples">UI Components Samples</string>
+    <string name="text">Text</string>
+    <string name="edittext">EditText</string>
+    <string name="button">Button</string>
+    <string name="image">Image</string>
+    <string name="icon">Icon</string>
+    <string name="searchbar">SearchBar</string>
+    <string name="snackbar">SnackBar</string>
+    <string name="scaffold">Scaffold</string>
+    <string name="column">Column</string>
+    <string name="row">Row</string>
+    <string name="box">Box</string>
+    <string name="card">Card</string>
+    <string name="verticallist">Vertical List</string>
+    <string name="horizontallist">Horizontal List</string>
+    <string name="constraintlayoutcontent">Constraint Layout Content</string>
+    <string name="runtimeconstraintlayout">runtime Constraint Layout</string>
+    <string name="clockusingconstraintlayout">Clock using constraint layout</string>
+    <string name="bottomsheet">Bottom Sheet</string>
+    <string name="switch1">Switch</string>
+    <string name="radiobutton">Radio Button</string>
+    <string name="checkbox">CheckBox</string>
+    <string name="dropdownmenu">Drop-down Menu</string>
+    <string name="slider">Slider</string>
+    <string name="badge">Badge</string>
+    <string name="dialog1">Dialog</string>
+    <string name="gesture">Gesture</string>
+    <string name="permission">Permission</string>
+    <string name="pictureinpicture">Picture In Picture</string>
+    <string name="tooltip">Tooltip</string>
+    <string name="dateTimePicker">Date-time picker</string>
+    <string name="listItem">ListItem</string>
     <!--    end region-->
 </resources>
