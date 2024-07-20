@@ -43,6 +43,7 @@ import androidx.compose.ui.layout.AlignmentLine
 import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -96,7 +97,7 @@ fun CustomModifierListingScreen(navController: NavHostController) {
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Custom Modifier Samples",
+                    text = stringResource(R.string.custom_modifier_samples),
                     modifier = Modifier.padding(16.dp),
                     fontSize = 18.sp,
                     fontFamily = FontFamily.SansSerif
@@ -132,7 +133,7 @@ fun BaseLineToTopFun() {
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                "with baseLineToTop\n32.dp",
+                stringResource(R.string.with_baselinetotop_32_dp),
                 Modifier
                     .baseLineToTop(32.dp)
                     .wrapContentWidth()
@@ -140,7 +141,7 @@ fun BaseLineToTopFun() {
                 textAlign = TextAlign.Center
             )
             Text(
-                text = "without baseLineToTop\n32.dp paddingTop",
+                text = stringResource(R.string.without_baselinetotop_32_dp_paddingtop),
                 modifier = Modifier
                     .padding(top = 32.dp)
                     .wrapContentHeight()
@@ -177,14 +178,17 @@ fun Modifier.baseLineToTop(firstBaselineToTop: Dp): Modifier {
 @Composable
 fun TextWithPaddingToBaselinePreview() {
     ComposeTheme {
-        Text("Hi there!", Modifier.baseLineToTop(32.dp))
+        Text(stringResource(R.string.hi_there), Modifier.baseLineToTop(32.dp))
     }
 }
 
 @Composable
 fun TextWithNormalPaddingPreview() {
     ComposeTheme {
-        Text("Hi there!", Modifier.padding(top = 32.dp))
+        Text(
+            text = stringResource(id = R.string.hi_there),
+            modifier = Modifier.padding(top = 32.dp)
+        )
     }
 }
 //endregion
@@ -231,7 +235,7 @@ fun ComposableVersusComposed() {
         ) {
             Text(
                 modifier = Modifier.padding(all = 16.dp),
-                text = "@Composable resolves state only once at the call site. so if we click on any of the box, all of the box will rotated."
+                text = stringResource(R.string.composable_resolves_state_only_once_at_the_call_site)
             )
             val modifier1 = Modifier
                 .rotateOnClickComposable()
@@ -242,13 +246,13 @@ fun ComposableVersusComposed() {
                         modifier = modifier1,
                         contentAlignment = Alignment.Center,
                     ) {
-                        Text(text = "Composable")
+                        Text(text = stringResource(R.string.composable))
                     }
                 }
             }
             Text(
                 modifier = Modifier.padding(all = 16.dp),
-                text = "composed resolves state at the usage site for each Layout. so if we click on any of the box, other box won't get affected."
+                text = stringResource(R.string.composed_resolves_state_at_the_usage_site_for_each_layout_so_if_we_click_on_any_of_the_box_other_box_won_t_get_affected)
             )
             val modifier2 = Modifier
                 .rotateOnClickComposed()
@@ -259,7 +263,7 @@ fun ComposableVersusComposed() {
                         modifier = modifier2,
                         contentAlignment = Alignment.Center,
                     ) {
-                        Text(text = "Composed")
+                        Text(text = stringResource(R.string.composed))
                     }
                 }
             }

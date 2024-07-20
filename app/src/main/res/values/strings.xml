@@ -390,4 +390,14 @@
     <!--    region datetime sample-->
     <string name="dateTimeSample">DateTime Sample</string>
     <!--    end region-->
+    <!--    region customModifier sample-->
+    <string name="custom_modifier_samples">Custom Modifier Samples</string>
+    <string name="with_baselinetotop_32_dp">with baseLineToTop\n32.dp</string>
+    <string name="without_baselinetotop_32_dp_paddingtop">without baseLineToTop\n32.dp paddingTop</string>
+    <string name="hi_there">Hi there!</string>
+    <string name="composable_resolves_state_only_once_at_the_call_site">\@Composable resolves state only once at the call site. so if we click on any of the box, all of the box will rotated.</string>
+    <string name="composable">Composable</string>
+    <string name="composed_resolves_state_at_the_usage_site_for_each_layout_so_if_we_click_on_any_of_the_box_other_box_won_t_get_affected">composed resolves state at the usage site for each Layout. so if we click on any of the box, other box won\'t get affected.</string>
+    <string name="composed">Composed</string>
+    <!--    end region-->
 </resources>
