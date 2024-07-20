@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.parthdesai1208.compose.R
-import com.parthdesai1208.compose.utils.AddBackIconToScreen
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
 import com.parthdesai1208.compose.utils.setSizeByScreenPercentage
 import com.parthdesai1208.compose.view.navigation.ColumnListingScreenPath
 import com.parthdesai1208.compose.view.theme.Amber600
@@ -161,7 +161,7 @@ fun Modifier.commonBorder(width: Dp = 10.dp, color: Color = Green800): Modifier 
 
 @Composable
 fun WrapColumnTopStart(navHostController: NavHostController, modifier: Modifier = Modifier) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         Column(
             modifier = modifier.commonBorder()
         ) {
@@ -294,7 +294,7 @@ fun FillMaxSizeColumn(
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.Start
 ) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -404,7 +404,7 @@ fun FillMaxSizeChildSpaceBetween(navHostController: NavHostController) {
 
 @Composable
 fun IndividualChildAlignment(navHostController: NavHostController) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         Column(
             modifier = Modifier
                 .commonBorder()
@@ -419,7 +419,7 @@ fun IndividualChildAlignment(navHostController: NavHostController) {
 
 @Composable
 fun ChildWeight(navHostController: NavHostController) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         Column(
             modifier = Modifier
                 .commonBorder()
@@ -435,7 +435,7 @@ fun ChildWeight(navHostController: NavHostController) {
 
 @Composable
 fun ScrollableColumn(navHostController: NavHostController) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         Column(
             modifier = Modifier
                 .commonBorder()
@@ -468,7 +468,7 @@ fun ScrollableColumn(navHostController: NavHostController) {
 
 @Composable
 fun AlignAllChild(navHostController: NavHostController) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         Surface {
             Column(
                 modifier = Modifier

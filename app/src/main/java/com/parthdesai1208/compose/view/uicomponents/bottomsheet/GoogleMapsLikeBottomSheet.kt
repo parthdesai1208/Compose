@@ -78,7 +78,7 @@ import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.model.GoogleMapsImageList
 import com.parthdesai1208.compose.model.GoogleMapsImageModel
 import com.parthdesai1208.compose.model.categoryList
-import com.parthdesai1208.compose.utils.AddBackIconToScreen
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
 import com.parthdesai1208.compose.view.animation.getScreenWidth
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.view.theme.blueDirectionColor
@@ -92,7 +92,7 @@ fun GoogleMapsLikeBottomSheet(navHostController: NavHostController) {
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
     val scope = rememberCoroutineScope()
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         Surface {
             BottomSheetScaffold(
                 sheetContent = {

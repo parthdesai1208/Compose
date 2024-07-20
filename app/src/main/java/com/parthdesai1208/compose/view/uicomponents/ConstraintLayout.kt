@@ -18,12 +18,12 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.parthdesai1208.compose.utils.AddBackIconToScreen
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 
 @Composable
 fun ConstraintLayoutContent(navHostController: NavHostController) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         Surface {
             ConstraintLayout(
                 modifier = Modifier
@@ -79,7 +79,7 @@ fun ConstraintLayoutContentPreview() {
 
 @Composable
 fun DecoupledConstraintLayout(navHostController: NavHostController) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         Surface {
             BoxWithConstraints {
                 val constraints = if (maxWidth < maxHeight) {
@@ -121,7 +121,7 @@ private fun decoupledConstraints(margin: Dp): ConstraintSet {
 
 @Composable
 fun ClockByConstraintLayout(navHostController: NavHostController) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         Surface {
             ConstraintLayout(modifier = Modifier.fillMaxSize()) {
                 val (middleDot, one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve) = createRefs()

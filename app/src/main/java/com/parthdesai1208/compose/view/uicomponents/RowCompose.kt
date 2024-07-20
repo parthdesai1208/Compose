@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.parthdesai1208.compose.R
-import com.parthdesai1208.compose.utils.AddBackIconToScreen
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
 import com.parthdesai1208.compose.utils.setSizeByScreenPercentage
 import com.parthdesai1208.compose.view.navigation.RowListingScreenPath
 
@@ -156,7 +156,7 @@ fun WrapRowTopStart(
     navHostController: NavHostController,
     modifier: Modifier = Modifier,
 ) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         Row(
             modifier = modifier.commonBorder(width = 5.dp, color = MaterialTheme.colors.onSurface)
         ) {
@@ -271,7 +271,7 @@ fun FillMaxRowTopStart(
     verticalAlignment: Alignment.Vertical = Alignment.Top,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
 ) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         Row(
             modifier = Modifier
                 .fillMaxSize()
@@ -389,7 +389,7 @@ fun FillMaxSizeRowChildSpaceBetween(navHostController: NavHostController) {
 
 @Composable
 fun IndividualChildAlignmentRow(navHostController: NavHostController) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         Row(
             modifier = Modifier
                 .fillMaxHeight()
@@ -417,7 +417,7 @@ fun IndividualChildAlignmentRow(navHostController: NavHostController) {
 
 @Composable
 fun ChildWeightRow(navHostController: NavHostController) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         Row(
             modifier = Modifier
                 .fillMaxHeight()
@@ -437,7 +437,7 @@ fun ChildWeightRow(navHostController: NavHostController) {
 
 @Composable
 fun ScrollableRow(navHostController: NavHostController) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         Row(
             modifier = Modifier
                 .fillMaxHeight()
@@ -466,7 +466,7 @@ fun ScrollableRow(navHostController: NavHostController) {
 
 @Composable
 fun AlignAllChildRow(navHostController: NavHostController) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         Row(
             modifier = Modifier
                 .fillMaxSize()

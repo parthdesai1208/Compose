@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.parthdesai1208.compose.R
-import com.parthdesai1208.compose.utils.AddBackIconToScreen
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
 import com.parthdesai1208.compose.view.navigation.BoxListingScreenPath
 
 //region Box Listing Screen
@@ -120,7 +120,7 @@ fun BoxListingScreen(navController: NavController) {
 
 @Composable
 fun WhatIsBox(navHostController: NavHostController) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         Box(modifier = Modifier.fillMaxSize()) {
 
             Box(
@@ -154,7 +154,7 @@ fun WhatIsBox(navHostController: NavHostController) {
 
 @Composable
 fun BoxAlignment(navHostController: NavHostController) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         Surface {
             Box(modifier = Modifier.fillMaxSize()) {
                 Text(
@@ -217,7 +217,7 @@ fun BoxAlignment(navHostController: NavHostController) {
 
 @Composable
 fun EditProfileImage(navHostController: NavHostController) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         Box(
             modifier = Modifier
                 .fillMaxWidth()

@@ -99,7 +99,7 @@ import com.parthdesai1208.compose.model.DrawableStringPair
 import com.parthdesai1208.compose.model.HorizontalGridListData
 import com.parthdesai1208.compose.model.HorizontalListData
 import com.parthdesai1208.compose.model.StaggeredGridListDataClass
-import com.parthdesai1208.compose.utils.AddBackIconToScreen
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
 import com.parthdesai1208.compose.utils.Phone
 import com.parthdesai1208.compose.view.navigation.HorizontalAdaptiveListScreen
 import com.parthdesai1208.compose.view.navigation.VerticalListingScreenPath
@@ -155,7 +155,7 @@ fun UpdateUsingMutableStateListOfSample(
     vm: UpdateUsingMutableStateListOfViewModel,
     navHostController: NavHostController
 ) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         LazyColumn {
             itemsIndexed(items = vm.updateUsingMutableStateListOfModelList,
                 key = { _, item -> item.name },
@@ -249,7 +249,7 @@ fun CollapsableRecyclerView(
     navHostController: NavHostController,
     names: List<String> = List(1000) { "$it" }
 ) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         LazyColumn(modifier = Modifier.padding(vertical = 8.dp, horizontal = 10.dp)) {
             items(names) { name ->
                 ItemCollapsableRecyclerView(name = name)
@@ -323,7 +323,7 @@ fun VerticalGridList(
     navHostController: NavHostController,
     gridCells: GridCells = GridCells.Fixed(2)
 ) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         LazyVerticalGrid(columns = gridCells,
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -367,7 +367,7 @@ val DoubleSizedLeftRowGridCell = object : GridCells {
 
 @Composable
 fun FirstItemTakeWholeSpace(navHostController: NavHostController) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         LazyVerticalGrid(columns = DoubleSizedLeftRowGridCell,
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -415,7 +415,7 @@ fun ItemViewFirstItemTakeWholeSpace(item: DrawableStringPair) {
 
 @Composable
 fun EveryThirdItemTakeWholeSpace(navHostController: NavHostController) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         LazyVerticalGrid(columns = DoubleSizedLeftRowGridCell,
             verticalArrangement = Arrangement.spacedBy(8.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -440,7 +440,7 @@ fun EveryThirdItemTakeWholeSpace(navHostController: NavHostController) {
 
 @Composable
 fun VerticalStaggeredGridListFun(navHostController: NavHostController) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         LazyColumn(contentPadding = PaddingValues(8.dp)) {
             item {
                 VerticalStaggeredGridList(totalColumn = 3) {
@@ -550,7 +550,7 @@ fun HorizontalList(
     }
     val context = LocalContext.current
     val viewModelState by viewModel.staggeredGridItems.collectAsState()
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         Surface {
             Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                 LazyRow(
@@ -761,7 +761,7 @@ fun HorizontalAdaptiveGridListFun(
     modifier: Modifier = Modifier,
     navHostController: NavHostController
 ) {
-    AddBackIconToScreen(screen = {
+    BuildTopBarWithScreen(screen = {
         Column(modifier = modifier.fillMaxSize()) {
             LazyHorizontalGrid(
                 rows = GridCells.Adaptive(150.dp),

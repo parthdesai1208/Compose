@@ -70,7 +70,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.parthdesai1208.compose.R
-import com.parthdesai1208.compose.utils.AddBackIconToScreen
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
 import com.parthdesai1208.compose.view.navigation.BottomsheetListingScreenPath
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -165,7 +165,7 @@ fun SimpleBottomSheet(navHostController: NavHostController) {
         }, sheetBackgroundColor = Color.Green,
         sheetPeekHeight = 0.dp
     ) {
-        AddBackIconToScreen(screen = {
+        BuildTopBarWithScreen(screen = {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -242,7 +242,7 @@ fun BottomSheetWithPeekHeight(navHostController: NavHostController) {
             }
         }, sheetBackgroundColor = Color.Green
     ) {
-        AddBackIconToScreen(screen = {
+        BuildTopBarWithScreen(screen = {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -290,7 +290,7 @@ fun BottomSheetWithAnimation(navHostController: NavHostController) {
         },
         sheetBackgroundColor = Color.Green,
     ) {
-        AddBackIconToScreen(screen = {
+        BuildTopBarWithScreen(screen = {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
