@@ -26,7 +26,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
@@ -55,9 +54,11 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.drawText
@@ -69,6 +70,7 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -98,8 +100,7 @@ import me.saket.extendedspans.rememberSquigglyUnderlineAnimator
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TextComponents(
-    name: Int,
-    navHostController: NavHostController
+    name: Int, navHostController: NavHostController
 ) {
     val context = LocalContext.current
     val changingEndStrings = remember {
@@ -112,269 +113,255 @@ fun TextComponents(
         )
     }
 
-    BuildTopBarWithScreen(
-        title = stringResource(id = R.string.text), screen = {
-            Column(
+    BuildTopBarWithScreen(title = stringResource(id = R.string.text), screen = {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(state = rememberScrollState())
+                .padding(start = 8.dp, end = 8.dp, bottom = 64.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(text = stringResource(R.string.singleClickText),
                 modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(state = rememberScrollState())
-                    .padding(start = 8.dp, end = 8.dp, bottom = 64.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(text = stringResource(R.string.singleClickText),
-                    modifier = Modifier
-                        .padding(16.dp) //to make clickable area bigger
-                        .clickable {
-                            Toast
-                                .makeText(
-                                    context,
-                                    context.getString(R.string.single_click), Toast.LENGTH_SHORT
-                                )
-                                .show()
-                        })
-                DividerTextCompose()
-                Text(text = stringResource(R.string.delayedClickText),
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .delayedClick(2000L) {
-                            Toast
-                                .makeText(
-                                    context,
-                                    context.getString(R.string.delayedClickText),
-                                    Toast.LENGTH_SHORT
-                                )
-                                .show()
-                        })
-                DividerTextCompose()
-                Text(
-                    text = stringResource(R.string.disable_click_text),
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .clickable(enabled = false) {
-                            Toast
-                                .makeText(
-                                    context,
-                                    context.getString(R.string.single_click),
-                                    Toast.LENGTH_SHORT
-                                )
-                                .show()
-                        })
-                DividerTextCompose()
-                Text(
-                    text = stringResource(R.string.text_with_gradient_background),
-                    modifier = Modifier.background(
-                        brush = Brush.linearGradient(
-                            colors = listOf(
-                                Color.Cyan, Color.Magenta, Color.Yellow, Color.DarkGray
+                    .padding(16.dp) //to make clickable area bigger
+                    .clickable {
+                        Toast
+                            .makeText(
+                                context,
+                                context.getString(R.string.single_click),
+                                Toast.LENGTH_SHORT
                             )
+                            .show()
+                    })
+            DividerTextCompose()
+            Text(text = stringResource(R.string.delayedClickText),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .delayedClick(2000L) {
+                        Toast
+                            .makeText(
+                                context,
+                                context.getString(R.string.delayedClickText),
+                                Toast.LENGTH_SHORT
+                            )
+                            .show()
+                    })
+            DividerTextCompose()
+            Text(text = stringResource(R.string.disable_click_text),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .clickable(enabled = false) {
+                        Toast
+                            .makeText(
+                                context,
+                                context.getString(R.string.single_click),
+                                Toast.LENGTH_SHORT
+                            )
+                            .show()
+                    })
+            DividerTextCompose()
+            Text(
+                text = stringResource(R.string.text_with_gradient_background),
+                modifier = Modifier.background(
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            Color.Cyan, Color.Magenta, Color.Yellow, Color.DarkGray
                         )
                     )
                 )
-                DividerTextCompose()
-                Text(
-                    text = stringResource(R.string.text_with_textcolor_lineargradient).repeat(6),
-                    style = TextStyle(brush = Brush.linearGradient(colors = RainbowColors))
+            )
+            DividerTextCompose()
+            Text(
+                text = stringResource(R.string.text_with_textcolor_lineargradient).repeat(6),
+                style = TextStyle(brush = Brush.linearGradient(colors = RainbowColors))
+            )
+            DividerTextCompose()
+            TextColorGradientAnimation(stringResource(R.string.text_with_textcolor_lineargradient_with_animation))
+            DividerTextCompose()
+            TextColorGradientAnimation(
+                stringResource(R.string.text_with_textcolor_lineargradient_with_reverse_animation),
+                repeatMode = RepeatMode.Reverse
+            )
+            DividerTextCompose()
+            Text(
+                text = stringResource(R.string.text_with_textcolor_horizontalgradient).repeat(6),
+                style = TextStyle(brush = Brush.horizontalGradient(colors = RainbowColors))
+            )
+            DividerTextCompose()
+            Text(
+                text = stringResource(R.string.text_with_textcolor_verticalgradient).repeat(6),
+                style = TextStyle(brush = Brush.verticalGradient(colors = RainbowColors))
+            )
+            DividerTextCompose()
+            Text(
+                text = stringResource(R.string.text_with_textcolor_radialgradient).repeat(6),
+                style = TextStyle(brush = Brush.radialGradient(colors = RainbowColors))
+            )
+            DividerTextCompose()
+            Text(
+                text = stringResource(R.string.text_with_textcolor_sweepgradient).repeat(6),
+                style = TextStyle(brush = Brush.sweepGradient(colors = RainbowColors))
+            )
+            DividerTextCompose()
+            DrawTextAPI()
+            DividerTextCompose()
+            Text(
+                text = stringResource(R.string.text_with_background_color),
+                modifier = Modifier.background(color = colorResource(id = R.color.teal_700))
+            )
+            DividerTextCompose()
+            Text(
+                text = stringResource(
+                    R.string.hello_this_text_is_in_center, context.getString(name)
                 )
-                DividerTextCompose()
-                TextColorGradientAnimation(stringResource(R.string.text_with_textcolor_lineargradient_with_animation))
-                DividerTextCompose()
-                TextColorGradientAnimation(
-                    stringResource(R.string.text_with_textcolor_lineargradient_with_reverse_animation),
-                    repeatMode = RepeatMode.Reverse
-                )
-                DividerTextCompose()
-                Text(
-                    text = stringResource(R.string.text_with_textcolor_horizontalgradient).repeat(6),
-                    style = TextStyle(brush = Brush.horizontalGradient(colors = RainbowColors))
-                )
-                DividerTextCompose()
-                Text(
-                    text = stringResource(R.string.text_with_textcolor_verticalgradient).repeat(6),
-                    style = TextStyle(brush = Brush.verticalGradient(colors = RainbowColors))
-                )
-                DividerTextCompose()
-                Text(
-                    text = stringResource(R.string.text_with_textcolor_radialgradient).repeat(6),
-                    style = TextStyle(brush = Brush.radialGradient(colors = RainbowColors))
-                )
-                DividerTextCompose()
-                Text(
-                    text = stringResource(R.string.text_with_textcolor_sweepgradient).repeat(6),
-                    style = TextStyle(brush = Brush.sweepGradient(colors = RainbowColors))
-                )
-                DividerTextCompose()
-                DrawTextAPI()
-                DividerTextCompose()
-                Text(
-                    text = stringResource(R.string.text_with_background_color),
-                    modifier = Modifier.background(color = colorResource(id = R.color.teal_700))
-                )
-                DividerTextCompose()
-                Text(
-                    text = stringResource(
-                        R.string.hello_this_text_is_in_center,
-                        context.getString(name)
+            )
+            DividerTextCompose()
+            Text(
+                text = stringResource(R.string.circle_shape_text),
+                modifier = Modifier
+                    .background(
+                        color = colorResource(id = R.color.teal_700), shape = CircleShape
+                    )
+                    .padding(horizontal = 5.dp)
+            )
+            DividerTextCompose()
+            Text(
+                text = stringResource(R.string.rounded_corner_shape_text),
+                modifier = Modifier
+                    .background(
+                        color = colorResource(id = R.color.teal_700),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .padding(horizontal = 5.dp)
+            )
+            DividerTextCompose()
+            Text(
+                text = stringResource(R.string.text_with_alpha_45f_0f_to_1f),
+                modifier = Modifier.alpha(.45f) //used to dim the color of text
+            )
+            DividerTextCompose()
+            Text(text = stringResource(R.string.accessibility_text_with_onclicklabel),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .clickable(onClickLabel = stringResource(R.string.you_are_clicking_on_accessibility_text)) {})
+            DividerTextCompose()
+            Text(text = stringResource(R.string.onlongclick_text_with_accessibility),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .combinedClickable(onLongClickLabel = stringResource(R.string.you_are_long_clicking_on_accessibility_text),
+                        onLongClick = {
+                            Toast
+                                .makeText(
+                                    context,
+                                    context.getString(R.string.long_click),
+                                    Toast.LENGTH_SHORT
+                                )
+                                .show()
+                        }) {})
+            DividerTextCompose()
+            Text(
+                stringResource(R.string.center_align_text), textAlign = TextAlign.Center,
+                modifier = Modifier.width(150.dp),
+            )
+            DividerTextCompose()
+            Text(
+                text = stringResource(R.string.text_with_shadow), style = TextStyle(
+                    fontSize = 24.sp, shadow = Shadow(
+                        color = Color.Blue, offset = Offset(5.0f, 10.0f), blurRadius = 3f
                     )
                 )
-                DividerTextCompose()
-                Text(
-                    text = stringResource(R.string.circle_shape_text), modifier = Modifier
-                        .background(
-                            color = colorResource(id = R.color.teal_700), shape = CircleShape
-                        )
-                        .padding(horizontal = 5.dp)
-                )
-                DividerTextCompose()
-                Text(
-                    text = stringResource(R.string.rounded_corner_shape_text), modifier = Modifier
-                        .background(
-                            color = colorResource(id = R.color.teal_700),
-                            shape = RoundedCornerShape(8.dp)
-                        )
-                        .padding(horizontal = 5.dp)
-                )
-                DividerTextCompose()
-                Text(
-                    text = stringResource(R.string.text_with_alpha_45f_0f_to_1f),
-                    modifier = Modifier.alpha(.45f) //used to dim the color of text
-                )
-                DividerTextCompose()
-                Text(text = stringResource(R.string.accessibility_text_with_onclicklabel),
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .clickable(onClickLabel = stringResource(R.string.you_are_clicking_on_accessibility_text)) {})
-                DividerTextCompose()
-                Text(
-                    text = stringResource(R.string.onlongclick_text_with_accessibility),
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .combinedClickable(
-                            onLongClickLabel = stringResource(R.string.you_are_long_clicking_on_accessibility_text),
-                            onLongClick = {
-                                Toast
-                                    .makeText(
-                                        context,
-                                        context.getString(R.string.long_click), Toast.LENGTH_SHORT
-                                    )
-                                    .show()
-                            }) {})
-                DividerTextCompose()
-                Text(
-                    stringResource(R.string.center_align_text), textAlign = TextAlign.Center,
-                    modifier = Modifier.width(150.dp),
-                )
-                DividerTextCompose()
-                Text(
-                    text = stringResource(R.string.text_with_shadow), style = TextStyle(
-                        fontSize = 24.sp, shadow = Shadow(
-                            color = Color.Blue, offset = Offset(5.0f, 10.0f), blurRadius = 3f
-                        )
-                    )
-                )
-                DividerTextCompose()
-                Text(
-                    stringResource(R.string.font_family_serif), fontFamily = FontFamily.Serif
-                )
-                DividerTextCompose()
-                val firaSansFamily =
-                    FontFamily(Font(resId = R.font.fira_sans_light, FontWeight.Light))
-                Text(
-                    text = stringResource(R.string.font_family_from_resource),
-                    fontFamily = firaSansFamily
-                )
-                DividerTextCompose()
-                Text(text = buildAnnotatedString {
-                    withStyle(style = SpanStyle(color = Color.Blue)) {
-                        append(stringResource(R.string.h))
-                    }
-                    append(stringResource(R.string.ello) + "  ")
+            )
+            DividerTextCompose()
+            Text(
+                stringResource(R.string.font_family_serif), fontFamily = FontFamily.Serif
+            )
+            DividerTextCompose()
+            val firaSansFamily = FontFamily(Font(resId = R.font.fira_sans_light, FontWeight.Light))
+            Text(
+                text = stringResource(R.string.font_family_from_resource),
+                fontFamily = firaSansFamily
+            )
+            DividerTextCompose()
+            Text(text = buildAnnotatedString {
+                withStyle(style = SpanStyle(color = Color.Blue)) {
+                    append(stringResource(R.string.h))
+                }
+                append(stringResource(R.string.ello) + "  ")
 
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = Color.Red)) {
-                        append(stringResource(R.string.w))
-                    }
-                    append(stringResource(R.string.orld))
-                }, color = MaterialTheme.colors.onSurface)
-                DividerTextCompose()
-                Text(text = buildAnnotatedString {
-                    withStyle(style = ParagraphStyle(lineHeight = 30.sp)) {
-                        append(context.getString(R.string.paragraph_annotated_string) + "\n")
-                        withStyle(style = SpanStyle(color = Color.Blue)) {
-                            append(context.getString(R.string.hello) + "\n")
-                        }
-                        withStyle(
-                            style = SpanStyle(
-                                fontWeight = FontWeight.Bold, color = Color.Red
-                            )
-                        ) {
-                            append(context.getString(R.string.world) + "\n")
-                        }
-                        append(context.getString(R.string.compose))
-                    }
-                })
-                DividerTextCompose()
-                AnimatingUnderLineWithBackgroundColorText()
-                DividerTextCompose()
-                Text(stringResource(R.string.max_line_2).repeat(50), maxLines = 2)
-                DividerTextCompose()
-                Text(
-                    stringResource(R.string.text_overflow).repeat(50),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                DividerTextCompose()
-                SelectionContainer {
-                    Text(
-                        stringResource(R.string.selection_container_content),
-                        modifier = Modifier.padding(all = 8.dp)
-                    )
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = Color.Red)) {
+                    append(stringResource(R.string.w))
                 }
-                DividerTextCompose()
-                SelectionContainer {
-                    Column {
-                        Text(stringResource(R.string.this_text_is_selectable))
-                        Text(stringResource(R.string.this_one_too))
-                        DisableSelection {
-                            Text(stringResource(R.string.but_not_this_one))
-                            Text(stringResource(R.string.disable_selection_text))
-                            Text(stringResource(R.string.don_t_touch_me))
-                        }
-                        Text(
-                            stringResource(R.string.but_again_you_can_select_this_one)
+                append(stringResource(R.string.orld))
+            }, color = MaterialTheme.colors.onSurface)
+            DividerTextCompose()
+            Text(text = buildAnnotatedString {
+                withStyle(style = ParagraphStyle(lineHeight = 30.sp)) {
+                    append(context.getString(R.string.paragraph_annotated_string) + "\n")
+                    withStyle(style = SpanStyle(color = Color.Blue)) {
+                        append(context.getString(R.string.hello) + "\n")
+                    }
+                    withStyle(
+                        style = SpanStyle(
+                            fontWeight = FontWeight.Bold, color = Color.Red
                         )
-                        Text(stringResource(R.string.and_this_one_too))
+                    ) {
+                        append(context.getString(R.string.world) + "\n")
                     }
+                    append(context.getString(R.string.compose))
                 }
-                DividerTextCompose()
-                ClickableText(text = AnnotatedString(
-                    stringResource(R.string.text_with_which_character_clicked),
-                    spanStyle = SpanStyle(color = MaterialTheme.colors.onSurface)
-                ), onClick = { offset ->
-                    Toast.makeText(
-                        context,
-                        context.getString(R.string.th_character_is_clicked, offset),
-                        Toast.LENGTH_SHORT
-                    )
-                        .show()
-                })
-                DividerTextCompose()
-                AnnotatedClickableTextWithURL()
-                DividerTextCompose()
-                TextWithUnderLine()
-                DividerTextCompose()
-                TextWithMiddleLine()
-                DividerTextCompose()
-                TypeWriterAnimation(
-                    text = stringResource(R.string.everything_you_need_to),
-                    highlightedText = stringResource(R.string.everything),
-                    changingEndStrings = changingEndStrings
+            })
+            DividerTextCompose()
+            AnimatingUnderLineWithBackgroundColorText()
+            DividerTextCompose()
+            Text(stringResource(R.string.max_line_2).repeat(50), maxLines = 2)
+            DividerTextCompose()
+            Text(
+                stringResource(R.string.text_overflow).repeat(50),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            DividerTextCompose()
+            SelectionContainer {
+                Text(
+                    stringResource(R.string.selection_container_content),
+                    modifier = Modifier.padding(all = 8.dp)
                 )
-                DividerTextCompose()
-                MultipleLineTextAutoMove()
-                DividerTextCompose()
             }
-        }, onBackIconClick = {
-            navHostController.popBackStack()
-        })
+            DividerTextCompose()
+            SelectionContainer {
+                Column {
+                    Text(stringResource(R.string.this_text_is_selectable))
+                    Text(stringResource(R.string.this_one_too))
+                    DisableSelection {
+                        Text(stringResource(R.string.but_not_this_one))
+                        Text(stringResource(R.string.disable_selection_text))
+                        Text(stringResource(R.string.don_t_touch_me))
+                    }
+                    Text(
+                        stringResource(R.string.but_again_you_can_select_this_one)
+                    )
+                    Text(stringResource(R.string.and_this_one_too))
+                }
+            }
+            DividerTextCompose()
+            AnnotatedClickableTextWithURL()
+            DividerTextCompose()
+            TextWithUnderLine()
+            DividerTextCompose()
+            TextWithMiddleLine()
+            DividerTextCompose()
+            TypeWriterAnimation(
+                text = stringResource(R.string.everything_you_need_to),
+                highlightedText = stringResource(R.string.everything),
+                changingEndStrings = changingEndStrings
+            )
+            DividerTextCompose()
+            MultipleLineTextAutoMove()
+            DividerTextCompose()
+        }
+    }, onBackIconClick = {
+        navHostController.popBackStack()
+    })
 }
 
 @Composable
@@ -489,43 +476,26 @@ fun DividerTextCompose() {
 fun AnnotatedClickableTextWithURL() {
     val context = LocalContext.current
     val annotatedText = buildAnnotatedString {
-        withStyle(style = SpanStyle(color = MaterialTheme.colors.onSurface)) {
-            append(stringResource(R.string.text_with_url))
-            append("\n" + stringResource(R.string.click))
-        }
-
-        // We attach this *URL* annotation to the following content
-        // until `pop()` is called
-        //means whatever text we want to use as link we put between pushStringAnnotation() & pop()
-        pushStringAnnotation(
-            tag = URL, annotation = ANDROID_DEVELOPER_SITE
-        )
-        withStyle(
+        append(stringResource(R.string.text_with_url))
+        append("\n" + stringResource(R.string.click))
+        withLink(link = LinkAnnotation.Clickable(tag = URL, styles = TextLinkStyles(
             style = SpanStyle(
-                color = Color.Cyan.copy(alpha = .5f), fontWeight = FontWeight.Bold
+                color = Color.Cyan.copy(alpha = .5f),
+                fontWeight = FontWeight.Bold,
+                textDecoration = TextDecoration.Underline
             )
-        ) {
+        ), linkInteractionListener = {
+            //on click
+            Toast.makeText(
+                context,
+                context.getString(R.string.clicked, ANDROID_DEVELOPER_SITE),
+                Toast.LENGTH_SHORT
+            ).show()
+        }), block = {
             append(stringResource(R.string.here))
-        }
-
-        pop()
+        })
     }
-
-    ClickableText(
-        text = annotatedText, onClick = { offset ->
-            // We check if there is an *URL* annotation attached to the text
-            // at the clicked position
-            annotatedText.getStringAnnotations(
-                tag = URL, start = offset, end = offset
-            ).firstOrNull()?.let { annotation ->
-                // If yes, we log its value
-                Toast.makeText(
-                    context,
-                    context.getString(R.string.clicked, annotation.item), Toast.LENGTH_SHORT
-                ).show()
-            }
-        }, modifier = Modifier.padding(all = 8.dp)
-    )
+    Text(text = annotatedText)
 }
 
 @Composable
@@ -638,35 +608,31 @@ fun TypeWriterAnimation(text: String, highlightedText: String, changingEndString
         }
     })
 
-    Text(
-        text = textToDisplay, style = TextStyle(
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 40.sp,
-            letterSpacing = -(1.6).sp,
-            lineHeight = 52.sp
-        ),
-        modifier = Modifier.drawBehind {
-            val borderSize = 20.sp.toPx()
+    Text(text = textToDisplay, style = TextStyle(
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 40.sp,
+        letterSpacing = -(1.6).sp,
+        lineHeight = 52.sp
+    ), modifier = Modifier.drawBehind {
+        val borderSize = 20.sp.toPx()
 
-            selectedPartRects.forEach { rect ->
-                val selectedRect = rect.translate(0f, -borderSize / 1.5f)
-                drawLine(  //85586F
-                    color = Color(0XFF85586F).copy(1f),
-                    start = Offset(selectedRect.left, selectedRect.bottom),
-                    end = selectedRect.bottomRight,
-                    strokeWidth = borderSize
-                )
-            }
-        },
+        selectedPartRects.forEach { rect ->
+            val selectedRect = rect.translate(0f, -borderSize / 1.5f)
+            drawLine(  //85586F
+                color = Color(0XFF85586F).copy(1f),
+                start = Offset(selectedRect.left, selectedRect.bottom),
+                end = selectedRect.bottomRight,
+                strokeWidth = borderSize
+            )
+        }
+    },
         //Callback that is executed when a new text layout is calculated
         onTextLayout = { layoutResult ->
             val start = text.length
             val end = textToDisplay.count()
             selectedPartRects = if (start < end) { //this calculates "changing end strings" bound
-                layoutResult
-                    .getBoundingBoxesForRange(
-                        start = start,
-                        end = end - 1
+                layoutResult.getBoundingBoxesForRange(
+                    start = start, end = end - 1
                     )
             } else {
                 emptyList() //return emptyList if no "chaning end strings" displayed
@@ -674,14 +640,11 @@ fun TypeWriterAnimation(text: String, highlightedText: String, changingEndString
 
             //this calculates "highlightedText" bound from text
             if (highlightStart >= 0) {
-                selectedPartRects = selectedPartRects + layoutResult
-                    .getBoundingBoxesForRange(
-                        start = highlightStart,
-                        end = highlightStart + highlightedText.length
+                selectedPartRects = selectedPartRects + layoutResult.getBoundingBoxesForRange(
+                    start = highlightStart, end = highlightStart + highlightedText.length
                     )
             }
-        }
-    )
+        })
 }
 
 @Composable
