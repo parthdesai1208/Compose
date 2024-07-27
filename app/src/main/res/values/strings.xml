@@ -204,6 +204,7 @@
     <string name="to_me">to me</string>
     <string name="and_life_will_always_be">"And life will always be "</string>
     <string name="la_vie_en_rose">la vie en rose</string>
+    <string name="hashTagAndUrlText">Text is a central piece of any UI, and #Jetpack_Compose makes it easier to display or write text. #Compose leverages #composition of its building blocks, meaning you don\'t need to overwrite properties and methods or extend big classes to have a specific #composable design and logic working the way you want. By https://developer.android.com/jetpack/compose/text</string>
     <!--    endregion -->
 
     <!--    region networking-->

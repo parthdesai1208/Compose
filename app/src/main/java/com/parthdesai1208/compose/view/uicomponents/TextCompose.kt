@@ -17,6 +17,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -51,6 +53,7 @@ import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -362,6 +365,8 @@ fun TextComponents(
             DividerTextCompose()
             MultipleLineTextAutoMove()
             DividerTextCompose()
+            AutoDetectHashTagAndUrlAndMakeClickable()
+            DividerTextCompose()
         }
     }, onBackIconClick = {
         navHostController.popBackStack()
@@ -661,6 +666,31 @@ fun MultipleLineTextAutoMove() {
         modifier = Modifier.basicMarquee(iterations = Int.MAX_VALUE),
         maxLines = 1,
     )
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun AutoDetectHashTagAndUrlAndMakeClickable(modifier: Modifier = Modifier) {
+    val uri = LocalUriHandler.current
+    FlowRow {
+        for (s in stringResource(id = R.string.hashTagAndUrlText).split(' ')) {
+            if (s.matches(".*(#\\w+)|(http(s)?://.+).*".toRegex())) {
+                Text(text = buildAnnotatedString {
+                    withLink(
+                        link = LinkAnnotation.Clickable(tag = s,
+                            styles = TextLinkStyles(style = SpanStyle(color = Color.Cyan)),
+                            linkInteractionListener = {
+                                runCatching { uri.openUri(s) }
+                            })
+                    ) {
+                        append(s)
+                    }
+                })
+            } else {
+                Text(text = "$s ")
+            }
+        }
+    }
 }
 
 @AllDevices
