@@ -80,7 +80,6 @@ import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.utils.AllDevices
 import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
 import com.parthdesai1208.compose.utils.Constant.ANDROID_DEVELOPER_SITE
-import com.parthdesai1208.compose.utils.Constant.URL
 import com.parthdesai1208.compose.utils.RainbowColors
 import com.parthdesai1208.compose.utils.delayedClick
 import com.parthdesai1208.compose.utils.getBoundingBoxesForRange
@@ -121,10 +120,11 @@ fun TextComponents(
                 .padding(start = 8.dp, end = 8.dp, bottom = 64.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = stringResource(R.string.singleClickText),
+            Text(
+                text = stringResource(R.string.singleClickText),
                 modifier = Modifier
                     .padding(16.dp) //to make clickable area bigger
-                    .clickable {
+                    .combinedClickable(onClick = {
                         Toast
                             .makeText(
                                 context,
@@ -133,11 +133,12 @@ fun TextComponents(
                             )
                             .show()
                     })
+            )
             DividerTextCompose()
             Text(text = stringResource(R.string.delayedClickText),
                 modifier = Modifier
                     .padding(16.dp)
-                    .delayedClick(2000L) {
+                    .delayedClick(2000L) { //after pressing for 2 second it will invoke
                         Toast
                             .makeText(
                                 context,
@@ -147,18 +148,21 @@ fun TextComponents(
                             .show()
                     })
             DividerTextCompose()
-            Text(text = stringResource(R.string.disable_click_text),
+            Text(
+                text = stringResource(R.string.disable_click_text),
                 modifier = Modifier
                     .padding(16.dp)
-                    .clickable(enabled = false) {
-                        Toast
-                            .makeText(
-                                context,
-                                context.getString(R.string.single_click),
-                                Toast.LENGTH_SHORT
-                            )
-                            .show()
-                    })
+                    .combinedClickable(enabled = false,
+                        onClick = {
+                            Toast
+                                .makeText(
+                                    context,
+                                    context.getString(R.string.single_click),
+                                    Toast.LENGTH_SHORT
+                                )
+                                .show()
+                        })
+            )
             DividerTextCompose()
             Text(
                 text = stringResource(R.string.text_with_gradient_background),
@@ -475,24 +479,27 @@ fun DividerTextCompose() {
 @Composable
 fun AnnotatedClickableTextWithURL() {
     val context = LocalContext.current
+    val linkString = stringResource(R.string.here)
     val annotatedText = buildAnnotatedString {
         append(stringResource(R.string.text_with_url))
         append("\n" + stringResource(R.string.click))
-        withLink(link = LinkAnnotation.Clickable(tag = URL, styles = TextLinkStyles(
-            style = SpanStyle(
-                color = Color.Cyan.copy(alpha = .5f),
-                fontWeight = FontWeight.Bold,
-                textDecoration = TextDecoration.Underline
-            )
-        ), linkInteractionListener = {
-            //on click
-            Toast.makeText(
-                context,
-                context.getString(R.string.clicked, ANDROID_DEVELOPER_SITE),
-                Toast.LENGTH_SHORT
-            ).show()
-        }), block = {
-            append(stringResource(R.string.here))
+        withLink(link = LinkAnnotation.Clickable(tag = linkString,
+            styles = TextLinkStyles(
+                style = SpanStyle(
+                    color = Color.Cyan.copy(alpha = .5f),
+                    fontWeight = FontWeight.Bold,
+                    textDecoration = TextDecoration.Underline
+                )
+            ),
+            linkInteractionListener = {
+                //on click
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.clicked, ANDROID_DEVELOPER_SITE),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }), block = {
+            append(linkString)
         })
     }
     Text(text = annotatedText)
@@ -633,7 +640,7 @@ fun TypeWriterAnimation(text: String, highlightedText: String, changingEndString
             selectedPartRects = if (start < end) { //this calculates "changing end strings" bound
                 layoutResult.getBoundingBoxesForRange(
                     start = start, end = end - 1
-                    )
+                )
             } else {
                 emptyList() //return emptyList if no "chaning end strings" displayed
             }
@@ -642,7 +649,7 @@ fun TypeWriterAnimation(text: String, highlightedText: String, changingEndString
             if (highlightStart >= 0) {
                 selectedPartRects = selectedPartRects + layoutResult.getBoundingBoxesForRange(
                     start = highlightStart, end = highlightStart + highlightedText.length
-                    )
+                )
             }
         })
 }
