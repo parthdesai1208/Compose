@@ -173,7 +173,10 @@ fun MainActivityNavGraph(
         }
         composable<CustomModifierScreen> { backStackEntry ->
             val arguments = backStackEntry.toRoute<CustomModifierScreen>()
-            CustomModifierListingScreen1(onClickButtonTitle = arguments.pathPostFix)
+            CustomModifierListingScreen1(
+                onClickButtonTitle = arguments.pathPostFix,
+                navHostController = navController
+            )
         }
         composable<CustomLayoutScreen> { backStackEntry ->
             val arguments = backStackEntry.toRoute<CustomLayoutScreen>()

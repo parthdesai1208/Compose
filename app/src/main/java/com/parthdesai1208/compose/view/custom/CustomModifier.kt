@@ -51,20 +51,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
+import com.parthdesai1208.compose.utils.Constant.CUSTOM_MODIFIER_ROTATING_ANIMATE_FLOAT
+import com.parthdesai1208.compose.utils.Constant.CUSTOM_MODIFIER_ROTATING_ANIMATION
 import com.parthdesai1208.compose.utils.rotateOnClickComposable
 import com.parthdesai1208.compose.utils.rotateOnClickComposed
+import com.parthdesai1208.compose.utils.setSizeByScreenPercentage
 import com.parthdesai1208.compose.view.navigation.CustomModifierScreen
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 
 //region Custom Modifier listing screen
 enum class CustomModifierListingEnumType(
     val buttonTitle: Int,
-    val func: @Composable () -> Unit
+    val func: @Composable (NavHostController) -> Unit
 ) {
     CustomModifierScreen(
-        R.string.baseLineToTop, { BaseLineToTopFun() }),
-    RotateAnyComposeDemonstration(R.string.rotateComposable, { RotateAnyComposeDemonstration() }),
-    ComposableVersusComposed(R.string.composableVersusComposed, { ComposableVersusComposed() }),
+        R.string.baseLineToTop, { BaseLineToTopFun(it) }),
+    RotateAnyComposeDemonstration(R.string.rotateComposable, { RotateAnyComposeDemonstration(it) }),
+    ComposableVersusComposed(R.string.composableVersusComposed, { ComposableVersusComposed(it) }),
 }
 
 @Composable
@@ -119,15 +123,17 @@ fun CustomModifierListingScreen(navController: NavHostController) {
 }
 
 @Composable
-fun CustomModifierListingScreen1(onClickButtonTitle: Int?) {
-    enumValues<CustomModifierListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke()
+fun CustomModifierListingScreen1(onClickButtonTitle: Int?, navHostController: NavHostController) {
+    enumValues<CustomModifierListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke(
+        navHostController
+    )
 }
 //endregion
 
 //region baseLineToTop
 @Composable
-fun BaseLineToTopFun() {
-    Surface {
+fun BaseLineToTopFun(navHostController: NavHostController) {
+    BuildTopBarWithScreen(title = stringResource(id = R.string.baseLineToTop), screen = {
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
@@ -149,30 +155,30 @@ fun BaseLineToTopFun() {
                 textAlign = TextAlign.Center
             )
         }
-    }
+    }, onBackIconClick = {
+        navHostController.popBackStack()
+    })
 }
 
 fun Modifier.baseLineToTop(firstBaselineToTop: Dp): Modifier {
 
-    return this.then(
-        layout { measurable, constraints ->
-            val placeable = measurable.measure(constraints = constraints)
+    return this.layout { measurable, constraints ->
+        val placeable = measurable.measure(constraints = constraints)
 
-            // Check the composable has a first baseline
-            check(placeable[FirstBaseline] != AlignmentLine.Unspecified)
-            val firstBaseline = placeable[FirstBaseline]
+        // Check the composable has a first baseline
+        check(placeable[FirstBaseline] != AlignmentLine.Unspecified)
+        val firstBaseline = placeable[FirstBaseline]
 
-            // now we minus total padding from firstbaseline, so we get it from baseline
-            val placeableY = firstBaselineToTop.roundToPx() - firstBaseline
-            // now we have to draw box with height of the layout + value that we get from minus operation
-            val height = placeable.height + placeableY
-            //apply height to layout
-            layout(placeable.width, height) {
-                // we place layout in box
-                placeable.placeRelative(0, placeableY)
-            }
+        // now we minus total padding from firstbaseline, so we get it from baseline
+        val placeableY = firstBaselineToTop.roundToPx() - firstBaseline
+        // now we have to draw box with height of the layout + value that we get from minus operation
+        val height = placeable.height + placeableY
+        //apply height to layout
+        layout(placeable.width, height) {
+            // we place layout in box
+            placeable.placeRelative(0, placeableY)
         }
-    )
+    }
 }
 
 @Composable
@@ -195,29 +201,31 @@ fun TextWithNormalPaddingPreview() {
 
 //region rotate any compose using custom modifier
 @Composable
-fun RotateAnyComposeDemonstration() {
-    Surface {
+fun RotateAnyComposeDemonstration(navHostController: NavHostController) {
+    BuildTopBarWithScreen(title = stringResource(id = R.string.rotateComposable), screen = {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Box(
                 modifier = Modifier
-                    .size(100.dp)
+                    .setSizeByScreenPercentage(40f, 15f)
                     .rotating(duration = 3000) //Note: here order is every important
                     .redRectangleBox()
             )
         }
-    }
+    }, onBackIconClick = {
+        navHostController.popBackStack()
+    })
 }
 
 fun Modifier.redRectangleBox(): Modifier = clip(RectangleShape).background(color = Color.Red)
 
 fun Modifier.rotating(duration: Int): Modifier = composed {
-    val transition = rememberInfiniteTransition()
+    val transition = rememberInfiniteTransition(label = CUSTOM_MODIFIER_ROTATING_ANIMATION)
     val angelRatio by transition.animateFloat(
         initialValue = 0f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = duration, easing = FastOutLinearInEasing)
-        )
+        ), label = CUSTOM_MODIFIER_ROTATING_ANIMATE_FLOAT
     )
 
     graphicsLayer(rotationZ = 360f * angelRatio)
@@ -226,12 +234,13 @@ fun Modifier.rotating(duration: Int): Modifier = composed {
 
 //region @Composable v/s composed { }
 @Composable
-fun ComposableVersusComposed() {
-    Surface {
+fun ComposableVersusComposed(navHostController: NavHostController) {
+    BuildTopBarWithScreen(title = stringResource(id = R.string.composableVersusComposed), screen = {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .wrapContentSize(align = Alignment.Center)
+                .verticalScroll(rememberScrollState())
         ) {
             Text(
                 modifier = Modifier.padding(all = 16.dp),
@@ -268,6 +277,8 @@ fun ComposableVersusComposed() {
                 }
             }
         }
+    }) {
+        navHostController.popBackStack()
     }
 }
 //endregion
