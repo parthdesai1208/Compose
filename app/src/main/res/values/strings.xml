@@ -87,13 +87,6 @@
     <string name="GoogleMapsPlaceDescription">Pune is a sprawling city in the western Indian state of Maharashtra. It was once the base of the Peshwas (prime ministers) of the Maratha Empire, which lasted from 1674 to 1818. It\'s known for the grand Aga Khan Palace, built in 1892 and now a memorial to Mahatma Gandhi, whose ashes are preserved in the garden. The 8th-century Pataleshwar Cave Temple is dedicated to the Hindu god Shiva.</string>
     <!--    end region-->
 
-    <!--    region custom compose-->
-    <string name="home_feed">Home</string>
-    <string name="home_search">Search</string>
-    <string name="home_cart">My Cart</string>
-    <string name="home_profile">Profile</string>
-    <!--    end region-->
-
     <!--    region any screen-->
     <string name="navigation_drawer">Navigation Drawer</string>
     <string name="tab_inbox">Inbox</string>
@@ -245,6 +238,21 @@
     <!--    region custom layout listing -->
     <string name="bottom_bar">Bottom Bar</string>
     <string name="banner">banner</string>
+    <string name="custom_layout_samples">Custom Layout Samples</string>
+    <string name="myowncolumn">MyOwnColumn</string>
+    <string name="places_items">places items</string>
+    <string name="vertically">vertically.</string>
+    <string name="we_ve_done_it_by_hand">We\'ve done it by hand!</string>
+    <string name="this_is_banner_text">This is banner text.</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="show_banner">Show banner</string>
+    <string name="feed">Feed</string>
+    <string name="search">Search</string>
+    <string name="cart">Cart</string>
+    <string name="home_feed">Home</string>
+    <string name="home_search">Search</string>
+    <string name="home_cart">My Cart</string>
+    <string name="home_profile">Profile</string>
     <!--    end region-->
 
     <!--    region animation sample-->

@@ -180,7 +180,7 @@ fun MainActivityNavGraph(
         }
         composable<CustomLayoutScreen> { backStackEntry ->
             val arguments = backStackEntry.toRoute<CustomLayoutScreen>()
-            ChildCustomLayoutScreen(onClickButtonTitle = arguments.pathPostFix)
+            ChildCustomLayoutScreen(onClickButtonTitle = arguments.pathPostFix, navController)
         }
         composable<AnimationListingScreen> { backStackEntry ->
             val arguments = backStackEntry.toRoute<AnimationListingScreen>()

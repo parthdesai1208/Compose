@@ -79,20 +79,26 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
+import com.parthdesai1208.compose.utils.Constant.CUSTOM_LAYOUT_ANIMATE_COLOR_AS_STATE
+import com.parthdesai1208.compose.utils.Constant.CUSTOM_LAYOUT_ANIMATE_FLOAT_AS_STATE
+import com.parthdesai1208.compose.view.custom.BottomBarCustomComposeDestinations.ICON
+import com.parthdesai1208.compose.view.custom.BottomBarCustomComposeDestinations.INDICATOR
+import com.parthdesai1208.compose.view.custom.BottomBarCustomComposeDestinations.TEXT
 import com.parthdesai1208.compose.view.navigation.CustomLayoutScreen
 import java.util.Locale
 
 //region Custom Modifier listing screen
 enum class CustomLayoutListingEnumType(
     val buttonTitle: Int,
-    val func: @Composable () -> Unit
+    val func: @Composable (NavHostController) -> Unit
 ) {
-    BottomBarCustomCompose(R.string.bottom_bar, { BottomBarCustomCompose() }),
-    MyOwnColumnFun(R.string.column, { MyOwnColumnFun() }),
-    BannerSample(R.string.banner, { BannerSampleScreen() }),
+    BottomBarCustomCompose(R.string.bottom_bar, { BottomBarCustomCompose(it) }),
+    MyOwnColumnFun(R.string.column, { MyOwnColumnFun(it) }),
+    BannerSample(R.string.banner, { BannerSampleScreen(it) }),
 }
 
 @Composable
@@ -125,7 +131,7 @@ fun CustomLayoutListingScreen(navController: NavHostController) {
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Custom Layout Samples",
+                    text = stringResource(R.string.custom_layout_samples),
                     modifier = Modifier.padding(16.dp),
                     fontSize = 18.sp,
                     fontFamily = FontFamily.SansSerif
@@ -148,16 +154,21 @@ fun CustomLayoutListingScreen(navController: NavHostController) {
 //endregion
 
 @Composable
-fun ChildCustomLayoutScreen(onClickButtonTitle: Int?) {
-    enumValues<CustomLayoutListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke()
+fun ChildCustomLayoutScreen(onClickButtonTitle: Int?, navHostController: NavHostController) {
+    enumValues<CustomLayoutListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke(
+        navHostController
+    )
 }
 
 //region custom compose bottom bar
 object BottomBarCustomComposeDestinations {
     const val HOME = "home"
+    const val INDICATOR = "indicator"
+    const val ICON = "icon"
+    const val TEXT = "text"
 }
 
-enum class BottomBarCustomComposeSections(
+enum class BottomBarCustomLayoutScreens(
     @StringRes val title: Int,
     val icon: ImageVector,
     val route: String
@@ -169,41 +180,44 @@ enum class BottomBarCustomComposeSections(
 }
 
 @Composable
-fun BottomBarCustomCompose() {
+fun BottomBarCustomCompose(navHostController: NavHostController) {
     val appState = rememberBottomBarCustomComposeAppState()
-    Scaffold(bottomBar = {
-        if (appState.shouldShowBottomBar) {
-            BottomBarCustomComposeFun(
-                tabs = appState.bottomBarTabs,
-                currentRoute = appState.currentRoute!!,
-                navigateToRoute = appState::navigateToBottomBarRoute
-            )
-        }
-    }) { innerPaddingModifier ->
-        NavHost(
-            navController = appState.navController,
-            startDestination = BottomBarCustomComposeDestinations.HOME,
-            modifier = Modifier.padding(innerPaddingModifier)
-        ) {
-            navigation(
-                route = BottomBarCustomComposeDestinations.HOME,
-                startDestination = BottomBarCustomComposeSections.FEED.route
+    BuildTopBarWithScreen(screen = {
+        Scaffold(bottomBar = {
+            if (appState.shouldShowBottomBar) {
+                BottomBarCustomComposeFun(
+                    tabs = appState.bottomBarTabs,
+                    currentRoute = appState.currentRoute!!,
+                    navigateToRoute = appState::navigateToBottomBarRoute
+                )
+            }
+        }) { innerPaddingModifier ->
+            NavHost(
+                navController = appState.navController,
+                startDestination = BottomBarCustomComposeDestinations.HOME,
+                modifier = Modifier.padding(innerPaddingModifier)
             ) {
-                composable(route = BottomBarCustomComposeSections.FEED.route) {
-                    CommonScreenForBottomBarCustomCompose(screenName = "Feed")
-                }
-                composable(route = BottomBarCustomComposeSections.SEARCH.route) {
-                    CommonScreenForBottomBarCustomCompose(screenName = "Search")
-                }
-                composable(route = BottomBarCustomComposeSections.CART.route) {
-                    CommonScreenForBottomBarCustomCompose(screenName = "Cart")
-                }
-                composable(route = BottomBarCustomComposeSections.PROFILE.route) {
-                    CommonScreenForBottomBarCustomCompose(screenName = "Profile")
+                navigation(
+                    route = BottomBarCustomComposeDestinations.HOME,
+                    startDestination = BottomBarCustomLayoutScreens.FEED.route
+                ) {
+                    composable(route = BottomBarCustomLayoutScreens.FEED.route) {
+                        CommonScreenForBottomBarCustomCompose(screenName = "Feed")
+                    }
+                    composable(route = BottomBarCustomLayoutScreens.SEARCH.route) {
+                        CommonScreenForBottomBarCustomCompose(screenName = "Search")
+                    }
+                    composable(route = BottomBarCustomLayoutScreens.CART.route) {
+                        CommonScreenForBottomBarCustomCompose(screenName = "Cart")
+                    }
+                    composable(route = BottomBarCustomLayoutScreens.PROFILE.route) {
+                        CommonScreenForBottomBarCustomCompose(screenName = "Profile")
+                    }
                 }
             }
         }
-
+    }) {
+        navHostController.popBackStack()
     }
 }
 
@@ -229,7 +243,7 @@ fun CommonScreenForBottomBarCustomCompose(modifier: Modifier = Modifier, screenN
 
 @Composable
 fun BottomBarCustomComposeFun(
-    tabs: Array<BottomBarCustomComposeSections>,
+    tabs: Array<BottomBarCustomLayoutScreens>,
     currentRoute: String,
     navigateToRoute: (String) -> Unit
 ) {
@@ -259,7 +273,7 @@ fun BottomBarCustomComposeFun(
                     MaterialTheme.colors.primaryVariant
                 } else {
                     MaterialTheme.colors.onSurface
-                }
+                }, label = CUSTOM_LAYOUT_ANIMATE_COLOR_AS_STATE
             )
 
             val text = stringResource(section.title).uppercase(currentLocale)
@@ -324,7 +338,7 @@ fun BottomBarCustomComposeNavLayout(
         modifier = modifier.height(56.dp),
         content = {
             content()
-            Box(Modifier.layoutId("indicator"), content = indicator)
+            Box(Modifier.layoutId(INDICATOR), content = indicator)
         }
     ) { measurables, constraints ->
         check(itemCount == (measurables.size - 1)) // account for indicator
@@ -332,7 +346,7 @@ fun BottomBarCustomComposeNavLayout(
         // Divide the width into n+1 slots and give the selected item 2 slots
         val unselectedWidth = constraints.maxWidth / (itemCount + 1)
         val selectedWidth = 2 * unselectedWidth
-        val indicatorMeasurable = measurables.first { it.layoutId == "indicator" }
+        val indicatorMeasurable = measurables.first { it.layoutId == INDICATOR }
 
         val itemPlaceables = measurables
             .filterNot { it == indicatorMeasurable }
@@ -396,7 +410,11 @@ fun BottomBarCustomComposeNavigationItem(
         contentAlignment = Alignment.Center
     ) {
         // Animate the icon/text positions within the item based on selection
-        val animationProgress by animateFloatAsState(if (selected) 1f else 0f, animSpec)
+        val animationProgress by animateFloatAsState(
+            if (selected) 1f else 0f,
+            animSpec,
+            label = CUSTOM_LAYOUT_ANIMATE_FLOAT_AS_STATE
+        )
         BottomBarCustomComposeItemLayout(
             icon = icon,
             text = text,
@@ -415,14 +433,14 @@ fun BottomBarCustomComposeItemLayout(
         content = {
             Box(
                 modifier = Modifier
-                    .layoutId("icon")
+                    .layoutId(ICON)
                     .padding(horizontal = 2.dp),
                 content = icon
             )
             val scale = lerp(0.6f, 1f, animationProgress)
             Box(
                 modifier = Modifier
-                    .layoutId("text")
+                    .layoutId(TEXT)
                     .padding(horizontal = 2.dp)
                     .graphicsLayer {
                         alpha = animationProgress
@@ -434,8 +452,8 @@ fun BottomBarCustomComposeItemLayout(
             )
         }
     ) { measurables, constraints ->
-        val iconPlaceable = measurables.first { it.layoutId == "icon" }.measure(constraints)
-        val textPlaceable = measurables.first { it.layoutId == "text" }.measure(constraints)
+        val iconPlaceable = measurables.first { it.layoutId == ICON }.measure(constraints)
+        val textPlaceable = measurables.first { it.layoutId == TEXT }.measure(constraints)
 
         val width = constraints.maxWidth
         val height = constraints.maxHeight
@@ -470,7 +488,7 @@ class BottomBarCustomComposeAppState(
     val navController: NavHostController
 ) {
 
-    val bottomBarTabs = BottomBarCustomComposeSections.values()
+    val bottomBarTabs = BottomBarCustomLayoutScreens.entries.toTypedArray()
     private val bottomBarRoutes = bottomBarTabs.map { it.route }
 
     // Reading this attribute will cause recompositions when the bottom bar needs shown, or not.
@@ -539,33 +557,39 @@ fun MyOwnColumn(
 }
 
 @Composable
-fun MyOwnColumnFun(modifier: Modifier = Modifier) {
-    Surface {
+fun MyOwnColumnFun(navHostController: NavHostController, modifier: Modifier = Modifier) {
+    BuildTopBarWithScreen(title = stringResource(id = R.string.column), screen = {
         MyOwnColumn(modifier.padding(8.dp)) {
-            Text("MyOwnColumn")
-            Text("places items")
-            Text("vertically.")
-            Text("We've done it by hand!")
+            Text(stringResource(R.string.myowncolumn))
+            Text(stringResource(R.string.places_items))
+            Text(stringResource(R.string.vertically))
+            Text(stringResource(R.string.we_ve_done_it_by_hand))
         }
+    }) {
+        navHostController.popBackStack()
     }
 }
 //endregion
 
 //region banner
 @Composable
-fun BannerSampleScreen() {
+fun BannerSampleScreen(navHostController: NavHostController) {
     var isVisibleBanner by rememberSaveable { mutableStateOf(false) }
-    Box(modifier = Modifier.fillMaxSize()) {
-        Banner(bannerText = "This is banner text.",
-            visibility = isVisibleBanner,
-            actionButton1Text = "Dismiss",
-            onClickActionButton1 = { isVisibleBanner = false })
-        Button(
-            enabled = !isVisibleBanner,
-            modifier = Modifier.align(Alignment.Center),
-            onClick = { isVisibleBanner = true }) {
-            Text(text = "Show banner")
+    BuildTopBarWithScreen(title = stringResource(id = R.string.banner), screen = {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Banner(bannerText = stringResource(R.string.this_is_banner_text),
+                visibility = isVisibleBanner,
+                actionButton1Text = stringResource(R.string.dismiss),
+                onClickActionButton1 = { isVisibleBanner = false })
+            Button(
+                enabled = !isVisibleBanner,
+                modifier = Modifier.align(Alignment.Center),
+                onClick = { isVisibleBanner = true }) {
+                Text(text = stringResource(R.string.show_banner))
+            }
         }
+    }) {
+        navHostController.popBackStack()
     }
 }
 
