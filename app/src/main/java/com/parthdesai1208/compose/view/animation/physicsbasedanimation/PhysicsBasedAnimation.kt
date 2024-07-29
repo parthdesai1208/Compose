@@ -1,12 +1,26 @@
 package com.parthdesai1208.compose.view.animation.physicsbasedanimation
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.with
 import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -15,7 +29,11 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -23,7 +41,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.parthdesai1208.compose.model.animation.StarMeta
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
 import com.parthdesai1208.compose.view.theme.blue
 import com.parthdesai1208.compose.view.theme.green
 import com.parthdesai1208.compose.view.theme.purple
@@ -33,32 +53,31 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 @Composable
-fun PhysicsBasedAnimationFun() {
-    Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
-        val simulation = rememberSimulation()
+fun PhysicsBasedAnimationFun(navHostController: NavHostController) {
+    val simulation = rememberSimulation()
 
-        val stars = remember { mutableStateListOf<StarMeta>() }
+    val stars = remember { mutableStateListOf<StarMeta>() }
 
-        val redCount = remember {
-            derivedStateOf { stars.count { it.color == red } }
-        }
+    val redCount = remember {
+        derivedStateOf { stars.count { it.color == red } }
+    }
 
-        val purpleCount = remember {
-            derivedStateOf { stars.count { it.color == purple } }
-        }
+    val purpleCount = remember {
+        derivedStateOf { stars.count { it.color == purple } }
+    }
 
-        val blueCount = remember {
-            derivedStateOf { stars.count { it.color == blue } }
-        }
+    val blueCount = remember {
+        derivedStateOf { stars.count { it.color == blue } }
+    }
 
-        val greenCount = remember {
-            derivedStateOf { stars.count { it.color == green } }
-        }
+    val greenCount = remember {
+        derivedStateOf { stars.count { it.color == green } }
+    }
 
-        GravitySensor {
-            simulation.setGravity(it.copy(x = -it.x).times(3f))
-        }
-
+    GravitySensor {
+        simulation.setGravity(it.copy(x = -it.x).times(3f))
+    }
+    BuildTopBarWithScreen(screen = {
         Box {
             PhysicsLayout(
                 modifier = Modifier.systemBarsPadding(), simulation = simulation
@@ -113,7 +132,10 @@ fun PhysicsBasedAnimationFun() {
                 }
             }
         }
-    }
+    },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 @Composable
@@ -242,7 +264,8 @@ fun PhysicsLayoutScope.Star(
 @Composable
 fun PhysicsLayoutScope.IconWithPhysicsLayoutScope(onClick: () -> Unit) {
 
-    Icon(imageVector = Icons.Default.Delete,
+    Icon(
+        imageVector = Icons.Default.Delete,
         contentDescription = "Delete icon",
         modifier = Modifier
             .body(isStatic = true, initialTranslation = LocalDensity.current.run {

@@ -124,12 +124,12 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.toUpperCase
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
@@ -138,6 +138,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.ColorUtils
 import androidx.navigation.NavHostController
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
+import com.parthdesai1208.compose.view.animation.physicsbasedanimation.PhysicsBasedAnimationFun
 import com.parthdesai1208.compose.view.navigation.AnimationListingScreen
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -145,94 +147,100 @@ import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 //region default screen & Navigation
-enum class AnimationScreenEnumType(val buttonTitle: Int, val func: @Composable () -> Unit) {
-    AnimatedVisibilityWithoutParams(
-        R.string.animatedvisibility_without_params,
-        { AnimatedVisibilityWithoutParams() }),
-    AnimatedVisibilityWithParams(
-        R.string.animatedvisibility_with_params,
-        { AnimatedVisibilityWithParams() }),
-    AnimateVisibilityState(R.string.animatedvisibility_with_state, { AnimateVisibilityState() }),
-    AnimateEnterExitChild(R.string.enter_exit_visibility_animation, { AnimateEnterExitChild() }),
-    CrossFade(R.string.crossfade, { CrossFade() }),
-    AnimatableOnly(R.string.animatableonly, { AnimatableOnly() }),
-    AnimatedContentSimple(R.string.animatedcontentsimple, { AnimatedContentSimple() }),
-    AnimatedContentWithTransitionSpec1(
-        R.string.animatedcontent_with_targetstate_transitionspec_ex_1,
-        { AnimatedContentWithTransitionSpec1() }),
-    AnimatedContentWithTransitionSpec2(
-        R.string.animatedcontent_with_targetstate_transitionspec_ex_2,
-        { AnimatedContentWithTransitionSpec2() }),
-    AnimatedContentWithTransitionSpec3(
-        R.string.animatedcontent_with_targetstate_transitionspec_ex_3,
-        { AnimatedContentWithTransitionSpec3() }),
-    AnimatedContentSize(R.string.animatedcontentsize, { AnimatedContentSize() }),
-    AnimatedContentSizeTransform(
-        R.string.animatedcontentsizetransform,
-        { AnimatedContentSizeTransform() }),
-    AnimateFloatAsState(
-        R.string.animatefloatasstate,
-        { AnimateFloatAsState() }),
+enum class AnimationScreenEnumType(
+    val buttonTitle: Int, val func: @Composable (NavHostController) -> Unit
+) {
+    AnimatedVisibilityWithoutParams(R.string.animatedvisibility_without_params,
+        { AnimatedVisibilityWithoutParams(it) }),
+    AnimatedVisibilityWithParams(R.string.animatedvisibility_with_params,
+        { AnimatedVisibilityWithParams(it) }),
+    AnimateVisibilityState(
+        R.string.animatedvisibility_with_state,
+        { AnimateVisibilityState(it) }),
+    AnimateEnterExitChild(
+        R.string.enter_exit_visibility_animation,
+        { AnimateEnterExitChild(it) }),
+    CrossFade(R.string.crossfade, { CrossFade(it) }), AnimatableOnly(
+        R.string.animatableonly,
+        { AnimatableOnly(it) }),
+    AnimatedContentSimple(
+        R.string.animatedcontentsimple,
+        { AnimatedContentSimple(it) }),
+    AnimatedContentWithTransitionSpec1(R.string.animatedcontent_with_targetstate_transitionspec_ex_1,
+        { AnimatedContentWithTransitionSpec1(it) }),
+    AnimatedContentWithTransitionSpec2(R.string.animatedcontent_with_targetstate_transitionspec_ex_2,
+        { AnimatedContentWithTransitionSpec2(it) }),
+    AnimatedContentWithTransitionSpec3(R.string.animatedcontent_with_targetstate_transitionspec_ex_3,
+        { AnimatedContentWithTransitionSpec3(it) }),
+    AnimatedContentSize(
+        R.string.animatedcontentsize,
+        { AnimatedContentSize(it) }),
+    AnimatedContentSizeTransform(R.string.animatedcontentsizetransform,
+        { AnimatedContentSizeTransform(it) }),
+    AnimateFloatAsState(R.string.animatefloatasstate,
+        { AnimateFloatAsState(it) }),
     AnimateColorAsState(
-        R.string.animatecolorasstate, { AnimateColorAsState() }),
-    AnimateDpAsState(R.string.animatedpasstate, { AnimateDpAsState() }),
-    AnimateSizeAsState(R.string.animatesizeasstate, { AnimateSizeAsState() }),
-    UpdateTransition1(R.string.updatetransition_1, { UpdateTransitionBasic1() }),
+        R.string.animatecolorasstate,
+        { AnimateColorAsState(it) }),
+    AnimateDpAsState(
+        R.string.animatedpasstate,
+        { AnimateDpAsState(it) }),
+    AnimateSizeAsState(
+        R.string.animatesizeasstate,
+        { AnimateSizeAsState(it) }),
+    UpdateTransition1(
+        R.string.updatetransition_1,
+        { UpdateTransitionBasic1(it) }),
     UpdateTransition2(
         R.string.updatetransition_2,
-        { UpdateTransitionBasic2() }),
-    UpdateTransitionChild(
-        R.string.updatetransitionchild,
-        { UpdateTransitionChild() }),
-    UpdateTransitionExtension(
-        R.string.multiple_anim_updatetransition,
-        { UpdateTransitionExtension() }),
-    MultipleAnimCoroutineAnimateTo(
-        R.string.multiple_anim_coroutine_animateto_rotate_color_change,
-        { MultipleAnimCoroutineAnimateTo() }),
-    InfiniteColorAnimation(
-        R.string.infiniteanimation_color,
-        { InfiniteColorAnimation() }),
-    InfiniteFloatAnimation(
-        R.string.infiniteanimation_float,
-        { InfiniteFloatAnimation() }),
-    InfiniteOffsetAnimation(
-        R.string.infiniteanimation_offset,
-        { InfiniteOffsetAnimation() }),
-    InfiniteRotation(R.string.infinite_rotation, { InfiniteRotation() }),
-    TargetBasedAnimation(R.string.targetbasedanimation, { TargetBasedAnimationFun() }), Spring(
-        R.string.spring,
-        { SpringFun() }),
-    Tween(R.string.tween, { TweenFun() }), Keyframes(
-        R.string.keyframes,
-        { KeyFramesFun() }),
-    Repeatable(R.string.repeatable, { RepeatableFun() }), InfiniteRepeatable(
-        R.string.infiniterepeatable,
-        { InfiniteRepeatableFun() }),
-    Snap(R.string.snap, { SnapFun() }),
-    AnimationVector(
-        R.string.animationvector_typeconverter_coroutine,
-        { AnimationVectorFun() }),
-    AnimationEx1(
-        R.string.animationex1,
-        { AnimationEx1() }),
-    BoxWithIconUpDownAnimation(
-        R.string.icon_up_down_animation,
-        { BoxWithIconUpDownAnimation() }),
-    DuolingoBirdAnimation(
-        R.string.duolingo_bird_animation,
-        { Surface(Modifier.fillMaxSize()) { DuolingoBird() } }),
-    ThreeDCardMoving(R.string._3d_card_moving, { ThreeDCardMoving() }),
-    InstagramLikeParticles(
-        R.string.instagram_like_particles,
-        { InstagramLikeParticles() }),
-    RotatingBorders(
-        R.string.rotating_borders,
-        { RotatingBorders() }),
-    PhysicsBasedAnimation(
-        R.string.physics_based_animation,
-        { com.parthdesai1208.compose.view.animation.physicsbasedanimation.PhysicsBasedAnimationFun() }),
-    ProgressAnimation(R.string.progressanimation, { ProgressAnimation() }),
+        { UpdateTransitionBasic2(it) }),
+    UpdateTransitionChild(R.string.updatetransitionchild,
+        { UpdateTransitionChild(it) }),
+    UpdateTransitionExtension(R.string.multiple_anim_updatetransition,
+        { UpdateTransitionExtension(it) }),
+    MultipleAnimCoroutineAnimateTo(R.string.multiple_anim_coroutine_animateto_rotate_color_change,
+        { MultipleAnimCoroutineAnimateTo(it) }),
+    InfiniteColorAnimation(R.string.infiniteanimation_color,
+        { InfiniteColorAnimation(it) }),
+    InfiniteFloatAnimation(R.string.infiniteanimation_float,
+        { InfiniteFloatAnimation(it) }),
+    InfiniteOffsetAnimation(R.string.infiniteanimation_offset,
+        { InfiniteOffsetAnimation(it) }),
+    InfiniteRotation(
+        R.string.infinite_rotation,
+        { InfiniteRotation(it) }),
+    TargetBasedAnimation(
+        R.string.targetbasedanimation,
+        { TargetBasedAnimationFun(it) }),
+    Spring(R.string.spring, { SpringFun(it) }), Tween(
+        R.string.tween,
+        { TweenFun(it) }),
+    Keyframes(R.string.keyframes, { KeyFramesFun(it) }), Repeatable(
+        R.string.repeatable,
+        { RepeatableFun(it) }),
+    InfiniteRepeatable(R.string.infiniterepeatable,
+        { InfiniteRepeatableFun(it) }),
+    Snap(
+        R.string.snap,
+        { SnapFun(it) }),
+    AnimationVector(R.string.animationvector_typeconverter_coroutine,
+        { AnimationVectorFun(it) }),
+    AnimationEx1(R.string.animationex1,
+        { AnimationEx1(it) }),
+    BoxWithIconUpDownAnimation(R.string.icon_up_down_animation,
+        { BoxWithIconUpDownAnimation(it) }),
+    DuolingoBirdAnimation(R.string.duolingo_bird_animation,
+        { DuolingoBird(it) }),
+    ThreeDCardMoving(
+        R.string._3d_card_moving,
+        { ThreeDCardMoving(it) }),
+    InstagramLikeParticles(R.string.instagram_like_particles,
+        { InstagramLikeParticles(it) }),
+    RotatingBorders(R.string.rotating_borders,
+        { RotatingBorders(it) }),
+    PhysicsBasedAnimation(R.string.physics_based_animation,
+        { PhysicsBasedAnimationFun(it) }),
+    ProgressAnimation(R.string.progressanimation, { ProgressAnimation(it) }),
 }
 
 @Composable
@@ -289,33 +297,37 @@ fun AnimationScreen(navController: NavHostController) {
 //endregion
 
 @Composable
-fun ChildAnimationScreen(onClickButtonTitle: Int?) {
-    enumValues<AnimationScreenEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke()
+fun ChildAnimationScreen(onClickButtonTitle: Int?, navHostController: NavHostController) {
+    enumValues<AnimationScreenEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke(
+        navHostController
+    )
 }
 
 /*
 *********************************************************************************************************************************
 AnimatedVisibility - without params
 **********************************************************************************************************************************/
-@Preview(showSystemUi = true)
 @Composable
-fun AnimatedVisibilityWithoutParams() {
+fun AnimatedVisibilityWithoutParams(navHostController: NavHostController) {
     var visibility by remember { mutableStateOf(true) }
 
-    Surface {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            AnimatedVisibility(visibility) {
-                Text(text = "Hello, world!")
-            }
+    BuildTopBarWithScreen(title = stringResource(id = R.string.animatedvisibility_without_params),
+        screen = {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                AnimatedVisibility(visibility) {
+                    Text(text = "Hello, world!")
+                }
 
-            Button(onClick = { visibility = !visibility }) {
-                Text(text = "Click Me")
+                Button(onClick = { visibility = !visibility }) {
+                    Text(text = "Click Me")
+                }
             }
-        }
+        }) {
+        navHostController.popBackStack()
     }
 }
 
@@ -323,37 +335,43 @@ fun AnimatedVisibilityWithoutParams() {
 *********************************************************************************************************************************
 AnimatedVisibility - with params
 **********************************************************************************************************************************/
-@Preview(showSystemUi = true)
 @Composable
-fun AnimatedVisibilityWithParams() {
+fun AnimatedVisibilityWithParams(navHostController: NavHostController) {
     var visible by remember {
         mutableStateOf(true)
     }
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        AnimatedVisibility(
-            visible = visible,
-            //execute when view is visible
-            enter = fadeIn(tween(4000)) + expandVertically(
-                animationSpec = tween(
-                    4000, easing = android.view.animation.BounceInterpolator().toEasing()
-                )
-            ),
-            //execute when view is gone
-            exit = fadeOut(tween(4000)) + shrinkVertically(
-                animationSpec = tween(
-                    4000, easing = android.view.animation.BounceInterpolator().toEasing()
-                )
-            )
-        ) {
-            Text(text = "Hello, world!", Modifier.background(MaterialTheme.colors.secondary))
-        }
-        Button(onClick = { visible = !visible }) {
-            Text("Click Me")
-        }
+    BuildTopBarWithScreen(title = stringResource(id = R.string.animatedvisibility_with_params),
+        screen = {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                AnimatedVisibility(
+                    visible = visible,
+                    //execute when view is visible
+                    enter = fadeIn(tween(4000)) + expandVertically(
+                        animationSpec = tween(
+                            4000, easing = android.view.animation.BounceInterpolator().toEasing()
+                        )
+                    ),
+                    //execute when view is gone
+                    exit = fadeOut(tween(4000)) + shrinkVertically(
+                        animationSpec = tween(
+                            4000, easing = android.view.animation.BounceInterpolator().toEasing()
+                        )
+                    )
+                ) {
+                    Text(
+                        text = "Hello, world!", Modifier.background(MaterialTheme.colors.secondary)
+                    )
+                }
+                Button(onClick = { visible = !visible }) {
+                    Text("Click Me")
+                }
+            }
+        }) {
+        navHostController.popBackStack()
     }
 }
 
@@ -362,61 +380,62 @@ fun TimeInterpolator.toEasing() = Easing { x -> getInterpolation(x) }
 /**********************************************************************************************************************************
 AnimatedVisibility - with state
  **********************************************************************************************************************************/
-@Preview(showSystemUi = true)
 @Composable
-fun AnimateVisibilityState() {
+fun AnimateVisibilityState(navHostController: NavHostController) {
     val state = remember {
         MutableTransitionState(false).apply {
             // Start the animation immediately.
             targetState = true
         }
     }
-    Surface {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            AnimatedVisibility(
-                visibleState = state,
-                //execute when view is visible
-                enter = fadeIn(tween(4000)) + expandVertically(
-                    animationSpec = tween(
-                        4000, easing = android.view.animation.BounceInterpolator().toEasing()
-                    )
-                ),
-                //execute when view is gone
-                exit = fadeOut(tween(4000)) + shrinkVertically(
-                    animationSpec = tween(
-                        4000, easing = android.view.animation.BounceInterpolator().toEasing()
-                    )
-                )
+    BuildTopBarWithScreen(title = stringResource(id = R.string.animatedvisibility_with_state),
+        screen = {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Use the MutableTransitionState to know the current animation state
-                // of the AnimatedVisibility.
-                Text(
-                    text = when {
-                        state.isIdle && state.currentState -> "Hello, World!"
-                        !state.isIdle && state.currentState -> "Disappearing"
-                        state.isIdle && !state.currentState -> ""
-                        else -> "Appearing"
-                    }
-                )
+                AnimatedVisibility(
+                    visibleState = state,
+                    //execute when view is visible
+                    enter = fadeIn(tween(4000)) + expandVertically(
+                        animationSpec = tween(
+                            4000, easing = android.view.animation.BounceInterpolator().toEasing()
+                        )
+                    ),
+                    //execute when view is gone
+                    exit = fadeOut(tween(4000)) + shrinkVertically(
+                        animationSpec = tween(
+                            4000, easing = android.view.animation.BounceInterpolator().toEasing()
+                        )
+                    )
+                ) {
+                    // Use the MutableTransitionState to know the current animation state
+                    // of the AnimatedVisibility.
+                    Text(
+                        text = when {
+                            state.isIdle && state.currentState -> "Hello, World!"
+                            !state.isIdle && state.currentState -> "Disappearing"
+                            state.isIdle && !state.currentState -> ""
+                            else -> "Appearing"
+                        }
+                    )
+                }
+                Button(onClick = { state.targetState = !state.targetState }) {
+                    Text("Click Me")
+                }
             }
-            Button(onClick = { state.targetState = !state.targetState }) {
-                Text("Click Me")
-            }
-        }
-    }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 /**********************************************************************************************************************************
 enter exit visibility animation
  **********************************************************************************************************************************/
-@Preview(showSystemUi = true)
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AnimateEnterExitChild() {
+fun AnimateEnterExitChild(navHostController: NavHostController) {
     var visible by remember {
         mutableStateOf(true)
     }
@@ -424,90 +443,100 @@ fun AnimateEnterExitChild() {
     var color by remember {
         mutableStateOf(Color.Black)
     }
-    Column(Modifier.fillMaxSize()) {
-        Button(onClick = { visible = !visible }) {
-            Text(if (visible) "Hide" else "Show")
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(30.dp)
-                .background(color)
-        )
-        AnimatedVisibility(
-            visible = visible, enter = fadeIn(
-                animationSpec = tween(
-                    durationMillis = 3000, easing = LinearOutSlowInEasing
-                )
-            ), exit = fadeOut(
-                animationSpec = tween(
-                    durationMillis = 3000, easing = LinearOutSlowInEasing
-                )
-            )
-        ) {
-            val background by transition.animateColor(label = "") { state ->
-                when (state) {
-                    EnterExitState.PreEnter -> Red
-                    EnterExitState.PostExit -> Color.Green
-                    EnterExitState.Visible -> Color.Blue
+    BuildTopBarWithScreen(title = stringResource(id = R.string.enter_exit_visibility_animation),
+        screen = {
+            Column(Modifier.fillMaxSize()) {
+                Button(onClick = { visible = !visible }) {
+                    Text(if (visible) "Hide" else "Show")
                 }
-            }
-
-            color = background
-
-            Box(
-                Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .background(background)
-            ) {
                 Box(
-                    Modifier
-                        .align(Alignment.Center)
-                        .animateEnterExit(
-                            // Slide in/out the inner box.
-                            enter = slideInVertically(
-                                animationSpec = tween(
-                                    durationMillis = 3000, easing = LinearOutSlowInEasing
-                                )
-                            ), exit = slideOutVertically(
-                                animationSpec = tween(
-                                    durationMillis = 3000, easing = LinearOutSlowInEasing
-                                )
-                            )
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(30.dp)
+                        .background(color)
+                )
+                AnimatedVisibility(
+                    visible = visible, enter = fadeIn(
+                        animationSpec = tween(
+                            durationMillis = 3000, easing = LinearOutSlowInEasing
                         )
-                        .sizeIn(minWidth = 256.dp, minHeight = 64.dp)
-                        .background(Red)
+                    ), exit = fadeOut(
+                        animationSpec = tween(
+                            durationMillis = 3000, easing = LinearOutSlowInEasing
+                        )
+                    )
                 ) {
-                    // Content of the notification…
+                    val background by transition.animateColor(label = "") { state ->
+                        when (state) {
+                            EnterExitState.PreEnter -> Red
+                            EnterExitState.PostExit -> Color.Green
+                            EnterExitState.Visible -> Color.Blue
+                        }
+                    }
+
+                    color = background
+
+                    Box(
+                        Modifier
+                            .weight(1f)
+                            .fillMaxWidth()
+                            .background(background)
+                    ) {
+                        Box(
+                            Modifier
+                                .align(Alignment.Center)
+                                .animateEnterExit(
+                                    // Slide in/out the inner box.
+                                    enter = slideInVertically(
+                                        animationSpec = tween(
+                                            durationMillis = 3000, easing = LinearOutSlowInEasing
+                                        )
+                                    ), exit = slideOutVertically(
+                                        animationSpec = tween(
+                                            durationMillis = 3000, easing = LinearOutSlowInEasing
+                                        )
+                                    )
+                                )
+                                .sizeIn(minWidth = 256.dp, minHeight = 64.dp)
+                                .background(Red)
+                        ) {
+                            // Content of the notification…
+                        }
+                    }
                 }
             }
-        }
-    }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 /**********************************************************************************************************************************
 trigger animation when any state changes using crossfade()
  **********************************************************************************************************************************/
 @Composable
-fun CrossFade() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        var currentPage by remember { mutableStateOf(0) }
-        Crossfade(
-            targetState = currentPage, animationSpec = tween(durationMillis = 1000)
-        ) { screen ->
-            ColorBox(screen)
+fun CrossFade(navHostController: NavHostController) {
+    BuildTopBarWithScreen(title = stringResource(id = R.string.crossfade), screen = {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            var currentPage by remember { mutableStateOf(0) }
+            Crossfade(
+                targetState = currentPage, animationSpec = tween(durationMillis = 1000)
+            ) { screen ->
+                ColorBox(screen)
+            }
+            Button(onClick = {
+                currentPage = (0..0xFFFFFF).random()
+            }) {
+                Text("Click Me")
+            }
         }
-        Button(onClick = {
-            currentPage = (0..0xFFFFFF).random()
-        }) {
-            Text("Click Me")
-        }
-    }
+    }, onBackIconClick = {
+        navHostController.popBackStack()
+    })
 }
 
 @Composable
@@ -535,41 +564,44 @@ fun contrastColor(color: Int): Color {
 trigger animation when any state changes using animateTo()
  **********************************************************************************************************************************/
 @Composable
-fun AnimatableOnly() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        //var enabled by remember { mutableStateOf(true) }
-        var currentPage by remember { mutableStateOf(0) }
-        val color = remember { Animatable(Color.Gray) }
-        LaunchedEffect(currentPage) {  //animateTo() is suspend function
-            color.animateTo(
-                //target value must be color because we use color.animateTo()
-                targetValue = Color(currentPage + 0xFF000000), animationSpec = tween(
-                    durationMillis = 3000, easing = LinearOutSlowInEasing
+fun AnimatableOnly(navHostController: NavHostController) {
+    BuildTopBarWithScreen(title = stringResource(id = R.string.animatableonly), screen = {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            //var enabled by remember { mutableStateOf(true) }
+            var currentPage by remember { mutableStateOf(0) }
+            val color = remember { Animatable(Color.Gray) }
+            LaunchedEffect(currentPage) {  //animateTo() is suspend function
+                color.animateTo(
+                    //target value must be color because we use color.animateTo()
+                    targetValue = Color(currentPage + 0xFF000000), animationSpec = tween(
+                        durationMillis = 3000, easing = LinearOutSlowInEasing
+                    )
                 )
+            }
+            Box(
+                Modifier
+                    .size(100.dp)
+                    .background(color.value)
             )
+            Button(onClick = { currentPage = (0..0xFFFFFF).random() }) {
+                Text("Click Me")
+            }
         }
-        Box(
-            Modifier
-                .size(100.dp)
-                .background(color.value)
-        )
-        Button(onClick = { currentPage = (0..0xFFFFFF).random() }) {
-            Text("Click Me")
-        }
-    }
+    }, onBackIconClick = {
+        navHostController.popBackStack()
+    })
 }
 
 /**********************************************************************************************************************************
 AnimatedContent - with targetState
  **********************************************************************************************************************************/
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AnimatedContentSimple() {
-    Surface {
+fun AnimatedContentSimple(navHostController: NavHostController) {
+    BuildTopBarWithScreen(title = stringResource(id = R.string.animatedcontentsimple), screen = {
         Row(
             modifier = Modifier.fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically,
@@ -585,44 +617,52 @@ fun AnimatedContentSimple() {
                 )
             }
         }
-    }
+    }, onBackIconClick = {
+        navHostController.popBackStack()
+    })
 }
 
 /**********************************************************************************************************************************
 AnimatedContent - with targetState, transitionSpec ex-1
  **********************************************************************************************************************************/
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AnimatedContentWithTransitionSpec1() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        var currentPage by remember { mutableStateOf(0) }
+fun AnimatedContentWithTransitionSpec1(navHostController: NavHostController) {
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.animatedcontent_with_targetstate_transitionspec_ex_1),
+        screen = {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                var currentPage by remember { mutableStateOf(0) }
 
-        Box {
-            Crossfade(
-                targetState = currentPage, animationSpec = animationSpec()
-            ) { screen -> ColorBoxOnly(screen) }
+                Box {
+                    Crossfade(
+                        targetState = currentPage, animationSpec = animationSpec()
+                    ) { screen -> ColorBoxOnly(screen) }
 
-            AnimatedContent(targetState = currentPage, transitionSpec = {
-                if (targetState > initialState) {
-                    upColorTransition()
-                } else {
-                    downColorTransition()
-                } //display animation outside the box
-                    .using(SizeTransform(clip = false))
-            }) { screen ->
-                ColorBoxTextOnly(screen)
+                    AnimatedContent(targetState = currentPage, transitionSpec = {
+                        if (targetState > initialState) {
+                            upColorTransition()
+                        } else {
+                            downColorTransition()
+                        } //display animation outside the box
+                            .using(SizeTransform(clip = false))
+                    }) { screen ->
+                        ColorBoxTextOnly(screen)
+                    }
+                }
+                Button(onClick = {
+                    currentPage = (0..0xFFFFFF).random()
+                }) {
+                    Text("Click Me")
+                }
             }
-        }
-        Button(onClick = {
-            currentPage = (0..0xFFFFFF).random()
-        }) {
-            Text("Click Me")
-        }
-    }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -670,41 +710,46 @@ AnimatedContent - with targetState, transitionSpec ex-2
  **********************************************************************************************************************************/
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AnimatedContentWithTransitionSpec2() {
-    Surface {
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
-        ) {
-            var count by remember { mutableStateOf(0) }
+fun AnimatedContentWithTransitionSpec2(navHostController: NavHostController) {
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.animatedcontent_with_targetstate_transitionspec_ex_2),
+        screen = {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                var count by remember { mutableStateOf(0) }
 
-            Button(onClick = { count++ }) {
-                Text(text = "Add")
-            }
+                Button(onClick = { count++ }) {
+                    Text(text = "Add")
+                }
 
-            Button(onClick = { count-- }, modifier = Modifier.padding(start = 8.dp)) {
-                Text(text = "Minus")
-            }
+                Button(onClick = { count-- }, modifier = Modifier.padding(start = 8.dp)) {
+                    Text(text = "Minus")
+                }
 
-            AnimatedContent(targetState = count, transitionSpec = {
-                if (targetState > initialState) {
-                    // If the target number is larger than old value
-                    slideInVertically { height -> height } + fadeIn() with slideOutVertically { height -> -height } + fadeOut()
-                } else {
-                    // If the target number is smaller than old value
-                    slideInVertically { height -> -height } + fadeIn() with slideOutVertically { height -> height } + fadeOut()
-                }.using(
-                    //for adding effect on slide up-down animation
-                    SizeTransform(clip = false)
-                )
-            }) { targetCount ->
-                Text(
-                    text = "$targetCount", modifier = Modifier.padding(start = 8.dp)
-                )
+                AnimatedContent(targetState = count, transitionSpec = {
+                    if (targetState > initialState) {
+                        // If the target number is larger than old value
+                        slideInVertically { height -> height } + fadeIn() with slideOutVertically { height -> -height } + fadeOut()
+                    } else {
+                        // If the target number is smaller than old value
+                        slideInVertically { height -> -height } + fadeIn() with slideOutVertically { height -> height } + fadeOut()
+                    }.using(
+                        //for adding effect on slide up-down animation
+                        SizeTransform(clip = false)
+                    )
+                }) { targetCount ->
+                    Text(
+                        text = "$targetCount", modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
             }
-        }
-    }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 /**********************************************************************************************************************************
@@ -712,38 +757,44 @@ AnimatedContent - with targetState, transitionSpec ex-3 between 2 content
  **********************************************************************************************************************************/
 @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialApi::class)
 @Composable
-fun AnimatedContentWithTransitionSpec3() {
+fun AnimatedContentWithTransitionSpec3(navHostController: NavHostController) {
     var expanded by remember { mutableStateOf(false) }
-    Surface(color = MaterialTheme.colors.primary, onClick = { expanded = !expanded }) {
-        AnimatedContent(targetState = expanded, transitionSpec = {
-            fadeIn(
-                animationSpec = tween(
-                    150,
-                    150
-                )
-            ) with fadeOut(animationSpec = tween(150)) using SizeTransform { initialSize, targetSize ->
-                if (targetState) {
-                    keyframes {
-                        // Expand horizontally first.
-                        IntSize(targetSize.width, initialSize.height) at 150
-                        durationMillis = 300
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.animatedcontent_with_targetstate_transitionspec_ex_3),
+        screen = {
+            Surface(color = MaterialTheme.colors.primary, onClick = { expanded = !expanded }) {
+                AnimatedContent(targetState = expanded, transitionSpec = {
+                    fadeIn(
+                        animationSpec = tween(
+                            150, 150
+                        )
+                    ) with fadeOut(animationSpec = tween(150)) using SizeTransform { initialSize, targetSize ->
+                        if (targetState) {
+                            keyframes {
+                                // Expand horizontally first.
+                                IntSize(targetSize.width, initialSize.height) at 150
+                                durationMillis = 300
+                            }
+                        } else {
+                            keyframes {
+                                // Shrink vertically first.
+                                IntSize(initialSize.width, targetSize.height) at 150
+                                durationMillis = 300
+                            }
+                        }
                     }
-                } else {
-                    keyframes {
-                        // Shrink vertically first.
-                        IntSize(initialSize.width, targetSize.height) at 150
-                        durationMillis = 300
+                }) { targetExpanded ->
+                    if (targetExpanded) {
+                        Expanded()
+                    } else {
+                        ContentIcon()
                     }
                 }
             }
-        }) { targetExpanded ->
-            if (targetExpanded) {
-                Expanded()
-            } else {
-                ContentIcon()
-            }
-        }
-    }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 @Composable
@@ -767,64 +818,76 @@ fun ContentIcon() {
 animateContentSize
  **********************************************************************************************************************************/
 @Composable
-fun AnimatedContentSize() {
-    Column {
-        var expanded by remember {
-            mutableStateOf(false)
-        }
+fun AnimatedContentSize(navHostController: NavHostController) {
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.animatedcontentsize),
+        screen = {
+            Column {
+                var expanded by remember {
+                    mutableStateOf(false)
+                }
 
-        Image(
-            painter = painterResource(
-                id = if (expanded) R.drawable.download
-                else R.drawable.ic_launcher_background
-            ),
-            contentDescription = "",
-            modifier = Modifier
-                .background(Yellow)
-                .animateContentSize(tween(1500))
-        )
+                Image(
+                    painter = painterResource(
+                        id = if (expanded) R.drawable.download
+                        else R.drawable.ic_launcher_background
+                    ),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .background(Yellow)
+                        .animateContentSize(tween(1500))
+                )
 
-        Button(onClick = { expanded = !expanded }) {
-            Text(if (expanded) "Hide" else "Show")
-        }
-    }
+                Button(onClick = { expanded = !expanded }) {
+                    Text(if (expanded) "Hide" else "Show")
+                }
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 /**********************************************************************************************************************************
 Animate Content Size Transform
  **********************************************************************************************************************************/
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun AnimatedContentSizeTransform() {
+fun AnimatedContentSizeTransform(navHostController: NavHostController) {
     val time = 500
-    Column {
-        var expanded by remember {
-            mutableStateOf(false)
-        }
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.animatedcontentsizetransform),
+        screen = {
+            Column {
+                var expanded by remember {
+                    mutableStateOf(false)
+                }
 
-        AnimatedContent(targetState = expanded, transitionSpec = {
-            if (targetState) {
-                expandFading(time) using expandSizing(time)
-            } else {
-                shrinkFading(time) using shrinkSizing(time)
+                AnimatedContent(targetState = expanded, transitionSpec = {
+                    if (targetState) {
+                        expandFading(time) using expandSizing(time)
+                    } else {
+                        shrinkFading(time) using shrinkSizing(time)
+                    }
+
+                }) { targetExpanded ->
+                    Image(
+                        painter = painterResource(
+                            id = if (targetExpanded) R.drawable.download
+                            else R.drawable.ic_launcher_background
+                        ), contentDescription = "", modifier = Modifier.background(Yellow)
+                    )
+                }
+
+                Button(onClick = { expanded = !expanded }) {
+                    Text(if (expanded) "Hide" else "Show")
+                }
             }
-
-        }) { targetExpanded ->
-            Image(
-                painter = painterResource(
-                    id = if (targetExpanded) R.drawable.download
-                    else R.drawable.ic_launcher_background
-                ), contentDescription = "", modifier = Modifier.background(Yellow)
-            )
-        }
-
-        Button(onClick = { expanded = !expanded }) {
-            Text(if (expanded) "Hide" else "Show")
-        }
-    }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 private fun shrinkSizing(time: Int) = SizeTransform { initialSize, targetSize ->
     keyframes {
         // Shrink to target height first
@@ -856,53 +919,67 @@ private fun expandFading(time: Int) =
 animateFloatAsState
  **********************************************************************************************************************************/
 @Composable
-fun AnimateFloatAsState() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        var enabled by remember { mutableStateOf(true) }
-        val alpha: Float by animateFloatAsState(
-            if (enabled) 1f else 0.2f, animationSpec = tween(
-                durationMillis = 3000, easing = LinearOutSlowInEasing
-            )
-        )
-        Box(
-            Modifier
-                .size(100.dp)
-                .graphicsLayer(alpha = alpha)
-                .background(Red)
-        )
-        Button(onClick = { enabled = !enabled }) {
-            Text("Click Me")
-        }
-    }
+fun AnimateFloatAsState(navHostController: NavHostController) {
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.animatefloatasstate),
+        screen = {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                var enabled by remember { mutableStateOf(true) }
+                val alpha: Float by animateFloatAsState(
+                    if (enabled) 1f else 0.2f, animationSpec = tween(
+                        durationMillis = 3000, easing = LinearOutSlowInEasing
+                    )
+                )
+                Box(
+                    Modifier
+                        .size(100.dp)
+                        .graphicsLayer(alpha = alpha)
+                        .background(Red)
+                )
+                Button(onClick = { enabled = !enabled }) {
+                    Text("Click Me")
+                }
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 /**********************************************************************************************************************************
 animateColorAsState
  **********************************************************************************************************************************/
 @Composable
-fun AnimateColorAsState() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+fun AnimateColorAsState(navHostController: NavHostController) {
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.animatecolorasstate),
+        screen = {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
 
-        var currentPage by remember { mutableStateOf(0) }
+                var currentPage by remember { mutableStateOf(0) }
 
-        val color: Color by animateColorAsState(targetValue = Color(currentPage + 0xFF000000))
-        Box(
-            Modifier
-                .size(100.dp)
-                .background(color)
-        )
-        Button(onClick = { currentPage = (0..0xFFFFFF).random() }) {
-            Text("Click Me")
-        }
-    }
+                val color: Color by animateColorAsState(targetValue = Color(currentPage + 0xFF000000))
+                Box(
+                    Modifier
+                        .size(100.dp)
+                        .background(color)
+                )
+                Button(onClick = { currentPage = (0..0xFFFFFF).random() }) {
+                    Text("Click Me")
+                }
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 /**********************************************************************************************************************************
@@ -912,71 +989,84 @@ enum class BikePosition {
     Start, Finish
 }
 
-@Preview
 @Composable
-fun AnimateDpAsState() {
+fun AnimateDpAsState(navHostController: NavHostController) {
     var bikeState by remember { mutableStateOf(BikePosition.Start) }
 
     val offsetAnimation: Dp by animateDpAsState(
         if (bikeState == BikePosition.Start) 5.dp else 300.dp,
     )
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        Image(
-            painter = painterResource(R.drawable.ic_launcher_foreground),
-            contentDescription = null,
-            modifier = Modifier
-                .height(90.dp)
-                .absoluteOffset(x = offsetAnimation)
-        )
-        Button(
-            onClick = {
-                bikeState = when (bikeState) {
-                    BikePosition.Start -> BikePosition.Finish
-                    BikePosition.Finish -> BikePosition.Start
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.animatedpasstate),
+        screen = {
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.ic_launcher_foreground),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .height(90.dp)
+                        .absoluteOffset(x = offsetAnimation)
+                )
+                Button(
+                    onClick = {
+                        bikeState = when (bikeState) {
+                            BikePosition.Start -> BikePosition.Finish
+                            BikePosition.Finish -> BikePosition.Start
+                        }
+                    }, modifier = Modifier
+                        .fillMaxSize()
+                        .wrapContentSize(align = Alignment.Center)
+                ) {
+                    Text(text = "Ride")
                 }
-            }, modifier = Modifier
-                .fillMaxSize()
-                .wrapContentSize(align = Alignment.Center)
-        ) {
-            Text(text = "Ride")
-        }
-    }
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 /**********************************************************************************************************************************
 AnimateSizeAsState
  **********************************************************************************************************************************/
 @Composable
-fun AnimateSizeAsState() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        var isOn by remember { mutableStateOf(true) }
-        val size1: Size by animateSizeAsState(
-            targetValue = if (isOn) Size(100f, 100f) else Size(
-                200f, 200f
-            )
-        )
-        Box(
-            Modifier
-                .background(MaterialTheme.colors.onSurface)
-                .size(width = size1.width.dp, height = size1.height.dp)
-        )
-        Button(onClick = { isOn = !isOn }) {
-            Text("Click Me")
-        }
-    }
+fun AnimateSizeAsState(navHostController: NavHostController) {
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.animatesizeasstate),
+        screen = {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                var isOn by remember { mutableStateOf(true) }
+                val size1: Size by animateSizeAsState(
+                    targetValue = if (isOn) Size(100f, 100f) else Size(
+                        200f, 200f
+                    )
+                )
+                Box(
+                    Modifier
+                        .background(MaterialTheme.colors.onSurface)
+                        .size(width = size1.width.dp, height = size1.height.dp)
+                )
+                Button(onClick = { isOn = !isOn }) {
+                    Text("Click Me")
+                }
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 /**********************************************************************************************************************************
 updateTransition-1
  **********************************************************************************************************************************/
 @Composable
-fun UpdateTransitionBasic1() {
+fun UpdateTransitionBasic1(navHostController: NavHostController) {
 
     //change in boxState will invoke the animation
     var boxState by remember { mutableStateOf(BoxState1.Small) }
@@ -984,7 +1074,8 @@ fun UpdateTransitionBasic1() {
     //create updateTransition object
     val transition = updateTransition(targetState = boxState, label = "Box transition")
 
-    val color by transition.animateColor(label = "Color",
+    val color by transition.animateColor(
+        label = "Color",
         transitionSpec = { tween(2000, easing = FastOutSlowInEasing) }) {
         when (it) {
             BoxState1.Small -> Red
@@ -1000,21 +1091,26 @@ fun UpdateTransitionBasic1() {
             BoxState1.Large -> 128.dp
         }
     }
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.updatetransition_1),
+        screen = {
+            Column {
+                Button(onClick = {
+                    boxState = if (boxState == BoxState1.Small) BoxState1.Large else BoxState1.Small
+                }) {
+                    Text(text = "Toggle")
+                }
 
-    Column {
-        Button(onClick = {
-            boxState = if (boxState == BoxState1.Small) BoxState1.Large else BoxState1.Small
-        }) {
-            Text(text = "Toggle")
-        }
-
-        Box(
-            Modifier
-                .background(color = color)
-                .size(size)
-        )
-    }
-
+                Box(
+                    Modifier
+                        .background(color = color)
+                        .size(size)
+                )
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 private enum class BoxState1 {
@@ -1029,7 +1125,7 @@ enum class BoxState {
 }
 
 @Composable
-fun UpdateTransitionBasic2() {
+fun UpdateTransitionBasic2(navHostController: NavHostController) {
     var currentState by remember { mutableStateOf(BoxState.Collapsed) }
     val transition = updateTransition(targetState = currentState, label = "")
 
@@ -1057,23 +1153,29 @@ fun UpdateTransitionBasic2() {
             BoxState.Expanded -> 20.dp
         }
     }
-
-    Column {
-        Canvas(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(500.dp)
-                .border(BorderStroke(borderWidth, Color.Green))
-        ) {
-            drawPath(Path().apply { addRect(rect) }, color)
-        }
-        Button(onClick = {
-            currentState =
-                if (currentState == BoxState.Expanded) BoxState.Collapsed else BoxState.Expanded
-        }) {
-            Text("Click Me")
-        }
-    }
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.updatetransition_2),
+        screen = {
+            Column {
+                Canvas(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(500.dp)
+                        .border(BorderStroke(borderWidth, Color.Green))
+                ) {
+                    drawPath(Path().apply { addRect(rect) }, color)
+                }
+                Button(onClick = {
+                    currentState =
+                        if (currentState == BoxState.Expanded) BoxState.Collapsed else BoxState.Expanded
+                }) {
+                    Text("Click Me")
+                }
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 @Composable
@@ -1081,9 +1183,9 @@ fun <T> transitioningSpec(): @Composable (Transition.Segment<BoxState>.() -> Fin
     {
         when {
             BoxState.Expanded isTransitioningTo BoxState.Collapsed -> spring(
-                stiffness = 20f,
-                dampingRatio = 0.25f
+                stiffness = 20f, dampingRatio = 0.25f
             )
+
             else -> tween(durationMillis = 3000)
         }
     }
@@ -1093,7 +1195,7 @@ UpdateTransitionChild
  **********************************************************************************************************************************/
 @OptIn(ExperimentalTransitionApi::class)
 @Composable
-fun UpdateTransitionChild() {
+fun UpdateTransitionChild(navHostController: NavHostController) {
     var currentState by remember { mutableStateOf(BoxState.Collapsed) }
     val transition = updateTransition(currentState, label = "")
 
@@ -1103,24 +1205,30 @@ fun UpdateTransitionChild() {
             BoxState.Expanded -> Rect(100f, 100f, 300f, 300f)
         }
     }
-
-    Column {
-        Canvas(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .border(BorderStroke(1.dp, Color.Green))
-        ) {
-            drawPath(Path().apply { addRect(rect) }, Red)
-        }
-        Child(transition.createChildTransition { currentState })
-        Button(onClick = {
-            currentState = if (currentState == BoxState.Expanded) BoxState.Collapsed
-            else BoxState.Expanded
-        }) {
-            Text("Click Me")
-        }
-    }
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.updatetransitionchild),
+        screen = {
+            Column {
+                Canvas(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .border(BorderStroke(1.dp, Color.Green))
+                ) {
+                    drawPath(Path().apply { addRect(rect) }, Red)
+                }
+                Child(transition.createChildTransition { currentState })
+                Button(onClick = {
+                    currentState = if (currentState == BoxState.Expanded) BoxState.Collapsed
+                    else BoxState.Expanded
+                }) {
+                    Text("Click Me")
+                }
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 
 //for launch as expanded by default for the first time
     LaunchedEffect(Unit) {
@@ -1154,7 +1262,7 @@ multiple animation using updateTransition
  **********************************************************************************************************************************/
 @OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
 @Composable
-fun UpdateTransitionExtension() {
+fun UpdateTransitionExtension(navHostController: NavHostController) {
     var selected by remember { mutableStateOf(false) }
     val transition = updateTransition(targetState = selected, label = "")
     val borderColor by transition.animateColor(label = "") { isSelected ->
@@ -1163,47 +1271,53 @@ fun UpdateTransitionExtension() {
     val elevation by transition.animateDp(label = "") { isSelected ->
         if (isSelected) 10.dp else 2.dp
     }
-
-    Surface(
-        onClick = { selected = !selected },
-        shape = RoundedCornerShape(8.dp),
-        border = BorderStroke(2.dp, borderColor),
-        elevation = elevation,
-        modifier = Modifier.padding(10.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Text(text = "Hello, world!")
-            // AnimatedVisibility as a part of the transition.
-            transition.AnimatedVisibility(
-                visible = { targetSelected -> targetSelected },
-                enter = expandVertically(),
-                exit = shrinkVertically()
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.multiple_anim_updatetransition),
+        screen = {
+            Surface(
+                onClick = { selected = !selected },
+                shape = RoundedCornerShape(8.dp),
+                border = BorderStroke(2.dp, borderColor),
+                elevation = elevation,
+                modifier = Modifier.padding(10.dp)
             ) {
-                Text(text = "It is fine today.")
-            }
-            // AnimatedContent as a part of the transition.
-            transition.AnimatedContent { targetState ->
-                if (targetState) {
-                    Text(text = "Selected")
-                } else {
-                    Icon(
-                        imageVector = Icons.Default.Phone, contentDescription = "Phone"
-                    )
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Text(text = "Hello, world!")
+                    // AnimatedVisibility as a part of the transition.
+                    transition.AnimatedVisibility(
+                        visible = { targetSelected -> targetSelected },
+                        enter = expandVertically(),
+                        exit = shrinkVertically()
+                    ) {
+                        Text(text = "It is fine today.")
+                    }
+                    // AnimatedContent as a part of the transition.
+                    transition.AnimatedContent { targetState ->
+                        if (targetState) {
+                            Text(text = "Selected")
+                        } else {
+                            Icon(
+                                imageVector = Icons.Default.Phone, contentDescription = "Phone"
+                            )
+                        }
+                    }
                 }
             }
-        }
-    }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 /**********************************************************************************************************************************
 Multiple Animation using animateTo() backed by coroutines
  **********************************************************************************************************************************/
 @Composable
-fun MultipleAnimCoroutineAnimateTo() {
+fun MultipleAnimCoroutineAnimateTo(navHostController: NavHostController) {
     //tasks here
     //1. rotation
     //2. change color
@@ -1232,71 +1346,90 @@ fun MultipleAnimCoroutineAnimateTo() {
             color.animateTo(targetValue = colorChanger.value, animationSpec = tween(3000))
         }
     }
-
-    Canvas(modifier = Modifier
-        .fillMaxSize()
-        .wrapContentWidth(align = Alignment.CenterHorizontally)
-        .wrapContentHeight(align = Alignment.CenterVertically)
-        .size(200.dp)
-        .clickable {
-            angleChanger = if (angleChanger == 0f) 360f else 0f
-            colorChanger.value = if (colorChanger.value == Color.Green) Color.Blue else Color.Green
-        }, onDraw = {
-        rotate(degrees = angle.value) {
-            drawRoundRect(
-                color = color.value, cornerRadius = CornerRadius(16.dp.toPx())
-            )
-        }
-    })
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.multiple_anim_coroutine_animateto_rotate_color_change),
+        screen = {
+            Canvas(modifier = Modifier
+                .fillMaxSize()
+                .wrapContentWidth(align = Alignment.CenterHorizontally)
+                .wrapContentHeight(align = Alignment.CenterVertically)
+                .size(200.dp)
+                .clickable {
+                    angleChanger = if (angleChanger == 0f) 360f else 0f
+                    colorChanger.value =
+                        if (colorChanger.value == Color.Green) Color.Blue else Color.Green
+                }, onDraw = {
+                rotate(degrees = angle.value) {
+                    drawRoundRect(
+                        color = color.value, cornerRadius = CornerRadius(16.dp.toPx())
+                    )
+                }
+            })
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 /**********************************************************************************************************************************
 InfiniteAnimation - color
  **********************************************************************************************************************************/
 @Composable
-fun InfiniteColorAnimation() {
+fun InfiniteColorAnimation(navHostController: NavHostController) {
     val infiniteTransition = rememberInfiniteTransition()
     val color by infiniteTransition.animateColor(
         initialValue = Red, targetValue = Color.Green, animationSpec = infiniteRepeatable(
             animation = tween(1000, easing = LinearEasing), repeatMode = RepeatMode.Reverse
         )
     )
-
-    Box(
-        Modifier
-            .fillMaxSize()
-            .background(color)
-    )
+    BuildTopBarWithScreen(
+        screen = {
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .background(color)
+            )
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 /**********************************************************************************************************************************
 InfiniteAnimation - float
  **********************************************************************************************************************************/
 @Composable
-fun InfiniteFloatAnimation() {
+fun InfiniteFloatAnimation(navHostController: NavHostController) {
     val infiniteTransition = rememberInfiniteTransition()
     val animationProgress by infiniteTransition.animateFloat(
         initialValue = 0f, targetValue = 1f, animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 800)
         )
     )
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize(align = Alignment.Center)
-            .scale(animationProgress)
-            .alpha(1 - animationProgress)
-            .size(100.dp)
-            .clipToBounds()
-            .background(color = MaterialTheme.colors.onSurface, shape = CircleShape)
-    )
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.infiniteanimation_float),
+        screen = {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize(align = Alignment.Center)
+                    .scale(animationProgress)
+                    .alpha(1 - animationProgress)
+                    .size(100.dp)
+                    .clipToBounds()
+                    .background(color = MaterialTheme.colors.onSurface, shape = CircleShape)
+            )
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 /**********************************************************************************************************************************
 InfiniteAnimation - offset
  **********************************************************************************************************************************/
 @Composable
-fun InfiniteOffsetAnimation() {
+fun InfiniteOffsetAnimation(navHostController: NavHostController) {
     val animationValues = (1..3).map { index ->
         var animatedValue by rememberSaveable { mutableStateOf(0f) }
 
@@ -1312,29 +1445,36 @@ fun InfiniteOffsetAnimation() {
         }
         animatedValue
     }
-    Row(
-        modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize(align = Alignment.Center)
-    ) {
-        animationValues.forEach { animatedValue ->
-            Box(
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.infiniteanimation_offset),
+        screen = {
+            Row(
                 modifier = Modifier
-                    .offset(y = animatedValue.dp)
-                    .padding(horizontal = 4.dp)
-                    .size(50.dp)
-                    .clipToBounds()
-                    .background(MaterialTheme.colors.onSurface, CircleShape)
-            )
-        }
-    }
+                    .fillMaxSize()
+                    .wrapContentSize(align = Alignment.Center)
+            ) {
+                animationValues.forEach { animatedValue ->
+                    Box(
+                        modifier = Modifier
+                            .offset(y = animatedValue.dp)
+                            .padding(horizontal = 4.dp)
+                            .size(50.dp)
+                            .clipToBounds()
+                            .background(MaterialTheme.colors.onSurface, CircleShape)
+                    )
+                }
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 /**********************************************************************************************************************************
 InfiniteAnimation - rotation
  **********************************************************************************************************************************/
 @Composable
-fun InfiniteRotation() {
+fun InfiniteRotation(navHostController: NavHostController) {
     val animationSpec = infiniteRepeatable<Float>(
         animation = tween(durationMillis = 2500, easing = LinearEasing)
     )
@@ -1350,18 +1490,24 @@ fun InfiniteRotation() {
     //2) 180 to 180 x-axis(not rotate) & 0 to 180(rotate) y-axis
     //3) 180 to 0(rotate) x-axis & 180 to 180(not rotate) y-axis
     //4) 0 to 0 x-axis(not rotate) & 180 to 0(rotate) y-axis
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize(align = Alignment.Center)
-            .graphicsLayer(
-                rotationX = xRotation,
-                rotationY = yRotation
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.infinite_rotation),
+        screen = {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .wrapContentSize(align = Alignment.Center)
+                    .graphicsLayer(
+                        rotationX = xRotation, rotationY = yRotation
+                    )
+                    .size(64.dp)
+                    .clipToBounds()
+                    .background(color = MaterialTheme.colors.onSurface, shape = TriangleShape)
             )
-            .size(64.dp)
-            .clipToBounds()
-            .background(color = MaterialTheme.colors.onSurface, shape = TriangleShape)
-    )
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 private val TriangleShape = GenericShape { size, _ ->
@@ -1413,7 +1559,7 @@ fun animateValues(
 TargetBasedAnimation
  **********************************************************************************************************************************/
 @Composable
-fun TargetBasedAnimationFun() {
+fun TargetBasedAnimationFun(navHostController: NavHostController) {
     var state by remember {
         mutableStateOf(0)
     }
@@ -1438,29 +1584,35 @@ fun TargetBasedAnimationFun() {
         } while (!anim.isFinishedFromNanos(playTime))
 
     }
-    Box(modifier = Modifier.fillMaxSize(1f), contentAlignment = Alignment.Center) {
-        Box(
-            modifier = Modifier
-                .size(animationValue.dp)
-                .background(Red, shape = RoundedCornerShape(animationValue / 5))
-                .clickable {
-                    state++
-                }, contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = animationValue.toString(),
-                style = TextStyle(color = Color.White, fontSize = (animationValue / 5).sp)
-            )
-        }
-    }
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.targetbasedanimation),
+        screen = {
+            Box(modifier = Modifier.fillMaxSize(1f), contentAlignment = Alignment.Center) {
+                Box(
+                    modifier = Modifier
+                        .size(animationValue.dp)
+                        .background(Red, shape = RoundedCornerShape(animationValue / 5))
+                        .clickable {
+                            state++
+                        }, contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = animationValue.toString(),
+                        style = TextStyle(color = Color.White, fontSize = (animationValue / 5).sp)
+                    )
+                }
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 /**********************************************************************************************************************************
 spring
  **********************************************************************************************************************************/
-@Preview
 @Composable
-fun SpringFun() {
+fun SpringFun(navHostController: NavHostController) {
     var bikeState by rememberSaveable { mutableStateOf(BikePosition.Start) }
 
     //100.dp = 90.dp is width of the image & 10.dp is for padding
@@ -1493,52 +1645,57 @@ fun SpringFun() {
     val offsetAnimationDampingRatioHighBouncy: Dp by animateDpAsState(
         targetValue, animationSpec = spring(dampingRatio = Spring.DampingRatioHighBouncy)
     )
-    Surface {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 16.dp, top = 16.dp)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                Text(text = "StiffnessLow")
-                DrawImage(offsetAnimationStiffnessLow)
-                Text(text = "StiffnessVeryLow")
-                DrawImage(offsetAnimationStiffnessVeryLow)
-                Text(text = "StiffnessMediumLow")
-                DrawImage(offsetAnimationStiffnessMediumLow)
-                Text(text = "StiffnessMedium")
-                DrawImage(offsetAnimationStiffnessMedium)
-                Text(text = "StiffnessHigh")
-                DrawImage(offsetAnimationStiffnessHigh)
-                Text(text = "DampingRatioNoBouncy")
-                DrawImage(offsetAnimationDampingRatioNoBouncy)
-                Text(text = "DampingRatioLowBouncy")
-                DrawImage(offsetAnimationDampingRatioLowBouncy)
-                Text(text = "DampingRatioMediumBouncy")
-                DrawImage(offsetAnimationDampingRatioMediumBouncy)
-                Text(text = "DampingRatioHighBouncy")
-                DrawImage(offsetAnimationDampingRatioHighBouncy)
-                Spacer(
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.spring),
+        screen = {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column(
                     modifier = Modifier
-                        .height(100.dp)
-                        .fillMaxWidth()
-                )
+                        .fillMaxSize()
+                        .padding(start = 16.dp, top = 16.dp)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Text(text = "StiffnessLow")
+                    DrawImage(offsetAnimationStiffnessLow)
+                    Text(text = "StiffnessVeryLow")
+                    DrawImage(offsetAnimationStiffnessVeryLow)
+                    Text(text = "StiffnessMediumLow")
+                    DrawImage(offsetAnimationStiffnessMediumLow)
+                    Text(text = "StiffnessMedium")
+                    DrawImage(offsetAnimationStiffnessMedium)
+                    Text(text = "StiffnessHigh")
+                    DrawImage(offsetAnimationStiffnessHigh)
+                    Text(text = "DampingRatioNoBouncy")
+                    DrawImage(offsetAnimationDampingRatioNoBouncy)
+                    Text(text = "DampingRatioLowBouncy")
+                    DrawImage(offsetAnimationDampingRatioLowBouncy)
+                    Text(text = "DampingRatioMediumBouncy")
+                    DrawImage(offsetAnimationDampingRatioMediumBouncy)
+                    Text(text = "DampingRatioHighBouncy")
+                    DrawImage(offsetAnimationDampingRatioHighBouncy)
+                    Spacer(
+                        modifier = Modifier
+                            .height(100.dp)
+                            .fillMaxWidth()
+                    )
 
-            }
-
-            ExtendedFloatingActionButton(onClick = {
-                bikeState = when (bikeState) {
-                    BikePosition.Start -> BikePosition.Finish
-                    BikePosition.Finish -> BikePosition.Start
                 }
-            },
-                modifier = Modifier
-                    .align(alignment = Alignment.BottomEnd)
-                    .padding(end = 16.dp, bottom = 16.dp),
-                text = { Text(text = "Ride") })
-        }
-    }
+
+                ExtendedFloatingActionButton(onClick = {
+                    bikeState = when (bikeState) {
+                        BikePosition.Start -> BikePosition.Finish
+                        BikePosition.Finish -> BikePosition.Start
+                    }
+                },
+                    modifier = Modifier
+                        .align(alignment = Alignment.BottomEnd)
+                        .padding(end = 16.dp, bottom = 16.dp),
+                    text = { Text(text = "Ride") })
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 @Composable
@@ -1569,9 +1726,8 @@ fun getScreenHeight(): Dp {
 /**********************************************************************************************************************************
 tween
  **********************************************************************************************************************************/
-@Preview
 @Composable
-fun TweenFun() {
+fun TweenFun(navHostController: NavHostController) {
     var bikeState by rememberSaveable { mutableStateOf(BikePosition.Start) }
 
     //100.dp = 90.dp is width of the image & 10.dp is for padding
@@ -1592,51 +1748,55 @@ fun TweenFun() {
     val withDelay: Dp by animateDpAsState(
         targetValue, animationSpec = tween(durationMillis = 1000, delayMillis = 1000)
     )
-    Surface {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-            ) {
-                Text(text = "LinearEasing")
-                DrawImage(easingLinearEasing)
-                Text(text = "LinearOutSlowInEasing")
-                DrawImage(easingLinearOutSlowInEasing)
-                Text(text = "FastOutLinearInEasing")
-                DrawImage(easingFastOutLinearInEasing)
-                Text(text = "FastOutLinearInEasing")
-                DrawImage(easingFastOutSlowInEasing)
-                Text(text = "withDelay")
-                DrawImage(withDelay)
-                Spacer(
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.tween),
+        screen = {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column(
                     modifier = Modifier
-                        .height(100.dp)
-                        .fillMaxWidth()
-                )
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Text(text = "LinearEasing")
+                    DrawImage(easingLinearEasing)
+                    Text(text = "LinearOutSlowInEasing")
+                    DrawImage(easingLinearOutSlowInEasing)
+                    Text(text = "FastOutLinearInEasing")
+                    DrawImage(easingFastOutLinearInEasing)
+                    Text(text = "FastOutLinearInEasing")
+                    DrawImage(easingFastOutSlowInEasing)
+                    Text(text = "withDelay")
+                    DrawImage(withDelay)
+                    Spacer(
+                        modifier = Modifier
+                            .height(100.dp)
+                            .fillMaxWidth()
+                    )
 
-            }
-
-            ExtendedFloatingActionButton(onClick = {
-                bikeState = when (bikeState) {
-                    BikePosition.Start -> BikePosition.Finish
-                    BikePosition.Finish -> BikePosition.Start
                 }
-            },
-                modifier = Modifier
-                    .align(alignment = Alignment.BottomEnd)
-                    .padding(end = 16.dp, bottom = 16.dp),
-                text = { Text(text = "Ride") })
-        }
-    }
+
+                ExtendedFloatingActionButton(onClick = {
+                    bikeState = when (bikeState) {
+                        BikePosition.Start -> BikePosition.Finish
+                        BikePosition.Finish -> BikePosition.Start
+                    }
+                },
+                    modifier = Modifier
+                        .align(alignment = Alignment.BottomEnd)
+                        .padding(end = 16.dp, bottom = 16.dp),
+                    text = { Text(text = "Ride") })
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 /**********************************************************************************************************************************
 keyframes
  **********************************************************************************************************************************/
-@Preview
 @Composable
-fun KeyFramesFun() {
+fun KeyFramesFun(navHostController: NavHostController) {
     var bikeState by rememberSaveable { mutableStateOf(BikePosition.Start) }
 
     //100.dp = 90.dp is width of the image & 10.dp is for padding
@@ -1647,43 +1807,47 @@ fun KeyFramesFun() {
         50.dp at 400 with LinearOutSlowInEasing // for 0-400 ms
         70.dp at 800 with FastOutLinearInEasing // for 400-800 ms
     })
-    Surface {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-            ) {
-                Text(text = "keyframes")
-                DrawImage(keyframesAnimation)
-
-                Spacer(
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.keyframes),
+        screen = {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column(
                     modifier = Modifier
-                        .height(100.dp)
-                        .fillMaxWidth()
-                )
-            }
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Text(text = "keyframes")
+                    DrawImage(keyframesAnimation)
 
-            ExtendedFloatingActionButton(onClick = {
-                bikeState = when (bikeState) {
-                    BikePosition.Start -> BikePosition.Finish
-                    BikePosition.Finish -> BikePosition.Start
+                    Spacer(
+                        modifier = Modifier
+                            .height(100.dp)
+                            .fillMaxWidth()
+                    )
                 }
-            },
-                modifier = Modifier
-                    .align(alignment = Alignment.BottomEnd)
-                    .padding(end = 16.dp, bottom = 16.dp),
-                text = { Text(text = "Ride") })
-        }
-    }
+
+                ExtendedFloatingActionButton(onClick = {
+                    bikeState = when (bikeState) {
+                        BikePosition.Start -> BikePosition.Finish
+                        BikePosition.Finish -> BikePosition.Start
+                    }
+                },
+                    modifier = Modifier
+                        .align(alignment = Alignment.BottomEnd)
+                        .padding(end = 16.dp, bottom = 16.dp),
+                    text = { Text(text = "Ride") })
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 /**********************************************************************************************************************************
 repeatable
  **********************************************************************************************************************************/
-@Preview
 @Composable
-fun RepeatableFun() {
+fun RepeatableFun(navHostController: NavHostController) {
     var bikeState by rememberSaveable { mutableStateOf(BikePosition.Start) }
 
     //100.dp = 90.dp is width of the image & 10.dp is for padding
@@ -1701,46 +1865,50 @@ fun RepeatableFun() {
         )
         //will reverse the last iteration as the animation repeats.
     )
-    Surface {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-            ) {
-                Text(text = "repeatable Restart")
-                DrawImage(repeatableRestartAnimation)
-
-                Spacer(
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.repeatable),
+        screen = {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column(
                     modifier = Modifier
-                        .height(150.dp)
-                        .fillMaxWidth()
-                )
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Text(text = "repeatable Restart")
+                    DrawImage(repeatableRestartAnimation)
 
-                Text(text = "repeatable Reverse")
-                DrawImage(repeatableReverseAnimation)
-            }
+                    Spacer(
+                        modifier = Modifier
+                            .height(150.dp)
+                            .fillMaxWidth()
+                    )
 
-            ExtendedFloatingActionButton(onClick = {
-                bikeState = when (bikeState) {
-                    BikePosition.Start -> BikePosition.Finish
-                    BikePosition.Finish -> BikePosition.Start
+                    Text(text = "repeatable Reverse")
+                    DrawImage(repeatableReverseAnimation)
                 }
-            },
-                modifier = Modifier
-                    .align(alignment = Alignment.BottomEnd)
-                    .padding(end = 16.dp, bottom = 16.dp),
-                text = { Text(text = "Ride") })
-        }
-    }
+
+                ExtendedFloatingActionButton(onClick = {
+                    bikeState = when (bikeState) {
+                        BikePosition.Start -> BikePosition.Finish
+                        BikePosition.Finish -> BikePosition.Start
+                    }
+                },
+                    modifier = Modifier
+                        .align(alignment = Alignment.BottomEnd)
+                        .padding(end = 16.dp, bottom = 16.dp),
+                    text = { Text(text = "Ride") })
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 /**********************************************************************************************************************************
 infiniteRepeatable
  **********************************************************************************************************************************/
-@Preview
 @Composable
-fun InfiniteRepeatableFun() {
+fun InfiniteRepeatableFun(navHostController: NavHostController) {
     var bikeState by rememberSaveable { mutableStateOf(BikePosition.Start) }
 
     //100.dp = 90.dp is width of the image & 10.dp is for padding
@@ -1756,7 +1924,7 @@ fun InfiniteRepeatableFun() {
         animationSpec = infiniteRepeatable(animation = tween(), repeatMode = RepeatMode.Reverse)
         //will reverse the last iteration as the animation repeats.
     )
-    Surface {
+    BuildTopBarWithScreen(title = stringResource(id = R.string.infiniterepeatable), screen = {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
@@ -1787,15 +1955,17 @@ fun InfiniteRepeatableFun() {
                     .padding(end = 16.dp, bottom = 16.dp),
                 text = { Text(text = "Ride") })
         }
-    }
+    },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 /**********************************************************************************************************************************
 snap
  **********************************************************************************************************************************/
-@Preview
 @Composable
-fun SnapFun() {
+fun SnapFun(navHostController: NavHostController) {
     var bikeState by rememberSaveable { mutableStateOf(BikePosition.Start) }
 
     //100.dp = 90.dp is width of the image & 10.dp is for padding
@@ -1804,35 +1974,40 @@ fun SnapFun() {
     val snapAnimation: Dp by animateDpAsState(
         targetValue, animationSpec = snap(delayMillis = 500)
     )
-    Surface {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-            ) {
-                Text(text = "snap animation")
-                DrawImage(snapAnimation)
-
-                Spacer(
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.snap),
+        screen = {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Column(
                     modifier = Modifier
-                        .height(150.dp)
-                        .fillMaxWidth()
-                )
-            }
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    Text(text = "snap animation")
+                    DrawImage(snapAnimation)
 
-            ExtendedFloatingActionButton(onClick = {
-                bikeState = when (bikeState) {
-                    BikePosition.Start -> BikePosition.Finish
-                    BikePosition.Finish -> BikePosition.Start
+                    Spacer(
+                        modifier = Modifier
+                            .height(150.dp)
+                            .fillMaxWidth()
+                    )
                 }
-            },
-                modifier = Modifier
-                    .align(alignment = Alignment.BottomEnd)
-                    .padding(end = 16.dp, bottom = 16.dp),
-                text = { Text(text = "Ride") })
-        }
-    }
+
+                ExtendedFloatingActionButton(onClick = {
+                    bikeState = when (bikeState) {
+                        BikePosition.Start -> BikePosition.Finish
+                        BikePosition.Finish -> BikePosition.Start
+                    }
+                },
+                    modifier = Modifier
+                        .align(alignment = Alignment.BottomEnd)
+                        .padding(end = 16.dp, bottom = 16.dp),
+                    text = { Text(text = "Ride") })
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 /**********************************************************************************************************************************
@@ -1840,31 +2015,38 @@ AnimationVector - TypeConverter
  **********************************************************************************************************************************/
 //animate circle on touch
 @Composable
-fun AnimationVectorFun() {
+fun AnimationVectorFun(navHostController: NavHostController) {
     //here we want to animate circle to touch position
     val offset = remember { Animatable(Offset(0f, 0f), Offset.VectorConverter) }
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .pointerInput(Unit) {
-            coroutineScope {
-                while (true) {
-                    // Detect a tap event and obtain its position.
-                    val position = awaitPointerEventScope {
-                        awaitFirstDown().position //consume tap down event & its position
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.animationvector_typeconverter_coroutine),
+        screen = {
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .pointerInput(Unit) {
+                    coroutineScope {
+                        while (true) {
+                            // Detect a tap event and obtain its position.
+                            val position = awaitPointerEventScope {
+                                awaitFirstDown().position //consume tap down event & its position
+                            }
+                            launch {
+                                // Animate to the tap position.
+                                offset.animateTo(
+                                    position, animationSpec = tween(
+                                        durationMillis = 500, easing = LinearOutSlowInEasing
+                                    )
+                                )
+                            }
+                        }
                     }
-                    launch {
-                        // Animate to the tap position.
-                        offset.animateTo(
-                            position, animationSpec = tween(
-                                durationMillis = 500, easing = LinearOutSlowInEasing
-                            )
-                        )
-                    }
-                }
+                }) {
+                Circle(modifier = Modifier.offset { offset.value.toIntOffset() })
             }
-        }) {
-        Circle(modifier = Modifier.offset { offset.value.toIntOffset() })
-    }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 private fun Offset.toIntOffset() = IntOffset(x.roundToInt(), y.roundToInt())

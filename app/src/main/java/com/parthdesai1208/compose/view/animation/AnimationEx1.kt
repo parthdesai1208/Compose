@@ -19,26 +19,83 @@
 package com.parthdesai1208.compose.view.animation
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.*
-import androidx.compose.animation.core.*
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.calculateTargetValue
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.splineBasedDecay
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.horizontalDrag
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
+import androidx.compose.material.TabPosition
+import androidx.compose.material.TabRow
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -58,8 +115,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.parthdesai1208.compose.R
-import com.parthdesai1208.compose.view.theme.*
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
+import com.parthdesai1208.compose.view.theme.Amber600
+import com.parthdesai1208.compose.view.theme.ComposeTheme
+import com.parthdesai1208.compose.view.theme.Green300
+import com.parthdesai1208.compose.view.theme.Green800
+import com.parthdesai1208.compose.view.theme.Purple100
+import com.parthdesai1208.compose.view.theme.purple700
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -75,7 +140,7 @@ private enum class TabPage {
  */
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun AnimationEx1() {
+fun AnimationEx1(navHostController: NavHostController) {
     // String resources.
     val allTasks = stringArrayResource(R.array.tasks)
     val allTopics = stringArrayResource(R.array.topics).toList()
@@ -130,90 +195,94 @@ fun AnimationEx1() {
 
     // The coroutine scope for event handlers calling suspend functions.
     val coroutineScope = rememberCoroutineScope()
-    Scaffold(
-        topBar = {
-            HomeTabBar(
-                backgroundColor = backgroundColor,
-                tabPage = tabPage,
-                onTabSelected = { tabPage = it }
-            )
-        },
-        backgroundColor = backgroundColor,
-        floatingActionButton = {
-            HomeFloatingActionButton(
-                extended = lazyListState.isScrollingUp(),
-                onClick = {
-                    coroutineScope.launch {
-                        showEditMessage()
-                    }
-                }
-            )
-        }
-    ) {
-        LazyColumn(
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 32.dp),
-            state = lazyListState
-        ) {
-            // Weather
-            item { Header(title = stringResource(R.string.weather)) }
-            item { Spacer(modifier = Modifier.height(16.dp)) }
-            item {
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    elevation = 2.dp
-                ) {
-                    if (weatherLoading) {
-                        LoadingRow()
-                    } else {
-                        WeatherRow(onRefresh = {
-                            coroutineScope.launch {
-                                loadWeather()
-                            }
-                        })
-                    }
-                }
-            }
-            item { Spacer(modifier = Modifier.height(32.dp)) }
-
-            // Topics
-            item { Header(title = stringResource(R.string.topics)) }
-            item { Spacer(modifier = Modifier.height(16.dp)) }
-            items(allTopics) { topic ->
-                TopicRow(
-                    topic = topic,
-                    expanded = expandedTopic == topic,
+    BuildTopBarWithScreen(screen = {
+        Scaffold(
+            topBar = {
+                HomeTabBar(
+                    backgroundColor = backgroundColor,
+                    tabPage = tabPage,
+                    onTabSelected = { tabPage = it }
+                )
+            },
+            backgroundColor = backgroundColor,
+            floatingActionButton = {
+                HomeFloatingActionButton(
+                    extended = lazyListState.isScrollingUp(),
                     onClick = {
-                        expandedTopic = if (expandedTopic == topic) null else topic
+                        coroutineScope.launch {
+                            showEditMessage()
+                        }
                     }
                 )
             }
-            item { Spacer(modifier = Modifier.height(32.dp)) }
-
-            // Tasks
-            item { Header(title = stringResource(R.string.tasks)) }
-            item { Spacer(modifier = Modifier.height(16.dp)) }
-            if (tasks.isEmpty()) {
+        ) {
+            LazyColumn(
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 32.dp),
+                state = lazyListState
+            ) {
+                // Weather
+                item { Header(title = stringResource(R.string.weather)) }
+                item { Spacer(modifier = Modifier.height(16.dp)) }
                 item {
-                    TextButton(onClick = { tasks.clear(); tasks.addAll(allTasks) }) {
-                        Text(stringResource(R.string.add_tasks))
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        elevation = 2.dp
+                    ) {
+                        if (weatherLoading) {
+                            LoadingRow()
+                        } else {
+                            WeatherRow(onRefresh = {
+                                coroutineScope.launch {
+                                    loadWeather()
+                                }
+                            })
+                        }
                     }
                 }
-            }
-            items(count = tasks.size) { i ->
-                val task = tasks.getOrNull(i)
-                if (task != null) {
-                    key(task) {
-                        TaskRow(
-                            task = task,
-                            onRemove = { tasks.remove(task) }
-                        )
+                item { Spacer(modifier = Modifier.height(32.dp)) }
+
+                // Topics
+                item { Header(title = stringResource(R.string.topics)) }
+                item { Spacer(modifier = Modifier.height(16.dp)) }
+                items(allTopics) { topic ->
+                    TopicRow(
+                        topic = topic,
+                        expanded = expandedTopic == topic,
+                        onClick = {
+                            expandedTopic = if (expandedTopic == topic) null else topic
+                        }
+                    )
+                }
+                item { Spacer(modifier = Modifier.height(32.dp)) }
+
+                // Tasks
+                item { Header(title = stringResource(R.string.tasks)) }
+                item { Spacer(modifier = Modifier.height(16.dp)) }
+                if (tasks.isEmpty()) {
+                    item {
+                        TextButton(onClick = { tasks.clear(); tasks.addAll(allTasks) }) {
+                            Text(stringResource(R.string.add_tasks))
+                        }
                     }
                 }
+                items(count = tasks.size) { i ->
+                    val task = tasks.getOrNull(i)
+                    if (task != null) {
+                        key(task) {
+                            TaskRow(
+                                task = task,
+                                onRemove = { tasks.remove(task) }
+                            )
+                        }
+                    }
+                }
+                item { Text(text = "Note : Theme isn't implemented properly here") }
             }
-            item { Text(text = "Note : Theme isn't implemented properly here") }
+            EditMessage(editMessageShown)
         }
-        EditMessage(editMessageShown)
-    }
+    }, onBackIconClick = {
+        navHostController.popBackStack()
+    })
 }
 
 /**
@@ -693,6 +762,6 @@ private fun PreviewHomeTabBar() {
 @Composable
 private fun PreviewHome() {
     ComposeTheme {
-        AnimationEx1()
+        AnimationEx1(rememberNavController())
     }
 }

@@ -1,13 +1,33 @@
 package com.parthdesai1208.compose.view.animation
 
 import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.InfiniteTransition
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -18,24 +38,35 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
 import com.parthdesai1208.compose.utils.Phone
-import com.parthdesai1208.compose.view.theme.*
+import com.parthdesai1208.compose.view.theme.CircleOffsetInitialColor
+import com.parthdesai1208.compose.view.theme.CircleOffsetTargetColor
+import com.parthdesai1208.compose.view.theme.ComposeTheme
+import com.parthdesai1208.compose.view.theme.Green800
+import com.parthdesai1208.compose.view.theme.LightDarkGrey
+import com.parthdesai1208.compose.view.theme.LightDarkRed
+import com.parthdesai1208.compose.view.theme.RainbowYellow
 
 
 @Phone
 @Composable
 fun ProgressAnimationPreview() {
     ComposeTheme {
-        ProgressAnimation()
+        ProgressAnimation(rememberNavController())
     }
 }
 
 @Composable
-fun ProgressAnimation() {
-    Surface {
+fun ProgressAnimation(navHostController: NavHostController) {
+    BuildTopBarWithScreen(screen = {
         Column(
             modifier = Modifier
+                .fillMaxHeight()
                 .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
                 .wrapContentWidth()
                 .padding(vertical = 8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -47,7 +78,10 @@ fun ProgressAnimation() {
             PacmanAnimation(infiniteTransition)
             ArcRotationAnimation(infiniteTransition)
         }
-    }
+    },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 

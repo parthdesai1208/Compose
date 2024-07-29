@@ -297,6 +297,7 @@
     <string name="rotating_borders">Rotating Borders</string>
     <string name="physics_based_animation">Physics Based Animation</string>
     <string name="progressanimation">ProgressAnimation</string>
+    <string name="you_can_drag_me_but_can_t_remove_drag_out_from_parent_surface">You can drag me but can\'t remove/drag out from parent surface</string>
     <!--    end region-->
 
     <string name="back">Back</string>

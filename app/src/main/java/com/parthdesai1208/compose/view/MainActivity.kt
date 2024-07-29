@@ -184,7 +184,7 @@ fun MainActivityNavGraph(
         }
         composable<AnimationListingScreen> { backStackEntry ->
             val arguments = backStackEntry.toRoute<AnimationListingScreen>()
-            ChildAnimationScreen(onClickButtonTitle = arguments.pathPostFix)
+            ChildAnimationScreen(onClickButtonTitle = arguments.pathPostFix, navController)
         }
         composable<ColumnListingScreenPath> { backStackEntry ->
             val arguments = backStackEntry.toRoute<ColumnListingScreenPath>()

@@ -1,11 +1,35 @@
 package com.parthdesai1208.compose.view.animation
 
-import androidx.compose.animation.core.*
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.InfiniteRepeatableSpec
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.Surface
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -14,7 +38,12 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 
 val toeColor = Color(230, 149, 53)
@@ -24,7 +53,7 @@ val birdBeak = Color(246, 196, 52)
 val birdBeakBelow = Color(230, 149, 53)
 
 @Composable
-fun DuolingoBird(modifier: Modifier = Modifier) {
+fun DuolingoBird(navHostController: NavHostController, modifier: Modifier = Modifier) {
 
     var scale by remember {
         mutableStateOf(1f)
@@ -101,27 +130,33 @@ fun DuolingoBird(modifier: Modifier = Modifier) {
             spring(dampingRatio = Spring.DampingRatioHighBouncy, stiffness = Spring.StiffnessLow)
         )
     })
-
-    Box(modifier = modifier
-        .fillMaxWidth()
-        .wrapContentWidth(align = Alignment.CenterHorizontally)
-        .fillMaxHeight()
-        .wrapContentHeight(align = Alignment.CenterVertically)
-        .clickable {
-            scale = if (scale == 1f) 56f else 1f
-        }
-        .graphicsLayer(translationY = scalingAnim.value)) {
-        //two toes at bottom
-        BirdToes(toeRotateLeft, toeRotateRight)
-        Box(
-            modifier = Modifier.graphicsLayer(
-                rotationZ = bodyRotateRight,
-                translationY = bodyTranslationY
-            )
-        ) {
-            BirdBody(rotateLeft, 0f, eyeBallsMoveLeft, eyeBallsMoveRight, beakSpace)
-        }
-    }
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.duolingo_bird_animation),
+        screen = {
+            Box(modifier = modifier
+                .fillMaxWidth()
+                .wrapContentWidth(align = Alignment.CenterHorizontally)
+                .fillMaxHeight()
+                .wrapContentHeight(align = Alignment.CenterVertically)
+                .clickable {
+                    scale = if (scale == 1f) 56f else 1f
+                }
+                .graphicsLayer(translationY = scalingAnim.value)) {
+                //two toes at bottom
+                BirdToes(toeRotateLeft, toeRotateRight)
+                Box(
+                    modifier = Modifier.graphicsLayer(
+                        rotationZ = bodyRotateRight,
+                        translationY = bodyTranslationY
+                    )
+                ) {
+                    BirdBody(rotateLeft, 0f, eyeBallsMoveLeft, eyeBallsMoveRight, beakSpace)
+                }
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 @Composable
@@ -475,7 +510,7 @@ fun PreviewDuolingoBird() {
             Modifier
                 .fillMaxSize()
         ) {
-            DuolingoBird()
+            DuolingoBird(rememberNavController())
         }
     }
 }
