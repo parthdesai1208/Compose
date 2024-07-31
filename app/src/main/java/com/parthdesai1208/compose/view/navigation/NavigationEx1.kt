@@ -2,25 +2,58 @@ package com.parthdesai1208.compose.view.navigation
 
 import android.app.Activity
 import android.content.ClipData
-import android.content.Context.CLIPBOARD_SERVICE
 import android.os.Build
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.*
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.material.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Card
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.AttachMoney
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.MoneyOff
+import androidx.compose.material.icons.filled.PieChart
+import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -29,7 +62,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
@@ -37,11 +69,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -54,28 +83,35 @@ import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.model.Account
 import com.parthdesai1208.compose.model.Bill
 import com.parthdesai1208.compose.model.UserData
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
 import com.parthdesai1208.compose.view.theme.AlertDialogTheme
 import java.text.DecimalFormat
-import java.util.*
+import java.util.Locale
 
 @Composable
-fun NavigationEx1() {
-    val allScreens = RallyScreen.values().toList()
+fun NavigationEx1(navHostController: NavHostController) {
+    val allScreens = RallyScreen.entries
     val navController = rememberNavController()
     val backstackEntry = navController.currentBackStackEntryAsState()
     val currentScreen = RallyScreen.fromRoute(backstackEntry.value?.destination?.route)
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.navigationex1),
+        screen = {
+            Scaffold(
+                topBar = {
+                    HorizontalTabRow(
+                        allScreens = allScreens,
+                        onTabSelected = { screen -> navController.navigate(screen.name) },
+                        currentScreen = currentScreen
+                    )
+                }
+            ) {
+                RallyNavHost(navController = navController, modifier = Modifier.padding(it))
+            }
+        }, onBackIconClick = {
+            navHostController.popBackStack()
+        })
 
-    Scaffold(
-        topBar = {
-            HorizontalTabRow(
-                allScreens = allScreens,
-                onTabSelected = { screen -> navController.navigate(screen.name) },
-                currentScreen = currentScreen
-            )
-        }
-    ) {
-        RallyNavHost(navController = navController)
-    }
 }
 
 //region enum class

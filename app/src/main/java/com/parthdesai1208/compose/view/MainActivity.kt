@@ -123,7 +123,7 @@ enum class MainScreenEnumType(
     CustomLayout(R.string.customlayout, { CustomLayoutListingScreen(it) }),
     AnimationScreen(R.string.animationsamples, { AnimationScreen(it) }),
     NavigationEx1(
-        R.string.navigationex1, { NavigationEx1() },
+        R.string.navigationex1, { NavigationEx1(it) },
         buttonTitleForAccessibility = R.string.navigationexample
     ),
     ComposeDestination(R.string.composedestination, { StartForComposeDestination() }),

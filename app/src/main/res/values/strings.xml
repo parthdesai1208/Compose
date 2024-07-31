@@ -477,4 +477,19 @@
     <string name="listItem">ListItem</string>
     <string name="world">World</string>
     <!--    end region-->
+
+    <!--    region compose destination library-->
+    <string name="first_screen">First Screen</string>
+    <string name="parth">Parth</string>
+    <string name="_123">123</string>
+    <string name="_16_08_2020">16–08–2020</string>
+    <string name="go_to_second_screen">Go to second screen</string>
+    <string name="open_dialog">Open Dialog</string>
+    <string name="open_bottomsheet">Open BottomSheet</string>
+    <string name="secondScreen">Second Screen</string>
+    <string name="thirdScreen">Third Screen</string>
+    <string name="second_screen">Second Screen : %1$s</string>
+    <string name="go_to_third_screen">Go to third screen</string>
+    <string name="third_screen">Third Screen : %1$s</string>
+    <!--    end region-->
 </resources>

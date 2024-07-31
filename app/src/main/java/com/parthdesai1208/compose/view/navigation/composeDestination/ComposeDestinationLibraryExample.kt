@@ -1,6 +1,7 @@
 package com.parthdesai1208.compose.view.navigation.composeDestination
 
 import android.os.Parcelable
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,19 +15,22 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.plusAssign
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
+import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
 import com.parthdesai1208.compose.view.navigation.composeDestination.destinations.BottomSheetUsingComposeDestinationDestination
 import com.parthdesai1208.compose.view.navigation.composeDestination.destinations.DialogComposeDestination
 import com.parthdesai1208.compose.view.navigation.composeDestination.destinations.SecondScreenDestination
@@ -66,64 +70,85 @@ fun StartForComposeDestination() {
 @Destination
 @Composable
 fun FirstScreen(navigator: DestinationsNavigator) {
-    Surface {
-        Column(
-            modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = "First Screen")
-            Button(onClick = {
-                navigator.navigate(
-                    direction = SecondScreenDestination(
-                        user = User(
-                            name = "Parth",
-                            id = "123",
-                            created = "16-08-2020"
+    val onBackPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    val context = LocalContext.current
+
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.composedestination),
+        screen = {
+            Column(
+                modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = stringResource(R.string.first_screen))
+                Button(onClick = {
+                    navigator.navigate(
+                        direction = SecondScreenDestination(
+                            user = User(
+                                name = context.getString(R.string.parth),
+                                id = context.getString(R.string._123),
+                                created = context.getString(R.string._16_08_2020)
+                            )
                         )
                     )
-                )
-            }) {
-                Text(text = "Go to second screen")
+                }) {
+                    Text(text = stringResource(R.string.go_to_second_screen))
+                }
+                Button(onClick = { navigator.navigate(direction = DialogComposeDestination) }) {
+                    Text(text = stringResource(R.string.open_dialog))
+                }
+                Button(onClick = { navigator.navigate(direction = BottomSheetUsingComposeDestinationDestination) }) {
+                    Text(text = stringResource(R.string.open_bottomsheet))
+                }
             }
-            Button(onClick = { navigator.navigate(direction = DialogComposeDestination) }) {
-                Text(text = "Open Dialog")
-            }
-            Button(onClick = { navigator.navigate(direction = BottomSheetUsingComposeDestinationDestination) }) {
-                Text(text = "Open BottomSheet")
-            }
-        }
-    }
+        },
+        onBackIconClick = {
+            onBackPressedDispatcher?.onBackPressed()
+        })
 }
 
 @Destination
 @Composable
 fun SecondScreen(navigator: DestinationsNavigator, user: User) {
-    Surface {
-        Column(
-            modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = "Second Screen : $user", textAlign = TextAlign.Center)
-            Button(onClick = {
-                navigator.navigate(direction = ThirdScreenDestination(show = true))
-            }) {
-                Text(text = "Go to third screen")
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.secondScreen),
+        screen = {
+            Column(
+                modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(R.string.second_screen, user),
+                    textAlign = TextAlign.Center
+                )
+                Button(onClick = {
+                    navigator.navigate(direction = ThirdScreenDestination(show = true))
+                }) {
+                    Text(text = stringResource(R.string.go_to_third_screen))
+                }
             }
-        }
-    }
+        },
+        onBackIconClick = {
+            navigator.popBackStack()
+        })
 }
 
 @Destination
 @Composable
-fun ThirdScreen(show: Boolean = false) {
-    Surface {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(text = "Third Screen : $show")
-        }
-    }
+fun ThirdScreen(navigator: DestinationsNavigator, show: Boolean = false) {
+
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.thirdScreen),
+        screen = {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = stringResource(R.string.third_screen, show))
+            }
+        }, onBackIconClick = {
+            navigator.popBackStack()
+        })
 }
 
 @Parcelize
