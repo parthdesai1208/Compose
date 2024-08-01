@@ -1,6 +1,5 @@
 package com.parthdesai1208.compose.view.accessibility
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -14,7 +13,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,15 +22,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-
 import com.google.accompanist.insets.navigationBarsPadding
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.model.accessibility.Post
 import com.parthdesai1208.compose.model.accessibility.PostsRepository
 import com.parthdesai1208.compose.model.accessibility.post3
+import com.parthdesai1208.compose.utils.Phone
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 
 /**
@@ -41,7 +38,6 @@ import com.parthdesai1208.compose.view.theme.ComposeTheme
  * @param postsRepository data source for this screen
  * @param onBack (event) request back navigation
  */
-@Suppress("DEPRECATION") // allow ViewModelLifecycleScope call
 @Composable
 fun ArticleScreen(
     postId: String?,
@@ -86,7 +82,7 @@ fun ArticleScreen(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             // Step 4: Content descriptions
                             contentDescription = stringResource(
                                 R.string.cd_navigate_up
@@ -138,13 +134,10 @@ private fun FunctionalityNotAvailablePopup(onDismiss: () -> Unit) {
     )
 }
 
-@Preview("Article screen")
-@Preview("Article screen (dark)", uiMode = UI_MODE_NIGHT_YES)
-@Preview("Article screen (big font)", fontScale = 1.5f)
-@Preview("Article screen (large screen)", device = Devices.PIXEL_C)
+@Phone
 @Composable
 fun PreviewArticle() {
     ComposeTheme {
-        ArticleScreen(PostsRepository().getPost(post3.id)!!, {})
+        ArticleScreen(PostsRepository().getPost(post3.id)!!) {}
     }
 }

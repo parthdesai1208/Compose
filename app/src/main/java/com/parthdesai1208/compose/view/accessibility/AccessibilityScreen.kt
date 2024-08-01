@@ -1,11 +1,13 @@
 package com.parthdesai1208.compose.view.accessibility
 
-import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
@@ -13,10 +15,9 @@ import com.parthdesai1208.compose.model.accessibility.AppContainer
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import kotlinx.coroutines.launch
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun AccessibilityScreen(
-    appContainer: AppContainer
+    appContainer: AppContainer, navHostController: NavHostController
 ) {
     ComposeTheme {
         ProvideWindowInsets {
@@ -37,12 +38,14 @@ fun AccessibilityScreen(
                         currentRoute = currentRoute,
                         navigateToHome = { navController.navigate(MainDestinations.HOME_ROUTE) },
                         navigateToInterests = { navController.navigate(MainDestinations.INTERESTS_ROUTE) },
-                        closeDrawer = { coroutineScope.launch { scaffoldState.drawerState.close() } }
+                        closeDrawer = { coroutineScope.launch { scaffoldState.drawerState.close() } },
+                        onExitClick = { navHostController.popBackStack() }
                     )
                 }
             ) {
                 JetnewsNavGraph(
                     appContainer = appContainer,
+                    modifier = Modifier.padding(it),
                     navController = navController,
                     scaffoldState = scaffoldState
                 )

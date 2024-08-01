@@ -5,6 +5,7 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -26,6 +27,7 @@ object MainDestinations {
 @Composable
 fun JetnewsNavGraph(
     appContainer: AppContainer,
+    modifier: Modifier,
     navController: NavHostController = rememberNavController(),
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     startDestination: String = MainDestinations.HOME_ROUTE
@@ -35,6 +37,7 @@ fun JetnewsNavGraph(
     val openDrawer: () -> Unit = { coroutineScope.launch { scaffoldState.drawerState.open() } }
 
     NavHost(
+        modifier = modifier,
         navController = navController,
         startDestination = startDestination
     ) {

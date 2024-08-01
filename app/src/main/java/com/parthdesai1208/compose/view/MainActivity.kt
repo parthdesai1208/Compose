@@ -152,7 +152,7 @@ fun MainActivityNavGraph(
             val arguments = backStackEntry.toRoute<ComposeSampleChildrenScreen>()
             if (arguments.pathPostFix == R.string.accessibility) {
                 val container = (application as ComposeApp).container
-                AccessibilityScreen(appContainer = container)
+                AccessibilityScreen(appContainer = container, navController)
             } else {
                 ChildScreen(arguments.pathPostFix, navController)
             }

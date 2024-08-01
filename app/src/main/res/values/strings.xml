@@ -492,4 +492,8 @@
     <string name="go_to_third_screen">Go to third screen</string>
     <string name="third_screen">Third Screen : %1$s</string>
     <!--    end region-->
+    <!--    region Accessibility screen-->
+    <string name="interests">Interests</string>
+    <string name="exit">Exit</string>
+    <!--    end region-->
 </resources>

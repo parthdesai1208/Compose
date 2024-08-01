@@ -1,6 +1,5 @@
 package com.parthdesai1208.compose.view.accessibility
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,7 +9,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.Checkbox
+import androidx.compose.material.Divider
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
+import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -23,14 +30,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.insets.navigationBarsPadding
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.model.accessibility.InterestsRepository
 import com.parthdesai1208.compose.model.accessibility.TopicSelection
 import com.parthdesai1208.compose.model.accessibility.TopicsMap
+import com.parthdesai1208.compose.utils.Phone
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import kotlinx.coroutines.launch
 
@@ -86,7 +92,7 @@ fun InterestsScreen(
         scaffoldState = scaffoldState,
         topBar = {
             InsetAwareTopAppBar(
-                title = { Text("Interests") },
+                title = { Text(stringResource(id = R.string.interests)) },
                 navigationIcon = {
                     IconButton(onClick = openDrawer) {
                         Icon(
@@ -98,7 +104,9 @@ fun InterestsScreen(
             )
         }
     ) {
-        LazyColumn(Modifier.navigationBarsPadding()) {
+        LazyColumn(modifier = Modifier
+            .padding(it)
+            .navigationBarsPadding()) {
             topics.forEach { (section, topics) ->
                 item {
                     Text(
@@ -187,10 +195,7 @@ private fun TopicDivider() {
     )
 }
 
-@Preview("Interests screen", "Interests")
-@Preview("Interests screen (dark)", "Interests", uiMode = UI_MODE_NIGHT_YES)
-@Preview("Interests screen (big font)", "Interests", fontScale = 1.5f)
-@Preview("Interests screen (large screen)", "Interests", device = Devices.PIXEL_C)
+@Phone
 @Composable
 fun PreviewInterestsScreen() {
     ComposeTheme {
