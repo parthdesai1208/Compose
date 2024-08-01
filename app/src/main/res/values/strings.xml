@@ -62,11 +62,20 @@
     <string name="home_post_min_read">%1$s - %2$d min read</string>
     <!--end region-->
 
-    <!--region Migration-->
+    <!--region Migration to compose-->
     <string name="go_to_fragment">Go To Fragment\n(Migration in fragment)</string>
     <string name="hello_i_am_view">Hello I am from View family</string>
     <string name="hello_i_am_from_compose">Hello I am from compose family</string>
     <string name="go_to_view_inside_compose_activity">Go To \'View Inside compose\' activity</string>
+    <string name="back_icon_description">back icon</string>
+    <string name="value_is_updating_from_view">Value is updating from view: %1$d</string>
+    <string name="fragment">Fragment</string>
+    <string name="hello_world">Hello World</string>
+    <string name="here_we_learn_android_view_system_inside_compose">Here we learn Android View system inside compose</string>
+    <string name="below_textview_is_rendering_html_content">Below textview is rendering html content but with compose we can\'t do it, so for that limitation we have to use Android View inside composable function</string>
+    <string name="the_avocado_lorem_ipsum"><![CDATA[The avocado (Persea americana) is a tree, long thought to have originated in South Central Mexico, classified as a member of the flowering plant family Lauraceae. The fruit of the plant, also called an avocado (or avocado pear or alligator pear), is botanically a large berry containing a single large seed.<br><br>Avocados are commercially valuable and are cultivated in tropical and Mediterranean climates throughout the world. They have a green-skinned, fleshy body that may be pear-shaped, egg-shaped, or spherical. Commercially, they ripen after harvesting. Avocado trees are partially self-pollinating and are often propagated through grafting to maintain a predictable quality and quantity of the fruit.<br><br>(From <a href=\"https://en.wikipedia.org/wiki/Avocado\">Wikipedia</a>)]]></string>
+    <string name="click_to_add_1_update_value_from_compose_to_view">Click to Add 1\n(update value from compose to view)</string>
+    <string name="valueEqualTo">Value = %1$s</string>
     <!--end region-->
 
     <!--    region UI components-->

@@ -51,6 +51,9 @@ class MigrationFragment : Fragment() {
                 }
             }
         }
+        binding.imgBack.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
     }
 
     override fun onDestroyView() {

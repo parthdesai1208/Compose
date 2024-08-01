@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +25,7 @@ class MigrationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMigrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        var amount by mutableStateOf(0) //here we don't use remember because its not compose fun.
+        var amount by mutableIntStateOf(0) //here we don't use remember because its not compose fun.
         binding.composeView.setContent {
             ComposeTheme {
                 Surface {
@@ -39,6 +39,9 @@ class MigrationActivity : AppCompatActivity() {
             }
         }
 
+        binding.imgBack.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
         //region interact compose <-> view
         binding.btnAdd.setOnClickListener {
             amount++
@@ -46,7 +49,7 @@ class MigrationActivity : AppCompatActivity() {
         binding.cvAddBtn.setContent {
             ComposeTheme {
                 Surface {
-                    Text(text = "Value is updating from view: $amount")
+                    Text(text = stringResource(R.string.value_is_updating_from_view, amount))
                 }
             }
         }
