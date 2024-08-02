@@ -24,10 +24,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.view.theme.DarkLightColor
 import com.parthdesai1208.compose.view.theme.LightDarkColor
 
@@ -75,7 +77,7 @@ fun BuildTopBarWithScreen(
                 ) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = null
+                        contentDescription = stringResource(id = R.string.back_arrow_description)
                     )
                 }
             }
