@@ -247,6 +247,7 @@
     <!--    end region-->
 
     <!--    region permission-->
+    <string name="permission_samples">Permission Samples</string>
     <string name="singlePermission">Single permission</string>
     <string name="multiplePermission">Multiple permission</string>
     <string name="title_activity_pipactivity">PIPActivity</string>

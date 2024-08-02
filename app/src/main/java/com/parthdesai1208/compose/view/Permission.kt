@@ -10,10 +10,25 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.*
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.FabPosition
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Camera
 import androidx.compose.runtime.Composable
@@ -25,53 +40,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
+import com.parthdesai1208.compose.view.navigation.PermissionListingScreenPath
 
 
-enum class PermissionListingEnumType(val buttonTitle: Int, val func: @Composable () -> Unit) {
-    SinglePermission(R.string.singlePermission, { SinglePermissionScreen() }),
-    MultiplePermission(R.string.multiplePermission, { MultiplePermissionScreen() }),
-}
-
-object PermissionListingDestinations {
-    const val PERMISSION_LISTING_MAIN_SCREEN = "PERMISSION_LISTING_MAIN_SCREEN"
-    const val PERMISSION_LISTING_SCREEN_ROUTE_PREFIX = "PERMISSION_LISTING_SCREEN_ROUTE_PREFIX"
-    const val PERMISSION_LISTING_SCREEN_ROUTE_POSTFIX = "PERMISSION_LISTING_SCREEN_ROUTE_POSTFIX"
-}
-
-@Composable
-fun PermissionListNavGraph(startDestination: String = PermissionListingDestinations.PERMISSION_LISTING_MAIN_SCREEN) {
-    val navController = rememberNavController()
-
-    NavHost(navController = navController, startDestination = startDestination) {
-        composable(route = PermissionListingDestinations.PERMISSION_LISTING_MAIN_SCREEN) {
-            PermissionListingScreen(navController = navController)
-        }
-
-        composable(
-            route = "${PermissionListingDestinations.PERMISSION_LISTING_SCREEN_ROUTE_PREFIX}/{${PermissionListingDestinations.PERMISSION_LISTING_SCREEN_ROUTE_POSTFIX}}",
-            arguments = listOf(navArgument(PermissionListingDestinations.PERMISSION_LISTING_SCREEN_ROUTE_POSTFIX) {
-                type = NavType.StringType
-            })
-        ) { backStackEntry ->
-            val arguments = requireNotNull(backStackEntry.arguments)
-            ChildPermissionScreen(
-                arguments.getString(PermissionListingDestinations.PERMISSION_LISTING_SCREEN_ROUTE_POSTFIX)
-            )
-        }
-    }
+enum class PermissionListingEnumType(
+    val buttonTitle: Int, val func: @Composable (NavHostController) -> Unit
+) {
+    SinglePermission(R.string.singlePermission, { SinglePermissionScreen(it) }), MultiplePermission(
+        R.string.multiplePermission,
+        { MultiplePermissionScreen(it) }),
 }
 
 @Composable
@@ -80,47 +64,40 @@ fun PermissionListingScreen(navController: NavHostController) {
     fun MyButton(
         title: PermissionListingEnumType
     ) {
-        Button(
-            onClick = { navController.navigate("${PermissionListingDestinations.PERMISSION_LISTING_SCREEN_ROUTE_PREFIX}/${title.buttonTitle}") },
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentWidth(align = Alignment.CenterHorizontally)
-                .padding(8.dp)
-        ) {
+        Button(modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentWidth(align = Alignment.CenterHorizontally)
+            .padding(8.dp),
+            onClick = { navController.navigate(PermissionListingScreenPath(title.buttonTitle)) }) {
             Text(stringResource(id = title.buttonTitle), textAlign = TextAlign.Center)
         }
     }
-    Surface {
-        Column {
-            Text(
-                text = "Networking Samples",
-                modifier = Modifier.padding(16.dp),
-                fontSize = 18.sp,
-                fontFamily = FontFamily.SansSerif
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(8.dp)
-            ) {
-                enumValues<PermissionListingEnumType>().forEach {
-                    MyButton(it)
-                }
+    BuildTopBarWithScreen(title = stringResource(id = R.string.permission_samples), screen = {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(8.dp)
+        ) {
+            enumValues<PermissionListingEnumType>().forEach {
+                MyButton(it)
             }
         }
-    }
+    }, onBackIconClick = {
+        navController.popBackStack()
+    })
 }
 
 @Composable
-fun ChildPermissionScreen(onClickButtonTitle: String?) {
-    enumValues<PermissionListingEnumType>().first { it.buttonTitle.toString() == onClickButtonTitle }.func.invoke()
+fun ChildPermissionScreen(onClickButtonTitle: Int?, navHostController: NavHostController) {
+    enumValues<PermissionListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke(
+        navHostController
+    )
 }
 
 //region single permission screen
 @Composable
-fun SinglePermissionScreen() {
+fun SinglePermissionScreen(navHostController: NavHostController) {
     val context = LocalContext.current
     var isDialogOpened by rememberSaveable { mutableStateOf(false) }
     val requestPermission = rememberLauncherForActivityResult(
@@ -136,59 +113,65 @@ fun SinglePermissionScreen() {
         }
     }
 
-    Scaffold(floatingActionButton = {
-        FloatingActionButton(onClick = { requestPermission.launch(Manifest.permission.CAMERA) }) {
-            Icon(imageVector = Icons.Default.Camera, contentDescription = null)
-        }
-    }, floatingActionButtonPosition = FabPosition.End, content = {
-
-        Surface(
-            modifier = Modifier
-                .padding(it)
-                .fillMaxSize()
-        ) {
-            AnimatedVisibility(visible = isDialogOpened, enter = fadeIn(), exit = fadeOut()) {
-                AlertDialog(
-                    //Executes when the user tries to dismiss the Dialog by clicking outside
-                    // or pressing the back button
-                    onDismissRequest = { },
-                    title = { Text(text = "Permission required") },
-                    text = { Text(text = "This is required in order for the app to take pictures") },
-                    buttons = {
-                        Row(
-                            horizontalArrangement = Arrangement.End,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            TextButton(onClick = {
-                                isDialogOpened = false
-                                //open settings screen directly
-                                val intent =
-                                    Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                                        data =
-                                            Uri.fromParts("package", context.packageName, null)
-                                    }
-                                startActivity(context, intent, null)
-                            }) {
-                                Text(text = "OK")
-                            }
-                        }
-                    },
-                    properties = DialogProperties(
-                        dismissOnBackPress = false, dismissOnClickOutside = false
-                    )
-                )
+    BuildTopBarWithScreen(title = stringResource(id = R.string.singlePermission), screen = {
+        Scaffold(floatingActionButton = {
+            FloatingActionButton(onClick = { requestPermission.launch(Manifest.permission.CAMERA) }) {
+                Icon(imageVector = Icons.Default.Camera, contentDescription = null)
             }
-        }
+        }, floatingActionButtonPosition = FabPosition.End, content = {
 
+            Surface(
+                modifier = Modifier
+                    .padding(it)
+                    .fillMaxSize()
+            ) {
+                AnimatedVisibility(
+                    visible = isDialogOpened, enter = fadeIn(), exit = fadeOut()
+                ) {
+                    AlertDialog(
+                        //Executes when the user tries to dismiss the Dialog by clicking outside
+                        // or pressing the back button
+                        onDismissRequest = { },
+                        title = { Text(text = "Permission required") },
+                        text = { Text(text = "This is required in order for the app to take pictures") },
+                        buttons = {
+                            Row(
+                                horizontalArrangement = Arrangement.End,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                TextButton(onClick = {
+                                    isDialogOpened = false
+                                    //open settings screen directly
+                                    val intent =
+                                        Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                            data = Uri.fromParts(
+                                                "package", context.packageName, null
+                                            )
+                                        }
+                                    startActivity(context, intent, null)
+                                }) {
+                                    Text(text = "OK")
+                                }
+                            }
+                        },
+                        properties = DialogProperties(
+                            dismissOnBackPress = false, dismissOnClickOutside = false
+                        )
+                    )
+                }
+            }
+
+        })
+    }, onBackIconClick = {
+        navHostController.popBackStack()
     })
-
 }
 //endregion
 
 
 //region multiple permission screen
 @Composable
-fun MultiplePermissionScreen() {
+fun MultiplePermissionScreen(navHostController: NavHostController) {
     val context = LocalContext.current
     var isDialogOpened by rememberSaveable { mutableStateOf(false) }
     var requiredPermissionName by rememberSaveable { mutableStateOf("") }
@@ -214,75 +197,71 @@ fun MultiplePermissionScreen() {
         }
         if (!wasGranted.values.contains(false)) {
             Toast.makeText(
-                context,
-                "Done with Permissions, now proceed with task",
-                Toast.LENGTH_SHORT
+                context, "Done with Permissions, now proceed with task", Toast.LENGTH_SHORT
             ).show()
         }
     }
-
-    Scaffold(floatingActionButton = {
-        FloatingActionButton(onClick = {
-            requestPermission.launch(
-                arrayOf(
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                )
-            )
-        }) {
-            Icon(imageVector = Icons.Default.Camera, contentDescription = null)
-        }
-    }, floatingActionButtonPosition = FabPosition.End, content = {
-
-        Surface(
-            modifier = Modifier
-                .padding(it)
-                .fillMaxSize()
-        ) {
-            AnimatedVisibility(visible = isDialogOpened, enter = fadeIn(), exit = fadeOut()) {
-                AlertDialog(
-                    //Executes when the user tries to dismiss the Dialog by clicking outside
-                    // or pressing the back button
-                    onDismissRequest = { },
-                    title = {
-                        Text(
-                            text = "$requiredPermissionName Permission required",
-                            style = MaterialTheme.typography.body1
-                        )
-                    },
-                    text = {
-                        Text(
-                            text = "This is required in order for the app to work properly",
-                            style = MaterialTheme.typography.body1
-                        )
-                    },
-                    buttons = {
-                        Row(
-                            horizontalArrangement = Arrangement.End,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            TextButton(onClick = {
-                                isDialogOpened = false
-                                //open settings screen directly
-                                val intent =
-                                    Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                                        data =
-                                            Uri.fromParts("package", context.packageName, null)
-                                    }
-                                startActivity(context, intent, null)
-                            }) {
-                                Text(text = "OK", style = MaterialTheme.typography.button)
-                            }
-                        }
-                    },
-                    properties = DialogProperties(
-                        dismissOnBackPress = false, dismissOnClickOutside = false
+    BuildTopBarWithScreen(title = stringResource(id = R.string.multiplePermission), screen = {
+        Scaffold(floatingActionButton = {
+            FloatingActionButton(onClick = {
+                requestPermission.launch(
+                    arrayOf(
+                        Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
                     )
                 )
+            }) {
+                Icon(imageVector = Icons.Default.Camera, contentDescription = null)
             }
-        }
-
+        }, floatingActionButtonPosition = FabPosition.End, content = {
+            Surface(
+                modifier = Modifier
+                    .padding(it)
+                    .fillMaxSize()
+            ) {
+                AnimatedVisibility(
+                    visible = isDialogOpened, enter = fadeIn(), exit = fadeOut()
+                ) {
+                    AlertDialog(
+                        //Executes when the user tries to dismiss the Dialog by clicking outside
+                        // or pressing the back button
+                        onDismissRequest = { }, title = {
+                            Text(
+                                text = "$requiredPermissionName Permission required",
+                                style = MaterialTheme.typography.body1
+                            )
+                        }, text = {
+                            Text(
+                                text = "This is required in order for the app to work properly",
+                                style = MaterialTheme.typography.body1
+                            )
+                        }, buttons = {
+                            Row(
+                                horizontalArrangement = Arrangement.End,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                TextButton(onClick = {
+                                    isDialogOpened = false
+                                    //open settings screen directly
+                                    val intent =
+                                        Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                                            data = Uri.fromParts(
+                                                "package", context.packageName, null
+                                            )
+                                        }
+                                    startActivity(context, intent, null)
+                                }) {
+                                    Text(text = "OK", style = MaterialTheme.typography.button)
+                                }
+                            }
+                        }, properties = DialogProperties(
+                            dismissOnBackPress = false, dismissOnClickOutside = false
+                        )
+                    )
+                }
+            }
+        })
+    }, onBackIconClick = {
+        navHostController.popBackStack()
     })
-
 }
 //endregion

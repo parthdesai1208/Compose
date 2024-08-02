@@ -15,13 +15,17 @@ import android.util.Log
 import android.util.Rational
 import android.widget.VideoView
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,10 +35,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toAndroidRect
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.MutableLiveData
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 
 class PIPActivity : ComponentActivity() {
@@ -67,24 +73,30 @@ class PIPActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
     private fun PIPScreen() {
-        Surface {
-            Column(modifier = Modifier.fillMaxSize()) {
-                AndroidView(factory = {
-                    VideoView(it, null).apply {
-                        setVideoURI(Uri.parse("android.resource://$packageName/${R.raw.sample}"))
-                        start() //to play video
-                    }
-                }, modifier = Modifier
-                    .fillMaxWidth()
-                    .onGloballyPositioned {
-                        videoViewBound = it
-                            .boundsInWindow()
-                            .toAndroidRect()
-                    })
+        val onBackPressedDispatcher =
+            LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+        BuildTopBarWithScreen(
+            title = stringResource(id = R.string.pictureinpicture),
+            screen = {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    AndroidView(factory = {
+                        VideoView(it, null).apply {
+                            setVideoURI(Uri.parse("android.resource://$packageName/${R.raw.sample}"))
+                            start() //to play video
+                        }
+                    }, modifier = Modifier
+                        .fillMaxWidth()
+                        .onGloballyPositioned {
+                            videoViewBound = it
+                                .boundsInWindow()
+                                .toAndroidRect()
+                        })
 
-                OtherUnImportantView()
-            }
-        }
+                    OtherUnImportantView()
+                }
+            }, onBackIconClick = {
+                onBackPressedDispatcher?.onBackPressed()
+            })
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

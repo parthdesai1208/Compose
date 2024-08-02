@@ -66,6 +66,7 @@ import com.parthdesai1208.compose.view.navigation.DrawListingScreenPath
 import com.parthdesai1208.compose.view.navigation.HorizontalAdaptiveListScreen
 import com.parthdesai1208.compose.view.navigation.NavigationEx1
 import com.parthdesai1208.compose.view.navigation.NetworkListingScreenPath
+import com.parthdesai1208.compose.view.navigation.PermissionListingScreenPath
 import com.parthdesai1208.compose.view.navigation.RallyScreen
 import com.parthdesai1208.compose.view.navigation.RowListingScreenPath
 import com.parthdesai1208.compose.view.navigation.StateListingScreen
@@ -135,7 +136,7 @@ enum class MainScreenEnumType(
         R.string.networking,
         { com.parthdesai1208.compose.view.networking.NetworkingListingScreen(it) }),
     GestureScreen(R.string.gesture, { GestureScreen(it) }),
-    PermissionScreen(R.string.permission, { PermissionListNavGraph() }),
+    PermissionScreen(R.string.permission, { PermissionListingScreen(it) }),
     PictureInPicture(R.string.pictureinpicture, {}),
 }
 
@@ -224,6 +225,10 @@ fun MainActivityNavGraph(
         composable<NetworkListingScreenPath> { backStackEntry ->
             val arguments = backStackEntry.toRoute<NetworkListingScreenPath>()
             ChildNetworkListingScreen(onClickButtonTitle = arguments.pathPostFix, navController)
+        }
+        composable<PermissionListingScreenPath> { backStackEntry ->
+            val arguments = backStackEntry.toRoute<PermissionListingScreenPath>()
+            ChildPermissionScreen(onClickButtonTitle = arguments.pathPostFix, navController)
         }
 
         //region for deep link = https://example.com/task_id=Checking
