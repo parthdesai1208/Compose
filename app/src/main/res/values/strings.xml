@@ -238,6 +238,12 @@
     <string name="swipetorightleftgestureacc">Swipe right &amp; left gesture icon</string>
     <string name="swipetorightleftgesturewithdifferentcompose">Swipe right &amp; left gesture with different compose</string>
     <string name="swipetorightleftgesturewithdifferentcomposeacc">Swipe right &amp; left gesture with different compose icon</string>
+    <string name="tap_detected">tap detected</string>
+    <string name="on_press_detected">on press detected</string>
+    <string name="double_tap_detected">double tap detected</string>
+    <string name="long_press_detected">Long press detected</string>
+    <string name="dismiss_to_end_detected">dismiss to end detected</string>
+    <string name="dismiss_to_start_detected">dismiss to start detected</string>
     <!--    end region-->
 
     <!--    region permission-->

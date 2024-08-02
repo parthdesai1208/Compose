@@ -134,7 +134,7 @@ enum class MainScreenEnumType(
     Networking(
         R.string.networking,
         { com.parthdesai1208.compose.view.networking.NetworkingListingScreen(it) }),
-    GestureScreen(R.string.gesture, { GestureScreen() }),
+    GestureScreen(R.string.gesture, { GestureScreen(it) }),
     PermissionScreen(R.string.permission, { PermissionListNavGraph() }),
     PictureInPicture(R.string.pictureinpicture, {}),
 }
