@@ -129,7 +129,7 @@ enum class MainScreenEnumType(
     Migration(R.string.migrationToCompose, {}),
     DrawScreen(R.string.drawsamples, { DrawListingScreen(it) }),
     AnyScreen(R.string.anyscreen, { AnyScreenListingScreen(it) }),
-    SlotAPI(R.string.slotapi, { SlotAPI() }),
+    SlotAPI(R.string.slotapi, { SlotAPI(it) }),
     Networking(R.string.networking, { NetworkingListNavGraph() }),
     GestureScreen(R.string.gesture, { GestureScreen() }),
     PermissionScreen(R.string.permission, { PermissionListNavGraph() }),
