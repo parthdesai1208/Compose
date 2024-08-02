@@ -17,8 +17,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavHostController
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.model.networking.ConnectionState
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
 import com.parthdesai1208.compose.utils.Phone
 import com.parthdesai1208.compose.utils.connectivityState
 import com.parthdesai1208.compose.view.theme.LightDarkColor
@@ -29,7 +31,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @OptIn(ExperimentalCoroutinesApi::class)
 @Phone
 @Composable
-fun InternetConnectivityDemo() {
+fun InternetConnectivityDemo(navHostController: NavHostController) {
     var isVisibleBanner by rememberSaveable { mutableStateOf(false) }
 
     val connection by connectivityState()
@@ -52,32 +54,33 @@ fun InternetConnectivityDemo() {
         }
 
     }
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        Box(modifier = Modifier.align(Alignment.TopCenter)) {
-            if (connection == ConnectionState.Available) {
-                InternetConnectivityUI(
-                    visibility = isVisibleBanner,
-                    text = stringResource(id = R.string.backOnline),
-                    icon = Icons.Default.CloudDone,
-                    bgColor = spotifyGreenColor,
-                )
-            } else {
-                InternetConnectivityUI(
-                    visibility = true,
-                    text = stringResource(id = R.string.noInternet),
-                    icon = Icons.Default.CloudOff,
-                    bgColor = googlePhotosRedColor,
-                )
+    BuildTopBarWithScreen(title = stringResource(id = R.string.internetConnectivityDemo), screen = {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Box(modifier = Modifier.align(Alignment.TopCenter)) {
+                if (connection == ConnectionState.Available) {
+                    InternetConnectivityUI(
+                        visibility = isVisibleBanner,
+                        text = stringResource(id = R.string.backOnline),
+                        icon = Icons.Default.CloudDone,
+                        bgColor = spotifyGreenColor,
+                    )
+                } else {
+                    InternetConnectivityUI(
+                        visibility = true,
+                        text = stringResource(id = R.string.noInternet),
+                        icon = Icons.Default.CloudOff,
+                        bgColor = googlePhotosRedColor,
+                    )
+                }
             }
+
+            Text(
+                modifier = Modifier.align(Alignment.Center),
+                text = stringResource(id = R.string.observeInternetConnectivityDemo),
+                color = LightDarkColor
+            )
         }
-
-        Text(
-            modifier = Modifier.align(Alignment.Center),
-            text = stringResource(id = R.string.observeInternetConnectivityDemo),
-            color = LightDarkColor
-        )
-    }
-
-
+    }, onBackIconClick = {
+        navHostController.popBackStack()
+    })
 }

@@ -219,6 +219,7 @@
     <string name="backOnline">Back Online!</string>
     <string name="noInternet">No Internet Connection!</string>
     <string name="observeInternetConnectivityDemo">Stay calm &amp; observe the internet connectivity</string>
+    <string name="networking_samples">Networking Samples</string>
     <!--    end region-->
 
     <!--  region gesture-->

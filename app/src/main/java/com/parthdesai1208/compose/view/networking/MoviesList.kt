@@ -4,33 +4,56 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Scale
 import coil.transform.CircleCropTransformation
+import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.model.networking.MoviesList
 import com.parthdesai1208.compose.model.networking.moviesPreviewList
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
 import com.parthdesai1208.compose.utils.rememberMutableStateListOf
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.viewmodel.networking.MoviesListVM
@@ -42,8 +65,9 @@ fun MoviesListScreen(vm: MoviesListVM, navHostController: NavHostController) {
 
     when {
         uiState.movies.isNotEmpty() -> {
-            MoviesList(uiState.movies)
+            MoviesList(uiState.movies, navHostController)
         }
+
         uiState.error?.isNotBlank() == true -> {
             //show error
             MoviesErrorScreen(
@@ -51,13 +75,15 @@ fun MoviesListScreen(vm: MoviesListVM, navHostController: NavHostController) {
                 error = uiState.error,
                 onGoBackClick = {
                     isErrorDialogOpened = false
-                    navHostController.navigateUp()
+                    navHostController.popBackStack()
                 })
         }
+
         uiState.loading -> {
             //show loading
             MoviesLoadingScreen(true)
         }
+
         else -> {
             //hide loading
             MoviesLoadingScreen(false)
@@ -117,20 +143,26 @@ fun MoviesLoadingScreen(isLoading: Boolean) {
 }
 
 @Composable
-fun MoviesList(moviesList: List<MoviesList>) {
+fun MoviesList(moviesList: List<MoviesList>, navHostController: NavHostController) {
     val selectedItemList = rememberMutableStateListOf<Int>()
-
-    LazyColumn(content = {
-        itemsIndexed(items = moviesList) { index, item ->
-            MovieItem(index, movie = item, selectedList = selectedItemList, onItemClick = {
-                if (!selectedItemList.contains(it)) {
-                    selectedItemList.add(it)
-                } else {
-                    selectedItemList.removeAt(selectedItemList.indexOf(it))
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.moviesList),
+        screen = {
+            LazyColumn(content = {
+                itemsIndexed(items = moviesList) { index, item ->
+                    MovieItem(index, movie = item, selectedList = selectedItemList, onItemClick = {
+                        if (!selectedItemList.contains(it)) {
+                            selectedItemList.add(it)
+                        } else {
+                            selectedItemList.removeAt(selectedItemList.indexOf(it))
+                        }
+                    })
                 }
             })
-        }
-    })
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 @Composable
@@ -213,7 +245,7 @@ fun MovieItem(
 @Composable
 fun MoviesListPreview() {
     ComposeTheme {
-        MoviesList(moviesList = moviesPreviewList)
+        MoviesList(moviesList = moviesPreviewList, rememberNavController())
     }
 }
 

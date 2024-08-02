@@ -65,13 +65,14 @@ import com.parthdesai1208.compose.view.navigation.CustomModifierScreen
 import com.parthdesai1208.compose.view.navigation.DrawListingScreenPath
 import com.parthdesai1208.compose.view.navigation.HorizontalAdaptiveListScreen
 import com.parthdesai1208.compose.view.navigation.NavigationEx1
+import com.parthdesai1208.compose.view.navigation.NetworkListingScreenPath
 import com.parthdesai1208.compose.view.navigation.RallyScreen
 import com.parthdesai1208.compose.view.navigation.RowListingScreenPath
 import com.parthdesai1208.compose.view.navigation.StateListingScreen
 import com.parthdesai1208.compose.view.navigation.UIComponentsListingScreen
 import com.parthdesai1208.compose.view.navigation.VerticalListingScreenPath
 import com.parthdesai1208.compose.view.navigation.composeDestination.StartForComposeDestination
-import com.parthdesai1208.compose.view.networking.NetworkingListNavGraph
+import com.parthdesai1208.compose.view.networking.ChildNetworkListingScreen
 import com.parthdesai1208.compose.view.state.ChildScreenState
 import com.parthdesai1208.compose.view.state.MainScreenState
 import com.parthdesai1208.compose.view.theme.ComposeTheme
@@ -130,7 +131,9 @@ enum class MainScreenEnumType(
     DrawScreen(R.string.drawsamples, { DrawListingScreen(it) }),
     AnyScreen(R.string.anyscreen, { AnyScreenListingScreen(it) }),
     SlotAPI(R.string.slotapi, { SlotAPI(it) }),
-    Networking(R.string.networking, { NetworkingListNavGraph() }),
+    Networking(
+        R.string.networking,
+        { com.parthdesai1208.compose.view.networking.NetworkingListingScreen(it) }),
     GestureScreen(R.string.gesture, { GestureScreen() }),
     PermissionScreen(R.string.permission, { PermissionListNavGraph() }),
     PictureInPicture(R.string.pictureinpicture, {}),
@@ -216,14 +219,11 @@ fun MainActivityNavGraph(
         }
         composable<AnyScreenListingScreenPath> { backStackEntry ->
             val arguments = backStackEntry.toRoute<AnyScreenListingScreenPath>()
-            if (arguments.pathPostFix == R.string.tablet_foldable_desktop_compatible_ui_sample_from_codelabs) {
-
-            } else {
-                ChildAnyScreenListingScreen(
-                    onClickButtonTitle = arguments.pathPostFix,
-                    navController
-                )
-            }
+            ChildAnyScreenListingScreen(onClickButtonTitle = arguments.pathPostFix, navController)
+        }
+        composable<NetworkListingScreenPath> { backStackEntry ->
+            val arguments = backStackEntry.toRoute<NetworkListingScreenPath>()
+            ChildNetworkListingScreen(onClickButtonTitle = arguments.pathPostFix, navController)
         }
 
         //region for deep link = https://example.com/task_id=Checking

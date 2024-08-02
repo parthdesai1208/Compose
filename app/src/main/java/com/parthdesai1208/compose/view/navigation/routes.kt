@@ -46,3 +46,6 @@ data class DrawListingScreenPath(val pathPostFix: Int)
 
 @Serializable
 data class AnyScreenListingScreenPath(val pathPostFix: Int)
+
+@Serializable
+data class NetworkListingScreenPath(val pathPostFix: Int)
