@@ -44,7 +44,8 @@ import com.parthdesai1208.compose.utils.PhoneInLandscape
 import com.parthdesai1208.compose.view.accessibility.AccessibilityScreen
 import com.parthdesai1208.compose.view.animation.AnimationScreen
 import com.parthdesai1208.compose.view.animation.ChildAnimationScreen
-import com.parthdesai1208.compose.view.anyscreen.AnyScreenListingNavGraph
+import com.parthdesai1208.compose.view.anyscreen.AnyScreenListingScreen
+import com.parthdesai1208.compose.view.anyscreen.ChildAnyScreenListingScreen
 import com.parthdesai1208.compose.view.custom.ChildCustomLayoutScreen
 import com.parthdesai1208.compose.view.custom.CustomLayoutListingScreen
 import com.parthdesai1208.compose.view.custom.CustomModifierListingScreen
@@ -53,6 +54,7 @@ import com.parthdesai1208.compose.view.draw.ChildDrawScreen
 import com.parthdesai1208.compose.view.draw.DrawListingScreen
 import com.parthdesai1208.compose.view.migration.MigrationActivity
 import com.parthdesai1208.compose.view.navigation.AnimationListingScreen
+import com.parthdesai1208.compose.view.navigation.AnyScreenListingScreenPath
 import com.parthdesai1208.compose.view.navigation.BottomsheetListingScreenPath
 import com.parthdesai1208.compose.view.navigation.BoxListingScreenPath
 import com.parthdesai1208.compose.view.navigation.ColumnListingScreenPath
@@ -126,7 +128,7 @@ enum class MainScreenEnumType(
     Accessibility(R.string.accessibility, {}),
     Migration(R.string.migrationToCompose, {}),
     DrawScreen(R.string.drawsamples, { DrawListingScreen(it) }),
-    AnyScreen(R.string.anyscreen, { AnyScreenListingNavGraph() }),
+    AnyScreen(R.string.anyscreen, { AnyScreenListingScreen(it) }),
     SlotAPI(R.string.slotapi, { SlotAPI() }),
     Networking(R.string.networking, { NetworkingListNavGraph() }),
     GestureScreen(R.string.gesture, { GestureScreen() }),
@@ -211,6 +213,17 @@ fun MainActivityNavGraph(
         composable<DrawListingScreenPath> { backStackEntry ->
             val arguments = backStackEntry.toRoute<DrawListingScreenPath>()
             ChildDrawScreen(onClickButtonTitle = arguments.pathPostFix, navController)
+        }
+        composable<AnyScreenListingScreenPath> { backStackEntry ->
+            val arguments = backStackEntry.toRoute<AnyScreenListingScreenPath>()
+            if (arguments.pathPostFix == R.string.tablet_foldable_desktop_compatible_ui_sample_from_codelabs) {
+
+            } else {
+                ChildAnyScreenListingScreen(
+                    onClickButtonTitle = arguments.pathPostFix,
+                    navController
+                )
+            }
         }
 
         //region for deep link = https://example.com/task_id=Checking

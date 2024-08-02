@@ -43,3 +43,6 @@ data class BottomsheetListingScreenPath(val pathPostFix: Int)
 
 @Serializable
 data class DrawListingScreenPath(val pathPostFix: Int)
+
+@Serializable
+data class AnyScreenListingScreenPath(val pathPostFix: Int)

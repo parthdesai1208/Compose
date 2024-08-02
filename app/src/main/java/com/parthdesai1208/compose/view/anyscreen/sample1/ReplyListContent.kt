@@ -1,15 +1,31 @@
 package com.parthdesai1208.compose.view.anyscreen.sample1
 
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.StarBorder
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -212,12 +228,27 @@ fun ReplyEmailThreadItem(
 fun ReplyListOnlyContent(
     replyHomeUIState: ReplyHomeUIState, modifier: Modifier = Modifier
 ) {
-    LazyColumn(modifier = modifier) {
-        item {
-            ReplySearchBar(modifier = Modifier.fillMaxWidth())
+    val onBackPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    Box(modifier = modifier) {
+        LazyColumn {
+            item {
+                ReplySearchBar(modifier = Modifier.fillMaxWidth())
+            }
+            items(replyHomeUIState.emails) { email ->
+                ReplyEmailListItem(email = email)
+            }
         }
-        items(replyHomeUIState.emails) { email ->
-            ReplyEmailListItem(email = email)
+        FloatingActionButton(
+            modifier = Modifier
+                .padding(16.dp)
+                .align(Alignment.BottomEnd),
+            onClick = {
+                onBackPressedDispatcher?.onBackPressed()
+            }) {
+            androidx.compose.material.Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = stringResource(id = R.string.back_arrow_description)
+            )
         }
     }
 }

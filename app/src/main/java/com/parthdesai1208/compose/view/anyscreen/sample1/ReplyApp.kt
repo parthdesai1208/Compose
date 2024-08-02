@@ -1,23 +1,43 @@
 package com.parthdesai1208.compose.view.anyscreen.sample1
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.Chat
+import androidx.compose.material.icons.automirrored.filled.Article
+import androidx.compose.material.icons.automirrored.filled.Chat
+import androidx.compose.material.icons.automirrored.filled.MenuOpen
+import androidx.compose.material.icons.automirrored.outlined.Chat
+import androidx.compose.material.icons.filled.Inbox
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.People
 import androidx.compose.material.icons.outlined.Videocam
-
-import androidx.compose.material3.*
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
+import androidx.compose.material3.NavigationRail
+import androidx.compose.material3.NavigationRailItem
+import androidx.compose.material3.PermanentNavigationDrawer
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
-
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
@@ -36,8 +56,11 @@ import androidx.window.layout.FoldingFeature
 import androidx.window.layout.WindowInfoTracker
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.model.anyscreen.ReplyHomeUIState
-import com.parthdesai1208.compose.utils.*
-import com.parthdesai1208.compose.view.MainActivity
+import com.parthdesai1208.compose.utils.DevicePosture
+import com.parthdesai1208.compose.utils.ReplyContentType
+import com.parthdesai1208.compose.utils.ReplyNavigationType
+import com.parthdesai1208.compose.utils.isBookPosture
+import com.parthdesai1208.compose.utils.isSeparating
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.viewmodel.anyscreen.Sample1ViewModel
 import kotlinx.coroutines.flow.SharingStarted
@@ -87,11 +110,6 @@ class AnyScreenSample1Activity : AppCompatActivity() {
                     )
                 }
             }
-
-            BackHandler {
-                startActivity(Intent(this, MainActivity::class.java))
-                finishAffinity()
-            }
         }
     }
 }
@@ -110,6 +128,7 @@ fun ReplyApp(
             navigationType = ReplyNavigationType.BOTTOM_NAVIGATION
             contentType = ReplyContentType.LIST_ONLY
         }
+
         WindowWidthSizeClass.Medium -> {
             navigationType = ReplyNavigationType.NAVIGATION_RAIL
             contentType = if (foldingDevicePosture is DevicePosture.BookPosture
@@ -120,6 +139,7 @@ fun ReplyApp(
                 ReplyContentType.LIST_ONLY
             }
         }
+
         WindowWidthSizeClass.Expanded -> {
             navigationType = if (foldingDevicePosture is DevicePosture.BookPosture) {
                 ReplyNavigationType.NAVIGATION_RAIL
@@ -128,6 +148,7 @@ fun ReplyApp(
             }
             contentType = ReplyContentType.LIST_AND_DETAIL
         }
+
         else -> {
             navigationType = ReplyNavigationType.BOTTOM_NAVIGATION
             contentType = ReplyContentType.LIST_ONLY
@@ -217,7 +238,7 @@ fun NavigationDrawerContent(
             )
             IconButton(onClick = onDrawerClicked) {
                 Icon(
-                    imageVector = Icons.Default.MenuOpen,
+                    imageVector = Icons.AutoMirrored.Filled.MenuOpen,
                     contentDescription = stringResource(id = R.string.navigation_drawer)
                 )
             }
@@ -250,7 +271,7 @@ fun NavigationDrawerContent(
             },
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Article,
+                    imageVector = Icons.AutoMirrored.Filled.Article,
                     contentDescription = stringResource(id = R.string.tab_article)
                 )
             },
@@ -267,7 +288,7 @@ fun NavigationDrawerContent(
             },
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Chat,
+                    imageVector = Icons.AutoMirrored.Filled.Chat,
                     contentDescription = stringResource(id = R.string.tab_dm)
                 )
             },
@@ -284,7 +305,7 @@ fun NavigationDrawerContent(
             },
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Article,
+                    imageVector = Icons.AutoMirrored.Filled.Article,
                     contentDescription = stringResource(id = R.string.tab_groups)
                 )
             },
@@ -363,7 +384,7 @@ fun ReplyNavigationRail(
             onClick = {},
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Article,
+                    imageVector = Icons.AutoMirrored.Filled.Article,
                     stringResource(id = R.string.tab_article)
                 )
             }
@@ -371,7 +392,12 @@ fun ReplyNavigationRail(
         NavigationRailItem(
             selected = false,
             onClick = {},
-            icon = { Icon(imageVector = Icons.Outlined.Chat, stringResource(id = R.string.tab_dm)) }
+            icon = {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.Chat,
+                    stringResource(id = R.string.tab_dm)
+                )
+            }
         )
         NavigationRailItem(
             selected = false,
@@ -405,8 +431,8 @@ fun ReplyBottomNavigationBar() {
             onClick = {},
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Article,
-                    contentDescription = stringResource(id = R.string.tab_inbox)
+                    imageVector = Icons.AutoMirrored.Filled.Article,
+                    contentDescription = stringResource(id = R.string.tab_article)
                 )
             }
         )
@@ -415,8 +441,8 @@ fun ReplyBottomNavigationBar() {
             onClick = {},
             icon = {
                 Icon(
-                    imageVector = Icons.Outlined.Chat,
-                    contentDescription = stringResource(id = R.string.tab_inbox)
+                    imageVector = Icons.AutoMirrored.Outlined.Chat,
+                    contentDescription = stringResource(id = R.string.tab_dm)
                 )
             }
         )
@@ -426,7 +452,7 @@ fun ReplyBottomNavigationBar() {
             icon = {
                 Icon(
                     imageVector = Icons.Outlined.Videocam,
-                    contentDescription = stringResource(id = R.string.tab_inbox)
+                    contentDescription = stringResource(id = R.string.tab_groups)
                 )
             }
         )

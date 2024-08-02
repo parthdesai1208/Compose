@@ -107,7 +107,7 @@
     <string name="search1">Search</string>
     <string name="search_replies">search replies</string>
     <string name="profile">Profile</string>
-
+    <string name="back_arrow_description">back icon for go to previous screen</string>
     <!--    end region-->
 
     <!--    region MainActivity-->
@@ -545,5 +545,8 @@
     <string name="this_text_is_drawing_using_drawtext"><![CDATA[This text is drawing using `drawText` with canvas onDraw{} lambda\nstarting from 100f in x-axis & y-axis]]></string>
     <string name="this_is_chainpatheffect_apply_to_text_compose">This is chainPathEffect apply to text compose</string>
     <string name="this_is_stampedpatheffect_apply_to_text_compose">This is stampedPathEffect apply to text compose</string>
+    <string name="any_screen_samples">Any Screen Samples</string>
+    <string name="tablet_foldable_desktop_compatible_ui_sample_from_codelabs"><![CDATA[Tablet,Foldable & Desktop compatible UI\n (sample from codelabs)]]></string>
+    <string name="insets">Insets</string>
     <!--    end region-->
 </resources>
