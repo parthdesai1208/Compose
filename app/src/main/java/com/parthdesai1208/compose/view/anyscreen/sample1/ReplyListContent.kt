@@ -42,15 +42,30 @@ import com.parthdesai1208.compose.model.anyscreen.ReplyHomeUIState
 fun ReplyListAndDetailContent(
     replyHomeUIState: ReplyHomeUIState, modifier: Modifier = Modifier, selectedItemIndex: Int = 0
 ) {
+    val onBackPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         LazyColumn(modifier = modifier.weight(1f)) {
             items(replyHomeUIState.emails) { email ->
                 ReplyEmailListItem(email = email)
             }
         }
-        LazyColumn(modifier = modifier.weight(1f)) {
-            items(replyHomeUIState.emails[selectedItemIndex].threads) { email ->
-                ReplyEmailThreadItem(email = email)
+        Box(modifier = modifier.weight(1f)) {
+            LazyColumn {
+                items(replyHomeUIState.emails[selectedItemIndex].threads) { email ->
+                    ReplyEmailThreadItem(email = email)
+                }
+            }
+            FloatingActionButton(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.BottomEnd),
+                onClick = {
+                    onBackPressedDispatcher?.onBackPressed()
+                }) {
+                androidx.compose.material.Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = stringResource(id = R.string.back_arrow_description)
+                )
             }
         }
     }
