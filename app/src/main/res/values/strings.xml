@@ -126,6 +126,7 @@
     <string name="drawsamples">Draw Samples</string>
     <string name="anyscreen">Any Screen</string>
     <string name="slotapi">Slot API</string>
+    <string name="compose_samples">Compose Samples</string>
     <!--    end region-->
 
     <!--    region custom modifier listing screen-->
