@@ -49,6 +49,8 @@ import com.parthdesai1208.compose.view.custom.ChildCustomLayoutScreen
 import com.parthdesai1208.compose.view.custom.CustomLayoutListingScreen
 import com.parthdesai1208.compose.view.custom.CustomModifierListingScreen
 import com.parthdesai1208.compose.view.custom.CustomModifierListingScreen1
+import com.parthdesai1208.compose.view.draw.ChildDrawScreen
+import com.parthdesai1208.compose.view.draw.DrawListingScreen
 import com.parthdesai1208.compose.view.migration.MigrationActivity
 import com.parthdesai1208.compose.view.navigation.AnimationListingScreen
 import com.parthdesai1208.compose.view.navigation.BottomsheetListingScreenPath
@@ -58,6 +60,7 @@ import com.parthdesai1208.compose.view.navigation.ComposeSampleChildrenScreen
 import com.parthdesai1208.compose.view.navigation.ComposeSamplesScreen
 import com.parthdesai1208.compose.view.navigation.CustomLayoutScreen
 import com.parthdesai1208.compose.view.navigation.CustomModifierScreen
+import com.parthdesai1208.compose.view.navigation.DrawListingScreenPath
 import com.parthdesai1208.compose.view.navigation.HorizontalAdaptiveListScreen
 import com.parthdesai1208.compose.view.navigation.NavigationEx1
 import com.parthdesai1208.compose.view.navigation.RallyScreen
@@ -129,7 +132,7 @@ enum class MainScreenEnumType(
     ComposeDestination(R.string.composedestination, { StartForComposeDestination() }),
     Accessibility(R.string.accessibility, {}),
     Migration(R.string.migrationToCompose, {}),
-    DrawScreen(R.string.drawsamples, { com.parthdesai1208.compose.view.draw.DrawNavGraph() }),
+    DrawScreen(R.string.drawsamples, { DrawListingScreen(it) }),
     AnyScreen(R.string.anyscreen, { AnyScreenListingNavGraph() }),
     SlotAPI(R.string.slotapi, { SlotAPI() }),
     Networking(R.string.networking, { NetworkingListNavGraph() }),
@@ -212,6 +215,11 @@ fun MainActivityNavGraph(
                 navHostController = navController
             )
         }
+        composable<DrawListingScreenPath> { backStackEntry ->
+            val arguments = backStackEntry.toRoute<DrawListingScreenPath>()
+            ChildDrawScreen(onClickButtonTitle = arguments.pathPostFix, navController)
+        }
+
         //region for deep link = https://example.com/task_id=Checking
         composable(
             route = "${RallyScreen.Accounts.name}/{name}",

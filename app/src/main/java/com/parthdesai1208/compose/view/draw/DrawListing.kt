@@ -1,93 +1,77 @@
 package com.parthdesai1208.compose.view.draw
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
 import com.parthdesai1208.compose.utils.Phone
+import com.parthdesai1208.compose.view.navigation.DrawListingScreenPath
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 
 
-enum class DrawListingEnumType(val buttonTitle: String, val func: @Composable () -> Unit) {
-    DrawLines("drawLine", { DrawLine() }), DrawRect("drawRect",
-        { DrawRect() }),
-    DrawLineFromTopRightToBottomLeft("DrawLine From TopRight To BottomLeft",
-        { DrawLineFromTopRightToBottomLeft() }),
+enum class DrawListingEnumType(
+    val buttonTitle: Int,
+    val func: @Composable (NavHostController) -> Unit
+) {
+    DrawLines(R.string.drawline, { DrawLine(it) }),
+    DrawRect(
+        R.string.drawrect,
+        { DrawRect(it) }),
+    DrawLineFromTopRightToBottomLeft(
+        R.string.drawline_from_topright_to_bottomleft,
+        { DrawLineFromTopRightToBottomLeft(it) }),
     DrawDashLineFromTopRightToBottomLeft(
-        "Draw Dash Line From Top-Right To Bottom-Left",
-        { DrawDashLineFromTopRightToBottomLeft() }),
-    DrawText("DrawText", { DrawText() }),
-    MeasureText("Measure Text", { MeasureText() }),
-    MeasureTextWithNarrowWidth("Measure Text With Narrow Size", { MeasureTextWithNarrowWidth() }),
-    DrawImage("Draw Image", { DrawImage() }),
-    DrawCircle("Draw Circle", { DrawCircle() }),
-    DrawRoundedRect("Draw RoundedRect", { DrawRoundedRect() }),
-    DrawOval("DrawOval", { DrawOval() }),
-    DrawArc("DrawArc", { DrawArc() }),
-    DrawPoint("DrawPoint", { DrawPoint() }),
-    DrawPath("DrawPath", { DrawPath() }),
-    AccessingCanvasObject("Accessing Canvas Object", { AccessingCanvasObject() }),
-    IconsUsingCanvasDraw("Icons Using Canvas Draw", { IconsUsingCanvasDraw() }),
-    DrawTriangleWithCornerPathEffects("Draw Triangle With CornerPathEffects",
-        { DrawTriangleWaterDropletWithCornerPathEffects() }),
-    ChainPathEffectSimpleExample("ChainPathEffect Simple Example",
-        { ChainPathEffectSimpleExample() }),
+        R.string.draw_dash_line_from_top_right_to_bottom_left,
+        { DrawDashLineFromTopRightToBottomLeft(it) }),
+    DrawText(R.string.drawtext, { DrawText(it) }),
+    MeasureText(R.string.measure_text, { MeasureText(it) }),
+    MeasureTextWithNarrowWidth(
+        R.string.measure_text_with_narrow_size,
+        { MeasureTextWithNarrowWidth(it) }),
+    DrawImage(R.string.draw_image, { DrawImage(it) }),
+    DrawCircle(R.string.draw_circle, { DrawCircle(it) }),
+    DrawRoundedRect(R.string.draw_roundedrect, { DrawRoundedRect(it) }),
+    DrawOval(R.string.drawoval, { DrawOval(it) }),
+    DrawArc(R.string.drawarc, { DrawArc(it) }),
+    DrawPoint(R.string.drawpoint, { DrawPoint(it) }),
+    DrawPath(R.string.drawpath, { DrawPath(it) }),
+    AccessingCanvasObject(R.string.accessing_canvas_object, { AccessingCanvasObject(it) }),
+    IconsUsingCanvasDraw(R.string.icons_using_canvas_draw, { IconsUsingCanvasDraw(it) }),
+    DrawTriangleWithCornerPathEffects(
+        R.string.draw_triangle_with_cornerpatheffects,
+        { DrawTriangleWaterDropletWithCornerPathEffects(it) }),
+    ChainPathEffectSimpleExample(
+        R.string.chainpatheffect_simple_example,
+        { ChainPathEffectSimpleExample(it) }),
     ChainPathEffectExample(
-        "Gooey effect using ChainPathEffect Example",
-        { GooeyEffectUsingChainPathEffect() }),
-    StampedPathEffectExample("StampedPathEffect Example", { StampedPathEffectExample() }),
-    ScalingTransformation("ScalingTransformation", { ScalingTransformation() }),
-    TranslateTransformation("Translate Transformation", { TranslateTransformation() }),
-    RotateTransformation("Rotate Transformation", { RotateTransformation() }),
-    InsetTransformation("Inset Transformation", { InsetTransformation() }),
-    MultipleTransformation("Multiple Transformation", { MultipleTransformation() }),
-    TruckArtCompose("TruckArt pattern", { TruckArtCompose() }),
-    RightShadow3DLayout("3D layout right shadow", { RightShadow3DLayout() }),
-    LeftShadow3DLayout("3D layout left shadow", { LeftShadow3DLayout() }),
-    BottomShadow3DLayout("3D layout bottom shadow", { BottomShadow3DLayout() }),
-    Dialog3D("3D Dialog", { Dialog3D() }),
-}
-
-object DrawDestinations {
-    const val DRAW_MAIN_SCREEN = "DRAW_MAIN_SCREEN"
-    const val DRAW_SCREEN_ROUTE_PREFIX = "DRAW_SCREEN_ROUTE_PREFIX"
-    const val DRAW_SCREEN_ROUTE_POSTFIX = "DRAW_SCREEN_ROUTE_POSTFIX"
-}
-
-@Composable
-fun DrawNavGraph(startDestination: String = DrawDestinations.DRAW_MAIN_SCREEN) {
-    val navController = rememberNavController()
-
-    NavHost(navController = navController, startDestination = startDestination) {
-        composable(route = DrawDestinations.DRAW_MAIN_SCREEN) {
-            DrawListingScreen(navController = navController)
-        }
-
-        composable(
-            route = "${DrawDestinations.DRAW_SCREEN_ROUTE_PREFIX}/{${DrawDestinations.DRAW_SCREEN_ROUTE_POSTFIX}}",
-            arguments = listOf(navArgument(DrawDestinations.DRAW_SCREEN_ROUTE_POSTFIX) {
-                type = NavType.StringType
-            })
-        ) { backStackEntry ->
-            val arguments = requireNotNull(backStackEntry.arguments)
-            ChildDrawScreen(arguments.getString(DrawDestinations.DRAW_SCREEN_ROUTE_POSTFIX))
-        }
-    }
+        R.string.gooey_effect_using_chainpatheffect_example,
+        { GooeyEffectUsingChainPathEffect(it) }),
+    StampedPathEffectExample(R.string.stampedpatheffect_example, { StampedPathEffectExample(it) }),
+    ScalingTransformation(R.string.scalingtransformation, { ScalingTransformation(it) }),
+    TranslateTransformation(R.string.translate_transformation, { TranslateTransformation(it) }),
+    RotateTransformation(R.string.rotate_transformation, { RotateTransformation(it) }),
+    InsetTransformation(R.string.inset_transformation, { InsetTransformation(it) }),
+    MultipleTransformation(R.string.multiple_transformation, { MultipleTransformation(it) }),
+    TruckArtCompose(R.string.truckart_pattern, { TruckArtCompose(it) }),
+    RightShadow3DLayout(R.string._3d_layout_right_shadow, { RightShadow3DLayout(it) }),
+    LeftShadow3DLayout(R.string._3d_layout_left_shadow, { LeftShadow3DLayout(it) }),
+    BottomShadow3DLayout(R.string._3d_layout_bottom_shadow, { BottomShadow3DLayout(it) }),
+    Dialog3D(R.string._3d_dialog, { Dialog3D(it) }),
 }
 
 @Composable
@@ -97,24 +81,18 @@ fun DrawListingScreen(navController: NavHostController) {
         title: DrawListingEnumType,
     ) {
         Button(
-            onClick = { navController.navigate("${DrawDestinations.DRAW_SCREEN_ROUTE_PREFIX}/${title.buttonTitle}") },
+            onClick = { navController.navigate(DrawListingScreenPath(title.buttonTitle)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentWidth(align = Alignment.CenterHorizontally)
                 .padding(8.dp)
         ) {
-            Text(title.buttonTitle, textAlign = TextAlign.Center)
+            Text(stringResource(id = title.buttonTitle), textAlign = TextAlign.Center)
         }
     }
-    Surface {
-        Column {
-            Text(
-                text = "Draw Samples",
-                modifier = Modifier.padding(16.dp),
-                fontSize = 18.sp,
-                fontFamily = FontFamily.SansSerif
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.drawsamples),
+        screen = {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -125,19 +103,23 @@ fun DrawListingScreen(navController: NavHostController) {
                     MyButton(it)
                 }
             }
-        }
-    }
+        },
+        onBackIconClick = {
+            navController.popBackStack()
+        })
 }
 
 @Composable
-fun ChildDrawScreen(onClickButtonTitle: String?) {
-    enumValues<DrawListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke()
+fun ChildDrawScreen(onClickButtonTitle: Int?, navController: NavHostController) {
+    enumValues<DrawListingEnumType>().first { it.buttonTitle == onClickButtonTitle }.func.invoke(
+        navController
+    )
 }
 
 @Phone
 @Composable
 fun PreviewDrawNavGraph() {
     ComposeTheme {
-        DrawNavGraph()
+        DrawListingScreen(rememberNavController())
     }
 }

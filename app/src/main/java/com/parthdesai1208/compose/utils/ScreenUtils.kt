@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.parthdesai1208.compose.view.theme.DarkLightColor
@@ -39,6 +40,18 @@ fun Modifier.setSizeByScreenPercentage(
     val width = configuration.screenWidthDp.dp * (widthPercentage / 100)
     val height = configuration.screenHeightDp.dp * (heightPercentage / 100)
     return then(this.size(width, height))
+}
+
+@Composable
+fun Float.widthByPercentage(): Dp {
+    val configuration = LocalConfiguration.current
+    return configuration.screenWidthDp.dp * (this / 100)
+}
+
+@Composable
+fun Float.heightByPercentage(): Dp {
+    val configuration = LocalConfiguration.current
+    return configuration.screenHeightDp.dp * (this / 100)
 }
 
 @Composable

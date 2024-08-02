@@ -1,16 +1,29 @@
 package com.parthdesai1208.compose.view.draw
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
 import com.parthdesai1208.compose.utils.Phone
 import com.parthdesai1208.compose.view.theme.TruckArtCanvasBackground
 import com.parthdesai1208.compose.view.theme.TruckArtPrimaryRectangleBackground
@@ -21,17 +34,24 @@ import kotlin.math.sin
 
 @Phone
 @Composable
-fun TruckArtCompose() {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxHeight()
-    ) {
-        TruckCanvas {
-            drawArtBannerAt(ArtPosition.TOP)
-            drawArtBannerAt(ArtPosition.CENTER)
-            drawArtBannerAt(ArtPosition.BOTTOM)
-        }
-    }
+fun TruckArtCompose(navHostController: NavHostController) {
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.truckart_pattern),
+        screen = {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxHeight()
+            ) {
+                TruckCanvas {
+                    drawArtBannerAt(ArtPosition.TOP)
+                    drawArtBannerAt(ArtPosition.CENTER)
+                    drawArtBannerAt(ArtPosition.BOTTOM)
+                }
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 @Composable
@@ -57,9 +77,11 @@ fun DrawScope.drawArtBannerAt(artPosition: ArtPosition) {
         ArtPosition.TOP -> {
             drawTopBannerArt()
         }
+
         ArtPosition.CENTER -> {
             drawCenterBannerArt()
         }
+
         else -> {
             drawBottomBannerArt()
         }

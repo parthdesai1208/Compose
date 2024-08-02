@@ -5,175 +5,275 @@ import android.graphics.DiscretePathEffect
 import android.graphics.Typeface
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.OvalShape
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.LocalTextStyle
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.*
-import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.drawscope.*
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.geometry.center
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.LinearGradientShader
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.PathMeasure
+import androidx.compose.ui.graphics.PathOperation
+import androidx.compose.ui.graphics.PointMode
+import androidx.compose.ui.graphics.StampedPathEffectStyle
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.graphics.drawOutline
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.drawscope.inset
+import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.graphics.drawscope.withTransform
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toComposePathEffect
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.*
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
 import com.parthdesai1208.compose.utils.Phone
-import com.parthdesai1208.compose.view.theme.*
+import com.parthdesai1208.compose.utils.widthByPercentage
+import com.parthdesai1208.compose.view.theme.androidIconColor
+import com.parthdesai1208.compose.view.theme.attractions_gmap
+import com.parthdesai1208.compose.view.theme.facebookIconColor
+import com.parthdesai1208.compose.view.theme.googlePhotosBlueColor
+import com.parthdesai1208.compose.view.theme.googlePhotosGreenColor
+import com.parthdesai1208.compose.view.theme.googlePhotosRedColor
+import com.parthdesai1208.compose.view.theme.googlePhotosYellowColor
+import com.parthdesai1208.compose.view.theme.messengerColor1
+import com.parthdesai1208.compose.view.theme.messengerColor2
+import com.parthdesai1208.compose.view.theme.spotifyGreenColor
+import com.parthdesai1208.compose.view.theme.stackoverflowBottomRectangleColor
+import com.parthdesai1208.compose.view.theme.stackoverflowStackColor
+import com.parthdesai1208.compose.view.theme.trelloBlueColor
+import com.parthdesai1208.compose.view.theme.weatherIconBgBottomColor
+import com.parthdesai1208.compose.view.theme.weatherIconBgUpperColor
+import com.parthdesai1208.compose.view.theme.weatherIconSunColor
+import com.parthdesai1208.compose.view.theme.weatherIconSunOverlappingColor
+import com.parthdesai1208.compose.view.theme.zoomIconColor1
+import com.parthdesai1208.compose.view.theme.zoomIconColor2
 
 
 @Composable
-fun DrawRect() {
-    Box {
-        Canvas(modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colors.surface),
-            //Note: here we specify background color because canvas lets you draw content on screen, it's not taking color from theme that we
-            //use in app
-            onDraw = {
-                val canvasQuadrantSize = size / 2F
-                drawRect(color = attractions_gmap, size = canvasQuadrantSize)
-            })
-        Text(
-            text = "by default, drawRect start with (0,0) Coordinate at top-left side of the phone screen",
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colors.onSurface,
-            modifier = Modifier
-                .align(alignment = Alignment.BottomCenter)
-                .padding(all = 8.dp)
-        )
-    }
-}
-
-@Composable
-fun DrawLineFromTopRightToBottomLeft() {
-    Box {
-        Canvas(modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colors.surface),
-            onDraw = {
-                val canvasWidth = size.width
-                val canvasHeight = size.height
-                drawLine(
-                    color = attractions_gmap,
-                    start = Offset(x = canvasWidth, y = 0f),
-                    end = Offset(x = 0f, canvasHeight),
-                    strokeWidth = 5f
+fun DrawRect(navHostController: NavHostController) {
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.drawrect),
+        screen = {
+            Box {
+                Canvas(modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = MaterialTheme.colors.surface),
+                    //Note: here we specify background color because canvas lets you draw content on screen, it's not taking color from theme that we
+                    //use in app
+                    onDraw = {
+                        val canvasQuadrantSize = size / 2F
+                        drawRect(color = attractions_gmap, size = canvasQuadrantSize)
+                    })
+                Text(
+                    text = stringResource(R.string.by_default_drawrect_start_with_0_0),
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colors.onSurface,
+                    modifier = Modifier
+                        .align(alignment = Alignment.BottomCenter)
+                        .padding(all = 8.dp)
                 )
-            })
-
-        Text(
-            text = "drawLines from topRight \nto bottomLeft using \ncoordinate system",
-            textAlign = TextAlign.Start,
-            color = MaterialTheme.colors.onSurface,
-            modifier = Modifier
-                .align(alignment = Alignment.TopStart)
-                .padding(all = 8.dp)
-        )
-    }
-}
-
-@Composable
-fun DrawDashLineFromTopRightToBottomLeft() {
-    Box {
-        Canvas(modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colors.surface),
-            onDraw = {
-                val canvasWidth = size.width
-                val canvasHeight = size.height
-                drawLine(
-                    color = attractions_gmap,
-                    start = Offset(x = canvasWidth, y = 0f),
-                    end = Offset(x = 0f, canvasHeight),
-                    strokeWidth = 5f,
-                    pathEffect = PathEffect.dashPathEffect(
-                        intervals = floatArrayOf(
-                            30f,
-                            10f,
-                            10f,
-                            10f
-                        ), phase = 0f
-                    )
-                    //The above path effect will draw a line beginning with a 30px dash and 10px space,
-                    //followed by 10px dash and a 10px space, repeating this sequence until the end of the line
-                )
-            })
-
-        Text(
-            text = "draw dash-Lines from topRight \nto bottomLeft using \ncoordinate system\ndraw a line beginning with a 30px dash and 10px space\nfollowed by 10px dash and a 10px space\nrepeating this sequence until the end of the line",
-            textAlign = TextAlign.Start,
-            color = MaterialTheme.colors.onSurface,
-            modifier = Modifier
-                .align(alignment = Alignment.TopStart)
-                .padding(all = 8.dp)
-        )
-    }
-}
-
-@OptIn(ExperimentalTextApi::class)
-@Composable
-fun DrawText() {
-    val textMeasurer = rememberTextMeasurer()
-    Canvas(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colors.surface),
-        onDraw = {
-            drawText(
-                textMeasurer = textMeasurer,
-                text = "This text is drawing using `drawText` with canvas onDraw{} lambda\nstarting from 100f in x-axis & y-axis",
-                style = TextStyle(color = attractions_gmap, fontSize = 16.sp),
-                topLeft = Offset(x = 100f, y = 100f)
-            )
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
         })
 }
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
-fun MeasureText() {
+fun DrawLineFromTopRightToBottomLeft(navHostController: NavHostController) {
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.drawline_from_topright_to_bottomleft),
+        screen = {
+            Box {
+                Canvas(modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = MaterialTheme.colors.surface),
+                    onDraw = {
+                        val canvasWidth = size.width
+                        val canvasHeight = size.height
+                        drawLine(
+                            color = attractions_gmap,
+                            start = Offset(x = canvasWidth, y = 0f),
+                            end = Offset(x = 0f, canvasHeight),
+                            strokeWidth = 5f
+                        )
+                    })
+
+                Text(
+                    text = stringResource(R.string.drawlines_from_topright_to_bottomleft),
+                    textAlign = TextAlign.Start,
+                    color = MaterialTheme.colors.onSurface,
+                    modifier = Modifier
+                        .align(alignment = Alignment.TopStart)
+                        .padding(all = 8.dp)
+                )
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
+}
+
+@Composable
+fun DrawDashLineFromTopRightToBottomLeft(navHostController: NavHostController) {
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.draw_dash_line_from_top_right_to_bottom_left),
+        screen = {
+            Box {
+                Canvas(modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = MaterialTheme.colors.surface),
+                    onDraw = {
+                        val canvasWidth = size.width
+                        val canvasHeight = size.height
+                        drawLine(
+                            color = attractions_gmap,
+                            start = Offset(x = canvasWidth, y = 0f),
+                            end = Offset(x = 0f, canvasHeight),
+                            strokeWidth = 5f,
+                            pathEffect = PathEffect.dashPathEffect(
+                                intervals = floatArrayOf(
+                                    30f,
+                                    10f,
+                                    10f,
+                                    10f
+                                ), phase = 0f
+                            )
+                            //The above path effect will draw a line beginning with a 30px dash and 10px space,
+                            //followed by 10px dash and a 10px space, repeating this sequence until the end of the line
+                        )
+                    })
+
+                Text(
+                    text = "draw dash-Lines from topRight \nto bottomLeft using \ncoordinate system\ndraw a line beginning with a 30px dash and 10px space\nfollowed by 10px dash and a 10px space\nrepeating this sequence until the end of the line",
+                    textAlign = TextAlign.Start,
+                    color = MaterialTheme.colors.onSurface,
+                    modifier = Modifier
+                        .align(alignment = Alignment.TopStart)
+                        .padding(all = 8.dp)
+                )
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
+}
+
+@Composable
+fun DrawText(navHostController: NavHostController) {
+    val textMeasurer = rememberTextMeasurer()
+    val context = LocalContext.current
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.drawtext),
+        screen = {
+            Canvas(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = MaterialTheme.colors.surface),
+                onDraw = {
+                    drawText(
+                        textMeasurer = textMeasurer,
+                        text = context.getString(R.string.this_text_is_drawing_using_drawtext),
+                        style = TextStyle(color = attractions_gmap, fontSize = 16.sp),
+                        topLeft = Offset(x = 100f, y = 100f)
+                    )
+                })
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
+}
+
+@Composable
+fun MeasureText(navHostController: NavHostController) {
     val textMeasurer = rememberTextMeasurer()
     val longText = stringResource(id = R.string.lorem_ipsum)
-
-    Canvas(modifier = Modifier
-        .padding(16.dp)
-        .fillMaxSize()
-        .drawWithCache {
-            val measuredText = textMeasurer.measure(
-                text = AnnotatedString(text = longText),
-                constraints = Constraints.fixedWidth(width = (size.width * 2f / 3f).toInt()),
-                style = TextStyle(fontSize = 18.sp)
-            )
-            onDrawBehind {
-                val sizeWithExtraPadding = Size(
-                    16.dp.toPx() + measuredText.size.width,
-                    16.dp.toPx() + measuredText.size.height
-                ) //16.dp just for padding
-                drawRect(color = attractions_gmap, size = sizeWithExtraPadding)
-                drawText(
-                    textLayoutResult = measuredText,
-                    topLeft = Offset(x = 8.dp.toPx(), y = 8.dp.toPx())
-                ) //topLeft just for padding
-                //Note: here order of execution is important
-                //so what happen inside onDrawBehind{} block?
-                //first it draw rect of text size which we measure in `measuredText`
-                //second it will draw text on that `rect`
-            }
-        }, onDraw = {})
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.measure_text),
+        screen = {
+            Canvas(modifier = Modifier
+                .padding(16.dp)
+                .fillMaxSize()
+                .drawWithCache {
+                    val measuredText = textMeasurer.measure(
+                        text = AnnotatedString(text = longText),
+                        constraints = Constraints.fixedWidth(width = (size.width * 2f / 3f).toInt()),
+                        style = TextStyle(fontSize = 18.sp)
+                    )
+                    onDrawBehind {
+                        val sizeWithExtraPadding = Size(
+                            16.dp.toPx() + measuredText.size.width,
+                            16.dp.toPx() + measuredText.size.height
+                        ) //16.dp just for padding
+                        drawRect(color = attractions_gmap, size = sizeWithExtraPadding)
+                        drawText(
+                            textLayoutResult = measuredText,
+                            topLeft = Offset(x = 8.dp.toPx(), y = 8.dp.toPx())
+                        ) //topLeft just for padding
+                        //Note: here order of execution is important
+                        //so what happen inside onDrawBehind{} block?
+                        //first it draw rect of text size which we measure in `measuredText`
+                        //second it will draw text on that `rect`
+                    }
+                }, onDraw = {})
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 //Note: The above example uses Modifier.drawWithCache, since drawing text is an expensive operation.
@@ -181,239 +281,306 @@ fun MeasureText() {
 // For more information, see the Modifier.drawWithCache documentation.
 // https://developer.android.com/jetpack/compose/graphics/draw/modifiers#drawwithcache
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
-fun MeasureTextWithNarrowWidth() {
+fun MeasureTextWithNarrowWidth(navHostController: NavHostController) {
     val textMeasurer = rememberTextMeasurer()
     val longText = stringResource(id = R.string.lorem_ipsum)
-
-    Canvas(modifier = Modifier
-        .padding(16.dp)
-        .fillMaxSize()
-        .drawWithCache {
-            val measuredText = textMeasurer.measure(
-                text = AnnotatedString(text = longText),
-                constraints = Constraints.fixed(
-                    width = (size.width / 3f).toInt(),
-                    height = (size.height / 3f).toInt()
-                ),
-                overflow = TextOverflow.Ellipsis,
-                style = TextStyle(fontSize = 18.sp)
-            )
-            onDrawBehind {
-                val sizeWithExtraPadding = Size(
-                    16.dp.toPx() + measuredText.size.width,
-                    16.dp.toPx() + measuredText.size.height
-                ) //16.dp just for padding
-                drawRect(color = attractions_gmap, size = sizeWithExtraPadding)
-                drawText(
-                    textLayoutResult = measuredText,
-                    topLeft = Offset(x = 8.dp.toPx(), y = 8.dp.toPx())
-                ) //topLeft just for padding
-                //Note: here order of execution is important
-                //so what happen inside onDrawBehind{} block?
-                //first it draw rect of text size which we measure in `measuredText`
-                //second it will draw text on that `rect`
-            }
-        }, onDraw = {})
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.measure_text_with_narrow_size),
+        screen = {
+            Canvas(modifier = Modifier
+                .padding(16.dp)
+                .fillMaxSize()
+                .drawWithCache {
+                    val measuredText = textMeasurer.measure(
+                        text = AnnotatedString(text = longText),
+                        constraints = Constraints.fixed(
+                            width = (size.width / 3f).toInt(),
+                            height = (size.height / 3f).toInt()
+                        ),
+                        overflow = TextOverflow.Ellipsis,
+                        style = TextStyle(fontSize = 18.sp)
+                    )
+                    onDrawBehind {
+                        val sizeWithExtraPadding = Size(
+                            16.dp.toPx() + measuredText.size.width,
+                            16.dp.toPx() + measuredText.size.height
+                        ) //16.dp just for padding
+                        drawRect(color = attractions_gmap, size = sizeWithExtraPadding)
+                        drawText(
+                            textLayoutResult = measuredText,
+                            topLeft = Offset(x = 8.dp.toPx(), y = 8.dp.toPx())
+                        ) //topLeft just for padding
+                        //Note: here order of execution is important
+                        //so what happen inside onDrawBehind{} block?
+                        //first it draw rect of text size which we measure in `measuredText`
+                        //second it will draw text on that `rect`
+                    }
+                }, onDraw = {})
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 @Composable
-fun DrawImage() {
+fun DrawImage(navHostController: NavHostController) {
     val image = ImageBitmap.imageResource(id = R.drawable.actual_bitmap_image)
 
-    Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
-        drawImage(image = image)
-    })
-}
-
-@Composable
-fun DrawCircle() {
-    Canvas(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        onDraw = {
-            drawCircle(color = attractions_gmap)
-        }
-    )
-
-}
-
-@Composable
-fun DrawRoundedRect() {
-    Canvas(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp), onDraw = {
-        drawRoundRect(
-            color = attractions_gmap,
-            cornerRadius = CornerRadius(
-                x = 16.dp.toPx(),
-                y = 16.dp.toPx()
-            ) //give radius to both x & y axis
-        )
-    })
-}
-
-@Composable
-fun DrawOval() {
-    Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
-        drawOval(color = attractions_gmap)
-    })
-}
-
-@Composable
-fun DrawArc() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Box(modifier = Modifier.weight(weight = 1f)) {
-            Canvas(modifier = Modifier
-                .fillMaxSize(), onDraw = {
-                drawArc(
-                    color = attractions_gmap,
-                    startAngle = 0f,
-                    sweepAngle = 250f,
-                    useCenter = false
-                )
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.draw_image),
+        screen = {
+            Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
+                drawImage(image = image)
             })
-            Text(
-                text = "startAngle = 0f\nsweepAngle = 250f\nuseCenter = false",
-                modifier = Modifier.align(alignment = Alignment.Center)
-            )
-        }
-        Box(modifier = Modifier.weight(weight = 1f)) {
-            Canvas(modifier = Modifier
-                .fillMaxSize(), onDraw = {
-                drawArc(
-                    color = attractions_gmap,
-                    startAngle = 0f,
-                    sweepAngle = 250f,
-                    useCenter = true
-                )
-            })
-            Text(
-                text = "startAngle = 0f\nsweepAngle = 250f\nuseCenter = true",
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
+}
+
+@Composable
+fun DrawCircle(navHostController: NavHostController) {
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.draw_circle),
+        screen = {
+            Canvas(
                 modifier = Modifier
-                    .align(alignment = Alignment.BottomCenter)
-                    .padding(bottom = 32.dp)
+                    .fillMaxSize()
+                    .padding(16.dp),
+                onDraw = {
+                    drawCircle(color = attractions_gmap)
+                }
             )
-        }
-    }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 @Composable
-fun DrawPoint() {
-    Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
-
-        val list = mutableListOf<Offset>()
-        repeat(5) {
-            list.add(
-                Offset(
-                    (0f.toInt()..size.width.toInt()).random().toFloat(),
-                    (0f.toInt()..size.height.toInt()).random().toFloat()
-                )
-            )
-        }
-
-        drawPoints(
-            points = list.toList(),
-            pointMode = PointMode.Points,
-            color = attractions_gmap,
-            strokeWidth = 5.dp.toPx()
-        )
-    })
-}
-
-@Composable
-fun DrawPath() {
-    Canvas(modifier = Modifier
-        .fillMaxSize()
-        .drawWithCache {
-            val path = Path()
-            path.moveTo(0f, 0f)
-            path.lineTo(size.width / 2f, size.height / 2f)
-            path.lineTo(size.width, 0f)
-            path.close()
-            path.moveTo(size.width / 2f, size.height / 2f)
-            path.lineTo(0f, size.height)
-            path.lineTo(size.width, size.height)
-            path.close()
-            onDrawBehind {
-                drawPath(
-                    path = path,
+fun DrawRoundedRect(navHostController: NavHostController) {
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.draw_roundedrect),
+        screen = {
+            Canvas(modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp), onDraw = {
+                drawRoundRect(
                     color = attractions_gmap,
-                    style = Stroke(width = 5.dp.toPx())
+                    cornerRadius = CornerRadius(
+                        x = 16.dp.toPx(),
+                        y = 16.dp.toPx()
+                    ) //give radius to both x & y axis
                 )
-            }
-        }, onDraw = {})
+            })
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 @Composable
-fun AccessingCanvasObject() {
-    val drawable = ShapeDrawable(OvalShape())
-    Canvas(modifier = Modifier
-        .fillMaxSize()
-        .background(color = Color.White)
-        .drawWithContent {
-            drawIntoCanvas { canvas ->
-                drawable.setBounds(0, 0, size.width.toInt(), size.height.toInt())
-                drawable.draw(canvas.nativeCanvas)
+fun DrawOval(navHostController: NavHostController) {
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.drawoval),
+        screen = {
+            Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
+                drawOval(color = attractions_gmap)
+            })
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
+}
+
+@Composable
+fun DrawArc(navHostController: NavHostController) {
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.drawarc),
+        screen = {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                Box(modifier = Modifier.weight(weight = 1f)) {
+                    Canvas(modifier = Modifier
+                        .fillMaxSize(), onDraw = {
+                        drawArc(
+                            color = attractions_gmap,
+                            startAngle = 0f,
+                            sweepAngle = 250f,
+                            useCenter = false
+                        )
+                    })
+                    Text(
+                        text = "startAngle = 0f\nsweepAngle = 250f\nuseCenter = false",
+                        modifier = Modifier.align(alignment = Alignment.Center)
+                    )
+                }
+                Box(modifier = Modifier.weight(weight = 1f)) {
+                    Canvas(modifier = Modifier
+                        .fillMaxSize(), onDraw = {
+                        drawArc(
+                            color = attractions_gmap,
+                            startAngle = 0f,
+                            sweepAngle = 250f,
+                            useCenter = true
+                        )
+                    })
+                    Text(
+                        text = "startAngle = 0f\nsweepAngle = 250f\nuseCenter = true",
+                        modifier = Modifier
+                            .align(alignment = Alignment.BottomCenter)
+                            .padding(bottom = 32.dp)
+                    )
+                }
             }
-        }, onDraw = {})
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
+}
+
+@Composable
+fun DrawPoint(navHostController: NavHostController) {
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.drawpoint),
+        screen = {
+            Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
+
+                val list = mutableListOf<Offset>()
+                repeat(5) {
+                    list.add(
+                        Offset(
+                            (0f.toInt()..size.width.toInt()).random().toFloat(),
+                            (0f.toInt()..size.height.toInt()).random().toFloat()
+                        )
+                    )
+                }
+
+                drawPoints(
+                    points = list.toList(),
+                    pointMode = PointMode.Points,
+                    color = attractions_gmap,
+                    strokeWidth = 5.dp.toPx()
+                )
+            })
+        }, onBackIconClick = {
+            navHostController.popBackStack()
+        })
+}
+
+@Composable
+fun DrawPath(navHostController: NavHostController) {
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.drawpath),
+        screen = {
+            Canvas(modifier = Modifier
+                .fillMaxSize()
+                .drawWithCache {
+                    val path = Path()
+                    path.moveTo(0f, 0f)
+                    path.lineTo(size.width / 2f, size.height / 2f)
+                    path.lineTo(size.width, 0f)
+                    path.close()
+                    path.moveTo(size.width / 2f, size.height / 2f)
+                    path.lineTo(0f, size.height)
+                    path.lineTo(size.width, size.height)
+                    path.close()
+                    onDrawBehind {
+                        drawPath(
+                            path = path,
+                            color = attractions_gmap,
+                            style = Stroke(width = 5.dp.toPx())
+                        )
+                    }
+                }, onDraw = {})
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
+}
+
+@Composable
+fun AccessingCanvasObject(navHostController: NavHostController) {
+    val drawable = ShapeDrawable(OvalShape())
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.accessing_canvas_object),
+        screen = {
+            Canvas(modifier = Modifier
+                .fillMaxSize()
+                .background(color = Color.White)
+                .drawWithContent {
+                    drawIntoCanvas { canvas ->
+                        drawable.setBounds(0, 0, size.width.toInt(), size.height.toInt())
+                        drawable.draw(canvas.nativeCanvas)
+                    }
+                }, onDraw = {})
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 @Phone
 @Composable
-fun IconsUsingCanvasDraw() {
-    val iconSize = 80.dp
+fun IconsUsingCanvasDraw(navHostController: NavHostController) {
+    val iconSize = 20f.widthByPercentage()
     val horizontalArrangement =
         Arrangement.spacedBy(16.dp, alignment = Alignment.CenterHorizontally)
-    val rowModifier = Modifier.horizontalScroll(state = rememberScrollState())
-
-    Column(
-        modifier = Modifier
-            .padding(8.dp)
-            .verticalScroll(state = rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        Row(
-            modifier = rowModifier,
-            horizontalArrangement = horizontalArrangement
-        ) {
-            InstagramIconUsingCanvasDraw(iconSize)
-            FacebookIconUsingCanvasDraw(iconSize)
-            MessengerIconUsingCanvasDraw(iconSize)
-            GooglePhotosIconUsingCanvasDrawing(iconSize)
-        }
-        Row(
-            modifier = rowModifier,
-            horizontalArrangement = horizontalArrangement
-        ) {
-            GoogleIconUsingCanvasDrawing(iconSize)
-            YoutubeIconUsingCanvasDrawing(iconSize)
-            GoogleAssistantIconUsingCanvasDrawing(iconSize)
-            GoogleAdsIconUsingCanvasDrawing(iconSize)
-        }
-        Row(
-            modifier = rowModifier,
-            horizontalArrangement = horizontalArrangement
-        ) {
-            GoogleVoiceSearchIconUsingCanvasDrawing(iconSize)
-            StackoverflowIconUsingCanvasDrawing(iconSize)
-            SpotifyIconUsingCanvasDrawing(iconSize)
-            TrelloIconUsingCanvasDrawing(iconSize)
-        }
-        Row(
-            modifier = rowModifier,
-            horizontalArrangement = horizontalArrangement
-        ) {
-            ZoomIconUsingCanvasDrawing(iconSize)
-            AndroidIconUsingCanvasDrawing(iconSize)
-            IosWeatherAppIconUsingCanvasDrawing(iconSize)
-        }
-    }
+    val rowModifier = Modifier
+        .fillMaxWidth()
+        .horizontalScroll(state = rememberScrollState())
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.icons_using_canvas_draw),
+        screen = {
+            Column(
+                modifier = Modifier
+                    .padding(8.dp)
+                    .verticalScroll(state = rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Row(
+                    modifier = rowModifier,
+                    horizontalArrangement = horizontalArrangement
+                ) {
+                    InstagramIconUsingCanvasDraw(iconSize)
+                    FacebookIconUsingCanvasDraw(iconSize)
+                    MessengerIconUsingCanvasDraw(iconSize)
+                    GooglePhotosIconUsingCanvasDrawing(iconSize)
+                }
+                Row(
+                    modifier = rowModifier,
+                    horizontalArrangement = horizontalArrangement
+                ) {
+                    GoogleIconUsingCanvasDrawing(iconSize)
+                    YoutubeIconUsingCanvasDrawing(iconSize)
+                    GoogleAssistantIconUsingCanvasDrawing(iconSize)
+                    GoogleAdsIconUsingCanvasDrawing(iconSize)
+                }
+                Row(
+                    modifier = rowModifier,
+                    horizontalArrangement = horizontalArrangement
+                ) {
+                    GoogleVoiceSearchIconUsingCanvasDrawing(iconSize)
+                    StackoverflowIconUsingCanvasDrawing(iconSize)
+                    SpotifyIconUsingCanvasDrawing(iconSize)
+                    TrelloIconUsingCanvasDrawing(iconSize)
+                }
+                Row(
+                    modifier = rowModifier,
+                    horizontalArrangement = horizontalArrangement
+                ) {
+                    ZoomIconUsingCanvasDrawing(iconSize)
+                    AndroidIconUsingCanvasDrawing(iconSize)
+                    IosWeatherAppIconUsingCanvasDrawing(iconSize)
+                }
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 @Composable
@@ -1077,31 +1244,36 @@ fun IosWeatherAppIconUsingCanvasDrawing(iconSize: Dp) {
 }
 
 @Composable
-fun DrawTriangleWaterDropletWithCornerPathEffects() {
+fun DrawTriangleWaterDropletWithCornerPathEffects(navHostController: NavHostController) {
     val dropColor = MaterialTheme.colors.onSurface
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.draw_triangle_with_cornerpatheffects),
+        screen = {
+            Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
+                val rect = Rect(Offset.Zero, size)
 
-    Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
-        val rect = Rect(Offset.Zero, size)
+                val trianglePath = Path().apply {
+                    moveTo(rect.topCenter.x, rect.topCenter.y)
+                    lineTo(rect.bottomRight.x, rect.bottomRight.y)
+                    lineTo(rect.bottomLeft.x, rect.bottomLeft.y)
+                    close()
+                }
 
-        val trianglePath = Path().apply {
-            moveTo(rect.topCenter.x, rect.topCenter.y)
-            lineTo(rect.bottomRight.x, rect.bottomRight.y)
-            lineTo(rect.bottomLeft.x, rect.bottomLeft.y)
-            close()
-        }
-
-        drawIntoCanvas {
-            it.drawOutline(outline = Outline.Generic(trianglePath), paint = Paint().apply {
-                color = dropColor
-                pathEffect = PathEffect.cornerPathEffect(rect.maxDimension / 2)
+                drawIntoCanvas {
+                    it.drawOutline(outline = Outline.Generic(trianglePath), paint = Paint().apply {
+                        color = dropColor
+                        pathEffect = PathEffect.cornerPathEffect(rect.maxDimension / 2)
+                    })
+                }
             })
-        }
-    })
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
-fun ChainPathEffectSimpleExample() {
+fun ChainPathEffectSimpleExample(navHostController: NavHostController) {
 
     val dashPathEffect = remember {
         PathEffect.dashPathEffect(intervals = floatArrayOf(20f, 10f), 0f)
@@ -1110,26 +1282,32 @@ fun ChainPathEffectSimpleExample() {
     val cornerPathEffect = remember {
         PathEffect.cornerPathEffect(80f)
     }
-
-    Text(
-        text = "This is chainPathEffect apply to text compose",
-        style = TextStyle(
-            color = stackoverflowStackColor,
-            fontSize = 80.sp,
-            drawStyle = Stroke(
-                width = 6f, join = StrokeJoin.Round,
-                pathEffect = PathEffect.chainPathEffect(
-                    outer = dashPathEffect,
-                    inner = cornerPathEffect
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.chainpatheffect_simple_example),
+        screen = {
+            Text(
+                text = stringResource(R.string.this_is_chainpatheffect_apply_to_text_compose),
+                style = TextStyle(
+                    color = stackoverflowStackColor,
+                    fontSize = 80.sp,
+                    drawStyle = Stroke(
+                        width = 6f, join = StrokeJoin.Round,
+                        pathEffect = PathEffect.chainPathEffect(
+                            outer = dashPathEffect,
+                            inner = cornerPathEffect
+                        )
+                    )
                 )
-            )
-        )
 
-    )
+            )
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 @Composable
-fun GooeyEffectUsingChainPathEffect() {
+fun GooeyEffectUsingChainPathEffect(navHostController: NavHostController) {
     val pathDynamic = remember { Path() }
     val pathStatic = remember { Path() }
 
@@ -1141,76 +1319,84 @@ fun GooeyEffectUsingChainPathEffect() {
     val paint = remember { Paint() }
 
     var isPaintSetUp by remember { mutableStateOf(false) }
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.gooey_effect_using_chainpatheffect_example),
+        screen = {
+            Canvas(modifier = Modifier
+                .pointerInput(Unit) {
+                    detectDragGestures { change, _ ->
+                        currentPosition = change.position
+                    }
+                }
+                .fillMaxSize(), onDraw = {
+                val center = size.center
 
-    Canvas(modifier = Modifier
-        .pointerInput(Unit) {
-            detectDragGestures { change, _ ->
-                currentPosition = change.position
-            }
-        }
-        .fillMaxSize(), onDraw = {
-        val center = size.center
+                val position = if (currentPosition == Offset.Unspecified) {
+                    center
+                } else currentPosition
 
-        val position = if (currentPosition == Offset.Unspecified) {
-            center
-        } else currentPosition
+                pathDynamic.reset() //clear path
+                pathDynamic.addOval( //add movable circle
+                    Rect(
+                        center = position,
+                        radius = 150f
+                    )
+                )
 
-        pathDynamic.reset() //clear path
-        pathDynamic.addOval( //add movable circle
-            Rect(
-                center = position,
-                radius = 150f
-            )
-        )
+                pathStatic.reset()  //clear path
+                pathStatic.addOval( //add fix circle in center of the screen
+                    Rect(
+                        center = Offset(center.x, center.y),
+                        radius = 100f
+                    )
+                )
 
-        pathStatic.reset()  //clear path
-        pathStatic.addOval( //add fix circle in center of the screen
-            Rect(
-                center = Offset(center.x, center.y),
-                radius = 100f
-            )
-        )
+                pathMeasure.setPath(pathDynamic, true) //assign new path
 
-        pathMeasure.setPath(pathDynamic, true) //assign new path
+                //apply effect to big movable circle
+                //0f as deviation means pattern is regular and evenly spaced
+                val discretePathEffect = DiscretePathEffect(pathMeasure.length / segmentCount, 0f)
+                //add full circle effect to two circles
+                val cornerPathEffect = CornerPathEffect(50f)
 
-        //apply effect to big movable circle
-        //0f as deviation means pattern is regular and evenly spaced
-        val discretePathEffect = DiscretePathEffect(pathMeasure.length / segmentCount, 0f)
-        //add full circle effect to two circles
-        val cornerPathEffect = CornerPathEffect(50f)
+                //chainPathEffect will provide effect to inner path effect & then outer effect to all inner path effect
+                val chainPathEffect = PathEffect.chainPathEffect(
+                    outer = cornerPathEffect.toComposePathEffect(), //toComposePathEffect() convert CornerPathEffect -> PathEffect
+                    inner = discretePathEffect.toComposePathEffect() //toComposePathEffect() convert DiscretePathEffect -> PathEffect
+                )
+                if (!isPaintSetUp) { //this condition make sure only one time paint will apply
 
-        //chainPathEffect will provide effect to inner path effect & then outer effect to all inner path effect
-        val chainPathEffect = PathEffect.chainPathEffect(
-            outer = cornerPathEffect.toComposePathEffect(), //toComposePathEffect() convert CornerPathEffect -> PathEffect
-            inner = discretePathEffect.toComposePathEffect() //toComposePathEffect() convert DiscretePathEffect -> PathEffect
-        )
-        if (!isPaintSetUp) { //this condition make sure only one time paint will apply
+                    paint.shader = LinearGradientShader(
+                        from = Offset.Zero,                     //start range when first color applied
+                        to = Offset(
+                            size.width,
+                            size.height
+                        ),   //end range when second color applied
+                        colors = listOf(
+                            Color(0xffFFEB3B),   //color applied when you drag big circle to top
+                            Color(0xffE91E63)    //color applied when you drag big circle to bottom
+                        ),
+                        tileMode = TileMode.Clamp
+                    )
+                    isPaintSetUp = true
+                    paint.pathEffect = chainPathEffect
+                }
 
-            paint.shader = LinearGradientShader(
-                from = Offset.Zero,                     //start range when first color applied
-                to = Offset(size.width, size.height),   //end range when second color applied
-                colors = listOf(
-                    Color(0xffFFEB3B),   //color applied when you drag big circle to top
-                    Color(0xffE91E63)    //color applied when you drag big circle to bottom
-                ),
-                tileMode = TileMode.Clamp
-            )
-            isPaintSetUp = true
-            paint.pathEffect = chainPathEffect
-        }
+                //combine two paths since we want to draw path into canvas & want it only one
+                val newPath = Path.combine(PathOperation.Union, pathDynamic, pathStatic)
 
-        //combine two paths since we want to draw path into canvas & want it only one
-        val newPath = Path.combine(PathOperation.Union, pathDynamic, pathStatic)
-
-        drawIntoCanvas {
-            it.drawPath(path = newPath, paint = paint)
-        }
-    })
+                drawIntoCanvas {
+                    it.drawPath(path = newPath, paint = paint)
+                }
+            })
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
-@OptIn(ExperimentalTextApi::class)
 @Composable
-fun StampedPathEffectExample() {
+fun StampedPathEffectExample(navHostController: NavHostController) {
 
     val heartPath = remember {
         Path().apply {
@@ -1231,102 +1417,140 @@ fun StampedPathEffectExample() {
             //phase = Amount to offset before the first shape is stamped
         )
     }
-    Text(
-        text = "This is stampedPathEffect apply to text compose",
-        style = LocalTextStyle.current.merge(
-            TextStyle(
-                color = stackoverflowStackColor,
-                fontSize = 80.sp,
-                drawStyle = Stroke(
-                    width = 6f, join = StrokeJoin.Round,
-                    pathEffect = stampEffect
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.stampedpatheffect_example),
+        screen = {
+            Text(
+                text = stringResource(R.string.this_is_stampedpatheffect_apply_to_text_compose),
+                style = LocalTextStyle.current.merge(
+                    TextStyle(
+                        color = stackoverflowStackColor,
+                        fontSize = 80.sp,
+                        drawStyle = Stroke(
+                            width = 6f, join = StrokeJoin.Round,
+                            pathEffect = stampEffect
+                        )
+                    )
                 )
             )
-        )
-    )
-}
-
-@Composable
-fun ScalingTransformation() {
-    Box {
-        Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
-            scale(scaleX = 10f, scaleY = 15f) {
-                drawCircle(color = attractions_gmap, radius = 12.dp.toPx())
-            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
         })
-        Text(
-            text = "circle is scaling in x 10 times & in y 15 times",
-            color = MaterialTheme.colors.onSurface,
-            modifier = Modifier.align(alignment = Alignment.Center)
-        )
-    }
 }
 
 @Composable
-fun TranslateTransformation() {
-    Box {
-        Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
-            translate(left = 100f, top = -300f, block = {
-                drawCircle(color = attractions_gmap, radius = 200.dp.toPx())
-            })
-        })
-        Text(
-            text = "circle is moving 100px in right & 300px up",
-            color = MaterialTheme.colors.onSurface,
-            modifier = Modifier.align(alignment = Alignment.Center)
-        )
-    }
-}
-
-@Composable
-fun RotateTransformation() {
-    Box {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            rotate(degrees = 45F) {
-                drawRect(
-                    color = Color.Gray,
-                    topLeft = Offset(x = size.width / 3F, y = size.height / 3F),
-                    size = size / 3F
+fun ScalingTransformation(navHostController: NavHostController) {
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.scalingtransformation),
+        screen = {
+            Box {
+                Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
+                    scale(scaleX = 10f, scaleY = 15f) {
+                        drawCircle(color = attractions_gmap, radius = 12.dp.toPx())
+                    }
+                })
+                Text(
+                    text = "circle is scaling in x 10 times & in y 15 times",
+                    color = MaterialTheme.colors.onSurface,
+                    modifier = Modifier.align(alignment = Alignment.Center)
                 )
             }
-        }
-        Text(
-            text = "rotates a rectangle 45 degrees",
-            color = MaterialTheme.colors.onSurface,
-            modifier = Modifier.align(alignment = Alignment.Center)
-        )
-    }
+        }, onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 @Composable
-fun InsetTransformation() {
-    Box {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val canvasQuadrantSize = size / 2F
-            inset(horizontal = 50f, vertical = 30f) {
-                drawRect(color = Color.Green, size = canvasQuadrantSize)
+fun TranslateTransformation(navHostController: NavHostController) {
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.translate_transformation),
+        screen = {
+            Box {
+                Canvas(modifier = Modifier.fillMaxSize(), onDraw = {
+                    translate(left = 100f, top = -300f, block = {
+                        drawCircle(color = attractions_gmap, radius = 200.dp.toPx())
+                    })
+                })
+                Text(
+                    text = "circle is moving 100px in right & 300px up",
+                    color = MaterialTheme.colors.onSurface,
+                    modifier = Modifier.align(alignment = Alignment.Center)
+                )
             }
-        }
-        Text(
-            text = "inset use to move to specific position\nrectangle move to 50f horizontally & 30f vertically",
-            color = MaterialTheme.colors.onSurface,
-            modifier = Modifier.align(alignment = Alignment.Center)
-        )
-    }
+        }, onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }
 
 @Composable
-fun MultipleTransformation() {
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        withTransform({
-            translate(left = size.width / 5F)
-            rotate(degrees = 45F)
-        }) {
-            drawRect(
-                color = Color.Gray,
-                topLeft = Offset(x = size.width / 3F, y = size.height / 3F),
-                size = size / 3F
-            )
-        }
-    }
+fun RotateTransformation(navHostController: NavHostController) {
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.rotate_transformation),
+        screen = {
+            Box {
+                Canvas(modifier = Modifier.fillMaxSize()) {
+                    rotate(degrees = 45F) {
+                        drawRect(
+                            color = Color.Gray,
+                            topLeft = Offset(x = size.width / 3F, y = size.height / 3F),
+                            size = size / 3F
+                        )
+                    }
+                }
+                Text(
+                    text = "rotates a rectangle 45 degrees",
+                    color = MaterialTheme.colors.onSurface,
+                    modifier = Modifier.align(alignment = Alignment.Center)
+                )
+            }
+        }, onBackIconClick = {
+            navHostController.popBackStack()
+        })
+}
+
+@Composable
+fun InsetTransformation(navHostController: NavHostController) {
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.inset_transformation),
+        screen = {
+            Box {
+                Canvas(modifier = Modifier.fillMaxSize()) {
+                    val canvasQuadrantSize = size / 2F
+                    inset(horizontal = 50f, vertical = 30f) {
+                        drawRect(color = Color.Green, size = canvasQuadrantSize)
+                    }
+                }
+                Text(
+                    text = "inset use to move to specific position\nrectangle move to 50f horizontally & 30f vertically",
+                    color = MaterialTheme.colors.onSurface,
+                    modifier = Modifier.align(alignment = Alignment.Center)
+                )
+            }
+        }, onBackIconClick = {
+            navHostController.popBackStack()
+        })
+}
+
+@Composable
+fun MultipleTransformation(navHostController: NavHostController) {
+    BuildTopBarWithScreen(
+        title = stringResource(id = R.string.multiple_transformation),
+        screen = {
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                withTransform({
+                    translate(left = size.width / 5F)
+                    rotate(degrees = 45F)
+                }) {
+                    drawRect(
+                        color = Color.Gray,
+                        topLeft = Offset(x = size.width / 3F, y = size.height / 3F),
+                        size = size / 3F
+                    )
+                }
+            }
+        },
+        onBackIconClick = {
+            navHostController.popBackStack()
+        })
 }

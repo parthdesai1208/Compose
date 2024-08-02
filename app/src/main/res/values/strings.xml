@@ -505,4 +505,44 @@
     <string name="interests">Interests</string>
     <string name="exit">Exit</string>
     <!--    end region-->
+
+    <!--    region draw sample-->
+    <string name="drawline">drawLine</string>
+    <string name="drawrect">drawRect</string>
+    <string name="drawline_from_topright_to_bottomleft">DrawLine From TopRight To BottomLeft</string>
+    <string name="draw_dash_line_from_top_right_to_bottom_left">Draw Dash Line From Top-Right To Bottom-Left</string>
+    <string name="drawtext">DrawText</string>
+    <string name="measure_text">Measure Text</string>
+    <string name="measure_text_with_narrow_size">Measure Text With Narrow Size</string>
+    <string name="draw_image">Draw Image</string>
+    <string name="draw_circle">Draw Circle</string>
+    <string name="draw_roundedrect">Draw RoundedRect</string>
+    <string name="drawoval">DrawOval</string>
+    <string name="drawarc">DrawArc</string>
+    <string name="drawpoint">DrawPoint</string>
+    <string name="drawpath">DrawPath</string>
+    <string name="accessing_canvas_object">Accessing Canvas Object</string>
+    <string name="icons_using_canvas_draw">Icons Using Canvas Draw</string>
+    <string name="draw_triangle_with_cornerpatheffects">Draw Triangle With CornerPathEffects</string>
+    <string name="chainpatheffect_simple_example">ChainPathEffect Simple Example</string>
+    <string name="gooey_effect_using_chainpatheffect_example">Gooey effect using ChainPathEffect Example</string>
+    <string name="stampedpatheffect_example">StampedPathEffect Example</string>
+    <string name="scalingtransformation">ScalingTransformation</string>
+    <string name="translate_transformation">Translate Transformation</string>
+    <string name="rotate_transformation">Rotate Transformation</string>
+    <string name="inset_transformation">Inset Transformation</string>
+    <string name="multiple_transformation">Multiple Transformation</string>
+    <string name="truckart_pattern">TruckArt pattern</string>
+    <string name="_3d_layout_right_shadow">3D layout right shadow</string>
+    <string name="_3d_layout_left_shadow">3D layout left shadow</string>
+    <string name="_3d_layout_bottom_shadow">3D layout bottom shadow</string>
+    <string name="_3d_dialog">3D Dialog</string>
+    <string name="drawlines">DrawLines</string>
+    <string name="using_drawbehind">Using DrawBehind</string>
+    <string name="by_default_drawrect_start_with_0_0">by default, drawRect start with (0,0) Coordinate at top-left side of the phone screen</string>
+    <string name="drawlines_from_topright_to_bottomleft">drawLines from topRight \nto bottomLeft using \ncoordinate system</string>
+    <string name="this_text_is_drawing_using_drawtext"><![CDATA[This text is drawing using `drawText` with canvas onDraw{} lambda\nstarting from 100f in x-axis & y-axis]]></string>
+    <string name="this_is_chainpatheffect_apply_to_text_compose">This is chainPathEffect apply to text compose</string>
+    <string name="this_is_stampedpatheffect_apply_to_text_compose">This is stampedPathEffect apply to text compose</string>
+    <!--    end region-->
 </resources>
