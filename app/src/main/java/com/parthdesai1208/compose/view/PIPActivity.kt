@@ -23,16 +23,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.Button
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.contentColorFor
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.toAndroidRect
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
@@ -40,7 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.MutableLiveData
 import com.parthdesai1208.compose.R
-import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
+import com.parthdesai1208.compose.utils.Constant.GOOGLE_SITE
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 
 class PIPActivity : ComponentActivity() {
@@ -75,28 +81,51 @@ class PIPActivity : ComponentActivity() {
     private fun PIPScreen() {
         val onBackPressedDispatcher =
             LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-        BuildTopBarWithScreen(
-            title = stringResource(id = R.string.pictureinpicture),
-            screen = {
-                Column(modifier = Modifier.fillMaxSize()) {
-                    AndroidView(factory = {
-                        VideoView(it, null).apply {
-                            setVideoURI(Uri.parse("android.resource://$packageName/${R.raw.sample}"))
-                            start() //to play video
+        val backgroundColor = MaterialTheme.colors.primary
+        Surface {
+            Column(modifier = Modifier.fillMaxSize()) {
+                AndroidView(factory = {
+                    VideoView(it, null).apply {
+                        setOnPreparedListener { mediaPlayer ->
+                            mediaPlayer.isLooping = true
                         }
-                    }, modifier = Modifier
-                        .fillMaxWidth()
-                        .onGloballyPositioned {
-                            videoViewBound = it
+                        setVideoURI(Uri.parse("android.resource://$packageName/${R.raw.sample}"))
+                        start() //to play video
+                    }
+                }, modifier = Modifier
+                    .fillMaxWidth()
+                    .onGloballyPositioned {
+                        videoViewBound = run {
+                            val boundsInWindow = it
                                 .boundsInWindow()
-                                .toAndroidRect()
-                        })
-
-                    OtherUnImportantView()
+                            Rect(
+                                boundsInWindow.left.toInt(),
+                                boundsInWindow.top.toInt(),
+                                boundsInWindow.right.toInt(),
+                                boundsInWindow.bottom.toInt()
+                            )
+                        }
+                    })
+                OtherUnImportantView()
+                FloatingActionButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(align = Alignment.CenterHorizontally)
+                        .padding(12.dp)
+                        .size(36.dp),
+                    onClick = {
+                        onBackPressedDispatcher?.onBackPressed()
+                    },
+                    backgroundColor = backgroundColor,
+                    contentColor = contentColorFor(backgroundColor),
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(id = R.string.back_arrow_description)
+                    )
                 }
-            }, onBackIconClick = {
-                onBackPressedDispatcher?.onBackPressed()
-            })
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -106,7 +135,7 @@ class PIPActivity : ComponentActivity() {
         AnimatedVisibility(visible = !isInPIPModeValue) {
             Column {
                 Text(
-                    text = "App for demonstrating the Picture in Picture mode in Android",
+                    text = stringResource(R.string.app_for_demonstrating_the_picture_in_picture_mode_in_android),
                     modifier = Modifier
                         .fillMaxWidth()
                         .wrapContentWidth(align = Alignment.CenterHorizontally)
@@ -120,7 +149,10 @@ class PIPActivity : ComponentActivity() {
                         .wrapContentWidth(align = Alignment.CenterHorizontally)
                         .padding(all = 16.dp)
                 ) {
-                    Text(text = "Enter PIP", style = MaterialTheme.typography.button)
+                    Text(
+                        text = stringResource(R.string.enter_pip),
+                        style = MaterialTheme.typography.button
+                    )
                 }
             }
         }
@@ -131,6 +163,7 @@ class PIPActivity : ComponentActivity() {
     //Home or recent button is pressed
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onUserLeaveHint() {
+        super.onUserLeaveHint()
         enterPIPMode()
     }
 
@@ -155,17 +188,17 @@ class PIPActivity : ComponentActivity() {
         if (isPIPSupported) {
             //region icon displayed in PIP mode layer
             val actions: ArrayList<RemoteAction> = ArrayList()
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"))
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(GOOGLE_SITE))
             val openBrowserAction = RemoteAction(
                 Icon.createWithResource(this, android.R.drawable.ic_menu_info_details),
-                "title here",
-                "description here",
+                getString(R.string.title_here),
+                getString(R.string.info_icon),
                 PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
             )
             val openBrowserAction1 = RemoteAction(
                 Icon.createWithResource(this, android.R.drawable.ic_delete),
-                "title here",
-                "description here",
+                getString(R.string.title_here),
+                getString(R.string.close_icon),
                 PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
             )
             actions.add(openBrowserAction)

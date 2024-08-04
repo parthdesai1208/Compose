@@ -250,7 +250,6 @@
     <string name="permission_samples">Permission Samples</string>
     <string name="singlePermission">Single permission</string>
     <string name="multiplePermission">Multiple permission</string>
-    <string name="title_activity_pipactivity">PIPActivity</string>
     <!--    endregion-->
 
     <!--    region custom layout listing -->
@@ -556,5 +555,13 @@
     <string name="any_screen_samples">Any Screen Samples</string>
     <string name="tablet_foldable_desktop_compatible_ui_sample_from_codelabs"><![CDATA[Tablet,Foldable & Desktop compatible UI\n (sample from codelabs)]]></string>
     <string name="insets">Insets</string>
+    <!--    end region-->
+    <!--    region PIP screen-->
+    <string name="title_activity_pipactivity">PIPActivity</string>
+    <string name="app_for_demonstrating_the_picture_in_picture_mode_in_android">App for demonstrating the Picture in Picture mode in Android</string>
+    <string name="enter_pip">Enter PIP</string>
+    <string name="title_here">title here</string>
+    <string name="info_icon">info icon</string>
+    <string name="close_icon">close icon</string>
     <!--    end region-->
 </resources>
