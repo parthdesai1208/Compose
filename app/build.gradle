@@ -209,5 +209,11 @@ dependencies {
     implementation 'androidx.browser:browser:1.8.0'
 
     //for new compose navigation we require serialization
+    //https://github.com/Kotlin/kotlinx.serialization?tab=readme-ov-file#2-dependency-on-the-json-library
+    //all version - https://github.com/Kotlin/kotlinx.serialization/releases
     implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3'
+
+    //for biometric authentication
+    //https://developer.android.com/jetpack/androidx/releases/biometric#groovy
+    implementation 'androidx.biometric:biometric:1.1.0'
 }

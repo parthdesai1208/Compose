@@ -69,11 +69,14 @@ import com.parthdesai1208.compose.view.navigation.NetworkListingScreenPath
 import com.parthdesai1208.compose.view.navigation.PermissionListingScreenPath
 import com.parthdesai1208.compose.view.navigation.RallyScreen
 import com.parthdesai1208.compose.view.navigation.RowListingScreenPath
+import com.parthdesai1208.compose.view.navigation.SecurityListingScreenPath
 import com.parthdesai1208.compose.view.navigation.StateListingScreen
 import com.parthdesai1208.compose.view.navigation.UIComponentsListingScreen
 import com.parthdesai1208.compose.view.navigation.VerticalListingScreenPath
 import com.parthdesai1208.compose.view.navigation.composeDestination.StartForComposeDestination
 import com.parthdesai1208.compose.view.networking.ChildNetworkListingScreen
+import com.parthdesai1208.compose.view.security.ChildSecurityListingScreen
+import com.parthdesai1208.compose.view.security.SecurityListingScreen
 import com.parthdesai1208.compose.view.state.ChildScreenState
 import com.parthdesai1208.compose.view.state.MainScreenState
 import com.parthdesai1208.compose.view.theme.ComposeTheme
@@ -135,6 +138,8 @@ enum class MainScreenEnumType(
     Networking(
         R.string.networking,
         { com.parthdesai1208.compose.view.networking.NetworkingListingScreen(it) }),
+
+    SecurityScreen(R.string.security, { SecurityListingScreen(it) }),
     GestureScreen(R.string.gesture, { GestureScreen(it) }),
     PermissionScreen(R.string.permission, { PermissionListingScreen(it) }),
     PictureInPicture(R.string.pictureinpicture, {}),
@@ -229,6 +234,10 @@ fun MainActivityNavGraph(
         composable<PermissionListingScreenPath> { backStackEntry ->
             val arguments = backStackEntry.toRoute<PermissionListingScreenPath>()
             ChildPermissionScreen(onClickButtonTitle = arguments.pathPostFix, navController)
+        }
+        composable<SecurityListingScreenPath> { backStackEntry ->
+            val arguments = backStackEntry.toRoute<SecurityListingScreenPath>()
+            ChildSecurityListingScreen(onClickButtonTitle = arguments.pathPostFix, navController)
         }
 
         //region for deep link = https://example.com/task_id=Checking

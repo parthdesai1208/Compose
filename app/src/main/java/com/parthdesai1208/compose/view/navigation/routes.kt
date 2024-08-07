@@ -52,3 +52,6 @@ data class NetworkListingScreenPath(val pathPostFix: Int)
 
 @Serializable
 data class PermissionListingScreenPath(val pathPostFix: Int)
+
+@Serializable
+data class SecurityListingScreenPath(val pathPostFix: Int)

@@ -493,6 +493,7 @@
     <string name="dateTimePicker">Date-time picker</string>
     <string name="listItem">ListItem</string>
     <string name="world">World</string>
+    <string name="security">Security</string>
     <!--    end region-->
 
     <!--    region compose destination library-->
@@ -563,5 +564,10 @@
     <string name="title_here">title here</string>
     <string name="info_icon">info icon</string>
     <string name="close_icon">close icon</string>
+    <!--    end region-->
+    <!--    region security screen-->
+    <string name="cancel">Cancel</string>
+    <string name="biometricStrongAuthentication">Authentication using fingerprint</string>
+    <string name="pinPasswordAuthentication">Authentication using PIN,Pattern,Password,fingerprint,Face</string>
     <!--    end region-->
 </resources>
