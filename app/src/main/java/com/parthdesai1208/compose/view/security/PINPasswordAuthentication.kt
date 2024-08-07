@@ -49,7 +49,7 @@ fun PINPasswordAuthenticationScreen(
     var isSetHereButtonVisible by remember {
         mutableStateOf(false)
     }
-
+    val context = LocalContext.current
     LaunchedEffect(key1 = biometricResult) {
         if (biometricResult is BiometricPromptManager.BiometricResult.AuthenticationNotSet) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -80,13 +80,13 @@ fun PINPasswordAuthenticationScreen(
                     enabled = !isSetHereButtonVisible,
                     onClick = {
                         promptManager.showBioMetricPrompt(
-                            title = "Title",
-                            subtitle = "Subtitle",
-                            description = "Description",
+                            title = context.getString(R.string.title),
+                            subtitle = context.getString(R.string.subtitle),
+                            description = context.getString(R.string.description),
                             authenticator = authenticator,
                         )
                     }) {
-                    Text("Authenticate")
+                    Text(stringResource(R.string.authenticate))
                 }
                 Spacer(modifier = Modifier.height(16.dp))
                 biometricResult?.let { result ->
@@ -97,23 +97,23 @@ fun PINPasswordAuthenticationScreen(
                             }
 
                             BiometricPromptManager.BiometricResult.AuthenticationFailed -> {
-                                "Authentication Failed"
+                                stringResource(R.string.authentication_failed)
                             }
 
                             BiometricPromptManager.BiometricResult.AuthenticationNotSet -> {
-                                "Authentication not set"
+                                stringResource(R.string.authentication_not_set)
                             }
 
                             BiometricPromptManager.BiometricResult.AuthenticationSuccess -> {
-                                "Authentication Success"
+                                stringResource(R.string.authentication_success)
                             }
 
                             BiometricPromptManager.BiometricResult.FeatureUnavailable -> {
-                                "Feature Unavailable"
+                                stringResource(R.string.feature_unavailable)
                             }
 
                             BiometricPromptManager.BiometricResult.HardwareUnavailable -> {
-                                "Hardware Unavailable"
+                                stringResource(R.string.hardware_unavailable)
                             }
                         }
                     )
@@ -123,7 +123,7 @@ fun PINPasswordAuthenticationScreen(
                     Button(onClick = {
                         enrollLauncher.launch(biometricEnrollIntent(authenticator))
                     }) {
-                        Text(text = "Set Here")
+                        Text(text = stringResource(R.string.set_here))
                     }
                 }
             }

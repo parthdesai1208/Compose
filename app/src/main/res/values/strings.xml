@@ -569,5 +569,15 @@
     <string name="cancel">Cancel</string>
     <string name="biometricStrongAuthentication">Authentication using fingerprint</string>
     <string name="pinPasswordAuthentication">Authentication using PIN,Pattern,Password,fingerprint,Face</string>
+    <string name="set_here">Set Here</string>
+    <string name="hardware_unavailable">Hardware Unavailable</string>
+    <string name="feature_unavailable">Feature Unavailable</string>
+    <string name="authentication_success">Authentication Success</string>
+    <string name="authentication_not_set">Authentication not set</string>
+    <string name="authentication_failed">Authentication Failed</string>
+    <string name="authenticate">Authenticate</string>
+    <string name="description">Description</string>
+    <string name="subtitle">Subtitle</string>
+    <string name="title">Title</string>
     <!--    end region-->
 </resources>
