@@ -10,14 +10,14 @@ import com.google.gson.Gson
 data class Article(
     @PrimaryKey(autoGenerate = false)
     val url: String,
-    val author: String?,
-    val content: String?,
-    val description: String?,
-    val publishedAt: String?,
-    val source: Source?,
-    val title: String?,
-    val urlToImage: String?,
-    var page: Int?,
+    val author: String? = null,
+    val content: String? = null,
+    val description: String? = null,
+    val publishedAt: String? = null,
+    val source: Source? = null,
+    val title: String? = null,
+    val urlToImage: String? = null,
+    var page: Int? = null,
 )
 
 class SourceConverter {

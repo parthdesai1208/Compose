@@ -5,11 +5,13 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.parthdesai1208.compose.model.networking.paging3withroom.*
+import com.parthdesai1208.compose.model.networking.paging3withroom.Article
+import com.parthdesai1208.compose.model.networking.paging3withroom.NewsListApiService
+import com.parthdesai1208.compose.model.networking.paging3withroom.Paging3WithRoomDataBase
+import com.parthdesai1208.compose.model.networking.paging3withroom.Paging3WithRoomDataBasePagingSource
+import com.parthdesai1208.compose.utils.Constant.ITEM_PREFETCH_DISTANCE
+import com.parthdesai1208.compose.utils.Constant.PAGING_ITEM_SIZE
 import kotlinx.coroutines.flow.Flow
-
-
-const val PAGE_SIZE = 10
 
 class Paging3WithRoomDBVM(
     private val newsApiService: NewsListApiService,
@@ -17,12 +19,12 @@ class Paging3WithRoomDBVM(
 ) : ViewModel() {
 
     @OptIn(ExperimentalPagingApi::class)
-    fun getArticle(query: String, sortBy: String): Flow<PagingData<Article>> =
+    fun getArticle(query: String): Flow<PagingData<Article>> =
         Pager(
             config = PagingConfig(
-                pageSize = PAGE_SIZE,
-                prefetchDistance = 4,
-                initialLoadSize = PAGE_SIZE
+                pageSize = PAGING_ITEM_SIZE,
+                prefetchDistance = ITEM_PREFETCH_DISTANCE,
+                initialLoadSize = PAGING_ITEM_SIZE
             ),
             pagingSourceFactory = {
                 paging3WithRoomDataBase.getPaging3WithRoomDataBaseDao().getArticles()
@@ -31,7 +33,6 @@ class Paging3WithRoomDBVM(
                 newsApiService = newsApiService,
                 paging3WithRoomDataBase = paging3WithRoomDataBase,
                 query = query,
-                sortBy = sortBy
             )
         ).flow
 }

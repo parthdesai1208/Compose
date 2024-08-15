@@ -28,8 +28,8 @@ enum class NetworkingListingEnumType(
 ) {
     MoviesList(R.string.moviesList, { MoviesListScreen(viewModel(), navHostController = it) }),
 
-    /*NewsList(R.string.newListUsingPaging3, { NewsListUsingPaging3(viewModel = viewModel()) }),
-    Paging3Room(R.string.Paging3Room, { Paging3Room() }),*/
+    NewsList(R.string.newListUsingPaging3, { NewsListUsingPaging3(viewModel = viewModel(), it) }),
+    Paging3Room(R.string.Paging3Room, { Paging3Room(it) }),
     InternetConnectivity(R.string.internetConnectivityDemo, { InternetConnectivityDemo(it) }),
 }
 

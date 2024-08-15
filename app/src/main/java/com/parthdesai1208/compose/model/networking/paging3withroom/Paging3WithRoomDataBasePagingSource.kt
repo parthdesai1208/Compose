@@ -1,9 +1,13 @@
 package com.parthdesai1208.compose.model.networking.paging3withroom
 
-import androidx.paging.*
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.LoadType
+import androidx.paging.PagingState
+import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.parthdesai1208.compose.BuildConfig
-import com.parthdesai1208.compose.viewmodel.networking.PAGE_SIZE
+import com.parthdesai1208.compose.utils.Constant.API_RESPONSE_REMOVED_KEYWORD
+import com.parthdesai1208.compose.utils.Constant.PAGING_ITEM_SIZE
 import kotlinx.coroutines.delay
 import retrofit2.HttpException
 import java.io.IOException
@@ -14,7 +18,6 @@ class Paging3WithRoomDataBasePagingSource(
     private val newsApiService: NewsListApiService,
     private val paging3WithRoomDataBase: Paging3WithRoomDataBase,
     private val query: String,
-    private val sortBy: String
 ) :
     RemoteMediator<Int, Article>() {
 
@@ -124,13 +127,13 @@ class Paging3WithRoomDataBasePagingSource(
                 query = query,
                 page = page,
                 apiKey = key,
-                pageSize = PAGE_SIZE,
-                sortBy = sortBy
+                pageSize = PAGING_ITEM_SIZE,
             )
 
             delay(3500) //for simulate progress bar
 
-            val articles = apiResponse.articles
+            val articles =
+                apiResponse.articles.filterNot { it.url.contains(API_RESPONSE_REMOVED_KEYWORD) }
             val endOfPaginationReached = articles.isEmpty()
 
             paging3WithRoomDataBase.withTransaction { //block will execute atomically, run query serially inside block

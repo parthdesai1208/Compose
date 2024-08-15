@@ -162,7 +162,7 @@ dependencies {
 
     //glide
     //https://bumptech.github.io/glide/int/compose.html
-    implementation "com.github.bumptech.glide:compose:1.0.0-alpha.0"
+    implementation "com.github.bumptech.glide:compose:1.0.0-beta01"
 
     //coil
     //https://github.com/coil-kt/coil#jetpack-compose
@@ -216,4 +216,8 @@ dependencies {
     //for biometric authentication
     //https://developer.android.com/jetpack/androidx/releases/biometric#groovy
     implementation 'androidx.biometric:biometric:1.1.0'
+
+    //network calls in notification
+    //https://github.com/ChuckerTeam/chucker
+    debugImplementation "com.github.chuckerteam.chucker:library:4.0.0"
 }

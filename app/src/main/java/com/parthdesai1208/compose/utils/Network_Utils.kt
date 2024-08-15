@@ -10,10 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.platform.LocalContext
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.parthdesai1208.compose.model.networking.ConnectionState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
+import okhttp3.OkHttpClient
 
 fun Context?.isOnline(failBlock: () -> Unit, successBlock: () -> Unit) {
     this?.apply {
@@ -106,3 +108,7 @@ fun connectivityState(): State<ConnectionState> {
     }
 }
 //endregion
+
+fun Context.getOkHttpClient(): OkHttpClient {
+    return OkHttpClient.Builder().addInterceptor(ChuckerInterceptor(this)).build()
+}
