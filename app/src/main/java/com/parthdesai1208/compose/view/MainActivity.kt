@@ -64,6 +64,7 @@ import com.parthdesai1208.compose.view.navigation.CustomLayoutScreen
 import com.parthdesai1208.compose.view.navigation.CustomModifierScreen
 import com.parthdesai1208.compose.view.navigation.DrawListingScreenPath
 import com.parthdesai1208.compose.view.navigation.HorizontalAdaptiveListScreen
+import com.parthdesai1208.compose.view.navigation.HorizontalPagerListingScreenPath
 import com.parthdesai1208.compose.view.navigation.NavigationEx1
 import com.parthdesai1208.compose.view.navigation.NetworkListingScreenPath
 import com.parthdesai1208.compose.view.navigation.PermissionListingScreenPath
@@ -82,6 +83,7 @@ import com.parthdesai1208.compose.view.state.MainScreenState
 import com.parthdesai1208.compose.view.theme.ComposeTheme
 import com.parthdesai1208.compose.view.uicomponents.ChildBoxScreen
 import com.parthdesai1208.compose.view.uicomponents.ChildColumnScreen
+import com.parthdesai1208.compose.view.uicomponents.ChildHorizontalPagerListScreen
 import com.parthdesai1208.compose.view.uicomponents.ChildRowScreen
 import com.parthdesai1208.compose.view.uicomponents.ChildUIComponentsScreen
 import com.parthdesai1208.compose.view.uicomponents.ChildVerticalListScreen
@@ -208,6 +210,13 @@ fun MainActivityNavGraph(
         composable<VerticalListingScreenPath> { backStackEntry ->
             val arguments = backStackEntry.toRoute<VerticalListingScreenPath>()
             ChildVerticalListScreen(onClickButtonTitle = arguments.pathPostFix, navController)
+        }
+        composable<HorizontalPagerListingScreenPath> { backStackEntry ->
+            val arguments = backStackEntry.toRoute<HorizontalPagerListingScreenPath>()
+            ChildHorizontalPagerListScreen(
+                onClickButtonTitle = arguments.pathPostFix,
+                navController
+            )
         }
         composable<HorizontalAdaptiveListScreen> { _ ->
             HorizontalAdaptiveGridListFun(navHostController = navController)

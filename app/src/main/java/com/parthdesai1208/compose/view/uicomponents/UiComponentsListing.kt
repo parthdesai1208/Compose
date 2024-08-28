@@ -45,6 +45,7 @@ enum class UIComponentsListingEnumType(
     CardCompose(R.string.card, { CardCompose(it) }),
     CollapsableRecyclerviewScreen(R.string.verticallist, { VerticalListListing(it) }),
     HorizontalListScreen(R.string.horizontallist, { HorizontalList(navController = it) }),
+    HorizontalPagerListScreen(R.string.horizontalPagerlist, { HorizontalPagerListScreen(it) }),
     ConstraintLayoutContent(R.string.constraintlayoutcontent, { ConstraintLayoutContent(it) }),
     ConstraintLayoutScreen(R.string.runtimeconstraintlayout, { DecoupledConstraintLayout(it) }),
     ConstraintLayoutClock(R.string.clockusingconstraintlayout, { ClockByConstraintLayout(it) }),

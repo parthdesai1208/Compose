@@ -486,6 +486,7 @@
     <string name="card">Card</string>
     <string name="verticallist">Vertical List</string>
     <string name="horizontallist">Horizontal List</string>
+    <string name="horizontalPagerlist">Horizontal Pager</string>
     <string name="constraintlayoutcontent">Constraint Layout Content</string>
     <string name="runtimeconstraintlayout">runtime Constraint Layout</string>
     <string name="clockusingconstraintlayout">Clock using constraint layout</string>
@@ -590,5 +591,8 @@
     <string name="description">Description</string>
     <string name="subtitle">Subtitle</string>
     <string name="title">Title</string>
+    <!--    end region-->
+    <!--    region horizontal pager screen-->
+    <string name="parallaxEffectUsingHorizontalPager1">Parallax effect using Horizontal Pager-1</string>
     <!--    end region-->
 </resources>

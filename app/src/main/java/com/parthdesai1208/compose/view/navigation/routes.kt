@@ -36,6 +36,9 @@ data class BoxListingScreenPath(val pathPostFix: Int)
 data class VerticalListingScreenPath(val pathPostFix: Int)
 
 @Serializable
+data class HorizontalPagerListingScreenPath(val pathPostFix: Int)
+
+@Serializable
 object HorizontalAdaptiveListScreen
 
 @Serializable
