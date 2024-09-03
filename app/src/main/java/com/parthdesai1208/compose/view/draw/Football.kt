@@ -28,6 +28,7 @@ fun DrawFootballGround(navHostController: NavHostController, modifier: Modifier 
 
                 for (i in 0..10) {
                     val color = if (i % 2 == 0) lightStadiumGreen else darkStadiumGreen
+                    //green lines on field
                     drawRect(
                         color = color,
                         topLeft = Offset(0f, i * rectangleHeight),
@@ -46,21 +47,23 @@ fun DrawFootballGround(navHostController: NavHostController, modifier: Modifier 
                     lineTo(size.width - 50f, size.height / 2)
                     close()
                 }
+                //outer rectangle border & middle horizontal line
                 drawPath(path = pitchOutLine, color = Color.White, style = Stroke(3.dp.toPx()))
+                //middle dot only
                 drawCircle(
                     color = Color.White, radius = 10f, center = Offset(
                         size.width / 2,
                         size.height / 2
                     )
                 )
-
+                //middle circle
                 drawCircle(
                     color = Color.White,
                     radius = 100f,
                     center = Offset(size.width / 2, size.height / 2),
                     style = Stroke(3.dp.toPx())
                 )
-
+                //top left arc
                 drawArc(
                     color = Color.White,
                     startAngle = 0f,
@@ -70,7 +73,7 @@ fun DrawFootballGround(navHostController: NavHostController, modifier: Modifier 
                     style = Stroke(3.dp.toPx()),
                     useCenter = false
                 )
-
+                //top right arc
                 drawArc(
                     color = Color.White,
                     startAngle = 90f,
@@ -80,7 +83,7 @@ fun DrawFootballGround(navHostController: NavHostController, modifier: Modifier 
                     style = Stroke(3.dp.toPx()),
                     useCenter = false
                 )
-
+                //bottom right arc
                 drawArc(
                     color = Color.White,
                     startAngle = 180f,
@@ -90,7 +93,7 @@ fun DrawFootballGround(navHostController: NavHostController, modifier: Modifier 
                     style = Stroke(3.dp.toPx()),
                     useCenter = false
                 )
-
+                //bottom left arc
                 drawArc(
                     color = Color.White,
                     startAngle = 270f,
@@ -102,40 +105,41 @@ fun DrawFootballGround(navHostController: NavHostController, modifier: Modifier 
                 )
 
                 //Penalty
-
+                //top first box
                 drawRect(
                     color = Color.White,
                     topLeft = Offset(size.width.div(2).minus(100f), 50f),
                     size = Size(200f, 100f),
                     style = Stroke(3.dp.toPx())
                 )
-
+                //bottom second box
                 drawRect(
                     color = Color.White,
                     topLeft = Offset(size.width.div(2).minus(100f), size.height - 150f),
                     size = Size(200f, 100f),
                     style = Stroke(3.dp.toPx())
                 )
-
+                //top second box
                 drawRect(
                     color = Color.White,
                     topLeft = Offset((size.width / 2) - 300f, 50f),
                     size = Size(600f, 300f),
                     style = Stroke(3.dp.toPx())
                 )
+                //bottom first box
                 drawRect(
                     color = Color.White,
                     topLeft = Offset((size.width / 2) - 300f, size.height - 350f),
                     size = Size(600f, 300f),
                     style = Stroke(3.dp.toPx())
                 )
-
+                //top penalty area dot
                 drawCircle(
                     color = Color.White,
                     radius = 10f,
                     center = Offset(size.width / 2, 200f)
                 )
-
+                //bottom penalty area dot
                 drawCircle(
                     color = Color.White,
                     radius = 10f,
