@@ -59,6 +59,8 @@ fun CricketField() {
 
                 for (i in 0..n) {
                     val color = if (i % 2 == 0) lightStadiumGreen else darkStadiumGreen
+
+                    //green lines on field
                     drawRect(
                         color = color,
                         topLeft = Offset(0f, i * rectangleHeight),
@@ -74,6 +76,7 @@ fun CricketField() {
                     radius = width / 2 - 20f
                 )
 
+                //inner circle
                 drawCircle(
                     color = Color.White,
                     style = Stroke(2.dp.toPx()),
@@ -95,32 +98,34 @@ fun CricketPitch(modifier: Modifier = Modifier) {
     val cliche = w / 4
     val wide = cliche / 3
     Canvas(modifier = modifier.size(width = w, height = h)) {
+        //pitch rectangle
         drawRect(
             color = pitch,
             topLeft = Offset(x, y),
             size = Size(width = w.toPx(), height = h.toPx())
         )
+        //top longer horizontal line
         drawLine(
             start = Offset(x, cliche.toPx()),
             end = Offset(w.toPx(), cliche.toPx()),
             color = Color.White,
             strokeWidth = 1.dp.toPx()
         )
-
+        //bottom longer horizontal line
         drawLine(
             start = Offset(x, h.toPx() - cliche.toPx()),
             end = Offset(w.toPx(), h.toPx() - cliche.toPx()),
             color = Color.White,
             strokeWidth = 1.dp.toPx()
         )
-
+        //top left vertical line
         drawLine(
             start = Offset(wide.toPx(), y),
             end = Offset(wide.toPx(), cliche.toPx()),
             color = Color.White,
             strokeWidth = 1.dp.toPx()
         )
-
+        //top right vertical line
         drawLine(
             start = Offset(w.toPx() - wide.toPx(), y),
             end = Offset(w.toPx() - wide.toPx(), cliche.toPx()),
@@ -128,14 +133,14 @@ fun CricketPitch(modifier: Modifier = Modifier) {
             strokeWidth = 1.dp.toPx()
         )
 
-
+        //bottom left vertical line
         drawLine(
             start = Offset(wide.toPx(), h.toPx() - cliche.toPx()),
             end = Offset(wide.toPx(), h.toPx()),
             color = Color.White,
             strokeWidth = 1.dp.toPx()
         )
-
+        //bottom right vertical line
         drawLine(
             start = Offset(w.toPx() - wide.toPx(), h.toPx() - cliche.toPx()),
             end = Offset(w.toPx() - wide.toPx(), h.toPx()),
@@ -143,14 +148,14 @@ fun CricketPitch(modifier: Modifier = Modifier) {
             strokeWidth = 1.dp.toPx()
         )
 
-        //Wicket
+        //top shorter horizontal line - top Wicket
         drawLine(
             start = Offset(5 * wide.toPx(), wide.toPx()),
             end = Offset(w.toPx() - 5 * wide.toPx(), wide.toPx()),
             color = Color.White,
             strokeWidth = 1.dp.toPx()
         )
-
+        //bottom shorter horizontal line - bottom wicket
         drawLine(
             start = Offset(5 * wide.toPx(), h.toPx() - wide.toPx()),
             end = Offset(w.toPx() - 5 * wide.toPx(), h.toPx() - wide.toPx()),
