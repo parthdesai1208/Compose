@@ -85,9 +85,8 @@ fun HorizontalPagerListScreen(navHostController: NavHostController) {
 enum class HorizontalPagerListingEnumType(
     val buttonTitle: Int, val func: @Composable (NavHostController) -> Unit
 ) {
-    CollapsableList(
-        R.string.parallaxEffectUsingHorizontalPager1,
-        { ParallaxEffectUsingHorizontalPager1(it) }),
+    ParallaxEffectUsingHorizontalPager1(R.string.parallaxEffectUsingHorizontalPager1, { ParallaxEffectUsingHorizontalPager1(it) }),
+    ParallaxEffectUsingHorizontalPager2(R.string.parallaxEffectUsingHorizontalPager2, { ParallaxEffectUsingHorizontalPager2(it) }),
 }
 
 @Composable

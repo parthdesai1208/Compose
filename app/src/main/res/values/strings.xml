@@ -594,5 +594,6 @@
     <!--    end region-->
     <!--    region horizontal pager screen-->
     <string name="parallaxEffectUsingHorizontalPager1">Parallax effect using Horizontal Pager-1</string>
+    <string name="parallaxEffectUsingHorizontalPager2">Parallax effect using Horizontal Pager-2</string>
     <!--    end region-->
 </resources>
