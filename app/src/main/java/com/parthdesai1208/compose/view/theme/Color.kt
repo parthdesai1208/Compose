@@ -73,6 +73,10 @@ val TruckArtCanvasBackground = Color(0xFF750839)
 val TruckArtPrimaryRectangleBackground = Color(0xFF1A237E)
 val TruckArtSecondaryRectangleBackground = Color(0xFFC51162)
 
+val lightStadiumGreen = Color(0xFF4CBB17)
+val darkStadiumGreen = Color(0xFF3A9D23)
+val pitch = Color(0xFFBBAB17)
+
 val LightDarkGrey: Color
     @Composable
     get() = if (isSystemInDarkTheme()) Color.DarkGray else Color.LightGray

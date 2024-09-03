@@ -72,6 +72,7 @@ enum class DrawListingEnumType(
     LeftShadow3DLayout(R.string._3d_layout_left_shadow, { LeftShadow3DLayout(it) }),
     BottomShadow3DLayout(R.string._3d_layout_bottom_shadow, { BottomShadow3DLayout(it) }),
     Dialog3D(R.string._3d_dialog, { Dialog3D(it) }),
+    DrawCricketGround(R.string.drawCricketGround, { DrawCricketGround(it) }),
 }
 
 @Composable
