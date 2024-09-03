@@ -568,7 +568,8 @@
     <string name="any_screen_samples">Any Screen Samples</string>
     <string name="tablet_foldable_desktop_compatible_ui_sample_from_codelabs"><![CDATA[Tablet,Foldable & Desktop compatible UI\n (sample from codelabs)]]></string>
     <string name="insets">Insets</string>
-    <string name="drawCricketGround">Draw Cricket Ground</string>
+    <string name="drawCricketGround">Cricket Ground</string>
+    <string name="drawFootballGround">Football Ground</string>
     <!--    end region-->
     <!--    region PIP screen-->
     <string name="title_activity_pipactivity">PIPActivity</string>

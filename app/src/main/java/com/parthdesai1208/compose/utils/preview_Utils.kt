@@ -4,12 +4,12 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 
-@Preview(group = "phone", name = "light", device = Devices.PIXEL_4_XL, showSystemUi = true)
+@Preview(group = "phone", name = "light", device = Devices.PIXEL_7, showSystemUi = true)
 @Preview(
     group = "phone",
     name = "dark",
     uiMode = UI_MODE_NIGHT_YES,
-    device = Devices.PIXEL_4_XL,
+    device = Devices.PIXEL_7,
     showSystemUi = true,
     showBackground = true
 )
