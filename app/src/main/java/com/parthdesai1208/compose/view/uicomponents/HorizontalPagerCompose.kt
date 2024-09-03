@@ -23,13 +23,16 @@ import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.parthdesai1208.compose.R
 import com.parthdesai1208.compose.utils.BuildTopBarWithScreen
+import com.parthdesai1208.compose.utils.Phone
 import kotlin.math.roundToInt
 
 val imageList = listOf(
@@ -74,7 +77,7 @@ fun ParallaxEffectUsingHorizontalPager1(
                 ) { page ->
 
                     val parallaxOffset =
-                        pagerState.getOffsetDistanceInPages(page) * screenWidth.value
+                        pagerState.getOffsetDistanceInPages(page) * (screenWidth.value * 0.15f)
 
                     ParallaxCarouselItem(
                         imageList[page],
@@ -161,4 +164,11 @@ private fun ImageBitmap.calculateDrawSize(
     }
 
     return IntSize(drawWidth.toIntPx(density), drawHeight.toIntPx(density))
+}
+
+
+@Preview
+@Composable
+private fun ParallaxEffectUsingHorizontalPager1Preview() {
+    ParallaxEffectUsingHorizontalPager1(rememberNavController())
 }
