@@ -2,6 +2,7 @@ package com.parthdesai1208.compose.view.uicomponents
 
 import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.rememberTransformableState
@@ -828,7 +829,7 @@ fun CuttingEdgeAvatars(modifier: Modifier = Modifier) {
                         .zIndex((listOfCuttingEdgeAvatars.size - index).toFloat())
                         .offset(x = -(index.dp * 16))
                         .clip(CircleShape)
-                        .border(width = 1.dp, color = Color.White, shape = CircleShape),
+                        .border(width = 1.dp, color = MaterialTheme.colors.onSurface, shape = CircleShape),
                 )
             }
     }
