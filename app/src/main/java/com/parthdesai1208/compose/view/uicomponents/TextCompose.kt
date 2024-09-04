@@ -69,6 +69,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -367,6 +368,15 @@ fun TextComponents(
             DividerTextCompose()
             AutoDetectHashTagAndUrlAndMakeClickable()
             DividerTextCompose()
+            Text(text = AnnotatedString.fromHtml(
+                htmlString = """
+                    <h2>this is html text</h2><br>
+                    <h5>K2 Compiler</h5><br>
+                    <i>Jetpack</i>&nbsp;&nbsp;<b>Compose</b>
+                """.trimIndent()
+            ))
+            DividerTextCompose()
+
         }
     }, onBackIconClick = {
         navHostController.popBackStack()
