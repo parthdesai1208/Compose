@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.rememberTransformableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.gestures.transformable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +17,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -62,6 +64,7 @@ import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
@@ -74,6 +77,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.parthdesai1208.compose.R
+import com.parthdesai1208.compose.model.uicomponents.listOfCuttingEdgeAvatars
 import com.parthdesai1208.compose.utils.Phone
 import com.parthdesai1208.compose.utils.ToolBarWithIconAndTitle
 import com.parthdesai1208.compose.utils.fadingEdge
@@ -118,6 +122,7 @@ fun ImageComposeScreen(navHostController: NavHostController) {
                 ImageWithFadingEdge()
                 ImageWithMagnifier()
                 PinchToZoomImage()
+                CuttingEdgeAvatars()
             }
         }
     }
@@ -254,14 +259,14 @@ fun LoadGifUsingCoil() {
                 .height(height = 350.dp) //need to provide height & width here
                 .clip(shape = RoundedCornerShape(16.dp))
         )
-/*        AsyncImage(
-            model = "https://media2.giphy.com/media/aQYR1p8saOQla/giphy.gif?cid=ecf05e4701sln9u63lr3z17lh5f3n3h3owrk54zh1183hqmi&rid=giphy.gif&ct=g",
-            contentDescription = null,
-            modifier = Modifier
-                .width(width = getScreenWidth().dp - 30.dp)
-                .height(height = 350.dp) //need to provide height & width here
-                .clip(shape = RoundedCornerShape(16.dp))
-        )*/
+        /*        AsyncImage(
+                    model = "https://media2.giphy.com/media/aQYR1p8saOQla/giphy.gif?cid=ecf05e4701sln9u63lr3z17lh5f3n3h3owrk54zh1183hqmi&rid=giphy.gif&ct=g",
+                    contentDescription = null,
+                    modifier = Modifier
+                        .width(width = getScreenWidth().dp - 30.dp)
+                        .height(height = 350.dp) //need to provide height & width here
+                        .clip(shape = RoundedCornerShape(16.dp))
+                )*/
     }
 }
 //endregion
@@ -799,4 +804,33 @@ fun PinchToZoomImage(modifier: Modifier = Modifier) {
         }
         Spacer(modifier = Modifier.height(32.dp))
     }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun CuttingEdgeAvatars(modifier: Modifier = Modifier) {
+    Spacer(modifier = Modifier.height(32.dp))
+    Row(
+        modifier = Modifier.padding(16.dp).fillMaxWidth().wrapContentWidth().horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        listOfCuttingEdgeAvatars.map { it.avatar to it.description }
+            .forEachIndexed { index, pairData ->
+                com.bumptech.glide.integration.compose.GlideImage(
+                    model = pairData.first,
+                    contentDescription = stringResource(
+                        R.string.cuttingEdgeAvatarDescription,
+                        pairData.second,
+                    ),
+                    modifier = modifier
+                        .size(52.dp)
+                        .zIndex((listOfCuttingEdgeAvatars.size - index).toFloat())
+                        .offset(x = -(index.dp * 16))
+                        .clip(CircleShape)
+                        .border(width = 1.dp, color = Color.White, shape = CircleShape),
+                )
+            }
+    }
+    Spacer(modifier = Modifier.height(32.dp))
 }
