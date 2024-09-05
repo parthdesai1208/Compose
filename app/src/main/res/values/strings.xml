@@ -570,6 +570,10 @@
     <string name="insets">Insets</string>
     <string name="drawCricketGround">Cricket Ground</string>
     <string name="drawFootballGround">Football Ground</string>
+    <string name="screenshot">capture screenshot using draw</string>
+    <string name="click_here_to_capture_screenshot">Click here, to capture screenshot</string>
+    <string name="this_is_screenshot_that_you_just_took">this is screenshot that you just took</string>
+    <string name="screenshot_will_be_captured_here">Screenshot will be captured here</string>
     <!--    end region-->
     <!--    region PIP screen-->
     <string name="title_activity_pipactivity">PIPActivity</string>

@@ -74,6 +74,7 @@ enum class DrawListingEnumType(
     Dialog3D(R.string._3d_dialog, { Dialog3D(it) }),
     DrawCricketGround(R.string.drawCricketGround, { DrawCricketGround(it) }),
     DrawFootballGround(R.string.drawFootballGround, { DrawFootballGround(it) }),
+    Screenshot(R.string.screenshot, { Screenshot(it) }),
 }
 
 @Composable
