@@ -351,7 +351,6 @@ private fun addContentToView(
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun BottomSheetWrapper(
     wrapWithBottomSheetUI: Boolean,
@@ -364,7 +363,7 @@ private fun BottomSheetWrapper(
     val modalBottomSheetState =
         rememberModalBottomSheetState(
             ModalBottomSheetValue.Hidden,
-            confirmStateChange = {
+            confirmValueChange = {
                 it != ModalBottomSheetValue.HalfExpanded
             }
         )

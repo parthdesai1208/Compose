@@ -44,7 +44,7 @@ import androidx.compose.material.contentColorFor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -262,7 +262,7 @@ fun TooltipOnLongClickExample(navHostController: NavHostController) {
                     modifier = Modifier
                         .combinedClickable(
                             interactionSource = remember { MutableInteractionSource() },
-                            indication = rememberRipple(),
+                            indication = ripple(),
                             onClickLabel = "Button action description",
                             role = Role.Button,
                             onClick = { },
