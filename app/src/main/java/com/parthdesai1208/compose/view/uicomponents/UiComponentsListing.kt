@@ -73,11 +73,11 @@ fun ChildUIComponentsScreen(onClickButtonTitle: Int?, navHostController: NavHost
 
 @Composable
 fun UIComponentsListingScreen(navController: NavHostController) {
+    val context = LocalContext.current
     @Composable
     fun MyButton(
         title: UIComponentsListingEnumType
     ) {
-        val context = LocalContext.current
 
         Button(
             onClick = { navController.navigate(UIComponentsListingScreen(pathPostFix = title.buttonTitle)) },
@@ -97,7 +97,7 @@ fun UIComponentsListingScreen(navController: NavHostController) {
                     .verticalScroll(rememberScrollState())
                     .padding(8.dp)
             ) {
-                enumValues<UIComponentsListingEnumType>().forEach {
+                enumValues<UIComponentsListingEnumType>().sortedBy { context.getString(it.buttonTitle) }.forEach {
                     MyButton(it)
                 }
             }

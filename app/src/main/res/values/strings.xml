@@ -488,7 +488,7 @@
     <string name="horizontallist">Horizontal List</string>
     <string name="horizontalPagerlist">Horizontal Pager</string>
     <string name="constraintlayoutcontent">Constraint Layout Content</string>
-    <string name="runtimeconstraintlayout">runtime Constraint Layout</string>
+    <string name="runtimeconstraintlayout">Runtime Constraint Layout</string>
     <string name="clockusingconstraintlayout">Clock using constraint layout</string>
     <string name="bottomsheet">Bottom Sheet</string>
     <string name="switch1">Switch</string>
