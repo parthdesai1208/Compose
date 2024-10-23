@@ -102,8 +102,8 @@ fun SwitchCompose(navHostController: NavHostController) {
                 )
 
                 DividerTextCompose()
-                MorphSwitchCompose()
-                DividerTextCompose()
+               // MorphSwitchCompose()
+//                DividerTextCompose()
             }
         }
     }
